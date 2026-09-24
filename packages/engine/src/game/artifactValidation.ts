@@ -20,7 +20,7 @@ export interface ArtifactDraft {
  * link and the GOOD importer, so "bounded like the others" is a fact rather
  * than a comment. Lives here because this module reaches neither the game
  * adapter nor the DOM, so a server-side caller can import it without the
- * dataset (upstream's `api/` did, until this fork removed it in TODO 0.7).
+ * dataset (upstream's `api/` did; see ADR-0021).
  */
 export const MAX_KEY_LEN = 64;
 

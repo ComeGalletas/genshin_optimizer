@@ -16,37 +16,21 @@ function src(rel: string): string {
   return readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8');
 }
 
-// Upstream's serverless proxy (`api/explain.ts`) bundled `ai/explainShared.ts`
-// (web side; its own checks live in `packages/web/src/bundleBoundaries.test.ts`),
-// which reaches these engine files. They all sat on that path, so an import of
-// the game adapter (or of `../labels`, which imports it) from either one
-// dragged the 328 KB `data.generated.json` snapshot into the function —
-// measured at 315 KB before the labels-core split, 9 KB after. The proxy was
-// removed in TODO 0.7; the tripwire stays until ADR-0021 (TODO 0.9) settles
-// whether the local server needs the split. A module-graph assertion needs a bundler; a source-text tripwire
-// catches the same mistake at the only place it can be made. The pattern
-// matches an import specifier, not the bare words — these files are allowed to
-// *mention* the adapter in the prose explaining why they must not import it.
-const ADAPTER_IMPORT = /from '[^']*genshin\/adapter'/;
-
-describe('serverless bundle boundary', () => {
-  it('labels-core does not reach the game adapter', () => {
-    expect(src('./labels-core.ts')).not.toMatch(ADAPTER_IMPORT);
-  });
-
-  it('artifactValidation (which explainShared imports) stays adapter-free', () => {
-    expect(src('./game/artifactValidation.ts')).not.toMatch(ADAPTER_IMPORT);
-  });
-});
-
 // The optimize worker (`workers/optimize.worker.ts` -> `workers/protocol.ts`
-// -> `optimizer/search.ts` -> `optimizer/diagnostics.ts`) is the same kind of
-// boundary as the serverless function was: a static import of the adapter
-// (or of `../labels`, which imports it) anywhere on that path would bundle
-// the 321 KB `data.generated.json` snapshot a second time, alongside the main
-// thread's own copy. `OptimizeContext.setNames` (populated on the main thread
-// in `optimizer/context.ts`, structured-cloned to the worker) is what lets
+// -> `optimizer/search.ts` -> `optimizer/diagnostics.ts` -> `labels-core.ts`)
+// must not carry the game dataset: a static import of the adapter (or of
+// `../labels`, which imports it) anywhere on that path would bundle the
+// 321 KB `data.generated.json` snapshot a second time, alongside the main
+// thread's own copy. A module-graph assertion needs a bundler; a source-text
+// tripwire catches the same mistake at the only place it can be made. The
+// patterns match import specifiers, not bare words, so these files may still
+// *mention* the adapter in prose. (Upstream also guarded its serverless
+// explain bundle here; ADR-0021 retired those checks with the proxy.)
+//
+// `OptimizeContext.setNames` (populated on the main thread in
+// `optimizer/context.ts`, structured-cloned to the worker) is what lets
 // `diagnostics.ts` render set names without reaching for the adapter itself.
+const ADAPTER_IMPORT = /from '[^']*genshin\/adapter'/;
 const LABELS_IMPORT = /from '\.\.\/labels'/;
 
 describe('optimize worker bundle boundary', () => {
@@ -56,11 +40,18 @@ describe('optimize worker bundle boundary', () => {
     expect(text).not.toMatch(LABELS_IMPORT);
   });
 
-  // `workers/protocol.ts` (web side) is checked in `packages/web/src/bundleBoundaries.test.ts`.
+  // `workers/protocol.ts` (web side) is checked in
+  // `packages/web/src/bundleBoundaries.test.ts`.
   it('search (which diagnostics sits behind) stays adapter-free', () => {
     const text = src('./optimizer/search.ts');
     expect(text).not.toMatch(ADAPTER_IMPORT);
     expect(text).not.toMatch(LABELS_IMPORT);
+  });
+
+  // diagnostics imports labels-core for display copy, so labels-core is on
+  // the worker path too.
+  it('labels-core (which diagnostics imports) stays adapter-free', () => {
+    expect(src('./labels-core.ts')).not.toMatch(ADAPTER_IMPORT);
   });
 });
 

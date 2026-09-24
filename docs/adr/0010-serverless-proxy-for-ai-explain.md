@@ -1,6 +1,6 @@
 # 0010. Serverless proxy for the AI "Explain this build" feature
 
-- Status: Accepted
+- Status: Superseded by [0021](0021-local-first-server-architecture.md) (the proxy was removed; explain moves to the local server. The no-`VITE_`-secrets rule carries over)
 - Date: 2026-06-17
 
 ## Context

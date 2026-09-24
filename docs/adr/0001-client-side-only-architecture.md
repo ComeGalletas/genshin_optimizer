@@ -1,6 +1,6 @@
 # 0001. Client-side-only architecture, no backend
 
-- Status: Accepted
+- Status: Superseded by [0021](0021-local-first-server-architecture.md) (this fork adds a local server; the web app still runs client-only)
 - Date: 2026-06-06
 
 ## Context

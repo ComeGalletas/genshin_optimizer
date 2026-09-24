@@ -2,13 +2,12 @@
  * The adapter-free half of the label/format vocabulary.
  *
  * IMPORTANT: this module must not import `game/genshin/adapter` (nor anything
- * that reaches it, directly or transitively). Upstream's serverless explain
- * proxy (`api/explain.ts`) bundled `ai/explainShared.ts`, which imports this
- * file, and pulling the adapter in here dragged the whole 328 KB
- * `data.generated.json` snapshot into that function (measured: 6.6 KB →
- * 321 KB). This fork removed the proxy in TODO 0.7; the split and its
- * tripwire (`labels-core.test.ts`) stay until ADR-0021 (TODO 0.9) settles
- * what the local server needs.
+ * that reaches it, directly or transitively). The optimize worker imports it
+ * through `optimizer/diagnostics.ts`, so pulling the adapter in here would
+ * drag the whole ~320 KB `data.generated.json` snapshot into the worker
+ * bundle. `labels-core.test.ts` is the tripwire. (The split was made for
+ * upstream's serverless explain function, measured at 6.6 KB → 321 KB; that
+ * function is gone, see ADR-0021, but the worker still needs it.)
  *
  * `packages/web/src/labels.ts` re-exports everything here, so UI code keeps
  * importing `../labels` and never needs to know this split exists.

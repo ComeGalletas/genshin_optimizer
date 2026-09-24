@@ -1,6 +1,6 @@
 # 0013. Per-IP rate limiting on the AI explain proxy
 
-- Status: Accepted
+- Status: Superseded by [0021](0021-local-first-server-architecture.md) (the proxy and its Upstash limiter were removed; the local server is localhost-only and single-user)
 - Date: 2026-07-03
 
 ## Context
