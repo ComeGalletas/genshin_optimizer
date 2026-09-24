@@ -34,18 +34,13 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc -b && tsc --noEmit -p tsconfig.api.json && tsc --noEmit -p tsconfig.scripts.json",
+    "typecheck": "tsc -b && tsc --noEmit -p tsconfig.scripts.json",
     "build:data": "tsx scripts/build-dataset.ts",
     "bench": "tsx scripts/benchmark.ts && prettier --write docs/speed-report.md",
     "docs:check": "tsx scripts/check-docs.ts",
     "bench:check": "tsx scripts/check-bench.ts",
     "size:check": "tsx scripts/check-size.ts",
     "size:update": "tsx scripts/check-size.ts --update"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.122.0",
-    "@upstash/ratelimit": "^2.0.8",
-    "@upstash/redis": "^1.38.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -55,7 +50,6 @@
     "@types/node": "^26.4.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "@vercel/node": "^10.0.0",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^4.1.11",
     "autoprefixer": "^10.5.4",

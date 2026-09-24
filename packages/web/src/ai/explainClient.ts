@@ -1,13 +1,13 @@
 /**
  * The client side of the AI-explain feature: the fetch call to the
- * serverless `/api/explain` proxy and the request/response shapes it shares
- * with that proxy.
+ * `/api/explain` endpoint and the request/response shapes it shares
+ * with that endpoint.
  * @packageDocumentation
  */
 
 import type { ExplainPayload } from './explainShared';
 
-/** Calls the serverless proxy. Throws on transport or shape errors. */
+/** Calls `/api/explain`. Throws on transport or shape errors. */
 export async function explainBuild(payload: ExplainPayload): Promise<string> {
   const res = await fetch('/api/explain', {
     method: 'POST',

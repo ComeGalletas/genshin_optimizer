@@ -17,9 +17,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'app',
-          // api/ goes away with the Vercel removal (TODO 0.7); until then its
-          // tests keep running exactly as they did before the split.
-          include: ['packages/web/src/**/*.test.{ts,tsx}', 'api/**/*.test.ts'],
+          include: ['packages/web/src/**/*.test.{ts,tsx}'],
           environment: 'jsdom',
           setupFiles: ['./packages/web/src/test-setup.ts'],
         },

@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.7, remove the Vercel parts
+**Next item:** 0.8, CI cleanup
 
 ## Housekeeping (done 2026-09-24)
 
@@ -54,7 +54,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - A test rather than a lint rule: `packages/engine/src/boundaries.test.ts` reads every engine file's imports with TypeScript's own scanner (`import type`, `export … from`, `import()` and `require()` included). Source may not import Node built-ins, third-party packages (the engine has no runtime dependencies), `@genshin-build-lab/web`/`server`, or relative paths that leave the package. Tests may read fixtures with `node:` modules and use `vitest`, but the `web`/`server` rule applies to them too.
   - DOM and Node globals stay with the type-level gate from 0.2/0.3 (`tsconfig.lib.json`). A second test fails if that gate is loosened (non-empty `types`, or a DOM/WebWorker lib).
   - The checker itself is tested: 14 planted imports must be flagged and 6 legitimate ones must pass. Planting an escaping import in `optimizer/score.ts` and adding `DOM` to the gate each turned the suite red; both were reverted.
-- [ ] 0.7 Remove the Vercel parts: `api/`, `vercel.json`, `tsconfig.api.json`, `@upstash/*`, `@vercel/node`, the api leg of `typecheck`, and the Upstash/`PUBLIC_ORIGIN` entries in `.env.example`. Keep `VITE_AI_ENABLED` off so the explain button stays hidden until Phase 3.
+- [x] 0.7 Remove the Vercel parts: `api/`, `vercel.json`, `tsconfig.api.json`, `@upstash/*`, `@vercel/node`, the api leg of `typecheck`, and the Upstash/`PUBLIC_ORIGIN` entries in `.env.example`. Keep `VITE_AI_ENABLED` off so the explain button stays hidden until Phase 3.
+  - Removed `api/` (4 files, 31 tests: 684 → 653), `vercel.json`, `tsconfig.api.json`, `@upstash/ratelimit`, `@upstash/redis` and `@vercel/node`, plus `@anthropic-ai/sdk`, whose only user was `api/explain.ts` (the Phase 3 server adds it back to its own package). The root `package.json` now has no runtime dependencies. The lockfile was regenerated with npm 11: 141 entries removed (the Vercel/Upstash/Anthropic trees), none added, no version changed.
+  - `.env.example` keeps only `ANTHROPIC_API_KEY` (for the local server) and `VITE_AI_ENABLED`. ESLint, Vitest, `.gitignore` and the `typecheck` script no longer mention `api/` or `.vercel`.
+  - The web explain client (`ai/`, `ExplainBuild`) stays, hidden. The "serverless bundle boundary" tripwires in `labels-core.test.ts` and `bundleBoundaries.test.ts` stay too; their comments now say the consumer is gone, and ADR-0021 (0.9) decides whether the split still matters. The CSP headers that lived in `vercel.json` went with it; Phase 3's server decides its own.
+  - Docs: FILE-MAP, CONTRIBUTING, the testing runbook, and README's AI section. The rest of README (upstream demo link, badges) is 0.10.
 - [ ] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).
 - [ ] 0.9 ADR-0021 "Local-first server architecture". It supersedes 0001, 0010 and 0013: mark those superseded and add ADR-0021 to `knowledge/index.md`.
 - [ ] 0.10 Update `README.md` (fork notice and attribution, keeping `LICENSE`/`DATA_LICENSE`), `package.json` metadata, `CONTEXT.md` "What this project is", `FILE-MAP.md`, and `knowledge/` component paths

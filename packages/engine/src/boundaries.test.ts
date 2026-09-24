@@ -92,7 +92,7 @@ describe('engine import boundary', () => {
 
     it.each([
       "import { useInventory } from '@genshin-build-lab/web/state/inventory';",
-      "import { explain } from '../../../../api/explain';",
+      "import { bench } from '../../../../scripts/benchmark';",
       "import { create } from 'zustand';",
     ])('flags %s in tests', (line) => {
       expect(violations(test, line)).toHaveLength(1);

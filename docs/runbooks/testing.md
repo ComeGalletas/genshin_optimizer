@@ -15,14 +15,14 @@ Node ≥ 22 (`engines.node` in `package.json`), dependencies installed
 
 ## Everyday commands
 
-| Command                 | What it does                                                                                                    | When to use it                                                                                                              |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                            | Before committing; what CI's `test` step runs.                                                                              |
-| `npm run test:watch`    | Vitest in watch mode, reruns on file save.                                                                      | While writing or fixing a test.                                                                                             |
-| `npm run test:coverage` | Full suite with a coverage report (`coverage/coverage-summary.json` + HTML in `coverage/`).                     | Before touching a module with low coverage, or when asked "is X tested."                                                    |
-| `npm run typecheck`     | `tsc -b` (strict, project references) plus separate checks for `tsconfig.api.json` and `tsconfig.scripts.json`. | Catches type errors `npm test` won't — the API (`api/`) and tooling (`scripts/`) projects aren't compiled by the app build. |
-| `npm run lint`          | ESLint over the whole repo.                                                                                     | Same cadence as typecheck.                                                                                                  |
-| `npm run docs:check`    | ADR numbering/contiguity, dead internal links, knowledge-bundle freshness (`scripts/check-docs.ts`).            | After editing anything in `docs/adr/`, `CONTEXT.md`, or `knowledge/`.                                                       |
+| Command                 | What it does                                                                                         | When to use it                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                 | Before committing; what CI's `test` step runs.                                                           |
+| `npm run test:watch`    | Vitest in watch mode, reruns on file save.                                                           | While writing or fixing a test.                                                                          |
+| `npm run test:coverage` | Full suite with a coverage report (`coverage/coverage-summary.json` + HTML in `coverage/`).          | Before touching a module with low coverage, or when asked "is X tested."                                 |
+| `npm run typecheck`     | `tsc -b` (strict, project references) plus a separate check for `tsconfig.scripts.json`.             | Catches type errors `npm test` won't — the tooling (`scripts/`) project isn't compiled by the app build. |
+| `npm run lint`          | ESLint over the whole repo.                                                                          | Same cadence as typecheck.                                                                               |
+| `npm run docs:check`    | ADR numbering/contiguity, dead internal links, knowledge-bundle freshness (`scripts/check-docs.ts`). | After editing anything in `docs/adr/`, `CONTEXT.md`, or `knowledge/`.                                    |
 
 Run `npm test`, `npm run lint`, and `npm run typecheck` before every commit —
 this is the project-wide workflow rule in `CONTRIBUTING.md`, not specific to
@@ -89,24 +89,26 @@ automation, not something to run locally.
 
 ## Where to look when a check fails
 
-| Failure                                                      | Likely cause                                                                                         | Where to look                                                                                      |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `npm test` fails on `search.test.ts`                         | Optimiser no longer matches brute force                                                              | `packages/engine/src/optimizer/search.ts`, `score.ts` — treat as a correctness bug, not a test bug |
-| `npm test` fails elsewhere                                   | A behavior change without a matching test update                                                     | The failing test's source file; check whether the change was intentional                           |
-| `npm run typecheck` fails only on the API or scripts project | A change under `api/` or `scripts/` broke a type the app build doesn't check                         | `tsconfig.api.json` / `tsconfig.scripts.json` scopes                                               |
-| `npm run docs:check` fails                                   | ADR numbering gap, a dead relative link in `CONTEXT.md`/an ADR, or a stale `knowledge/` bundle entry | The script's own error message names the file and line                                             |
-| CI's `bench:check` fails but local `npm test` is green       | `docs/speed-report.md` wasn't regenerated for a change to the files it gates                         | Run `npm run bench` (see above) and commit the result                                              |
-| `format:check` is green in CI but fails locally              | Windows/CRLF — `core.autocrlf` reformats line endings repo-wide                                      | Format only the files you changed: `npx prettier --write path/to/file` (per `CONTRIBUTING.md`)     |
+| Failure                                                | Likely cause                                                                                         | Where to look                                                                                      |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `npm test` fails on `search.test.ts`                   | Optimiser no longer matches brute force                                                              | `packages/engine/src/optimizer/search.ts`, `score.ts` — treat as a correctness bug, not a test bug |
+| `npm test` fails elsewhere                             | A behavior change without a matching test update                                                     | The failing test's source file; check whether the change was intentional                           |
+| `npm run typecheck` fails only on the scripts project  | A change under `scripts/` broke a type the app build doesn't check                                   | `tsconfig.scripts.json` scope                                                                      |
+| `npm run docs:check` fails                             | ADR numbering gap, a dead relative link in `CONTEXT.md`/an ADR, or a stale `knowledge/` bundle entry | The script's own error message names the file and line                                             |
+| CI's `bench:check` fails but local `npm test` is green | `docs/speed-report.md` wasn't regenerated for a change to the files it gates                         | Run `npm run bench` (see above) and commit the result                                              |
+| `format:check` is green in CI but fails locally        | Windows/CRLF — `core.autocrlf` reformats line endings repo-wide                                      | Format only the files you changed: `npx prettier --write path/to/file` (per `CONTRIBUTING.md`)     |
 
 ## Adding new tests
 
 Follow the existing pattern for the module you're extending — Vitest +
 Testing Library, colocated `*.test.ts`/`*.test.tsx` next to the source file.
-`api/explain.test.ts` and `api/_ratelimit.test.ts` are the strongest
-reference examples in the repo for testing boundary conditions
-systematically (method/size/origin/rate-limit/error-leak paths each get
-their own case) — model new boundary-condition tests on those rather than
-writing one broad happy-path test.
+`packages/web/src/ai/explainShared.test.ts` (the untrusted explain payload)
+and `packages/engine/src/share/url.test.ts` (the untrusted `?b=` share link)
+are good reference examples for testing boundary conditions systematically:
+each rejection path gets its own case. Model new boundary-condition tests on
+those rather than writing one broad happy-path test. (Upstream's strongest
+examples, `api/explain.test.ts` and `api/_ratelimit.test.ts`, went with the
+Vercel removal in TODO 0.7.)
 
 For what to prioritize adding next, see the prioritized list (ordered by
 risk × silence, not raw coverage percentage) in

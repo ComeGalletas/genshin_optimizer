@@ -11,7 +11,10 @@ const src = (rel: string): string => readFileSync(join(here, rel), 'utf8');
 // adapter — or of the adapter-bound labels, which import it — drags the
 // ~320 KB `data.generated.json` snapshot into a bundle that must not carry it.
 // The patterns match import specifiers, not bare words, so these files may
-// still *mention* the adapter in prose.
+// still *mention* the adapter in prose. The "serverless" case guarded
+// upstream's `api/explain.ts` bundle; that proxy was removed in TODO 0.7, and
+// the check stays until ADR-0021 (TODO 0.9) settles whether the local server
+// needs it.
 const ADAPTER_IMPORT = /from '[^']*genshin\/adapter'/;
 const LABELS_IMPORT =
   /from '(?:\.\.\/labels|@genshin-build-lab\/engine\/labels)'/;

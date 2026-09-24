@@ -13,4 +13,4 @@ local server comes in Phase 3.
 - Engine code is imported by subpath, for example
   `@genshin-build-lab/engine/optimizer/search`, not through the package root,
   so each bundle only pulls in what it uses. `src/bundleBoundaries.test.ts`
-  keeps the ~320 KB dataset out of the worker and serverless bundles.
+  keeps the ~320 KB dataset out of the worker bundle.

@@ -38,8 +38,6 @@ coverage/
 # Git worktrees
 .worktrees/
 
-# Vercel
-.vercel
 
 # Local scanner tool + its exports (not repo content)
 inventory_kamera/

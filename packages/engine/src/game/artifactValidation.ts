@@ -16,10 +16,11 @@ export interface ArtifactDraft {
 
 /**
  * The longest a dataset key (character, weapon, set) may be at any untrusted
- * seam. One definition, shared by the AI proxy payload guard, the ?b= share
+ * seam. One definition, shared by the explain payload guard, the ?b= share
  * link and the GOOD importer, so "bounded like the others" is a fact rather
  * than a comment. Lives here because this module reaches neither the game
- * adapter nor the DOM, so `api/` can import it without bundling the dataset.
+ * adapter nor the DOM, so a server-side caller can import it without the
+ * dataset (upstream's `api/` did, until this fork removed it in TODO 0.7).
  */
 export const MAX_KEY_LEN = 64;
 

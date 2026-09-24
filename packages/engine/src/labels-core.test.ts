@@ -16,12 +16,14 @@ function src(rel: string): string {
   return readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8');
 }
 
-// `api/explain.ts` bundles `ai/explainShared.ts` (web side; its own checks
-// live in `packages/web/src/bundleBoundaries.test.ts`), which reaches these engine files.
-// They all sit on that path, so an import of the game adapter (or of `../labels`, which imports
-// it) from either one drags the 328 KB `data.generated.json` snapshot into the
-// serverless function — measured at 315 KB before the labels-core split, 9 KB
-// after. A module-graph assertion needs a bundler; a source-text tripwire
+// Upstream's serverless proxy (`api/explain.ts`) bundled `ai/explainShared.ts`
+// (web side; its own checks live in `packages/web/src/bundleBoundaries.test.ts`),
+// which reaches these engine files. They all sat on that path, so an import of
+// the game adapter (or of `../labels`, which imports it) from either one
+// dragged the 328 KB `data.generated.json` snapshot into the function —
+// measured at 315 KB before the labels-core split, 9 KB after. The proxy was
+// removed in TODO 0.7; the tripwire stays until ADR-0021 (TODO 0.9) settles
+// whether the local server needs the split. A module-graph assertion needs a bundler; a source-text tripwire
 // catches the same mistake at the only place it can be made. The pattern
 // matches an import specifier, not the bare words — these files are allowed to
 // *mention* the adapter in the prose explaining why they must not import it.
@@ -39,7 +41,7 @@ describe('serverless bundle boundary', () => {
 
 // The optimize worker (`workers/optimize.worker.ts` -> `workers/protocol.ts`
 // -> `optimizer/search.ts` -> `optimizer/diagnostics.ts`) is the same kind of
-// boundary as the serverless function above: a static import of the adapter
+// boundary as the serverless function was: a static import of the adapter
 // (or of `../labels`, which imports it) anywhere on that path would bundle
 // the 321 KB `data.generated.json` snapshot a second time, alongside the main
 // thread's own copy. `OptimizeContext.setNames` (populated on the main thread
