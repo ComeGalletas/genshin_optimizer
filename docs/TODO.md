@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
-**Next item:** 1.4, the `data:coverage` report
+**Next item:** 1.5, update the patch-refresh runbook
 
 ## Housekeeping (done 2026-09-24)
 
@@ -94,7 +94,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 1.3 Show the snapshot versions in the web UI footer
   - Footer: "Data from genshin-db 5.2.14 (released 2026-09-21), game version 7.1 · Curated tables: patch 6.7". The date is a `<time datetime>`; each version is `whitespace-nowrap`, because at phone width the date and "genshin-db" otherwise broke at their hyphens. Checked in the browser at 1280 and 375 px: no horizontal overflow.
   - Test: the footer shows all four values, read from the engine's exports so a data bump never touches it (verified to fail with the genshin-db version removed).
-- [ ] 1.4 Add `npm run data:coverage`: per character/weapon, whether it's in genshin-db, has a curated guide or meta target, has a damage profile, and gcsim support (placeholder column until Phase 5)
+- [x] 1.4 Add `npm run data:coverage`: per character/weapon, whether it's in genshin-db, has a curated guide or meta target, has a damage profile, and gcsim support (placeholder column until Phase 5)
+  - The report is built by the engine's pure `buildDataCoverage` (`packages/engine/src/data-coverage/`, reusable by the Phase 3 server); `scripts/data-coverage.ts` prints a summary plus Markdown tables, or the raw report with `-- --json`. Rows are the union of snapshot keys and every key the curated tables use, so a curated entry missing from genshin-db shows as a gap. There is no separate "guide" table: the fork's guides are the meta targets, which the report covers (weapons as meta picks).
+  - Today: 120 characters (meta target 52, damage profile 18, in a team archetype 69), 253 weapons (obtainability 86, meta pick 71), nothing curated missing from genshin-db. 51 characters have no curated data, including the 7.0 and 7.1 releases (Alyosha, Odette, Vesna, Vodyanitsa) and older ones such as Diluc, Eula and Tighnari.
+  - Fixed while testing: `--json` was cut off at 64 KiB when piped, because the script exited before stdout flushed.
+  - The directory is `data-coverage/`, not `coverage/`: `.gitignore` and `.prettierignore` ignore every directory named `coverage` (test-coverage output), which would have kept the module out of git and out of `format:check`.
 - [ ] 1.5 Update `docs/runbooks/patch-refresh.md` for the new metadata and coverage report
 - [ ] **Accept:** the snapshot regenerates byte-identically twice in a row, and the coverage report prints
 

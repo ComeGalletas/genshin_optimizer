@@ -24,6 +24,7 @@ npm run dev
 | `npm run format:check`  | Prettier check (no writes) — what CI runs                |
 | `npm run build`         | Production build → `packages/web/dist/`                  |
 | `npm run build:data`    | Regenerate the frozen `genshin-db` snapshot              |
+| `npm run data:coverage` | Which characters and weapons each curated table covers   |
 | `npm run bench`         | Regenerate `docs/speed-report.md`                        |
 | `npm run docs:check`    | ADR numbering, knowledge-bundle freshness, dead links    |
 
