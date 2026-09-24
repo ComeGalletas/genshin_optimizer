@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.6, the engine import-boundary check
+**Next item:** 0.7, remove the Vercel parts
 
 ## Housekeeping (done 2026-09-24)
 
@@ -50,7 +50,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 0.5 Fix the tooling paths: `scripts/build-dataset.ts` output, the CI dataset `git diff` path, `benchmark.ts`/`check-bench.ts` imports, `size-baseline.json`, the ESLint and Prettier configs, and `vite.config.ts`
   - Done in 0.3 (CI had to stay green): `build-dataset.ts` output, the CI dataset diff path, `benchmark.ts` imports, `check-bench.ts` watched paths, `.prettierignore`, and Tailwind content. The speed report is regenerated, which fixes its staleness. Done in 0.4: `vite.config.ts`, `index.html`/`public/`, `check-size.ts`'s `dist` path (the baseline value is unchanged), and the ESLint globs (`**/dist`, with `packages/web/src` covered by `packages/*/src`). Left alone: `vercel.json` would need `outputDirectory: packages/web/dist`, but 0.7 deletes it.
   - Closed out in 0.5: verified every listed tool from the new layout. `build:data` is a no-op on the dataset, `size:check` reads `packages/web/dist`, and `bench:check` passes against both the pre-0.3 and pre-0.4 bases. `npm run bench` gives explored/pruned counts identical to the committed report; timings from this container weren't committed. Two fixes: `bench` now runs Prettier on the report it writes (before, following the runbook left `format:check` red), and `packages/web/tsconfig.node.json` typechecks the web Vite config inside its own package, while the root `tsconfig.node.json` keeps only `vitest.config.ts`.
-- [ ] 0.6 Add a lint rule or test that `packages/engine` has no I/O imports (`fs`, `child_process`, `http`, DOM) and doesn't import from `server` or `web`
+- [x] 0.6 Add a lint rule or test that `packages/engine` has no I/O imports (`fs`, `child_process`, `http`, DOM) and doesn't import from `server` or `web`
+  - A test rather than a lint rule: `packages/engine/src/boundaries.test.ts` reads every engine file's imports with TypeScript's own scanner (`import type`, `export … from`, `import()` and `require()` included). Source may not import Node built-ins, third-party packages (the engine has no runtime dependencies), `@genshin-build-lab/web`/`server`, or relative paths that leave the package. Tests may read fixtures with `node:` modules and use `vitest`, but the `web`/`server` rule applies to them too.
+  - DOM and Node globals stay with the type-level gate from 0.2/0.3 (`tsconfig.lib.json`). A second test fails if that gate is loosened (non-empty `types`, or a DOM/WebWorker lib).
+  - The checker itself is tested: 14 planted imports must be flagged and 6 legitimate ones must pass. Planting an escaping import in `optimizer/score.ts` and adding `DOM` to the gate each turned the suite red; both were reverted.
 - [ ] 0.7 Remove the Vercel parts: `api/`, `vercel.json`, `tsconfig.api.json`, `@upstash/*`, `@vercel/node`, the api leg of `typecheck`, and the Upstash/`PUBLIC_ORIGIN` entries in `.env.example`. Keep `VITE_AI_ENABLED` off so the explain button stays hidden until Phase 3.
 - [ ] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).
 - [ ] 0.9 ADR-0021 "Local-first server architecture". It supersedes 0001, 0010 and 0013: mark those superseded and add ADR-0021 to `knowledge/index.md`.
