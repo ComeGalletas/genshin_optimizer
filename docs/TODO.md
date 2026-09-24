@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.1, record the baseline numbers
+**Next item:** 0.1b, locale-deterministic number formatting
 
 ## Housekeeping (done 2026-09-24)
 
@@ -26,7 +26,8 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 0: Fork and baseline
 
-- [ ] 0.1 Baseline on the untouched fork: `npm test`, `typecheck`, `lint`, `docs:check`, `bench`, `build`, `size:check`. Save the numbers to `docs/baseline-phase0.md`: test count, bench timings, bundle sizes, Node version, machine.
+- [x] 0.1 Baseline on the untouched fork: `npm test`, `typecheck`, `lint`, `docs:check`, `bench`, `build`, `size:check`. Save the numbers to `docs/baseline-phase0.md`: test count, bench timings, bundle sizes, Node version, machine.
+  - Recorded in [baseline-phase0.md](baseline-phase0.md). The committed `docs/speed-report.md` is stale, and the restructure regenerates it.
   - Known: on this machine (locale `es-CO`), 659/661 tests pass. The 2 failures are the progress-counter assertions in `App.test.tsx` and `OptimizePanel.test.tsx`: `toLocaleString()` renders `12.345` where the tests expect `12,345`. CI (en-US) is unaffected, and `LANG` doesn't change ICU's locale on Windows.
 - [ ] 0.1b Make number formatting locale-deterministic: pass an explicit locale in the formatter or in the tests, so the suite is green on the owner's machine
 - [ ] 0.2 Set up npm workspaces with `packages/{engine,server,web}` and tsconfig project references. Get root scripts `test`, `typecheck`, `lint` and `bench` fanning out to the packages.
