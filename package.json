@@ -36,7 +36,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc -b && tsc --noEmit -p tsconfig.api.json && tsc --noEmit -p tsconfig.scripts.json",
     "build:data": "tsx scripts/build-dataset.ts",
-    "bench": "tsx scripts/benchmark.ts",
+    "bench": "tsx scripts/benchmark.ts && prettier --write docs/speed-report.md",
     "docs:check": "tsx scripts/check-docs.ts",
     "bench:check": "tsx scripts/check-bench.ts",
     "size:check": "tsx scripts/check-size.ts",

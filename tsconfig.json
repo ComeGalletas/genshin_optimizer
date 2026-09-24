@@ -5,6 +5,9 @@
       "path": "./packages/web"
     },
     {
+      "path": "./packages/web/tsconfig.node.json"
+    },
+    {
       "path": "./tsconfig.node.json"
     },
     {
