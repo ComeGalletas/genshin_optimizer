@@ -15,14 +15,14 @@ Node ≥ 22 (`engines.node` in `package.json`), dependencies installed
 
 ## Everyday commands
 
-| Command                 | What it does                                                                                         | When to use it                                                                                           |
-| ----------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                 | Before committing; what CI's `test` step runs.                                                           |
-| `npm run test:watch`    | Vitest in watch mode, reruns on file save.                                                           | While writing or fixing a test.                                                                          |
-| `npm run test:coverage` | Full suite with a coverage report (`coverage/coverage-summary.json` + HTML in `coverage/`).          | Before touching a module with low coverage, or when asked "is X tested."                                 |
-| `npm run typecheck`     | `tsc -b` (strict, project references) plus a separate check for `tsconfig.scripts.json`.             | Catches type errors `npm test` won't — the tooling (`scripts/`) project isn't compiled by the app build. |
-| `npm run lint`          | ESLint over the whole repo.                                                                          | Same cadence as typecheck.                                                                               |
-| `npm run docs:check`    | ADR numbering/contiguity, dead internal links, knowledge-bundle freshness (`scripts/check-docs.ts`). | After editing anything in `docs/adr/`, `CONTEXT.md`, or `knowledge/`.                                    |
+| Command                 | What it does                                                                                                        | When to use it                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                                | Before committing; what CI's `test` step runs.                                                           |
+| `npm run test:watch`    | Vitest in watch mode, reruns on file save.                                                                          | While writing or fixing a test.                                                                          |
+| `npm run test:coverage` | Full suite with a coverage report (`coverage/coverage-summary.json` + HTML in `coverage/`).                         | Before touching a module with low coverage, or when asked "is X tested."                                 |
+| `npm run typecheck`     | `tsc -b` (strict, project references) plus a separate check for `tsconfig.scripts.json`.                            | Catches type errors `npm test` won't — the tooling (`scripts/`) project isn't compiled by the app build. |
+| `npm run lint`          | ESLint over the whole repo.                                                                                         | Same cadence as typecheck.                                                                               |
+| `npm run docs:check`    | ADR numbering/contiguity, dead internal links, knowledge-bundle freshness, OKF line caps (`scripts/check-docs.ts`). | After editing anything in `docs/adr/`, `CONTEXT.md`, or `knowledge/`.                                    |
 
 Run `npm test`, `npm run lint`, and `npm run typecheck` before every commit —
 this is the project-wide workflow rule in `CONTRIBUTING.md`, not specific to

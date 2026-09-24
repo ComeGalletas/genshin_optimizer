@@ -77,6 +77,20 @@ function checkLinks(file: string): void {
 
 for (const file of linkSources) checkLinks(file);
 
+// 4. Line caps the OKF knowledge-bundle action (okf.yml) enforces, mirrored
+// here so an overlong file fails locally instead of only after a push.
+const LINE_CAPS: Record<string, number> = {
+  'CLAUDE.md': 60,
+  'knowledge/index.md': 60,
+};
+for (const [rel, cap] of Object.entries(LINE_CAPS)) {
+  const text = fs.readFileSync(path.join(root, rel), 'utf-8');
+  const lines = text.split('\n').length - (text.endsWith('\n') ? 1 : 0);
+  if (lines > cap) {
+    errors.push(`${rel} is ${lines} lines, over the OKF cap of ${cap}`);
+  }
+}
+
 // Report.
 if (errors.length > 0) {
   console.error(`docs:check failed with ${errors.length} problem(s):`);
@@ -85,5 +99,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `docs:check OK — ${adrFiles.length} ADRs, contiguous, indexed, links resolve.`,
+  `docs:check OK — ${adrFiles.length} ADRs, contiguous, indexed, links resolve, line caps hold.`,
 );

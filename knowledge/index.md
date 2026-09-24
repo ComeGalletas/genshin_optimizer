@@ -1,9 +1,8 @@
 # RPG Build Optimizer — Knowledge
 
-A client-side web app that, given the artifacts a player owns, finds the best
-5-piece build for a character under chosen constraints, and (v1.1) tells them what
-to farm to reach a meta target. No backend, no accounts; sharing is via
-self-contained links.
+Finds the best 5-piece build from the artifacts a player owns, under chosen constraints,
+and what to farm to reach a meta target. The web app still runs client-only; a local
+server adds the rest ([ADR-0021](../docs/adr/0021-local-first-server-architecture.md)).
 
 This bundle is the agent- and reviewer-readable knowledge map. The canonical
 glossary is [`CONTEXT.md`](../CONTEXT.md); decisions live in [`docs/adr/`](../docs/adr/).
@@ -55,7 +54,6 @@ The full decision record is in [`docs/adr/`](../docs/adr/):
 
 The v2 Endgame Planner turned the single-character optimiser into an account-level
 planner; its decisions are ADR-0016 (damage objective) through ADR-0019 (the Plan),
-linked above. Those terms are defined once in [`CONTEXT.md`](../CONTEXT.md), not
-duplicated here.
-Team and meta data are hand-curated per patch — the refresh checklist is
+linked above, and its terms are defined once in [`CONTEXT.md`](../CONTEXT.md). Team and
+meta data are hand-curated per patch; the refresh checklist is
 [`docs/runbooks/patch-refresh.md`](../docs/runbooks/patch-refresh.md).
