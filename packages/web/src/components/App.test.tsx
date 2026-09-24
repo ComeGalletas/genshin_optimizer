@@ -186,7 +186,12 @@ describe('App — optimise progress and cancel', () => {
       pruned: number;
     }) => void;
     act(() => onProgress({ explored: 1234, pruned: 99 }));
-    expect(screen.getByText('1,234')).toBeInTheDocument();
+    // findBy, not getBy: the progress line subscribes to the store in a
+    // passive effect. When its mount commit is slow (a loaded CI machine),
+    // React runs that effect after the test resumes, so the report above can
+    // land before the subscription; React then re-renders on subscribe. A
+    // synchronous getBy failed intermittently on exactly that window.
+    expect(await screen.findByText('1,234')).toBeInTheDocument();
     expect(screen.getByText('99')).toBeInTheDocument();
   });
 
