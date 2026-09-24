@@ -5,8 +5,8 @@ import type {
   OptimizeRequest,
   Slot,
   StatKey,
-} from '../game/types';
-import { SLOTS } from '../game/types';
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import {
   formatScore,
   formatSetName,
@@ -16,11 +16,11 @@ import {
   SLOT_LABELS,
   statLabel,
 } from '../labels';
-import { META_TARGETS } from '../meta/metaTargets';
-import { gradeBuild } from '../meta/grade';
-import { countSets } from '../optimizer/score';
-import { fourPieceAssumptions } from '../damage/setBonuses';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import { gradeBuild } from '@genshin-build-lab/engine/meta/grade';
+import { countSets } from '@genshin-build-lab/engine/optimizer/score';
+import { fourPieceAssumptions } from '@genshin-build-lab/engine/damage/setBonuses';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { SlotGlyph } from './SlotGlyph';
 import { CheckGlyph } from './ui/Glyphs';
 import { cn } from './ui/cn';

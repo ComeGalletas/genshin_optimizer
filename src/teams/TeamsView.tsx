@@ -7,14 +7,23 @@
 import { useMemo } from 'react';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
-import { genshinAdapter, PATCH } from '../game/genshin/adapter';
-import { band, rosterBuildScores } from '../roster/buildScore';
-import { getArchetype, archetypeName } from './comps';
+import {
+  genshinAdapter,
+  PATCH,
+} from '@genshin-build-lab/engine/game/genshin/adapter';
+import {
+  band,
+  rosterBuildScores,
+} from '@genshin-build-lab/engine/roster/buildScore';
+import {
+  getArchetype,
+  archetypeName,
+} from '@genshin-build-lab/engine/teams/comps';
 import {
   recommendAbyss,
   type TeamInstance,
   type ArchetypeGap,
-} from './recommend';
+} from '@genshin-build-lab/engine/teams/recommend';
 import { BAND_TONE, bandLabel, formatScore, ROLE_LABELS } from '../labels';
 import { Badge } from '../components/ui/Badge';
 

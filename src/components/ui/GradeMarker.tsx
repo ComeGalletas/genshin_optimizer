@@ -1,5 +1,5 @@
 import { GRADE_TONE } from '../../labels';
-import type { Grade } from '../../meta/grade';
+import type { Grade } from '@genshin-build-lab/engine/meta/grade';
 import { Marker } from './Marker';
 
 /** A build's grade letter as a marker. A bare letter in a role-less span is

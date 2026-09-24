@@ -31,9 +31,9 @@ npm run dev
 
 ### What CI checks
 
-`.github/workflows/ci.yml` runs one job, in order: `typecheck` → `lint` → `docs:check` → `bench:check` → `format:check` → `test` → `build` → `build:data`. That last step is a **dataset-drift gate**: it regenerates the snapshot and then runs `git diff --exit-code src/game/genshin/data.generated.json`, so a `genshin-db` bump or a change to `scripts/build-dataset.ts` fails CI unless the regenerated file is committed with it.
+`.github/workflows/ci.yml` runs one job, in order: `typecheck` → `lint` → `docs:check` → `bench:check` → `format:check` → `test` → `build` → `build:data`. That last step is a **dataset-drift gate**: it regenerates the snapshot and then runs `git diff --exit-code packages/engine/src/game/genshin/data.generated.json`, so a `genshin-db` bump or a change to `scripts/build-dataset.ts` fails CI unless the regenerated file is committed with it.
 
-`bench:check` (`scripts/check-bench.ts`) is the matching **speed-report gate**: if `src/optimizer/search.ts`, `src/optimizer/score.ts`, `src/optimizer/benchmark.ts`, `src/optimizer/context.ts`, `src/damage/setBonuses.ts`, or `src/damage/profiles.ts` changed in the diff against the base commit but `docs/speed-report.md` did not, it fails — run `npm run bench` and commit the regenerated report. It reads the base from `BENCH_BASE_SHA` (the PR base SHA in CI, the previous commit on a push to `main`) and skips silently when that is unset or the git history is unavailable, so it is a no-op locally unless you set the var yourself.
+`bench:check` (`scripts/check-bench.ts`) is the matching **speed-report gate**: if `packages/engine/src/optimizer/search.ts`, `packages/engine/src/optimizer/score.ts`, `packages/engine/src/optimizer/benchmark.ts`, `packages/engine/src/optimizer/context.ts`, `packages/engine/src/damage/setBonuses.ts`, or `packages/engine/src/damage/profiles.ts` changed in the diff against the base commit but `docs/speed-report.md` did not, it fails — run `npm run bench` and commit the regenerated report. It reads the base from `BENCH_BASE_SHA` (the PR base SHA in CI, the previous commit on a push to `main`) and skips silently when that is unset or the git history is unavailable, so it is a no-op locally unless you set the var yourself.
 
 A second workflow, `.github/workflows/okf.yml`, validates the `knowledge/` bundle against the house standard (this is why `knowledge/index.md` uses root-relative links, and why `docs:check` deliberately skips them).
 
@@ -51,7 +51,7 @@ npx prettier --write path/to/changed-file.tsx
 
 ## Data refresh
 
-Hand-curated tables (`src/meta/metaTargets.ts`, `src/teams/comps.ts`, `src/damage/profiles.ts`, `src/meta/teammates.ts`) are transcribed from KQM guides and go stale each game patch. Follow [`docs/runbooks/patch-refresh.md`](docs/runbooks/patch-refresh.md) when a patch lands.
+Hand-curated tables (`packages/engine/src/meta/metaTargets.ts`, `packages/engine/src/teams/comps.ts`, `packages/engine/src/damage/profiles.ts`, `packages/engine/src/meta/teammates.ts`) are transcribed from KQM guides and go stale each game patch. Follow [`docs/runbooks/patch-refresh.md`](docs/runbooks/patch-refresh.md) when a patch lands.
 
 ## Issues
 

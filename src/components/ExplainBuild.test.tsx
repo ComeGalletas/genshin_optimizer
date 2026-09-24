@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ExplainBuild } from './ExplainBuild';
-import type { GapReport } from '../meta/gap';
+import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
 
 vi.mock('../ai/explainClient', () => ({ explainBuild: vi.fn() }));
 import { explainBuild } from '../ai/explainClient';

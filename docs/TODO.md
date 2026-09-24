@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.3, move pure logic into `packages/engine`
+**Next item:** 0.4, move the React app into `packages/web`
 
 ## Housekeeping (done 2026-09-24)
 
@@ -35,9 +35,17 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Packages are `@genshin-build-lab/{engine,server,web}` and export TypeScript source directly (no build step). `web` is an empty placeholder until 0.4.
   - `npm test` runs Vitest projects `app` (root `src/` + `api/`, jsdom), `engine` and `server` (node), with one coverage report. `tsc -b` references each package. There's one root ESLint config. Result: 665/665 tests (663 + 2 package smoke tests), and every CI step is green locally.
   - Head start on 0.6: `packages/engine/tsconfig.lib.json` typechecks non-test source with no Node or DOM types (verified that `node:fs`, `document` and `process` fail). The import-boundary part (no `server`/`web` imports) is still open. `optimizer/benchmark.ts` uses `performance`, so it needs a small ambient declaration or an injected clock when it moves in 0.3.
-- [ ] 0.3 Move pure logic into `packages/engine`: `optimizer`, `damage`, `import`, `meta`, `game` (+ `genshin/data.generated.json`), `share`, `teams`, `plan`, `roster`, `invest`, `sample` data, and `test-fixtures`. Split mixed directories: `*.tsx` views such as `PlanView`, the roster drawer and the teams view go to `web`.
+- [x] 0.3 Move pure logic into `packages/engine`: `optimizer`, `damage`, `import`, `meta`, `game` (+ `genshin/data.generated.json`), `share`, `teams`, `plan`, `roster`, `invest`, `sample` data, and `test-fixtures`. Split mixed directories: `*.tsx` views such as `PlanView`, the roster drawer and the teams view go to `web`.
+  - 62 files moved with `git mv`, keeping history. The app imports engine modules by subpath (`@genshin-build-lab/engine/optimizer/search`), not a barrel, so the module graph and bundle are unchanged: JS within 0.03 kB, and the CSS hash is identical to the baseline. The views stay in root `src/` until 0.4.
+  - Also moved: `labels-core.ts`, and the adapter-bound half of `labels.ts`. The root `src/labels.ts` now re-exports the engine copy and keeps the UI tone mappings. `state/artifactValidation.ts` moved to `game/artifactValidation.ts`.
+  - `import/uid.ts` is split: the pure `parseEnkaResponse` is in the engine as `import/enka.ts`, and `fetchUidArtifacts` (the network call) stays in `src/import/uid.ts`.
+  - Engine purity: `tsconfig.lib.json` adds a reviewed allowlist of web-standard, non-I/O globals (`types/web-globals.d.ts`: `performance.now`, `crypto.randomUUID`, base64, text encoding, compression streams). Everything else from DOM or Node is still a type error.
+  - Tests: 667/667 (337 app in jsdom, 329 engine in node, 1 server). Bundle-boundary tripwires are split between `packages/engine/src/labels-core.test.ts` and `src/bundleBoundaries.test.ts`, and the locale scan now covers both trees. Explored/pruned counts are identical to the baseline, and side-by-side timings against the pre-move commit are within ±7% (see [baseline-phase0.md](baseline-phase0.md)).
+  - Found and fixed: Tailwind only scanned `src/`, so the move silently dropped about 0.3 kB of CSS. `tailwind.config.js` now scans the engine too.
+  - Living docs (CONTEXT, CONTRIBUTING, runbooks, knowledge, FILE-MAP) point at the new paths. ADR prose was left as history, and only broken ADR links were fixed.
 - [ ] 0.4 Move React, `state/`, `workers/`, `hooks/`, `components/`, `ui/`, `ai/` and the entry point into `packages/web`, importing engine via the workspace package.
 - [ ] 0.5 Fix the tooling paths: `scripts/build-dataset.ts` output, the CI dataset `git diff` path, `benchmark.ts`/`check-bench.ts` imports, `size-baseline.json`, the ESLint and Prettier configs, and `vite.config.ts`
+  - Done in 0.3 (CI had to stay green): `build-dataset.ts` output, the CI dataset diff path, `benchmark.ts` imports, `check-bench.ts` watched paths, `.prettierignore`, and Tailwind content. The speed report is regenerated, which fixes its staleness. Left for 0.4: `vite.config.ts`, `index.html`/`public/`, `size-baseline.json`, and the ESLint globs for `packages/web`.
 - [ ] 0.6 Add a lint rule or test that `packages/engine` has no I/O imports (`fs`, `child_process`, `http`, DOM) and doesn't import from `server` or `web`
 - [ ] 0.7 Remove the Vercel parts: `api/`, `vercel.json`, `tsconfig.api.json`, `@upstash/*`, `@vercel/node`, the api leg of `typecheck`, and the Upstash/`PUBLIC_ORIGIN` entries in `.env.example`. Keep `VITE_AI_ENABLED` off so the explain button stays hidden until Phase 3.
 - [ ] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).

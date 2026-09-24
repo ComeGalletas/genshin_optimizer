@@ -21,7 +21,7 @@
  * the `aria-hidden` here is not a shortcut — a second reading of "Flower" is
  * noise, not access.
  */
-import type { Slot } from '../game/types';
+import type { Slot } from '@genshin-build-lab/engine/game/types';
 import { cn } from './ui/cn';
 
 /** 24×24 viewBox, filled with `currentColor`, drawn to a common optical size.

@@ -8,10 +8,7 @@ import type {
 } from '../game/types';
 import { BUILD_LEVELS, ELEMENTS, SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
-import {
-  MAX_KEY_LEN,
-  validateArtifactDraft,
-} from '../state/artifactValidation';
+import { MAX_KEY_LEN, validateArtifactDraft } from '../game/artifactValidation';
 
 // A full-collection GOOD export is large (a maxed account's artifact inventory
 // runs into the low thousands) but not unbounded; cap generously so a

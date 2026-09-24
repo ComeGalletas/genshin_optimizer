@@ -18,4 +18,4 @@ the link itself is the storage: opening it reconstructs the exact state with no 
 
 [ADR-0005 — self-contained share links](../../docs/adr/0005-self-contained-share-links.md);
 [ADR-0001 — client-side-only architecture](../../docs/adr/0001-client-side-only-architecture.md).
-Source: [`src/share`](../../src/share).
+Source: [`packages/engine/src/share`](../../src/share).

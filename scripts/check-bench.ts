@@ -13,12 +13,12 @@ import { execFileSync } from 'child_process';
 
 /** Changing any of these invalidates the numbers in the report. */
 const WATCHED = [
-  'src/optimizer/search.ts',
-  'src/optimizer/score.ts',
-  'src/optimizer/benchmark.ts',
-  'src/optimizer/context.ts',
-  'src/damage/setBonuses.ts',
-  'src/damage/profiles.ts',
+  'packages/engine/src/optimizer/search.ts',
+  'packages/engine/src/optimizer/score.ts',
+  'packages/engine/src/optimizer/benchmark.ts',
+  'packages/engine/src/optimizer/context.ts',
+  'packages/engine/src/damage/setBonuses.ts',
+  'packages/engine/src/damage/profiles.ts',
 ];
 const REPORT = 'docs/speed-report.md';
 

@@ -65,6 +65,7 @@ How to apply the Phase 0 "bench within ±10%" check:
 
 - **Explored and pruned counts must match exactly.** They're deterministic, so any change means the search itself changed.
 - **Time ±10% applies only to rows of about 35 ms or more.** Those are 400 and 800 `crit_value`, and 100, 200 and 400 `er_pct`. Rows under 10 ms swing by more than 50% between runs, which is timer noise. Even the 200 `er_pct` row moved by 38% between these two runs, so compare its median over several runs.
+- **Compare times side by side, never against this table.** At TODO 0.3 the same machine ran the whole benchmark about 30% faster than the numbers above (400 `er_pct` ≈ 690 ms), and it did so **for the untouched pre-move commit too**. Machine state drifts between sessions by more than the ±10% budget. The valid check is interleaved runs (old, new, old, new) of `npx tsx scripts/benchmark.ts` against the pre-change commit, exported with `git archive` into a scratch folder. At 0.3, old and new agreed within ±7% on every slow row.
 
 ### The committed speed report is stale
 

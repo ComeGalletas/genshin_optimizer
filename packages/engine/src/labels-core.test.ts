@@ -16,8 +16,9 @@ function src(rel: string): string {
   return readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8');
 }
 
-// `api/explain.ts` bundles `ai/explainShared.ts`. Both of these files sit on
-// that path, so an import of the game adapter (or of `../labels`, which imports
+// `api/explain.ts` bundles `ai/explainShared.ts` (web side; its own checks
+// live in `src/bundleBoundaries.test.ts`), which reaches these engine files.
+// They all sit on that path, so an import of the game adapter (or of `../labels`, which imports
 // it) from either one drags the 328 KB `data.generated.json` snapshot into the
 // serverless function — measured at 315 KB before the labels-core split, 9 KB
 // after. A module-graph assertion needs a bundler; a source-text tripwire
@@ -31,14 +32,8 @@ describe('serverless bundle boundary', () => {
     expect(src('./labels-core.ts')).not.toMatch(ADAPTER_IMPORT);
   });
 
-  it('explainShared reaches neither the adapter nor adapter-bound labels', () => {
-    const text = src('./ai/explainShared.ts');
-    expect(text).not.toMatch(ADAPTER_IMPORT);
-    expect(text).not.toMatch(/from '\.\.\/labels'/);
-  });
-
   it('artifactValidation (which explainShared imports) stays adapter-free', () => {
-    expect(src('./state/artifactValidation.ts')).not.toMatch(ADAPTER_IMPORT);
+    expect(src('./game/artifactValidation.ts')).not.toMatch(ADAPTER_IMPORT);
   });
 });
 
@@ -59,12 +54,11 @@ describe('optimize worker bundle boundary', () => {
     expect(text).not.toMatch(LABELS_IMPORT);
   });
 
-  it('search and protocol (which diagnostics sits behind) stay adapter-free', () => {
-    for (const rel of ['./optimizer/search.ts', './workers/protocol.ts']) {
-      const text = src(rel);
-      expect(text).not.toMatch(ADAPTER_IMPORT);
-      expect(text).not.toMatch(LABELS_IMPORT);
-    }
+  // `workers/protocol.ts` (web side) is checked in `src/bundleBoundaries.test.ts`.
+  it('search (which diagnostics sits behind) stays adapter-free', () => {
+    const text = src('./optimizer/search.ts');
+    expect(text).not.toMatch(ADAPTER_IMPORT);
+    expect(text).not.toMatch(LABELS_IMPORT);
   });
 });
 
@@ -77,7 +71,8 @@ describe('labels-core', () => {
   // CI runs under en-US, where a bare `toLocaleString()` looks correct; on a
   // host like es-CO it renders `12.345`. Every UI number goes through a pinned
   // formatter instead, so a new bare call fails here rather than on one machine.
-  it('no source file formats with the host locale', () => {
+  // (The web app's own tree is scanned by `src/bundleBoundaries.test.ts`.)
+  it('no engine source file formats with the host locale', () => {
     const root = dirname(fileURLToPath(import.meta.url));
     const offenders = readdirSync(root, { recursive: true, encoding: 'utf8' })
       .filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f))

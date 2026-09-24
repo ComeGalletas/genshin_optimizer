@@ -1,8 +1,15 @@
-import type { Objective, StatKey, StatVec } from '../game/types';
-import { isStatKey, isObjective } from '../game/types';
-import { objectiveLabel, statLabel } from '../labels-core';
-import { MAX_KEY_LEN } from '../state/artifactValidation';
-import type { GapReport } from '../meta/gap';
+import type {
+  Objective,
+  StatKey,
+  StatVec,
+} from '@genshin-build-lab/engine/game/types';
+import { isStatKey, isObjective } from '@genshin-build-lab/engine/game/types';
+import {
+  objectiveLabel,
+  statLabel,
+} from '@genshin-build-lab/engine/labels-core';
+import { MAX_KEY_LEN } from '@genshin-build-lab/engine/game/artifactValidation';
+import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
 
 // ---------------------------------------------------------------------------
 // ExplainPayload — the validated request shape sent to the AI proxy

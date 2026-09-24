@@ -7,6 +7,6 @@
     "tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.engine-lib.tsbuildinfo",
     "types": []
   },
-  "include": ["src"],
+  "include": ["src", "types/web-globals.d.ts"],
   "exclude": ["src/**/*.test.ts"]
 }

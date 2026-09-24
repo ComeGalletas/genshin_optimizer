@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
-import type { Artifact, OptimizeRequest, OptimizeResult } from '../game/types';
-import { META_TARGETS } from '../meta/metaTargets';
-import { computeGapReport } from '../meta/gap';
+import type {
+  Artifact,
+  OptimizeRequest,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import { computeGapReport } from '@genshin-build-lab/engine/meta/gap';
 import { GapReport } from './GapReport';
 import { ExplainBuild } from './ExplainBuild';
 

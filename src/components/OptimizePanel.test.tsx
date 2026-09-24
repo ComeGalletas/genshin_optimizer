@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { OptimizePanel } from './OptimizePanel';
 import { searchProgressStore } from './searchProgress';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { useOptimizeRequest } from '../state/optimizeRequest';
-import { META_TARGETS } from '../meta/metaTargets';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { currentRequest } from '../state/optimizeRequest';
 
 describe('OptimizePanel', () => {

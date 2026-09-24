@@ -1,8 +1,14 @@
 import { useId, useRef, useState } from 'react';
-import type { Artifact, Element, Slot, StatKey, SubStat } from '../game/types';
-import { ELEMENTS, SLOTS } from '../game/types';
-import { genshinAdapter } from '../game/genshin/adapter';
-import { validateArtifactDraft } from '../state/artifactValidation';
+import type {
+  Artifact,
+  Element,
+  Slot,
+  StatKey,
+  SubStat,
+} from '@genshin-build-lab/engine/game/types';
+import { ELEMENTS, SLOTS } from '@genshin-build-lab/engine/game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { validateArtifactDraft } from '@genshin-build-lab/engine/game/artifactValidation';
 import { useInventory } from '../state/inventory';
 import { elementLabel, formatSetName, SLOT_LABELS, statLabel } from '../labels';
 import { Callout } from './ui/Callout';

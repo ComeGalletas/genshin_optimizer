@@ -1,10 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { runSearchRequest, readSearchResponse } from './protocol';
 import type { WorkerProgress, WorkerRequest, WorkerResponse } from './protocol';
-import { genshinAdapter } from '../game/genshin/adapter';
-import { buildContext } from '../optimizer/context';
-import type { Artifact, OptimizeRequest } from '../game/types';
-import { SLOTS } from '../game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
+import type {
+  Artifact,
+  OptimizeRequest,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 
 let c = 0;
 const inv: Artifact[] = SLOTS.flatMap((slot) =>

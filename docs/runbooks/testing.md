@@ -30,9 +30,9 @@ this runbook.
 
 ## The brute-force oracle test
 
-`src/optimizer/search.test.ts` is the load-bearing test in the repo: it runs
+`packages/engine/src/optimizer/search.test.ts` is the load-bearing test in the repo: it runs
 a brute-force enumeration (`bruteForce`, the reference implementation at the
-bottom of `src/optimizer/search.ts`) over small synthetic artifact pools and
+bottom of `packages/engine/src/optimizer/search.ts`) over small synthetic artifact pools and
 asserts the real branch-and-bound search returns the identical top-K set.
 This is what makes "provably optimal" (README, ADR-0004) a tested claim
 rather than a slogan — the search's pruning bounds are only ever exact if
@@ -40,7 +40,7 @@ they never discard a branch the oracle would have kept.
 
 - It runs as part of `npm test` / `test:coverage` like any other test — there
   is no separate command for it.
-- If you touch `src/optimizer/search.ts`, `score.ts`, or `context.ts`, re-run
+- If you touch `packages/engine/src/optimizer/search.ts`, `score.ts`, or `context.ts`, re-run
   `npm test` and specifically confirm `search.test.ts` passes; a failure here
   means the optimiser is no longer exact, which is a correctness regression,
   not a flaky test.
@@ -51,10 +51,10 @@ they never discard a branch the oracle would have kept.
 
 ## The benchmark and `bench:check`
 
-| Command               | What it does                                                                                                                                                                                                                      |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run bench`       | Regenerates `docs/speed-report.md` by timing the optimiser (`scripts/benchmark.ts`) against realistic and worst-case inventories.                                                                                                 |
-| `npm run bench:check` | `scripts/check-bench.ts` — fails if `src/optimizer/search.ts`, `score.ts`, `benchmark.ts`, `context.ts`, `src/damage/setBonuses.ts`, or `src/damage/profiles.ts` changed since the base commit but `docs/speed-report.md` didn't. |
+| Command               | What it does                                                                                                                                                                                                                                                                      |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run bench`       | Regenerates `docs/speed-report.md` by timing the optimiser (`scripts/benchmark.ts`) against realistic and worst-case inventories.                                                                                                                                                 |
+| `npm run bench:check` | `scripts/check-bench.ts` — fails if `packages/engine/src/optimizer/search.ts`, `score.ts`, `benchmark.ts`, `context.ts`, `packages/engine/src/damage/setBonuses.ts`, or `packages/engine/src/damage/profiles.ts` changed since the base commit but `docs/speed-report.md` didn't. |
 
 `bench:check` reads its base commit from `BENCH_BASE_SHA` (set by CI to the
 PR base SHA, or the previous commit on a push to `main`) and is a **no-op
@@ -89,14 +89,14 @@ automation, not something to run locally.
 
 ## Where to look when a check fails
 
-| Failure                                                      | Likely cause                                                                                         | Where to look                                                                                  |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `npm test` fails on `search.test.ts`                         | Optimiser no longer matches brute force                                                              | `src/optimizer/search.ts`, `score.ts` — treat as a correctness bug, not a test bug             |
-| `npm test` fails elsewhere                                   | A behavior change without a matching test update                                                     | The failing test's source file; check whether the change was intentional                       |
-| `npm run typecheck` fails only on the API or scripts project | A change under `api/` or `scripts/` broke a type the app build doesn't check                         | `tsconfig.api.json` / `tsconfig.scripts.json` scopes                                           |
-| `npm run docs:check` fails                                   | ADR numbering gap, a dead relative link in `CONTEXT.md`/an ADR, or a stale `knowledge/` bundle entry | The script's own error message names the file and line                                         |
-| CI's `bench:check` fails but local `npm test` is green       | `docs/speed-report.md` wasn't regenerated for a change to the files it gates                         | Run `npm run bench` (see above) and commit the result                                          |
-| `format:check` is green in CI but fails locally              | Windows/CRLF — `core.autocrlf` reformats line endings repo-wide                                      | Format only the files you changed: `npx prettier --write path/to/file` (per `CONTRIBUTING.md`) |
+| Failure                                                      | Likely cause                                                                                         | Where to look                                                                                      |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `npm test` fails on `search.test.ts`                         | Optimiser no longer matches brute force                                                              | `packages/engine/src/optimizer/search.ts`, `score.ts` — treat as a correctness bug, not a test bug |
+| `npm test` fails elsewhere                                   | A behavior change without a matching test update                                                     | The failing test's source file; check whether the change was intentional                           |
+| `npm run typecheck` fails only on the API or scripts project | A change under `api/` or `scripts/` broke a type the app build doesn't check                         | `tsconfig.api.json` / `tsconfig.scripts.json` scopes                                               |
+| `npm run docs:check` fails                                   | ADR numbering gap, a dead relative link in `CONTEXT.md`/an ADR, or a stale `knowledge/` bundle entry | The script's own error message names the file and line                                             |
+| CI's `bench:check` fails but local `npm test` is green       | `docs/speed-report.md` wasn't regenerated for a change to the files it gates                         | Run `npm run bench` (see above) and commit the result                                              |
+| `format:check` is green in CI but fails locally              | Windows/CRLF — `core.autocrlf` reformats line endings repo-wide                                      | Format only the files you changed: `npx prettier --write path/to/file` (per `CONTRIBUTING.md`)     |
 
 ## Adding new tests
 

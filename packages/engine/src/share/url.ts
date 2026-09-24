@@ -12,7 +12,7 @@ import type {
   StatVec,
 } from '../game/types';
 import { isStatKey, isObjective, BUILD_LEVELS, SLOTS } from '../game/types';
-import { isPersistedArtifact, MAX_KEY_LEN } from '../state/artifactValidation';
+import { isPersistedArtifact, MAX_KEY_LEN } from '../game/artifactValidation';
 import { genshinAdapter } from '../game/genshin/adapter';
 
 export interface BuildSnapshot {

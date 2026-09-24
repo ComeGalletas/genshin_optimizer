@@ -6,9 +6,14 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from 'react';
-import type { BuildLevel, Objective, Slot, StatKey } from '../game/types';
-import { BUILD_LEVELS } from '../game/types';
-import { genshinAdapter } from '../game/genshin/adapter';
+import type {
+  BuildLevel,
+  Objective,
+  Slot,
+  StatKey,
+} from '@genshin-build-lab/engine/game/types';
+import { BUILD_LEVELS } from '@genshin-build-lab/engine/game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { useOptimizeRequest } from '../state/optimizeRequest';
@@ -30,9 +35,12 @@ import {
   META_TARGETS,
   metaToConstraints,
   type MetaTarget,
-} from '../meta/metaTargets';
-import { teammatesFor, type DerivedTeammate } from '../teams/comps';
-import { getDamageProfile } from '../damage/profiles';
+} from '@genshin-build-lab/engine/meta/metaTargets';
+import {
+  teammatesFor,
+  type DerivedTeammate,
+} from '@genshin-build-lab/engine/teams/comps';
+import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 
 // Every objective a curated meta recipe can recommend has to be offerable,
 // or "(Recommended)" points at an option the dropdown doesn't carry — which is

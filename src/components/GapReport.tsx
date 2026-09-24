@@ -1,5 +1,5 @@
 import { Callout } from './ui/Callout';
-import type { GapReport as GapReportData } from '../meta/gap';
+import type { GapReport as GapReportData } from '@genshin-build-lab/engine/meta/gap';
 
 export function GapReport({ report }: { report: GapReportData }) {
   const allMet =

@@ -16,8 +16,8 @@ import { App } from './App';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { useOptimizeRequest } from '../state/optimizeRequest';
-import { loadSampleGOOD } from '../test-fixtures/sampleAccount';
-import { decodeBuild } from '../share/url';
+import { loadSampleGOOD } from '@genshin-build-lab/engine/test-fixtures/sampleAccount';
+import { decodeBuild } from '@genshin-build-lab/engine/share/url';
 
 describe('golden path: import -> optimize -> share -> decode', () => {
   beforeEach(() => {

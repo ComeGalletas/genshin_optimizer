@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
-import { SAMPLE_PRESETS, type SamplePreset } from '../sample/presets';
-import { SAMPLE_INVENTORY } from '../sample/sampleInventory';
+import {
+  SAMPLE_PRESETS,
+  type SamplePreset,
+} from '@genshin-build-lab/engine/sample/presets';
+import { SAMPLE_INVENTORY } from '@genshin-build-lab/engine/sample/sampleInventory';
 
 export function SampleGear({
   onRun,

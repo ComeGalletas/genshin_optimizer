@@ -23,4 +23,4 @@ Web Worker to keep the UI responsive (`src/workers`).
 # Citations
 
 [ADR-0004 — exact branch-and-bound optimisation](../../docs/adr/0004-exact-branch-and-bound-optimisation.md).
-Source: [`src/optimizer`](../../src/optimizer).
+Source: [`packages/engine/src/optimizer`](../../src/optimizer).

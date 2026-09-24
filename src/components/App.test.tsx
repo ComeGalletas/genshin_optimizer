@@ -4,10 +4,14 @@ import { App } from './App';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { useRoster } from '../state/roster';
-import type { Artifact, BuildResult, OptimizeResult } from '../game/types';
+import type {
+  Artifact,
+  BuildResult,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
 import { OptimizeCancelledError } from '../workers/optimizeClient';
-import { SLOTS } from '../game/types';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 
 const { optimizeRun } = vi.hoisted(() => ({ optimizeRun: vi.fn() }));
 // Only the dispatch is faked: OptimizeCancelledError / isOptimizeCancelled stay

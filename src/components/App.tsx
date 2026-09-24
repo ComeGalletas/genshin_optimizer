@@ -21,22 +21,29 @@ import { Results } from './Results';
 import { SampleGear } from './SampleGear';
 import { GapSection } from './GapSection';
 import { LockGlyph } from './ui/Glyphs';
-import { decodeBuild } from '../share/url';
+import { decodeBuild } from '@genshin-build-lab/engine/share/url';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import {
   useOptimizeRequest,
   isDefaultSelection,
 } from '../state/optimizeRequest';
-import { bestBuiltCharacter } from '../roster/buildScore';
-import { PATCH } from '../game/genshin/adapter';
+import { bestBuiltCharacter } from '@genshin-build-lab/engine/roster/buildScore';
+import { PATCH } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
-import { buildHeroExample, type HeroExample } from '../sample/heroExample';
+import {
+  buildHeroExample,
+  type HeroExample,
+} from '@genshin-build-lab/engine/sample/heroExample';
 import { scrollToId } from '../ui/scroll';
 import { Callout } from './ui/Callout';
 import { Disclosure } from './ui/Disclosure';
 import { cn } from './ui/cn';
-import type { Artifact, OptimizeRequest, OptimizeResult } from '../game/types';
+import type {
+  Artifact,
+  OptimizeRequest,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
 import { Section, ThesisHero, SolvedHero, SharedBuildBanner } from './landing';
 import { STEPS, LOCKED_HINT } from './landingSteps';
 import { useScrollSpy } from './useScrollSpy';

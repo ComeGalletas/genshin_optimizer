@@ -1,8 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GapSection } from './GapSection';
-import { META_TARGETS } from '../meta/metaTargets';
-import type { OptimizeRequest, OptimizeResult } from '../game/types';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import type {
+  OptimizeRequest,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
 
 const metaKey = Object.keys(META_TARGETS)[0];
 

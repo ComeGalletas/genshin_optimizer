@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { safeStorage } from './safeStorage';
-import { isPersistedArtifact } from './artifactValidation';
-import type { Artifact } from '../game/types';
+import { isPersistedArtifact } from '@genshin-build-lab/engine/game/artifactValidation';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 interface InventoryState {
   artifacts: Artifact[];

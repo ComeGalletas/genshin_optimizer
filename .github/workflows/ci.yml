@@ -36,4 +36,4 @@ jobs:
       - run: npm run size:check
       # Generated dataset must stay in sync with its build script + genshin-db.
       - run: npm run build:data
-      - run: git diff --exit-code src/game/genshin/data.generated.json
+      - run: git diff --exit-code packages/engine/src/game/genshin/data.generated.json

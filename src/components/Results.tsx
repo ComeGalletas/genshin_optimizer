@@ -6,10 +6,10 @@ import type {
   OptimizeRequest,
   Slot,
   StatKey,
-} from '../game/types';
-import { SLOTS } from '../game/types';
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import { BuildCard } from './BuildCard';
-import { encodeBuild } from '../share/url';
+import { encodeBuild } from '@genshin-build-lab/engine/share/url';
 import { Callout } from './ui/Callout';
 import { PlayGlyph } from './ui/Glyphs';
 import { Meter } from './ui/Meter';
@@ -21,14 +21,14 @@ import {
   statLabel,
   SLOT_LABELS,
 } from '../labels';
-import { buildContext } from '../optimizer/context';
+import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
 import {
   emptySlotCause,
   unreachableMinStats,
   type StatCeiling,
-} from '../optimizer/diagnostics';
+} from '@genshin-build-lab/engine/optimizer/diagnostics';
 import { zeroOffElementGoblets } from '../workers/optimizeClient';
-import { setRequirementGap } from '../meta/gap';
+import { setRequirementGap } from '@genshin-build-lab/engine/meta/gap';
 import { useInventory } from '../state/inventory';
 
 /** One card's worth of result: the build shown, plus any further builds that

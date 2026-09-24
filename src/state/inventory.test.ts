@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useInventory } from './inventory';
-import type { Artifact } from '../game/types';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 const sample = (over: Partial<Artifact> = {}): Artifact => ({
   id: 'a1',

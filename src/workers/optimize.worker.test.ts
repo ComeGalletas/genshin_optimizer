@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { buildContext } from '../optimizer/context';
-import { genshinAdapter } from '../game/genshin/adapter';
-import type { Artifact, OptimizeRequest } from '../game/types';
-import { SLOTS } from '../game/types';
+import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import type {
+  Artifact,
+  OptimizeRequest,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import type { WorkerRequest, WorkerResponse } from './protocol';
 
 // jsdom (this suite's test environment) has no global `Worker`, and Vitest's

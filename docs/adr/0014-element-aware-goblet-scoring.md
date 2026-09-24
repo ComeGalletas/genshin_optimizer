@@ -25,12 +25,12 @@ its contribution when it doesn't match the character being optimised for —
 without adding element-matching logic to the core solver.
 
 - `Artifact` gains an optional `element?: Element` field
-  ([src/game/types.ts](../../src/game/types.ts)), set only when
+  ([src/game/types.ts](../../packages/engine/src/game/types.ts)), set only when
   `mainStat === 'elemental_dmg'`. `Element` is the 7-value union
   (`pyro`…`dendro`); `physical_dmg` stays a separate, unaffected `StatKey`.
   `genshin/adapter.ts`'s `CharacterMeta.element` (`Element | 'physical'`)
   reuses the same union rather than duplicating the literal type.
-- The GOOD importer ([src/import/good.ts](../../src/import/good.ts)) now
+- The GOOD importer ([src/import/good.ts](../../packages/engine/src/import/good.ts)) now
   captures the element from `mainStatKey` (e.g. `pyro_dmg_` → `'pyro'`)
   instead of discarding it. Manual entry
   ([ArtifactForm.tsx](../../src/components/ArtifactForm.tsx)) exposes the
@@ -48,7 +48,7 @@ without adding element-matching logic to the core solver.
   this change lack it) keep today's element-agnostic behavior — treated as
   on-element, never zeroed. This is a deliberate backward-compatible default,
   not a correctness claim.
-- Share links ([src/share/url.ts](../../src/share/url.ts)) encode the new
+- Share links ([src/share/url.ts](../../packages/engine/src/share/url.ts)) encode the new
   optional field; `isArtifact()` accepts it as optional so links minted
   before this change still decode.
 

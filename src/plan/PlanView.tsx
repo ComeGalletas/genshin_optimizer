@@ -14,27 +14,37 @@ import {
 } from 'react';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import {
   rosterBuildScores,
   groupByLocation,
   equippedGrade,
-} from '../roster/buildScore';
-import { recommendAbyss } from '../teams/recommend';
-import { archetypeName } from '../teams/comps';
-import { META_TARGETS } from '../meta/metaTargets';
+} from '@genshin-build-lab/engine/roster/buildScore';
+import { recommendAbyss } from '@genshin-build-lab/engine/teams/recommend';
+import { archetypeName } from '@genshin-build-lab/engine/teams/comps';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { formatScore, objectiveHint, objectiveLabel } from '../labels';
-import { gradeBuild, type Grade } from '../meta/grade';
+import { gradeBuild, type Grade } from '@genshin-build-lab/engine/meta/grade';
 import { GradeMarker } from '../components/ui/GradeMarker';
 import { SourceLink } from '../components/ui/SourceLink';
 import { BuildCard } from '../components/BuildCard';
 import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
 import { optimize } from '../workers/optimizeClient';
-import { composePlan, type Plan, type RunOptimize } from './composePlan';
-import { adviseInvestments, type Advice } from '../invest/advise';
-import type { Artifact, OptimizeRequest } from '../game/types';
-import { SLOTS } from '../game/types';
+import {
+  composePlan,
+  type Plan,
+  type RunOptimize,
+} from '@genshin-build-lab/engine/plan/composePlan';
+import {
+  adviseInvestments,
+  type Advice,
+} from '@genshin-build-lab/engine/invest/advise';
+import type {
+  Artifact,
+  OptimizeRequest,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 
 /** The grade a member's winning build would earn, or null when the character
  *  has no curated stat targets (or failed to gear). */

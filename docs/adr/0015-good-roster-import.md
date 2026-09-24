@@ -31,7 +31,7 @@ all (a pre-existing dataset gap, not something this change fixes).
 ## Decision
 
 GOOD import also extracts an owned roster
-([`parseGOODRoster`](../../src/import/good.ts)): character ownership, each
+([`parseGOODRoster`](../../packages/engine/src/import/good.ts)): character ownership, each
 character's equipped weapon (via `weapons[].location`), and a build level
 implied by ascension. Unresolvable keys are skipped silently, mirroring
 `parseGOOD`'s existing "skip unrecognised entries rather than throwing"

@@ -5,10 +5,10 @@ import type {
   OptimizeConstraints,
   OptimizeRequest,
   StatKey,
-} from '../game/types';
-import { genshinAdapter } from '../game/genshin/adapter';
-import { META_TARGETS } from '../meta/metaTargets';
-import { getDamageProfile } from '../damage/profiles';
+} from '@genshin-build-lab/engine/game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 import { useRoster } from './roster';
 
 export interface PresetInput {

@@ -4,8 +4,11 @@ import { useOptimizeRun } from './useOptimizeRun';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { OptimizeCancelledError } from '../workers/optimizeClient';
-import { SLOTS } from '../game/types';
-import type { Artifact, OptimizeResult } from '../game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import type {
+  Artifact,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
 
 const { optimizeRun } = vi.hoisted(() => ({ optimizeRun: vi.fn() }));
 // Only the dispatch is faked, exactly as App.test.tsx does: cancellation is

@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { safeStorage } from './safeStorage';
-import { genshinAdapter } from '../game/genshin/adapter';
-import { BUILD_LEVELS } from '../game/types';
-import type { BuildLevel } from '../game/types';
-import type { RosterEntry } from '../import/good';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { BUILD_LEVELS } from '@genshin-build-lab/engine/game/types';
+import type { BuildLevel } from '@genshin-build-lab/engine/game/types';
+import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 
 interface RosterState {
   /** characterKey -> roster entry; key presence = the player owns them. */

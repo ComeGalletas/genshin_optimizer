@@ -4,12 +4,12 @@
  * @packageDocumentation
  */
 import { useId, useMemo, useState } from 'react';
-import { genshinAdapter } from '../game/genshin/adapter';
-import { computeBuildScore } from './buildScore';
-import { META_TARGETS } from '../meta/metaTargets';
-import { archetypesFor } from '../teams/comps';
-import { getDamageProfile } from '../damage/profiles';
-import { fourPieceAssumptions } from '../damage/setBonuses';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { computeBuildScore } from '@genshin-build-lab/engine/roster/buildScore';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import { archetypesFor } from '@genshin-build-lab/engine/teams/comps';
+import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
+import { fourPieceAssumptions } from '@genshin-build-lab/engine/damage/setBonuses';
 import {
   formatScore,
   formatSetName,
@@ -24,9 +24,13 @@ import {
 import { Segmented } from '../components/ui/Segmented';
 import { CharacterLine } from '../components/ui/CharacterLine';
 import { SourceLink } from '../components/ui/SourceLink';
-import type { RosterEntry } from '../import/good';
-import type { Artifact, Slot, StatKey } from '../game/types';
-import { SLOTS } from '../game/types';
+import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
+import type {
+  Artifact,
+  Slot,
+  StatKey,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 
 const TABS = ['Overview', 'Gear', 'Recommended', 'Teams'] as const;
 type Tab = (typeof TABS)[number];

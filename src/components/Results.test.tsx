@@ -7,8 +7,8 @@ import type {
   OptimizeResult,
   OptimizeRequest,
   Slot,
-} from '../game/types';
-import { SLOTS } from '../game/types';
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 

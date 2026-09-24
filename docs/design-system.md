@@ -19,7 +19,7 @@ for `font-black` and you get nothing — deliberately.
 [`src/index.css`](../src/index.css); Tailwind reads them through
 `rgb(var(--accent) / <alpha-value>)` so opacity modifiers still work. A second
 game overrides those three custom properties under a `[data-game]` selector and
-inherits every accent-tinted rule for free — see `src/game/registry.ts`. Two
+inherits every accent-tinted rule for free — see `packages/engine/src/game/registry.ts`. Two
 things can't follow the seam and say so in a comment: the `select.field`
 chevron (a `background-image` data-URI can't read a custom property) and the
 scrollbar greys.

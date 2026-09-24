@@ -1,12 +1,15 @@
 import { useEffect, useId, useRef, useState, type ChangeEvent } from 'react';
-import { parseGOOD, parseGOODRoster } from '../import/good';
+import {
+  parseGOOD,
+  parseGOODRoster,
+} from '@genshin-build-lab/engine/import/good';
 import { fetchUidArtifacts, type UidError } from '../import/uid';
-import { mergeNew } from '../import/dedupe';
+import { mergeNew } from '@genshin-build-lab/engine/import/dedupe';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { scrollToId } from '../ui/scroll';
 import { Callout } from './ui/Callout';
-import type { Artifact } from '../game/types';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 // WCAG 3.3.1: describe what actually went wrong. fetchUidArtifacts already
 // distinguishes the three cases; collapsing them into one message left the

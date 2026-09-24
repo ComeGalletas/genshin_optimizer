@@ -8,13 +8,13 @@
  */
 
 import { useId, type ReactNode } from 'react';
-import { genshinAdapter } from '../game/genshin/adapter';
-import type { HeroExample } from '../sample/heroExample';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import type { HeroExample } from '@genshin-build-lab/engine/sample/heroExample';
 import { scrollToId } from '../ui/scroll';
 import { formatCount, formatScore, objectiveHint } from '../labels';
 import { Callout } from './ui/Callout';
 import { SearchCounts } from './ui/SearchCounts';
-import type { OptimizeRequest } from '../game/types';
+import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
 
 export function Section({
   n,

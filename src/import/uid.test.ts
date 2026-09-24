@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fetchUidArtifacts } from './uid';
-import type { Artifact } from '../game/types';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 afterEach(() => vi.restoreAllMocks());
 

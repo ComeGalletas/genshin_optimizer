@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SharedBuildBanner } from './landing';
-import type { OptimizeRequest } from '../game/types';
+import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
 
 describe('SharedBuildBanner', () => {
   it('names the character and weapon, and scrolls to the optimise step on click', async () => {

@@ -5,9 +5,9 @@ import {
   isDefaultSelection,
   DEFAULT_SELECTION,
 } from './optimizeRequest';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useRoster } from './roster';
-import { META_TARGETS } from '../meta/metaTargets';
+import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 
 describe('optimizeRequest defaults', () => {
   beforeEach(() => useOptimizeRequest.getState().reset());

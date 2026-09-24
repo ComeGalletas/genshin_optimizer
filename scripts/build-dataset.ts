@@ -1,5 +1,5 @@
 /**
- * Build script: generate src/game/genshin/data.generated.json from genshin-db.
+ * Build script: generate packages/engine/src/game/genshin/data.generated.json from genshin-db.
  *
  * ADR-0002: frozen snapshot – app imports the JSON, not genshin-db.
  * ADR-0003: stat-only set bonuses; elemental 2pc → elemental_dmg.
@@ -20,7 +20,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
-import { BUILD_LEVELS, ELEMENTS, WEAPON_TYPES } from '../src/game/types';
+import {
+  BUILD_LEVELS,
+  ELEMENTS,
+  WEAPON_TYPES,
+} from '@genshin-build-lab/engine/game/types';
 
 const require = createRequire(import.meta.url);
 // genshin-db uses CommonJS; we use createRequire to load it in an ESM script.
@@ -461,7 +465,7 @@ function main() {
 
   const outPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../src/game/genshin/data.generated.json',
+    '../packages/engine/src/game/genshin/data.generated.json',
   );
 
   fs.writeFileSync(outPath, JSON.stringify(snapshot, null, 2), 'utf-8');

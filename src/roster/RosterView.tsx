@@ -6,9 +6,13 @@ import { useMemo, useState } from 'react';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
-import { genshinAdapter } from '../game/genshin/adapter';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { PlayGlyph, ChevronGlyph } from '../components/ui/Glyphs';
-import { computeBuildScore, band, groupByLocation } from './buildScore';
+import {
+  computeBuildScore,
+  band,
+  groupByLocation,
+} from '@genshin-build-lab/engine/roster/buildScore';
 import { AppDrawer } from '../components/ui/Drawer';
 import { CharacterDetail } from './CharacterDetail';
 import { scrollToId } from '../ui/scroll';

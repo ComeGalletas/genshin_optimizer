@@ -3,8 +3,8 @@ import {
   runBenchmark,
   formatReduction,
   type BenchRow,
-} from '../src/optimizer/benchmark';
-import { PATCH } from '../src/game/genshin/adapter';
+} from '@genshin-build-lab/engine/optimizer/benchmark';
+import { PATCH } from '@genshin-build-lab/engine/game/genshin/adapter';
 
 // crit_value scales to the ~100-billion-combination 800 case because its value
 // is concentrated on a few pieces. er_pct's value is spread across almost every

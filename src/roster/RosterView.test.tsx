@@ -5,7 +5,7 @@ import { RosterView } from './RosterView';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
-import type { Artifact } from '../game/types';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 function equipped(id: string, location: string): Artifact {
   return {

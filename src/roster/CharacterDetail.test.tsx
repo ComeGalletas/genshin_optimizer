@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CharacterDetail } from './CharacterDetail';
-import type { Artifact } from '../game/types';
-import type { RosterEntry } from '../import/good';
-import { getDamageProfile } from '../damage/profiles';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
+import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 
 const entry: RosterEntry = {
   buildLevel: 90,

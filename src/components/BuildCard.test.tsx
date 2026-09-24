@@ -2,7 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BuildCard } from './BuildCard';
-import type { Artifact, BuildResult, OptimizeRequest } from '../game/types';
+import type {
+  Artifact,
+  BuildResult,
+  OptimizeRequest,
+} from '@genshin-build-lab/engine/game/types';
 
 const artifacts: Artifact[] = [];
 

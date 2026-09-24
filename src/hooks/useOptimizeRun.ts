@@ -17,7 +17,10 @@ import {
   type OptimizeHandle,
   type OptimizeProgress,
 } from '../workers/optimizeClient';
-import type { OptimizeRequest, OptimizeResult } from '../game/types';
+import type {
+  OptimizeRequest,
+  OptimizeResult,
+} from '@genshin-build-lab/engine/game/types';
 
 export interface UseOptimizeRunOptions {
   /** Called right before a new run's search actually starts (after the

@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { optimize, optimizeRun, isOptimizeCancelled } from './optimizeClient';
-import { genshinAdapter } from '../game/genshin/adapter';
-import type { Artifact, OptimizeRequest } from '../game/types';
-import { SLOTS } from '../game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import type {
+  Artifact,
+  OptimizeRequest,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 
 let c = 0;
 const inv: Artifact[] = SLOTS.flatMap((slot) =>

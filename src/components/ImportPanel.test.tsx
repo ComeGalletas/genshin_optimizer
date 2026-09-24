@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ImportPanel } from './ImportPanel';
 import { useInventory } from '../state/inventory';
-import { SAMPLE_INVENTORY } from '../sample/sampleInventory';
+import { SAMPLE_INVENTORY } from '@genshin-build-lab/engine/sample/sampleInventory';
 import { useRoster } from '../state/roster';
 
 const goodJson = JSON.stringify({

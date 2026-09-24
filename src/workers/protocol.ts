@@ -1,11 +1,11 @@
-import { searchBuilds } from '../optimizer/search';
-import type { SearchProgress } from '../optimizer/search';
+import { searchBuilds } from '@genshin-build-lab/engine/optimizer/search';
+import type { SearchProgress } from '@genshin-build-lab/engine/optimizer/search';
 import type {
   Artifact,
   OptimizeContext,
   OptimizeRequest,
   OptimizeResult,
-} from '../game/types';
+} from '@genshin-build-lab/engine/game/types';
 
 export interface WorkerRequest {
   req: OptimizeRequest;

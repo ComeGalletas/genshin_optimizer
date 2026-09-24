@@ -4,11 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { PlanView } from './PlanView';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
-import { searchBuilds } from '../optimizer/search';
-import { buildContext } from '../optimizer/context';
-import type { RunOptimize } from './composePlan';
-import type { Artifact, Slot, StatKey } from '../game/types';
-import { SLOTS } from '../game/types';
+import { searchBuilds } from '@genshin-build-lab/engine/optimizer/search';
+import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
+import type { RunOptimize } from '@genshin-build-lab/engine/plan/composePlan';
+import type {
+  Artifact,
+  Slot,
+  StatKey,
+} from '@genshin-build-lab/engine/game/types';
+import { SLOTS } from '@genshin-build-lab/engine/game/types';
 
 const run: RunOptimize = (req, inv) =>
   Promise.resolve(searchBuilds(req, inv, buildContext(req)));

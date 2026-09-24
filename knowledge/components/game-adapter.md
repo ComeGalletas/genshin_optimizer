@@ -25,4 +25,4 @@ this concrete adapter ([ADR-0012](../../docs/adr/0012-collapse-gameadapter-seam-
 [ADR-0012 — collapse the GameAdapter seam to a concrete adapter](../../docs/adr/0012-collapse-gameadapter-seam-to-concrete-adapter.md)
 (supersedes [ADR-0008](../../docs/adr/0008-gameadapter-seam-for-multi-game.md));
 [ADR-0009 — adapter owns universal game baselines](../../docs/adr/0009-adapter-owns-universal-game-baselines.md).
-Source: [`src/game`](../../src/game).
+Source: [`packages/engine/src/game`](../../src/game).
