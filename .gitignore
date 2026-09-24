@@ -44,3 +44,15 @@ coverage/
 # Local scanner tool + its exports (not repo content)
 inventory_kamera/
 genshinData_GOOD_*.json
+
+# genshin-build-lab (local-first fork)
+# Account data never goes in git: inbox drops, SQLite store, sim cache.
+imports/inbox/*
+!imports/inbox/.gitkeep
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+.cache/
+# Downloaded gcsim binary (version pinned in config/tools.json)
+tools/bin/

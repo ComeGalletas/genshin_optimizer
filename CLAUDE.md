@@ -1,31 +1,64 @@
-## Agent skills
+# genshin-build-lab
 
-### Issue tracker
+A local Genshin Impact account advisor. It imports the owner's full inventory, finds the best builds from gear they actually own, and scores teams with a real combat rotation simulator. An LLM (local or cloud) is the conversational interface and translates goals into constraints. **It never does the math itself.**
 
-Issues and PRDs are tracked as GitHub issues via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Base: a fork of `natcat38/rpg-build-optimizer` (MIT). Keep its LICENSE, DATA_LICENSE and attribution. Read its `README.md`, `CONTEXT.md`, `FILE-MAP.md` and `docs/adr/` before changing anything, and follow its ADR habit: every architectural decision we add gets a new ADR (numbering continues after the fork's last one).
 
-### Triage labels
+Roadmap: `docs/PLAN.md`. Work phase by phase and don't skip acceptance criteria.
 
-Default vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+## Core principles
 
-### Domain docs
+1. **The GOOD file is the contract.** Every data source (Irminsul, OCR scanner, Enka) produces GOOD JSON. Everything downstream only reads normalized GOOD plus our sidecar fields. Scanners are external tools. We import their files and never implement packet capture or decoding ourselves.
+2. **Exact search first, simulation second.** The fork's branch-and-bound optimizer produces the top-K builds by stat objective (fast and provably exact). gcsim then re-ranks those candidates by simulated team DPS (slow, Monte Carlo). Never run gcsim over the raw combinatorial space.
+3. **The LLM is the interface, not the solver.** It converts natural-language conditions into a validated `ConstraintSpec` JSON, calls tools, and explains results. Every number in an answer must come from a tool result. If a tool fails, say so instead of estimating.
+4. **Correctness is tested, not assumed.** Keep and extend the fork's brute-force oracle tests. Any optimizer change must pass them. The gcsim integration has golden tests against known community configs.
 
-Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+## Stack
 
-Per-patch data refresh: `docs/runbooks/patch-refresh.md`.
+- TypeScript (strict) monorepo, keeping the fork's Vite, React, Zustand and Vitest setup.
+- New `packages/server`: a local Node server (Fastify) plus an MCP server (official TS SDK) that exposes the same engine. It stores data in SQLite (`better-sqlite3`), including import snapshots and history.
+- gcsim runs as an external CLI binary (Go). Pin a version in `config/tools.json`, then call it via child process with generated configs and parse the JSON output.
+- Static data comes from a `genshin-db` snapshot generated at build time (the fork already does this in `scripts/build-dataset.ts`). Record the game version of the snapshot.
+- LLM access is configured in `config/llm.json` (`provider`: `ollama` | `anthropic` | `openai_compatible`, `baseUrl`, `model`). Local default is Ollama on `http://localhost:11434`. API keys live only in `.env` on the server side, never in the client bundle (see the fork's ADR-0010 for why).
+- The external `genshin-agent` project (Python) may produce GOOD files from its own OCR. It connects only by dropping files into `imports/inbox/`.
 
-### Persistent memory
+## Layout (target)
 
-`memory/` at the repo root. Read `memory/MEMORY.md` at session start; write new
-memories there too. It is deliberately standalone — no `.claude/` dependency —
-so any agent on any machine picks it up.
+```
+packages/
+  engine/      # pure TS: GOOD types, normalize, merge, optimizer (from fork), constraint spec, gcsim config gen/parse
+  server/      # Fastify API + MCP server + import watcher + gcsim runner + LLM client
+  web/         # the fork's React app, now talking to server when available (still works client-only)
+data/          # genshin-db snapshot, curated guides (from fork), rotation library
+rotations/     # gcsim rotation templates per team archetype (*.gcsl.tmpl + meta.json)
+imports/inbox/ # drop GOOD files here (Irminsul, OCR scanners, genshin-agent)
+config/
+docs/{PLAN.md, adr/}
+```
 
-## Merging and CI (learned 2026-09-06)
+## Conventions
 
-- Auto-merge is disabled on this repo (`gh pr merge --auto` errors); the ruleset
-  requires linear history, so a PR whose `mergeStateStatus` is `BEHIND` must be
-  rebased onto `origin/main` and re-pass CI before `gh pr merge --squash`. Merge
-  a batch sequentially: rebase → wait CI → merge → repeat for the next.
-- The `verify` job runs `prettier --check .` over the whole tree, including
-  `.md`. Run `npx prettier --check` on every changed file (docs too) before
-  pushing.
+- Run `npm test`, `npm run typecheck` and `npm run lint` before every commit. CI must stay green.
+- Engine code is pure with no I/O. All I/O (files, SQLite, child processes, HTTP, LLM) lives in `server`.
+- All units are the game's internal units in engine code (for example crit rate 0.311, not 31.1%). Convert only at the UI and gcsim boundaries, and test those conversions.
+- Never overwrite an import. Each import is a timestamped snapshot, and "current account" is a view over the latest merged snapshot.
+- When game data is missing for a new character or item (genshin-db or gcsim lagging behind the game), degrade gracefully: stat-only mode with an explicit "not simulated" flag. Never crash, and never guess.
+
+## Repo workflow
+
+- Progress tracking: `docs/TODO.md` is the working checklist for `docs/PLAN.md`. Read it at session start, state the current phase and next unchecked item, and tick items in the same commit that finishes them.
+- Git: `upstream` is `natcat38/rpg-build-optimizer`. `origin` is `ComeGalletas/genshin_optimizer` (public). For now all work happens on `main` in this single checkout, with no parallel branches or worktrees, until work is split into simultaneous tasks. Pull upstream changes deliberately (`git fetch upstream` then merge), never blindly.
+- ADRs: the fork's last one is 0020, so ours start at **0021**. `npm run docs:check` (in CI) fails unless ADR numbers are contiguous **and** every ADR is listed in `knowledge/index.md`, so add the index line in the same commit.
+- Glossary: `CONTEXT.md` is the canonical vocabulary. New domain terms (snapshot, sidecar, fingerprint, ConstraintSpec, rotation template, ...) get an entry there when introduced.
+- Formatting: CI runs `prettier --check .`, which includes Markdown. Run `npx prettier --check` on changed files, docs included, before committing.
+- Line endings: `.gitattributes` forces LF and this checkout sets `core.autocrlf=false`. Don't reformat the tree to fix CRLF noise.
+- Shared agent memory: `memory/` (index `memory/MEMORY.md`) is the repo's tool-agnostic memory, inherited from the fork. Some entries describe the upstream repo's GitHub setup and may not apply here.
+- Keep `FILE-MAP.md` current when adding or moving a top-level source directory (it changes a lot in Phase 0).
+
+## Commands (target)
+
+- `npm run dev`: web + server
+- `npm run server`: API + MCP (stdio and HTTP)
+- `npm run build:data`: regenerate the genshin-db snapshot
+- `npm run sim:check`: verify the gcsim binary, version, and golden configs
+- `npm test`, `npm run typecheck`, `npm run lint`, `npm run bench`
