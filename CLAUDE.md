@@ -49,7 +49,7 @@ docs/{PLAN.md, adr/}
 - ADRs: the fork's last one is 0020, so ours start at **0021**. `npm run docs:check` (in CI) fails unless ADR numbers are contiguous **and** every ADR is linked from `knowledge/index.md`, so add it to its topic line there in the same commit.
 - Glossary: `CONTEXT.md` is the canonical vocabulary. New domain terms (snapshot, sidecar, fingerprint, ConstraintSpec, rotation template, ...) get an entry there when introduced. Keep `FILE-MAP.md` current when adding or moving a top-level source directory.
 - Line endings: `.gitattributes` forces LF and this checkout sets `core.autocrlf=false`. Don't reformat the tree to fix CRLF noise.
-- Shared agent memory: `memory/` (index `memory/MEMORY.md`) is the repo's tool-agnostic memory, inherited from the fork. Entries marked _(upstream, unconfirmed)_ are upstream's maintainer's preferences; don't follow them until the owner confirms.
+- Shared agent memory: `memory/` (index `memory/MEMORY.md`) is the repo's tool-agnostic memory, inherited from the fork. Entries marked _(upstream, unconfirmed)_ need the owner's confirmation before you follow them. Plain-text notes worth keeping go in `.claude/notes/`.
 
 ## Commands (target)
 

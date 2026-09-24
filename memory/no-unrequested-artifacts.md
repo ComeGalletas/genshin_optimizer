@@ -6,10 +6,10 @@ metadata:
   type: feedback
   originSessionId: 99087584-9048-40ed-a7d5-80c826109456
   modified: 2026-08-19T16:20:44.197Z
-  origin: upstream (natcat38/rpg-build-optimizer), unconfirmed for this fork
+  origin: upstream (natcat38/rpg-build-optimizer), confirmed by this repo's owner 2026-09-24
 ---
 
-> **Inherited from upstream** (natcat38/rpg-build-optimizer). This records upstream's maintainer's global Artifact preference (also in their `~/.claude/CLAUDE.md`), not a confirmed preference of this repo's owner. Follow it only if the owner confirms it (TODO 0.11, 2026-09-24).
+> Inherited from upstream and **confirmed by this repo's owner** (2026-09-24). The history below is upstream's.
 
 Don't publish claude.ai Artifacts proactively — only when the user explicitly asks.
 

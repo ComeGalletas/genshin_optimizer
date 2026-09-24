@@ -8,5 +8,8 @@ package-lock.json
 dist/
 coverage/
 
+# Agents' plain-text notes (memory/subagents-cannot-write-files.md)
+.claude/notes/
+
 # Vendored static assets
 *.svg

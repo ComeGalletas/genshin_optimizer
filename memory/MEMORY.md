@@ -1,12 +1,11 @@
 # Memory index
 
-Entries marked _(upstream, unconfirmed)_ came with the fork and record upstream's maintainer's preferences; follow them only once this repo's owner confirms them.
+Entries marked _(upstream, unconfirmed)_ came with the fork and record upstream's maintainer's preferences; follow them only once this repo's owner confirms them. The owner reviewed all of them on 2026-09-24, so none are marked now.
 
-- [Subagent "spend limit" = 5hr limit](subagent-spend-limit-is-5hr.md) — don't pause/escalate on that dispatch error; just retry. _(upstream, unconfirmed)_
 - [format:check and line endings](autocrlf-formatcheck-gotcha.md) — LF everywhere here; `format:check` includes Markdown, so prettier every changed file.
-- [No unrequested artifacts](no-unrequested-artifacts.md) — only publish Artifacts when explicitly asked. _(upstream, unconfirmed)_
-- [Subagent Write is env-dependent](subagents-cannot-write-files.md) — instruct file-first reports with a text fallback. _(upstream, unconfirmed)_
-- [Token economy & subagent tiering](token-economy-practices.md) — Sonnet-default tiering, diff-scoped reviews, 3–4-agent waves, file-first reports. _(upstream, unconfirmed)_
+- [No unrequested artifacts](no-unrequested-artifacts.md) — only publish Artifacts when explicitly asked.
+- [Subagent Write is env-dependent](subagents-cannot-write-files.md) — instruct file-first reports with a text fallback; keepable notes go in `.claude/notes/`.
+- [Token economy & subagent tiering](token-economy-practices.md) — Sonnet-default tiering, diff-scoped reviews, 3–4-agent waves, file-first reports.
 
 ## How this works (any agent, any machine)
 

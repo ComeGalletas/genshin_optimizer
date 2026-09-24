@@ -2,8 +2,8 @@
 
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
-**Current phase:** 0 (fork and baseline)
-**Next item:** Phase 0 acceptance. Evidence is in [baseline-phase0.md](baseline-phase0.md#phase-0-result-2026-09-24-head-c06df45); the owner confirms, then Phase 1
+**Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
+**Next item:** 1.1, bump `genshin-db` and regenerate the snapshot
 
 ## Housekeeping (done 2026-09-24)
 
@@ -75,7 +75,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 0.11 Review the `memory/` entries that describe upstream's GitHub setup and mark or trim them
   - `autocrlf-formatcheck-gotcha` rewritten for this fork: LF everywhere (`.gitattributes` `eol=lf`, `core.autocrlf=false`), one `verify` CI job, and the lesson that still applies (`format:check` includes Markdown, so prettier every changed file). Upstream's Windows/autocrlf setup, its two CI jobs and PR #18 are kept only as labelled history.
   - The other four (Artifacts preference, spend-limit behaviour, subagent Write, token economy) record upstream's maintainer's preferences and sessions. Marked, not deleted: `origin` in their frontmatter, a note at the top, and _(upstream, unconfirmed)_ in `MEMORY.md`. `CLAUDE.md` says not to follow them until the owner confirms; the owner can keep, adopt or delete each.
-- [ ] **Accept:** identical test results, bench within ±10% of 0.1, web app works client-only (manual smoke: sample build, GOOD import, share link)
+  - Owner's decisions (2026-09-24): Artifacts preference kept; spend-limit entry deleted (it described upstream's account); subagent-Write entry adopted and extended so agents may leave plain-text notes in `.claude/notes/` (outside the code, skipped by Prettier); token-economy rules kept as written. No entry is marked unconfirmed now.
+- [x] **Accept:** identical test results, bench within ±10% of 0.1, web app works client-only (manual smoke: sample build, GOOD import, share link)
+  - Accepted by the owner on 2026-09-24. Evidence: [baseline-phase0.md](baseline-phase0.md#phase-0-result-2026-09-24-head-c06df45).
 
 ## Phase 1: Static data refresh
 

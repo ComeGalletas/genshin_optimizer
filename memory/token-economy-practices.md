@@ -3,10 +3,10 @@ name: token-economy-practices
 description: Subagent model-tiering and token-economy ruleset — how to size, scope, and schedule agents so sessions don't hit the usage limit.
 metadata:
   type: feedback
-  origin: upstream (natcat38/rpg-build-optimizer), unconfirmed for this fork
+  origin: upstream (natcat38/rpg-build-optimizer), confirmed by this repo's owner 2026-09-24
 ---
 
-> **Inherited from upstream** (natcat38/rpg-build-optimizer). This records upstream's maintainer's subagent and token-economy rules and a 2026-08 audit of upstream's repo, not a confirmed preference of this repo's owner. Follow it only if the owner confirms it (TODO 0.11, 2026-09-24).
+> Inherited from upstream and **confirmed by this repo's owner** (2026-09-24), all rules as written. The history below is upstream's.
 
 **Model tiering** (Claude judges, user can override):
 
@@ -36,4 +36,4 @@ metadata:
 
 **Why (local history):** the 2026-08 full-repo audit of this repo ran ~40 all-Opus agents, two max-effort review gates, duplicated full-suite verification, and full reports echoed into context — hitting the session usage limit three times. The [[subagents-cannot-write-files]] note also came out of that session.
 
-Also mirrored in the user's global `~/.claude/CLAUDE.md` ("Subagents & Token Economy"); this copy is the one that travels with the repo. See also [[subagent-spend-limit-is-5hr]].
+Also mirrored in the user's global `~/.claude/CLAUDE.md` ("Subagents & Token Economy"); this copy is the one that travels with the repo.
