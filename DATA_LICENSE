@@ -1,4 +1,4 @@
-Game reference data in src/game/genshin/data.generated.json is derived from the
+Game reference data in packages/engine/src/game/genshin/data.generated.json is derived from the
 genshin-db project (https://github.com/theBowja/genshin-db) at build time.
 Genshin Impact and all related data are property of HoYoverse. This project bundles
 only numeric stat/reference data for interoperability; no game assets are included.
@@ -6,7 +6,7 @@ Data snapshot: patch (see "patch" field in data.generated.json).
 
 ## Meta build recipes
 
-The "meta build" recipes in `src/meta/metaTargets.ts` (recommended set, main stats,
+The "meta build" recipes in `packages/engine/src/meta/metaTargets.ts` (recommended set, main stats,
 and stat targets per character) are hand-adapted from the community guides at
 KQM (KeqingMains, https://keqingmains.com). They are summaries of public guidance,
 not copied text, and are used as an optional, overridable comparison target. Genshin

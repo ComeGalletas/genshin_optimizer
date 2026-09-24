@@ -1,4 +1,4 @@
-# RPG Build Optimizer — Knowledge
+# genshin-build-lab — Knowledge
 
 Finds the best 5-piece build from the artifacts a player owns, under chosen constraints,
 and what to farm to reach a meta target. The web app still runs client-only; a local

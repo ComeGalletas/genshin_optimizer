@@ -1,10 +1,10 @@
-# CONTEXT — RPG Build Optimizer
+# CONTEXT — genshin-build-lab
 
 Single-context project. This file is the canonical glossary; use these exact terms in code, issues, tests, and docs. Decisions live in `docs/adr/`.
 
 ## What this project is
 
-A client-side web app that, given the artifacts a player owns, finds the best 5-piece build for a character under chosen constraints, and (v1.1) tells them what to farm to reach a meta target. No backend, no accounts; sharing is via self-contained links. See [ADR-0001](docs/adr/0001-client-side-only-architecture.md).
+A local Genshin Impact account advisor, forked from `natcat38/rpg-build-optimizer`. Given the artifacts a player owns, it finds the best 5-piece build for a character under chosen constraints and tells them what to farm to reach a meta target; the roadmap adds multi-source import with snapshot history, gcsim simulation and an LLM interface ([docs/PLAN.md](docs/PLAN.md)). The web app runs client-only, with no accounts, and shares builds as self-contained links; a local, single-user server owns everything else. See [ADR-0021](docs/adr/0021-local-first-server-architecture.md).
 
 ## Glossary
 

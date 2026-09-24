@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.10, README, package metadata and CONTEXT for the fork
+**Next item:** 0.11, review the upstream `memory/` entries
 
 ## Housekeeping (done 2026-09-24)
 
@@ -66,7 +66,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - [ADR-0021](adr/0021-local-first-server-architecture.md): pure `engine` / I/O-owning `server` / `web`; a localhost-only, single-user server (Fastify, MCP over stdio and HTTP, SQLite, inbox watcher, gcsim, LLM client); the web app keeps working client-only; secrets only in the server's `.env`; explain rebuilt on the server in Phase 3; no rate limiter while the server stays on localhost. 0001, 0010 and 0013 are marked superseded, and `knowledge/index.md` lists 0021.
   - Settles the tripwires 0.7 left open. `labels-core` is on the optimize worker's import path (`protocol` → `search` → `diagnostics` → `labels-core`), so its adapter-free check stays, moved under the worker boundary; planting an adapter import in it turns the suite red. The `explainShared` and `artifactValidation` checks guarded only the deleted serverless bundle and are retired (653 → 651 tests).
   - The index entry pushed `knowledge/index.md` to 61 lines and OKF failed (60-line cap). Fixed by rewriting the index intro, which still said "no backend", and tightening the closing paragraph (59 lines now, so one more ADR fits). `docs:check` now enforces OKF's known line caps (`CLAUDE.md`, `knowledge/index.md`) locally.
-- [ ] 0.10 Update `README.md` (fork notice and attribution, keeping `LICENSE`/`DATA_LICENSE`), `package.json` metadata, `CONTEXT.md` "What this project is", `FILE-MAP.md`, and `knowledge/` component paths
+- [x] 0.10 Update `README.md` (fork notice and attribution, keeping `LICENSE`/`DATA_LICENSE`), `package.json` metadata, `CONTEXT.md` "What this project is", `FILE-MAP.md`, and `knowledge/` component paths
+  - README rewritten for the fork: fork notice and attribution (upstream repo, its hosted demo, `LICENSE` and `DATA_LICENSE` unchanged), this repo's CI and coverage badges, a status section with the roadmap phases, the three-package architecture, and highlights, tech stack and non-goals brought in line with ADR-0021 (no Vercel, Lighthouse or "zero backend" claims). Upstream's feature list, "How it works" and data credits stay.
+  - `package.json` (and the lockfile's two name fields): name `genshin-build-lab`, new description, homepage and repository. `CONTEXT.md` title and "What this project is"; `knowledge/index.md` title; `share-link.md` cites ADR-0021 instead of the superseded ADR-0001. `DATA_LICENSE` keeps its text, with its two file paths updated to `packages/engine`.
+  - Checked and already current: FILE-MAP (30 directories, 158 files, every count matches the tree) and the `knowledge/` component paths (fixed in 0.3).
+  - Not in scope, still upstream's: the app's own name in `packages/web/index.html` and the header ("RPG Build Optimizer"), and `CHANGELOG.md`.
 - [ ] 0.11 Review the `memory/` entries that describe upstream's GitHub setup and mark or trim them
 - [ ] **Accept:** identical test results, bench within ±10% of 0.1, web app works client-only (manual smoke: sample build, GOOD import, share link)
 

@@ -1,12 +1,12 @@
 {
-  "name": "rpg-build-optimizer",
+  "name": "genshin-build-lab",
   "private": true,
   "version": "0.0.0",
-  "description": "Exact branch-and-bound artifact optimizer for Genshin Impact — find the provably best five-piece build from the gear you own, 100% client-side, shareable as a single link.",
-  "homepage": "https://rpg-build-optimizer.vercel.app",
+  "description": "Local Genshin Impact account advisor: exact artifact optimizer over the gear you own, with gcsim simulation and an LLM interface on the roadmap. Fork of natcat38/rpg-build-optimizer.",
+  "homepage": "https://github.com/ComeGalletas/genshin_optimizer#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/natcat38/rpg-build-optimizer.git"
+    "url": "git+https://github.com/ComeGalletas/genshin_optimizer.git"
   },
   "keywords": [
     "genshin-impact",
