@@ -1,18 +1,19 @@
 ---
 name: autocrlf-formatcheck-gotcha
-description: 'Why `npm run format:check` fails locally on Windows but passes in CI'
+description: 'format:check and line endings: what holds in this fork, and the Markdown lesson that still applies'
 metadata:
   node_type: memory
   type: project
   originSessionId: 47b4390b-dd27-425a-9f25-d0790b1d71e5
+  origin: upstream (natcat38/rpg-build-optimizer), rewritten for this fork 2026-09-24 (TODO 0.11)
 ---
 
-On this repo (Windows, `git config core.autocrlf=true`), `npm run format:check` (`prettier --check .`) fails locally on ~100 pre-existing files. This is a **CRLF artifact**, not a real failure: git checks out files as CRLF locally, Prettier's default `endOfLine: "lf"` flags them. CI (Linux, LF checkout) passes — every prior PR was green.
+**In this fork** `.gitattributes` sets `* text=auto eol=lf` and the checkout uses `core.autocrlf=false`, so files are LF on every platform and a full local `npm run format:check` should match CI. Don't reformat the whole tree to fix line-ending noise (CLAUDE.md "Line endings"); if CRLF shows up, fix the checkout, not the files.
 
-**Why:** Don't chase the local full-repo `format:check` failure or "fix" it by reformatting the whole tree (that would commit line-ending churn).
+**Still true:** CI's single `verify` job (`.github/workflows/ci.yml`) runs `npm run format:check`, which is `prettier --check .` and **includes Markdown**. Files written with an editor or agent Write tool are not auto-formatted, so run `npx prettier --check` on every changed file, `.md` included, before pushing; an unformatted table or list fails CI.
 
-**How to apply:** To verify a branch is CI-clean, run Prettier only on the files the branch changed:
-`git diff --name-only main...HEAD | grep -E '\.(ts|tsx|js|json|md)$' | grep -v package-lock | xargs npx prettier --check`
-A truly content-vs-CRLF distinction: `prettier --write` the file then `git diff` — empty diff = line-ending-only (CI-safe); content diff = real formatting that must be committed. Specs/plans written with the Write tool are NOT auto-prettier'd, so they can carry real markdown-table/wrap issues that fail CI — prettier them before pushing.
+**How to apply:** check the changed files, Markdown included:
+`git diff --name-only origin/main...HEAD | grep -E '\.(ts|tsx|js|json|md|yml)$' | grep -v package-lock | xargs npx prettier --check`
+To tell content from line-ending problems: `prettier --write` the file, then `git diff`. An empty diff means line endings only; a content diff is real formatting to commit.
 
-**CI gate (confirmed 2026-06-22):** the GitHub Actions `verify` job runs full-repo `npm run format:check` (`prettier --check .`), which **includes Markdown**. So the changed-files check above MUST keep `.md` in the grep — never narrow it to just `.ts/.tsx` (doing so let an unformatted plan doc fail `verify` on PR #18). The `validate` job (typecheck/lint/test/build) is separate and won't catch formatting.
+**Upstream history (not this repo):** upstream ran on Windows with `core.autocrlf=true`, where ~100 files failed `format:check` locally while CI passed, and it had separate `verify` and `validate` jobs; an unformatted plan doc failed upstream's PR #18.

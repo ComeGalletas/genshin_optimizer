@@ -5,7 +5,10 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 47b4390b-dd27-425a-9f25-d0790b1d71e5
+  origin: upstream (natcat38/rpg-build-optimizer), unconfirmed for this fork
 ---
+
+> **Inherited from upstream** (natcat38/rpg-build-optimizer). This records upstream's maintainer's account and usage-limit behaviour, not a confirmed preference of this repo's owner. Follow it only if the owner confirms it (TODO 0.11, 2026-09-24).
 
 When an `Agent` (subagent) dispatch fails with "You've hit your monthly spend limit · raise it at claude.ai/settings/usage", the user has clarified this is effectively the **5-hour rate limit**, not a true hard monthly cap.
 

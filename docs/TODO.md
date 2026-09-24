@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.11, review the upstream `memory/` entries
+**Next item:** Phase 0 acceptance: the owner confirms the Accept line in PLAN.md, then Phase 1
 
 ## Housekeeping (done 2026-09-24)
 
@@ -72,7 +72,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `package.json` (and the lockfile's two name fields): name `genshin-build-lab`, new description, homepage and repository. `CONTEXT.md` title and "What this project is"; `knowledge/index.md` title; `share-link.md` cites ADR-0021 instead of the superseded ADR-0001. `DATA_LICENSE` keeps its text, with its two file paths updated to `packages/engine`.
   - Checked and already current: FILE-MAP (30 directories, 158 files, every count matches the tree) and the `knowledge/` component paths (fixed in 0.3).
   - Not in scope, still upstream's: the app's own name in `packages/web/index.html` and the header ("RPG Build Optimizer"), and `CHANGELOG.md`.
-- [ ] 0.11 Review the `memory/` entries that describe upstream's GitHub setup and mark or trim them
+- [x] 0.11 Review the `memory/` entries that describe upstream's GitHub setup and mark or trim them
+  - `autocrlf-formatcheck-gotcha` rewritten for this fork: LF everywhere (`.gitattributes` `eol=lf`, `core.autocrlf=false`), one `verify` CI job, and the lesson that still applies (`format:check` includes Markdown, so prettier every changed file). Upstream's Windows/autocrlf setup, its two CI jobs and PR #18 are kept only as labelled history.
+  - The other four (Artifacts preference, spend-limit behaviour, subagent Write, token economy) record upstream's maintainer's preferences and sessions. Marked, not deleted: `origin` in their frontmatter, a note at the top, and _(upstream, unconfirmed)_ in `MEMORY.md`. `CLAUDE.md` says not to follow them until the owner confirms; the owner can keep, adopt or delete each.
 - [ ] **Accept:** identical test results, bench within ±10% of 0.1, web app works client-only (manual smoke: sample build, GOOD import, share link)
 
 ## Phase 1: Static data refresh

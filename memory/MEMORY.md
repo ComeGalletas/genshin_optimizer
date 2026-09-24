@@ -1,10 +1,12 @@
 # Memory index
 
-- [Subagent "spend limit" = 5hr limit](subagent-spend-limit-is-5hr.md) — don't pause/escalate on that dispatch error; just retry.
-- [autocrlf format:check gotcha](autocrlf-formatcheck-gotcha.md) — local `format:check` fails on CRLF but CI is green; check only changed files.
-- [No unrequested artifacts](no-unrequested-artifacts.md) — global preference: only publish Artifacts when explicitly asked
-- [Subagent Write is env-dependent](subagents-cannot-write-files.md) — instruct file-first reports with a text fallback.
-- [Token economy & subagent tiering](token-economy-practices.md) — Sonnet-default tiering, diff-scoped reviews, 3–4-agent waves, file-first reports.
+Entries marked _(upstream, unconfirmed)_ came with the fork and record upstream's maintainer's preferences; follow them only once this repo's owner confirms them.
+
+- [Subagent "spend limit" = 5hr limit](subagent-spend-limit-is-5hr.md) — don't pause/escalate on that dispatch error; just retry. _(upstream, unconfirmed)_
+- [format:check and line endings](autocrlf-formatcheck-gotcha.md) — LF everywhere here; `format:check` includes Markdown, so prettier every changed file.
+- [No unrequested artifacts](no-unrequested-artifacts.md) — only publish Artifacts when explicitly asked. _(upstream, unconfirmed)_
+- [Subagent Write is env-dependent](subagents-cannot-write-files.md) — instruct file-first reports with a text fallback. _(upstream, unconfirmed)_
+- [Token economy & subagent tiering](token-economy-practices.md) — Sonnet-default tiering, diff-scoped reviews, 3–4-agent waves, file-first reports. _(upstream, unconfirmed)_
 
 ## How this works (any agent, any machine)
 

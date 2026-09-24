@@ -3,7 +3,10 @@ name: token-economy-practices
 description: Subagent model-tiering and token-economy ruleset — how to size, scope, and schedule agents so sessions don't hit the usage limit.
 metadata:
   type: feedback
+  origin: upstream (natcat38/rpg-build-optimizer), unconfirmed for this fork
 ---
+
+> **Inherited from upstream** (natcat38/rpg-build-optimizer). This records upstream's maintainer's subagent and token-economy rules and a 2026-08 audit of upstream's repo, not a confirmed preference of this repo's owner. Follow it only if the owner confirms it (TODO 0.11, 2026-09-24).
 
 **Model tiering** (Claude judges, user can override):
 
