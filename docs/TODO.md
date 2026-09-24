@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
-**Next item:** 1.3, show the snapshot versions in the web UI footer
+**Next item:** 1.4, the `data:coverage` report
 
 ## Housekeeping (done 2026-09-24)
 
@@ -91,7 +91,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `CURATION_PATCH = '6.7'` (new `packages/engine/src/curation.ts`) drives the Teams note; the header chip, footer and speed-report header now show `gameVersion`. New glossary entries in CONTEXT; the runbook's version step and `DATA_LICENSE` updated.
   - The owner asked to mark new characters without usable data and fall back to the newest usable version. Checked: Vesna and Vodyanitsa have complete stats at every level, talents and constellations; all 3★+ weapons, the six 7.1 ones included, have passive text and full stat curves. HoYoverse launched 7.1 on 2026-09-23. So nothing is marked and `gameVersion` stays 7.1. They are optimised like any character, but have no curated meta target, damage profile or team entry until the curation catches up.
   - Tests: snapshot built from the installed genshin-db (fails on a bump without a rebuild; verified), version/date formats, and `CURATION_PATCH` never newer than `gameVersion`. The build's pin check was verified by setting a wrong pin.
-- [ ] 1.3 Show the snapshot versions in the web UI footer
+- [x] 1.3 Show the snapshot versions in the web UI footer
+  - Footer: "Data from genshin-db 5.2.14 (released 2026-09-21), game version 7.1 · Curated tables: patch 6.7". The date is a `<time datetime>`; each version is `whitespace-nowrap`, because at phone width the date and "genshin-db" otherwise broke at their hyphens. Checked in the browser at 1280 and 375 px: no horizontal overflow.
+  - Test: the footer shows all four values, read from the engine's exports so a data bump never touches it (verified to fail with the genshin-db version removed).
 - [ ] 1.4 Add `npm run data:coverage`: per character/weapon, whether it's in genshin-db, has a curated guide or meta target, has a damage profile, and gcsim support (placeholder column until Phase 5)
 - [ ] 1.5 Update `docs/runbooks/patch-refresh.md` for the new metadata and coverage report
 - [ ] **Accept:** the snapshot regenerates byte-identically twice in a row, and the coverage report prints

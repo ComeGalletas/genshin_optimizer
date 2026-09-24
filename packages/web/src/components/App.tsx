@@ -29,7 +29,12 @@ import {
   isDefaultSelection,
 } from '../state/optimizeRequest';
 import { bestBuiltCharacter } from '@genshin-build-lab/engine/roster/buildScore';
-import { GAME_VERSION } from '@genshin-build-lab/engine/game/genshin/adapter';
+import {
+  GAME_VERSION,
+  GENSHIN_DB_VERSION,
+  SNAPSHOT_DATE,
+} from '@genshin-build-lab/engine/game/genshin/adapter';
+import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
 import {
   buildHeroExample,
@@ -493,8 +498,20 @@ export function App() {
 
       <footer className="mt-16 border-t border-white/5 pt-6 text-center text-xs text-muted">
         Built with branch-and-bound optimization in a Web Worker · Data from{' '}
-        {GAME_SOURCE} (patch {GAME_VERSION}) · Not affiliated with the game’s
-        publisher.
+        {/* nowrap keeps each version together: at phone width the date and
+            "genshin-db" otherwise break at their hyphens ("2026-" / "09-21"). */}
+        <span className="whitespace-nowrap">
+          {GAME_SOURCE} {GENSHIN_DB_VERSION}
+        </span>{' '}
+        (released{' '}
+        <time dateTime={SNAPSHOT_DATE} className="whitespace-nowrap">
+          {SNAPSHOT_DATE}
+        </time>
+        ),{' '}
+        <span className="whitespace-nowrap">game version {GAME_VERSION}</span> ·
+        Curated tables:{' '}
+        <span className="whitespace-nowrap">patch {CURATION_PATCH}</span> · Not
+        affiliated with the game’s publisher.
       </footer>
     </div>
   );

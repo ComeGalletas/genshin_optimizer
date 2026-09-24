@@ -11,7 +11,13 @@ import type {
 } from '@genshin-build-lab/engine/game/types';
 import { OptimizeCancelledError } from '../workers/optimizeClient';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import {
+  genshinAdapter,
+  GAME_VERSION,
+  GENSHIN_DB_VERSION,
+  SNAPSHOT_DATE,
+} from '@genshin-build-lab/engine/game/genshin/adapter';
+import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 
 const { optimizeRun } = vi.hoisted(() => ({ optimizeRun: vi.fn() }));
 // Only the dispatch is faked: OptimizeCancelledError / isOptimizeCancelled stay
@@ -31,6 +37,21 @@ describe('App shell', () => {
     useInventory.getState().clear();
     useOptimizeRequest.getState().reset();
     window.history.pushState({}, '', '/');
+  });
+
+  it('names the snapshot versions and the curation patch in the footer', () => {
+    render(<App />);
+    // Read from the engine's exports, so a data bump never needs this test
+    // touched; what it pins is that the footer shows all four.
+    const footer = screen.getByRole('contentinfo');
+    expect(footer).toHaveTextContent(`genshin-db ${GENSHIN_DB_VERSION}`);
+    expect(footer).toHaveTextContent(`released ${SNAPSHOT_DATE}`);
+    expect(footer).toHaveTextContent(`game version ${GAME_VERSION}`);
+    expect(footer).toHaveTextContent(`Curated tables: patch ${CURATION_PATCH}`);
+    expect(within(footer).getByText(SNAPSHOT_DATE)).toHaveAttribute(
+      'datetime',
+      SNAPSHOT_DATE,
+    );
   });
 
   it('shows the empty-state import choices on first load', () => {
