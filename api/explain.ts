@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import {
   parseExplainPayload,
   buildExplainPrompt,
-} from '../src/ai/explainShared';
+} from '../packages/web/src/ai/explainShared';
 import { checkRateLimit } from './_ratelimit';
 
 function clientIp(req: VercelRequest): string {

@@ -17,7 +17,7 @@ function src(rel: string): string {
 }
 
 // `api/explain.ts` bundles `ai/explainShared.ts` (web side; its own checks
-// live in `src/bundleBoundaries.test.ts`), which reaches these engine files.
+// live in `packages/web/src/bundleBoundaries.test.ts`), which reaches these engine files.
 // They all sit on that path, so an import of the game adapter (or of `../labels`, which imports
 // it) from either one drags the 328 KB `data.generated.json` snapshot into the
 // serverless function — measured at 315 KB before the labels-core split, 9 KB
@@ -54,7 +54,7 @@ describe('optimize worker bundle boundary', () => {
     expect(text).not.toMatch(LABELS_IMPORT);
   });
 
-  // `workers/protocol.ts` (web side) is checked in `src/bundleBoundaries.test.ts`.
+  // `workers/protocol.ts` (web side) is checked in `packages/web/src/bundleBoundaries.test.ts`.
   it('search (which diagnostics sits behind) stays adapter-free', () => {
     const text = src('./optimizer/search.ts');
     expect(text).not.toMatch(ADAPTER_IMPORT);
@@ -71,7 +71,7 @@ describe('labels-core', () => {
   // CI runs under en-US, where a bare `toLocaleString()` looks correct; on a
   // host like es-CO it renders `12.345`. Every UI number goes through a pinned
   // formatter instead, so a new bare call fails here rather than on one machine.
-  // (The web app's own tree is scanned by `src/bundleBoundaries.test.ts`.)
+  // (The web app's own tree is scanned by `packages/web/src/bundleBoundaries.test.ts`.)
   it('no engine source file formats with the host locale', () => {
     const root = dirname(fileURLToPath(import.meta.url));
     const offenders = readdirSync(root, { recursive: true, encoding: 'utf8' })

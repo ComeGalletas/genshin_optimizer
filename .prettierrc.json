@@ -1,5 +1,6 @@
 {
   "singleQuote": true,
   "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindConfig": "./packages/web/tailwind.config.js",
   "tailwindFunctions": ["cn"]
 }

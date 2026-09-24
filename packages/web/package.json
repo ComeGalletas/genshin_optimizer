@@ -4,7 +4,16 @@
   "private": true,
   "description": "The React app (from the fork). Works client-only, and talks to the local server when it's running.",
   "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
-    "@genshin-build-lab/engine": "0.0.0"
+    "@genshin-build-lab/engine": "0.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "vaul": "^1.1.2",
+    "zustand": "^5.0.15"
   }
 }

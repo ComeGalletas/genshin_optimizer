@@ -74,7 +74,7 @@ the module-by-module breakdown of where the remaining gaps are (damage
 formula level-interpolation edge cases, `meta/gap.ts`'s 2pc branches,
 `invest/advise.ts`'s `craftableFor`, and others).
 
-**A coverage floor is enforced** — `vite.config.ts`'s `test.coverage.thresholds`
+**A coverage floor is enforced** — `vitest.config.ts`'s `test.coverage.thresholds`
 sets statements/branches/functions/lines floors (94% / 87% / 95% / 95%),
 about a point under the current whole-repo numbers, so `npm run test:coverage`
 fails CI on a real regression instead of only showing it in the report (closes

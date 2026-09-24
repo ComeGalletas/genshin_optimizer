@@ -14,7 +14,7 @@ npm run dev
 | Script                  | What it does                                             |
 | ----------------------- | -------------------------------------------------------- |
 | `npm run dev`           | Vite dev server                                          |
-| `npm run preview`       | Serve the built `dist/` locally                          |
+| `npm run preview`       | Serve the built `packages/web/dist/` locally             |
 | `npm test`              | Vitest suite (jsdom)                                     |
 | `npm run test:watch`    | Vitest in watch mode                                     |
 | `npm run test:coverage` | Vitest with a coverage report                            |
@@ -22,7 +22,7 @@ npm run dev
 | `npm run lint`          | ESLint                                                   |
 | `npm run format`        | Prettier write                                           |
 | `npm run format:check`  | Prettier check (no writes) — what CI runs                |
-| `npm run build`         | Production build → `dist/`                               |
+| `npm run build`         | Production build → `packages/web/dist/`                  |
 | `npm run build:data`    | Regenerate the frozen `genshin-db` snapshot              |
 | `npm run bench`         | Regenerate `docs/speed-report.md`                        |
 | `npm run docs:check`    | ADR numbering, knowledge-bundle freshness, dead links    |

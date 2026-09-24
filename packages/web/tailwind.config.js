@@ -1,13 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  // The engine moved out of src/ in TODO 0.3, but Tailwind extracts utilities
-  // from tokens in those files too: without this glob the CSS lost ~0.3 kB of
-  // rules the app had before the move.
-  content: [
-    './index.html',
-    './src/**/*.{ts,tsx}',
-    './packages/engine/src/**/*.ts',
-  ],
+  // The engine moved out of the app in TODO 0.3, but Tailwind extracts
+  // utilities from tokens in those files too: without the engine glob the CSS
+  // lost ~0.3 kB of rules the app had before the move. `relative` resolves the
+  // globs against this file rather than the cwd, so building from the repo
+  // root or from this package scans the same files.
+  content: {
+    relative: true,
+    files: ['./index.html', './src/**/*.{ts,tsx}', '../engine/src/**/*.ts'],
+  },
   theme: {
     // Replaces Tailwind's default weight scale rather than extending it: only
     // these four weights are actually fetched in index.html, so `font-black`

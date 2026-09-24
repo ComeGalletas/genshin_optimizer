@@ -1,14 +1,10 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
+// Test runner only. The app's dev server and build are configured in
+// packages/web/vite.config.ts.
 export default defineConfig({
   plugins: [react()],
-  server: {
-    // Pin the dev server port so it doesn't collide with sibling repos
-    // checked out on the same machine. See #65.
-    port: 5199,
-    strictPort: true,
-  },
   test: {
     globals: true,
     // Ignore local git worktrees (e.g. .worktrees/*) so a checked-out copy of
@@ -23,9 +19,9 @@ export default defineConfig({
           name: 'app',
           // api/ goes away with the Vercel removal (TODO 0.7); until then its
           // tests keep running exactly as they did before the split.
-          include: ['src/**/*.test.{ts,tsx}', 'api/**/*.test.ts'],
+          include: ['packages/web/src/**/*.test.{ts,tsx}', 'api/**/*.test.ts'],
           environment: 'jsdom',
-          setupFiles: ['./src/test-setup.ts'],
+          setupFiles: ['./packages/web/src/test-setup.ts'],
         },
       },
       {

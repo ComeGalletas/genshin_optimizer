@@ -42,13 +42,13 @@ contract.
   their ascension already unlocks: `[20, 40, 50, 60, 70, 80, 90][ascension]`.
   A level-81/ascension-6 character evaluates at 90, not 81. [0006]'s single
   global build-level dropdown is unchanged — the roster only pre-fills it.
-- **Roster state is a new store**, [`useRoster`](../../src/state/roster.ts),
+- **Roster state is a new store**, [`useRoster`](../../packages/web/src/state/roster.ts),
   following the same zustand + `persist` pattern as
-  [`useInventory`](../../src/state/inventory.ts). It is replaced wholesale on
+  [`useInventory`](../../packages/web/src/state/inventory.ts). It is replaced wholesale on
   each GOOD import (a GOOD export is a full account snapshot, not an
   incremental diff), unlike inventory's append/dedupe.
 - **Pre-fill, stay overridable.** Selecting a rostered character in
-  [`OptimizePanel`](../../src/components/OptimizePanel.tsx) pre-fills its
+  [`OptimizePanel`](../../packages/web/src/components/OptimizePanel.tsx) pre-fills its
   equipped weapon and build level in the character combobox's change handler
   — not a render effect, so a later manual override is never clobbered by an
   unrelated re-render. Same spirit as the existing "Use meta build" pre-fill
@@ -59,7 +59,7 @@ contract.
 - **UID/Enka import stays artifact-only.** Enka's showcase API exposes only
   numeric `avatarId` / `nameTextMapHash` values; the frozen dataset has no
   numeric IDs to join against (the same gap already noted for artifact
-  `setKey` hashes at [src/import/uid.ts:82](../../src/import/uid.ts)).
+  `setKey` hashes at [src/import/uid.ts:82](../../packages/web/src/import/uid.ts)).
   Building that ID→key mapping is a separate, larger change, deferred
   indefinitely. UID import never reads or writes the roster store.
 

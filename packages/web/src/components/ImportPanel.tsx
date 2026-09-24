@@ -39,9 +39,9 @@ function plural(n: number, word: string): string {
   return n === 1 ? word : `${word}s`;
 }
 
-/** Sample gear carries a `sample-` id prefix (see src/sample/sampleInventory)
- *  — the one marker distinguishing the demo bag from artifacts the player
- *  actually owns. */
+/** Sample gear carries a `sample-` id prefix (see the engine's
+ *  sample/sampleInventory) — the one marker distinguishing the demo bag from
+ *  artifacts the player actually owns. */
 function isSampleArtifact(a: Artifact): boolean {
   return a.id.startsWith('sample-');
 }

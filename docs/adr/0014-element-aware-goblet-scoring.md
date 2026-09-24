@@ -33,7 +33,7 @@ without adding element-matching logic to the core solver.
 - The GOOD importer ([src/import/good.ts](../../packages/engine/src/import/good.ts)) now
   captures the element from `mainStatKey` (e.g. `pyro_dmg_` → `'pyro'`)
   instead of discarding it. Manual entry
-  ([ArtifactForm.tsx](../../src/components/ArtifactForm.tsx)) exposes the
+  ([ArtifactForm.tsx](../../packages/web/src/components/ArtifactForm.tsx)) exposes the
   same choice as a dropdown, defaulting to unset ("any/unknown").
 - The solver itself is untouched. `optimizeClient.ts`'s `optimize()` — which
   already has both the character key and the full inventory — pre-processes

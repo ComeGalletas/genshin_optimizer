@@ -13,7 +13,7 @@ The optimiser searches the space of [builds](/domain/build.md) for the top-K tha
 every [constraint](/domain/constraint.md), ranked by the [objective](/domain/objective.md).
 It is **exact branch-and-bound, never approximate** — pruning explores only a small
 fraction of the brute-force space while still returning the true optimum. It runs in a
-Web Worker to keep the UI responsive (`src/workers`).
+Web Worker to keep the UI responsive (`packages/web/src/workers`).
 
 - **Diagnostics** — per-build data the optimiser emits: binding constraints, per-slot
   marginal contribution, explored/pruned counts.

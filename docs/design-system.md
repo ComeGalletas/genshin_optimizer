@@ -6,7 +6,7 @@ exists so a new component reaches for a name instead of inventing a value.
 
 ## Two layers of tokens
 
-**Primitives** live in [`tailwind.config.js`](../tailwind.config.js) — the
+**Primitives** live in [`tailwind.config.js`](../packages/web/tailwind.config.js) — the
 surface/paper/muted greys, the `flux` constraint blue, `rose`/`jade`, the type
 scale (`text-2xs` = 0.7rem), the two tracking values (`tracking-label` 0.18em,
 `tracking-eyebrow` 0.4em), and the shadows (`panel`, `popover`, `glow*`). The
@@ -16,7 +16,7 @@ for `font-black` and you get nothing — deliberately.
 
 **The accent is a seam, not a primitive.** `--accent`, `--accent-bright` and
 `--accent-deep` are `"r g b"` triplets on `:root` in
-[`src/index.css`](../src/index.css); Tailwind reads them through
+[`packages/web/src/index.css`](../packages/web/src/index.css); Tailwind reads them through
 `rgb(var(--accent) / <alpha-value>)` so opacity modifiers still work. A second
 game overrides those three custom properties under a `[data-game]` selector and
 inherits every accent-tinted rule for free — see `packages/engine/src/game/registry.ts`. Two
@@ -25,15 +25,15 @@ chevron (a `background-image` data-URI can't read a custom property) and the
 scrollbar greys.
 
 **Element hues are a token set, not a seam.** `element.pyro`/`hydro`/`electro`/
-`cryo`/`anemo`/`geo`/`dendro` in [`tailwind.config.js`](../tailwind.config.js)
+`cryo`/`anemo`/`geo`/`dendro` in [`tailwind.config.js`](../packages/web/tailwind.config.js)
 are the seven canonical game hues, brightened for this chassis: each is stored
 as an `rgb(r g b / <alpha-value>)` triplet like the accent, so `/alpha`
 modifiers work, and each clears 4.5:1 as **text** on `surface-900` (the darkest
 ground the app paints). Unlike the accent they are constant — an element is a
 fact about the dataset, not a per-game reading. Domain code never writes these
 classes: `ELEMENT_TONE` in
-[`src/components/ui/elementTone.ts`](../src/components/ui/elementTone.ts) and
-the [`ElementName`](../src/components/ui/ElementName.tsx) component own
+[`packages/web/src/components/ui/elementTone.ts`](../packages/web/src/components/ui/elementTone.ts) and
+the [`ElementName`](../packages/web/src/components/ui/ElementName.tsx) component own
 the mapping, and `ElementName` always prints the element's name beside its dot,
 so hue is a second channel and never the only one.
 
@@ -42,7 +42,7 @@ body, hints and status sentences are sentence case.
 
 ## Component classes
 
-Defined in `@layer components` in [`src/index.css`](../src/index.css).
+Defined in `@layer components` in [`packages/web/src/index.css`](../packages/web/src/index.css).
 
 | Class                              | What it is                                                                       |
 | ---------------------------------- | -------------------------------------------------------------------------------- |
@@ -64,7 +64,7 @@ it, because the same shell wraps a two-line row and a whole form. `.panel-md`
 
 ## React primitives
 
-In [`src/components/ui/`](../src/components/ui). Domain-free: nothing here
+In [`packages/web/src/components/ui/`](../packages/web/src/components/ui). Domain-free: nothing here
 imports from `game/`, `meta/` or `roster/`.
 
 - **`tone.ts`** — the one `TONE` record: `accent`/`jade`/`flux`/`muted`/`rose`,

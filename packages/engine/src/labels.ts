@@ -3,7 +3,7 @@
  * adapter-free half lives in `labels-core.ts` (which `api/explain.ts` bundles —
  * see the note there); this file adds the parts that need the dataset adapter,
  * and re-exports the core. UI-only mappings (tones) live in the web app's
- * `src/labels.ts`, which re-exports this module.
+ * `packages/web/src/labels.ts`, which re-exports this module.
  * @packageDocumentation
  */
 

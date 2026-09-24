@@ -1,7 +1,7 @@
 /**
  * Bundle-size drift gate (run in CI via `npm run size:check`, after `npm run build`).
  *
- * Compares the gzip total of dist/assets/*.js against the checked-in baseline
+ * Compares the gzip total of packages/web/dist/assets/*.js against the checked-in baseline
  * (scripts/size-baseline.json), mirroring the bench:check drift-gate pattern.
  * Fails when the total grows more than TOLERANCE over the baseline. Refresh the
  * baseline deliberately with `npm run size:update` and commit it.
@@ -10,7 +10,7 @@ import { gzipSync } from 'zlib';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-const DIST = 'dist/assets';
+const DIST = 'packages/web/dist/assets';
 const BASELINE = 'scripts/size-baseline.json';
 const TOLERANCE = 0.05; // ponytail: flat 5% total-gzip budget; per-chunk budgets if this masks a regression
 

@@ -8,7 +8,7 @@
  * function (measured: 6.6 KB → 321 KB). `src/labels-core.test.ts` is the
  * tripwire that keeps it that way.
  *
- * `src/labels.ts` re-exports everything here, so UI code keeps importing
+ * `packages/web/src/labels.ts` re-exports everything here, so UI code keeps importing
  * `../labels` and never needs to know this split exists.
  * @packageDocumentation
  */
@@ -48,7 +48,7 @@ export const SLOT_LABELS: Record<Slot, string> = {
 };
 
 // The per-slot mark used by compact build lists is not here: it is drawn, not
-// written. See src/components/SlotGlyph.tsx for why five Unicode characters
+// written. See packages/web/src/components/SlotGlyph.tsx for why five Unicode characters
 // could not carry it.
 
 /** Elements are lowercase dataset keys ("hydro"), never display copy. Colour is

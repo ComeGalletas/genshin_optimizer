@@ -25,9 +25,9 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "dev": "npm run dev -w @genshin-build-lab/web --",
+    "build": "tsc -b && npm run build -w @genshin-build-lab/web",
+    "preview": "npm run preview -w @genshin-build-lab/web --",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -45,11 +45,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.122.0",
     "@upstash/ratelimit": "^2.0.8",
-    "@upstash/redis": "^1.38.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "vaul": "^1.1.2",
-    "zustand": "^5.0.15"
+    "@upstash/redis": "^1.38.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

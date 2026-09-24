@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.4, move the React app into `packages/web`
+**Next item:** 0.5, finish the tooling paths
 
 ## Housekeeping (done 2026-09-24)
 
@@ -43,9 +43,12 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Tests: 667/667 (337 app in jsdom, 329 engine in node, 1 server). Bundle-boundary tripwires are split between `packages/engine/src/labels-core.test.ts` and `src/bundleBoundaries.test.ts`, and the locale scan now covers both trees. Explored/pruned counts are identical to the baseline, and side-by-side timings against the pre-move commit are within ±7% (see [baseline-phase0.md](baseline-phase0.md)).
   - Found and fixed: Tailwind only scanned `src/`, so the move silently dropped about 0.3 kB of CSS. `tailwind.config.js` now scans the engine too.
   - Living docs (CONTEXT, CONTRIBUTING, runbooks, knowledge, FILE-MAP) point at the new paths. ADR prose was left as history, and only broken ADR links were fixed.
-- [ ] 0.4 Move React, `state/`, `workers/`, `hooks/`, `components/`, `ui/`, `ai/` and the entry point into `packages/web`, importing engine via the workspace package.
+- [x] 0.4 Move React, `state/`, `workers/`, `hooks/`, `components/`, `ui/`, `ai/` and the entry point into `packages/web`, importing engine via the workspace package.
+  - The whole root `src/` moved to `packages/web/src` with `git mv`, together with `index.html`, `public/`, `tailwind.config.js` and `postcss.config.js`. `tsconfig.app.json` became `packages/web/tsconfig.json`, referenced from the root `tsc -b`. React, `react-dom`, `vaul` and `zustand` are now dependencies of `web` (the lockfile was edited by hand, since npm 10 strips its `libc` fields).
+  - Vite is split in two. `packages/web/vite.config.ts` owns dev (port 5199), build (output `packages/web/dist`) and preview, and reads `.env` from the repo root. The root `vite.config.ts` became `vitest.config.ts`, test projects and coverage only. Root `dev`, `build` and `preview` delegate to the workspace. Tailwind globs are `relative` and PostCSS pins the Tailwind config, so the CSS is the same from any cwd. Prettier's Tailwind plugin points at the moved config.
+  - Result: every file in `dist/` is byte-identical to the pre-move build (CSS `index-BEd0SRuD.css`, JS 162,637 B gzip). 667/667 tests, coverage above the floors, and the dataset rebuild is a no-op. Smoke test with Playwright on both dev and preview: live hero solve, sample Nahida optimise, GOOD import of the fixture (20 artifacts), and a share link that decodes in a fresh browser context.
 - [ ] 0.5 Fix the tooling paths: `scripts/build-dataset.ts` output, the CI dataset `git diff` path, `benchmark.ts`/`check-bench.ts` imports, `size-baseline.json`, the ESLint and Prettier configs, and `vite.config.ts`
-  - Done in 0.3 (CI had to stay green): `build-dataset.ts` output, the CI dataset diff path, `benchmark.ts` imports, `check-bench.ts` watched paths, `.prettierignore`, and Tailwind content. The speed report is regenerated, which fixes its staleness. Left for 0.4: `vite.config.ts`, `index.html`/`public/`, `size-baseline.json`, and the ESLint globs for `packages/web`.
+  - Done in 0.3 (CI had to stay green): `build-dataset.ts` output, the CI dataset diff path, `benchmark.ts` imports, `check-bench.ts` watched paths, `.prettierignore`, and Tailwind content. The speed report is regenerated, which fixes its staleness. Done in 0.4: `vite.config.ts`, `index.html`/`public/`, `check-size.ts`'s `dist` path (the baseline value is unchanged), and the ESLint globs (`**/dist`, with `packages/web/src` covered by `packages/*/src`). Still open: `vercel.json` would need `outputDirectory: packages/web/dist`, but it goes away in 0.7.
 - [ ] 0.6 Add a lint rule or test that `packages/engine` has no I/O imports (`fs`, `child_process`, `http`, DOM) and doesn't import from `server` or `web`
 - [ ] 0.7 Remove the Vercel parts: `api/`, `vercel.json`, `tsconfig.api.json`, `@upstash/*`, `@vercel/node`, the api leg of `typecheck`, and the Upstash/`PUBLIC_ORIGIN` entries in `.env.example`. Keep `VITE_AI_ENABLED` off so the explain button stays hidden until Phase 3.
 - [ ] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).

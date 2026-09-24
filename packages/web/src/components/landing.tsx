@@ -78,8 +78,8 @@ export function ThesisHero({ tagline }: { tagline: string }) {
 }
 
 /** The hero leads with a real solve, not an empty form: one genuine build from
- *  a seeded synthetic inventory (see src/sample/heroExample.ts), plus the exact
- *  search proof — the thing this tool actually does. */
+ *  a seeded synthetic inventory (see the engine's sample/heroExample.ts), plus
+ *  the exact search proof — the thing this tool actually does. */
 export function SolvedHero({ hero }: { hero: HeroExample }) {
   return (
     <>
