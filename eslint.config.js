@@ -31,16 +31,21 @@ export default tseslint.config(
     },
   },
   {
-    files: ['api/**/*.ts', 'scripts/**/*.ts'],
+    files: ['api/**/*.ts', 'scripts/**/*.ts', 'packages/server/**/*.ts'],
     languageOptions: {
       globals: globals.node,
     },
   },
   {
     // Type-aware promise-handling rules. Every tracked TypeScript tree is
-    // covered by a tsconfig (app, api, scripts), so the rules apply to all of
-    // them rather than only the app + serverless-function source.
-    files: ['src/**/*.{ts,tsx}', 'api/**/*.ts', 'scripts/**/*.ts'],
+    // covered by a tsconfig (app, api, scripts, packages), so the rules apply
+    // to all of them rather than only the app + serverless-function source.
+    files: [
+      'src/**/*.{ts,tsx}',
+      'api/**/*.ts',
+      'scripts/**/*.ts',
+      'packages/*/src/**/*.{ts,tsx}',
+    ],
     languageOptions: {
       parserOptions: {
         projectService: true,

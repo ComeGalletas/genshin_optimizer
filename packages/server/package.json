@@ -1,0 +1,13 @@
+{
+  "name": "@genshin-build-lab/server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local Fastify API and MCP server over the engine; owns all I/O (SQLite, import watcher, gcsim runner, LLM client).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@genshin-build-lab/engine": "0.0.0"
+  }
+}

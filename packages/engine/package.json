@@ -1,0 +1,10 @@
+{
+  "name": "@genshin-build-lab/engine",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure TypeScript core: GOOD types and normalization, the exact optimizer, constraint specs, gcsim config generation. No I/O.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

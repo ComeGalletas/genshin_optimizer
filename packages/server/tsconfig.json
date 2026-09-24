@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.server.tsbuildinfo",
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "types": ["node", "vitest/globals"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode — run through tsx for now; revisited when the server
+       gets a real entry point (TODO 2.6 / Phase 3). */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}

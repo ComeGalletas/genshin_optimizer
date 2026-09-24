@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.2, npm workspaces
+**Next item:** 0.3, move pure logic into `packages/engine`
 
 ## Housekeeping (done 2026-09-24)
 
@@ -31,7 +31,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Recorded in [baseline-phase0.md](baseline-phase0.md). The committed `docs/speed-report.md` is stale, and the restructure regenerates it.
   - Known: on this machine (locale `es-CO`), 659/661 tests pass. The 2 failures are the progress-counter assertions in `App.test.tsx` and `OptimizePanel.test.tsx`: `toLocaleString()` renders `12.345` where the tests expect `12,345`. CI (en-US) is unaffected, and `LANG` doesn't change ICU's locale on Windows.
 - [x] 0.1b Make number formatting locale-deterministic. `formatCount` now uses a pinned en-US `Intl.NumberFormat`, and the `OptimizePanel` live region goes through it. A source-scan test fails CI on any new bare `toLocaleString()`. The suite is now 663/663 green locally, and the Phase 0 "identical test results" bar is all 663 passing.
-- [ ] 0.2 Set up npm workspaces with `packages/{engine,server,web}` and tsconfig project references. Get root scripts `test`, `typecheck`, `lint` and `bench` fanning out to the packages.
+- [x] 0.2 Set up npm workspaces with `packages/{engine,server,web}` and tsconfig project references. Get root scripts `test`, `typecheck`, `lint` and `bench` fanning out to the packages.
+  - Packages are `@genshin-build-lab/{engine,server,web}` and export TypeScript source directly (no build step). `web` is an empty placeholder until 0.4.
+  - `npm test` runs Vitest projects `app` (root `src/` + `api/`, jsdom), `engine` and `server` (node), with one coverage report. `tsc -b` references each package. There's one root ESLint config. Result: 665/665 tests (663 + 2 package smoke tests), and every CI step is green locally.
+  - Head start on 0.6: `packages/engine/tsconfig.lib.json` typechecks non-test source with no Node or DOM types (verified that `node:fs`, `document` and `process` fail). The import-boundary part (no `server`/`web` imports) is still open. `optimizer/benchmark.ts` uses `performance`, so it needs a small ambient declaration or an injected clock when it moves in 0.3.
 - [ ] 0.3 Move pure logic into `packages/engine`: `optimizer`, `damage`, `import`, `meta`, `game` (+ `genshin/data.generated.json`), `share`, `teams`, `plan`, `roster`, `invest`, `sample` data, and `test-fixtures`. Split mixed directories: `*.tsx` views such as `PlanView`, the roster drawer and the teams view go to `web`.
 - [ ] 0.4 Move React, `state/`, `workers/`, `hooks/`, `components/`, `ui/`, `ai/` and the entry point into `packages/web`, importing engine via the workspace package.
 - [ ] 0.5 Fix the tooling paths: `scripts/build-dataset.ts` output, the CI dataset `git diff` path, `benchmark.ts`/`check-bench.ts` imports, `size-baseline.json`, the ESLint and Prettier configs, and `vite.config.ts`

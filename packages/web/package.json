@@ -1,0 +1,10 @@
+{
+  "name": "@genshin-build-lab/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The React app (from the fork). Works client-only, and talks to the local server when it's running.",
+  "type": "module",
+  "dependencies": {
+    "@genshin-build-lab/engine": "0.0.0"
+  }
+}

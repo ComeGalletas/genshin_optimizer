@@ -18,6 +18,9 @@
     "web-workers"
   ],
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
     "node": ">=22"
   },

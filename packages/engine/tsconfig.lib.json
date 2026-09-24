@@ -1,0 +1,12 @@
+{
+  /* The purity gate: engine source (tests excluded) typechecked with neither
+     DOM nor Node types, so touching `document`, `fs` or `process` is a type
+     error rather than a review comment (CLAUDE.md "Conventions"). */
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.engine-lib.tsbuildinfo",
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

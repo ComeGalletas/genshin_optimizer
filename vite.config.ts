@@ -11,11 +11,40 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test-setup.ts'],
     // Ignore local git worktrees (e.g. .worktrees/*) so a checked-out copy of
     // the repo isn't scanned and run with a second, conflicting React instance.
     exclude: [...configDefaults.exclude, '**/.worktrees/**'],
+    // One `npm test` fans out to every workspace package, each in the
+    // environment it actually runs in, and CI gets a single coverage report.
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'app',
+          // api/ goes away with the Vercel removal (TODO 0.7); until then its
+          // tests keep running exactly as they did before the split.
+          include: ['src/**/*.test.{ts,tsx}', 'api/**/*.test.ts'],
+          environment: 'jsdom',
+          setupFiles: ['./src/test-setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'engine',
+          include: ['packages/engine/src/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'server',
+          include: ['packages/server/src/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+    ],
     coverage: {
       provider: 'v8',
       // json-summary feeds the coverage-badge workflow.
