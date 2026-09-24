@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** Phase 0 acceptance: the owner confirms the Accept line in PLAN.md, then Phase 1
+**Next item:** Phase 0 acceptance. Evidence is in [baseline-phase0.md](baseline-phase0.md#phase-0-result-2026-09-24-head-c06df45); the owner confirms, then Phase 1
 
 ## Housekeeping (done 2026-09-24)
 

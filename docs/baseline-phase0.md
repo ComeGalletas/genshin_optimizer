@@ -70,3 +70,25 @@ How to apply the Phase 0 "bench within ±10%" check:
 ### The committed speed report is stale
 
 `docs/speed-report.md` was last regenerated in `22b7080` (2026-08-29). Commit `105114f` (2026-08-31) then changed `src/optimizer`, and its explored and pruned counts no longer match the current code. For example, 200 `crit_value` explored is 680 in the report and 640 now. `bench:check` only runs against a PR base SHA, so it didn't catch this. The table above is the reference for Phase 0. The report gets regenerated as part of the restructure.
+
+## Phase 0 result (2026-09-24, head `c06df45`)
+
+Measured after every Phase 0 item (0.1–0.11) landed, for the owner's acceptance check. This run was in a Linux cloud container (4 shared vCPUs, Node 22), not the baseline machine, which is why both sides of the benchmark were run here.
+
+**Tests.** 651/651 pass, 64 files, and all CI steps are green. The count differs from the baseline's 663 (after 0.1b) only by deliberate changes: +2 package smoke tests (0.2), +2 from the labels split (0.3), +17 import-boundary tests (0.6), −31 with `api/` (0.7) and −2 retired serverless tripwires (ADR-0021, 0.9). Every other test is the same test, passing.
+
+**Benchmark.** Interleaved runs (old, new × 6) of `npx tsx scripts/benchmark.ts` in `git archive` exports of `a9fa5cb` (the untouched fork) and `c06df45`. The optimizer, scoring, damage and benchmark sources are byte-identical between the two; the script differs only in its import paths. Explored and pruned counts matched the baseline table exactly in all 12 runs. Medians of the six runs per side, slow rows only:
+
+| Inventory | Scenario   | Old (ms) | New (ms) | Change |
+| --------- | ---------- | -------: | -------: | -----: |
+| 400       | crit_value |    259.3 |    250.8 |  −3.3% |
+| 800       | crit_value |   3266.8 |   3258.1 |  −0.3% |
+| 100       | er_pct     |    100.4 |     91.8 |  −8.6% |
+| 200       | er_pct     |    114.7 |    108.8 |  −5.1% |
+| 400       | er_pct     |   2697.6 |   2592.3 |  −3.9% |
+
+All five are within ±10%. The first three pairs alone put 400 `crit_value` at +15.9% and 200 `er_pct` at −11.5%; both came back inside the band with three more pairs, which is the run-to-run noise described above.
+
+**Build.** `size:check` 162,637 B gzip (baseline 162,619 B; the 18 B is 0.1b's pinned number formatter). The `dist/` output was byte-identical before and after the 0.4 move to `packages/web`.
+
+**Client-only app.** Playwright against `npm run preview` with no server running: the landing hero solves live, a sample preset optimises, the committed GOOD fixture imports (20 artifacts), and a share link decodes in a fresh browser context with empty storage.
