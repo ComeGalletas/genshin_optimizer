@@ -4,8 +4,6 @@ A local Genshin Impact account advisor. It imports the owner's full inventory, f
 
 Base: a fork of `natcat38/rpg-build-optimizer` (MIT). Keep its LICENSE, DATA_LICENSE and attribution. Read its `README.md`, `CONTEXT.md`, `FILE-MAP.md` and `docs/adr/` before changing anything, and follow its ADR habit: every architectural decision we add gets a new ADR (numbering continues after the fork's last one).
 
-Roadmap: `docs/PLAN.md`. Work phase by phase and don't skip acceptance criteria.
-
 ## Core principles
 
 1. **The GOOD file is the contract.** Every data source (Irminsul, OCR scanner, Enka) produces GOOD JSON. Everything downstream only reads normalized GOOD plus our sidecar fields. Scanners are external tools. We import their files and never implement packet capture or decoding ourselves.
@@ -38,7 +36,7 @@ docs/{PLAN.md, adr/}
 
 ## Conventions
 
-- Run `npm test`, `npm run typecheck` and `npm run lint` before every commit. CI must stay green.
+- Before every commit, run `npm test`, `npm run typecheck`, `npm run lint`, and `npx prettier --check` on changed files (CI checks Markdown too). CI must stay green.
 - Engine code is pure with no I/O. All I/O (files, SQLite, child processes, HTTP, LLM) lives in `server`.
 - All units are the game's internal units in engine code (for example crit rate 0.311, not 31.1%). Convert only at the UI and gcsim boundaries, and test those conversions.
 - Never overwrite an import. Each import is a timestamped snapshot, and "current account" is a view over the latest merged snapshot.
@@ -46,19 +44,16 @@ docs/{PLAN.md, adr/}
 
 ## Repo workflow
 
-- Progress tracking: `docs/TODO.md` is the working checklist for `docs/PLAN.md`. Read it at session start, state the current phase and next unchecked item, and tick items in the same commit that finishes them.
+- Plan and progress: `docs/PLAN.md` is the roadmap. Work phase by phase and don't skip acceptance criteria. `docs/TODO.md` is its checklist. Read it at session start, state the current phase and next unchecked item, and tick items in the same commit that finishes them.
 - Git: `upstream` is `natcat38/rpg-build-optimizer`. `origin` is `ComeGalletas/genshin_optimizer` (public). For now all work happens on `main` in this single checkout, with no parallel branches or worktrees, until work is split into simultaneous tasks. Pull upstream changes deliberately (`git fetch upstream` then merge), never blindly.
 - ADRs: the fork's last one is 0020, so ours start at **0021**. `npm run docs:check` (in CI) fails unless ADR numbers are contiguous **and** every ADR is listed in `knowledge/index.md`, so add the index line in the same commit.
-- Glossary: `CONTEXT.md` is the canonical vocabulary. New domain terms (snapshot, sidecar, fingerprint, ConstraintSpec, rotation template, ...) get an entry there when introduced.
-- Formatting: CI runs `prettier --check .`, which includes Markdown. Run `npx prettier --check` on changed files, docs included, before committing.
+- Glossary: `CONTEXT.md` is the canonical vocabulary. New domain terms (snapshot, sidecar, fingerprint, ConstraintSpec, rotation template, ...) get an entry there when introduced. Keep `FILE-MAP.md` current when adding or moving a top-level source directory.
 - Line endings: `.gitattributes` forces LF and this checkout sets `core.autocrlf=false`. Don't reformat the tree to fix CRLF noise.
 - Shared agent memory: `memory/` (index `memory/MEMORY.md`) is the repo's tool-agnostic memory, inherited from the fork. Some entries describe the upstream repo's GitHub setup and may not apply here.
-- Keep `FILE-MAP.md` current when adding or moving a top-level source directory (it changes a lot in Phase 0).
 
 ## Commands (target)
 
 - `npm run dev`: web + server
 - `npm run server`: API + MCP (stdio and HTTP)
-- `npm run build:data`: regenerate the genshin-db snapshot
 - `npm run sim:check`: verify the gcsim binary, version, and golden configs
-- `npm test`, `npm run typecheck`, `npm run lint`, `npm run bench`
+- `npm test`, `npm run typecheck`, `npm run lint`, `npm run bench`, `npm run build:data` (regenerate the genshin-db snapshot)
