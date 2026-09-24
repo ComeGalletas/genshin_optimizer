@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { genshinAdapter } from './adapter';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import {
+  genshinAdapter,
+  GAME_VERSION,
+  GENSHIN_DB_VERSION,
+  SNAPSHOT_DATE,
+} from './adapter';
+import { CURATION_PATCH } from '../../curation';
 import { WEAPON_TYPES } from '../types';
 import type { Snapshot } from './snapshot';
 import rawData from './data.generated.json';
@@ -175,5 +183,38 @@ describe('weapon typing', () => {
   it('carries a weapon rarity, so a picker can annotate without a second source', () => {
     expect(genshinAdapter.weapon('aquila_favonia')?.rarity).toBe(5);
     expect(genshinAdapter.weapon('the_catch')?.rarity).toBe(4);
+  });
+});
+
+describe('snapshot versions', () => {
+  // Read from disk rather than imported: engine tests may not import
+  // third-party packages (boundaries.test.ts). npm workspaces hoist it to the
+  // repo root.
+  const installed = JSON.parse(
+    readFileSync(
+      fileURLToPath(
+        new URL(
+          '../../../../../node_modules/genshin-db/package.json',
+          import.meta.url,
+        ),
+      ),
+      'utf8',
+    ),
+  ).version as string;
+  const parse = (v: string) => v.split('.').map(Number);
+
+  it('was built from the installed genshin-db (rebuild after a bump)', () => {
+    expect(GENSHIN_DB_VERSION).toBe(installed);
+  });
+
+  it('records a major.minor game version and a release date', () => {
+    expect(GAME_VERSION).toMatch(/^\d+\.\d+$/);
+    expect(SNAPSHOT_DATE).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it('never claims curation for a patch newer than the data', () => {
+    const [cMaj, cMin] = parse(CURATION_PATCH);
+    const [gMaj, gMin] = parse(GAME_VERSION);
+    expect(cMaj * 1000 + cMin).toBeLessThanOrEqual(gMaj * 1000 + gMin);
   });
 });

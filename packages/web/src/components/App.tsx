@@ -29,7 +29,7 @@ import {
   isDefaultSelection,
 } from '../state/optimizeRequest';
 import { bestBuiltCharacter } from '@genshin-build-lab/engine/roster/buildScore';
-import { PATCH } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { GAME_VERSION } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
 import {
   buildHeroExample,
@@ -233,7 +233,7 @@ export function App() {
           <p className="eyebrow">Exact search · proven optimal</p>
           <span className="chip">
             <span className="h-1.5 w-1.5 rounded-full bg-jade" />
-            {GAME_SOURCE} · patch {PATCH}
+            {GAME_SOURCE} · patch {GAME_VERSION}
           </span>
         </div>
         {showSolvedHero ? (
@@ -493,7 +493,7 @@ export function App() {
 
       <footer className="mt-16 border-t border-white/5 pt-6 text-center text-xs text-muted">
         Built with branch-and-bound optimization in a Web Worker · Data from{' '}
-        {GAME_SOURCE} (patch {PATCH}) · Not affiliated with the game’s
+        {GAME_SOURCE} (patch {GAME_VERSION}) · Not affiliated with the game’s
         publisher.
       </footer>
     </div>

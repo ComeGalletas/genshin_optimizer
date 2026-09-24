@@ -45,7 +45,13 @@ function vec(obj?: Record<string, number>): StatVec {
   return (obj ?? {}) as StatVec;
 }
 
-export const PATCH: string = data.patch;
+/** Newest game version the snapshot covers (derived from genshin-db). Not the
+ *  patch the curated tables were checked against: that is `CURATION_PATCH`. */
+export const GAME_VERSION: string = data.gameVersion;
+/** The genshin-db package version the snapshot was built from. */
+export const GENSHIN_DB_VERSION: string = data.genshinDbVersion;
+/** Release date of that genshin-db version (YYYY-MM-DD). */
+export const SNAPSHOT_DATE: string = data.generatedAt;
 
 // The snapshot is frozen for the app's lifetime (ADR-0002), so the three
 // dataset views are mapped once at module load and handed out as-is. Frozen

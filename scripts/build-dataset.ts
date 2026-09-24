@@ -31,6 +31,55 @@ const require = createRequire(import.meta.url);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const genshindb: any = require('genshin-db');
 
+// The genshin-db release this snapshot is built from. `released` becomes the
+// snapshot's `generatedAt`: a fixed date rather than the wall clock, so two
+// builds are byte-identical and CI's drift check stays meaningful. When you
+// bump genshin-db, update both fields from `npm view genshin-db time`; the
+// build refuses to run while they disagree with the installed package.
+const GENSHIN_DB_RELEASE = { version: '5.2.14', released: '2026-09-21' };
+
+function checkGenshinDbRelease(): string {
+  const installed: string = require('genshin-db/package.json').version;
+  if (installed !== GENSHIN_DB_RELEASE.version) {
+    throw new Error(
+      `genshin-db ${installed} is installed but GENSHIN_DB_RELEASE pins ` +
+        `${GENSHIN_DB_RELEASE.version}. Update GENSHIN_DB_RELEASE in ` +
+        `scripts/build-dataset.ts (version and release date from ` +
+        `\`npm view genshin-db time\`).`,
+    );
+  }
+  return installed;
+}
+
+/** Compare two "major.minor" game versions numerically ("7.10" > "7.9"). */
+function compareVersions(a: string, b: string): number {
+  const [aMaj, aMin] = a.split('.').map(Number);
+  const [bMaj, bMin] = b.split('.').map(Number);
+  return aMaj - bMaj || aMin - bMin;
+}
+
+/**
+ * The game version the snapshot covers: the newest `version` genshin-db gives
+ * any included character, weapon or set. Derived rather than typed in, so it
+ * can't go stale the way a hand-kept patch string did (the snapshot held 7.0
+ * content while still labelled 6.7).
+ */
+function newestGameVersion(
+  characters: { name: string }[],
+  weapons: { name: string }[],
+  sets: { name: string }[],
+): string {
+  const versions: string[] = [
+    ...characters.map((c) => genshindb.characters(c.name)?.version),
+    ...weapons.map((w) => genshindb.weapons(w.name)?.version),
+    ...sets.map((s) => genshindb.artifacts(s.name)?.version),
+  ].filter((v): v is string => typeof v === 'string' && /^\d+\.\d+$/.test(v));
+  if (versions.length === 0) {
+    throw new Error('genshin-db returned no game versions for the snapshot.');
+  }
+  return versions.reduce((a, b) => (compareVersions(a, b) >= 0 ? a : b));
+}
+
 // ---------------------------------------------------------------------------
 // Stat key mapping: genshin-db substat name → our StatKey
 // ---------------------------------------------------------------------------
@@ -450,13 +499,16 @@ function dedupeByKey<T extends { key: string; name: string }>(
 
 function main() {
   console.log('Building Genshin Impact dataset...');
+  const genshinDbVersion = checkGenshinDbRelease();
 
   const characters = dedupeByKey(buildCharacters(), 'character');
   const weapons = dedupeByKey(buildWeapons(), 'weapon');
   const sets = dedupeByKey(buildSets(), 'set');
 
   const snapshot = {
-    patch: '6.7',
+    genshinDbVersion,
+    gameVersion: newestGameVersion(characters, weapons, sets),
+    generatedAt: GENSHIN_DB_RELEASE.released,
     characters,
     weapons,
     sets,
@@ -471,6 +523,9 @@ function main() {
   fs.writeFileSync(outPath, JSON.stringify(snapshot, null, 2), 'utf-8');
 
   console.log(`✓ Wrote ${outPath}`);
+  console.log(
+    `  genshin-db ${snapshot.genshinDbVersion} (released ${snapshot.generatedAt}), game version ${snapshot.gameVersion}`,
+  );
   console.log(`  Characters: ${characters.length}`);
   console.log(`  Weapons:    ${weapons.length}`);
   console.log(`  Sets:       ${sets.length}`);

@@ -18,11 +18,15 @@ tables underneath it are not.
    ```
 
    Bump the `genshin-db` dependency first if the new patch's characters or weapons are
-   missing from it.
+   missing from it, and update `GENSHIN_DB_RELEASE` in `scripts/build-dataset.ts` to
+   match (version and release date from `npm view genshin-db time`); the build refuses
+   to run while they disagree. The snapshot's `gameVersion` (header chip and footer) is
+   derived from the data, so it needs no hand edit.
 
-2. **Bump the patch string.** `PATCH` in `packages/engine/src/game/genshin/adapter.ts`. It is surfaced
-   in the header chip, the footer, and the Teams curation note, so a stale value is
-   visible to users.
+2. **Bump the curation patch, last.** `CURATION_PATCH` in `packages/engine/src/curation.ts`
+   drives the Teams note ("Curated from KQM guides for patch …"). Bump it only after step 3
+   has re-verified the curated tables for the new patch; until then it stays behind
+   `gameVersion` on purpose.
 
 3. **Re-verify each curated table** against its `source` URL and the patch notes:
    - `packages/engine/src/meta/metaTargets.ts` — build recipes (set, main stats, ER floor, objective,

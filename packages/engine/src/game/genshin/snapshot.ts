@@ -29,7 +29,14 @@ export interface SnapshotSet {
 }
 
 export interface Snapshot {
-  patch: string;
+  /** The `genshin-db` package version the snapshot was built from. */
+  genshinDbVersion: string;
+  /** Newest game version ("major.minor") among the included characters,
+   *  weapons and sets, as genshin-db records it. */
+  gameVersion: string;
+  /** Release date (YYYY-MM-DD) of that genshin-db version. Deliberately not
+   *  the build time, so rebuilding is byte-identical. */
+  generatedAt: string;
   characters: SnapshotCharacter[];
   weapons: SnapshotWeapon[];
   sets: SnapshotSet[];

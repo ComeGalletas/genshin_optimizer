@@ -7,10 +7,8 @@
 import { useMemo } from 'react';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
-import {
-  genshinAdapter,
-  PATCH,
-} from '@genshin-build-lab/engine/game/genshin/adapter';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import {
   band,
   rosterBuildScores,
@@ -101,8 +99,8 @@ export function TeamsView() {
   return (
     <div className="panel panel-md space-y-4">
       <p className="text-xs text-muted">
-        Curated from KQM guides for patch {PATCH} — Abyss blessings change each
-        patch, so treat these as archetypes, not answers.
+        Curated from KQM guides for patch {CURATION_PATCH} — Abyss blessings
+        change each patch, so treat these as archetypes, not answers.
       </p>
 
       {rec.teams ? (

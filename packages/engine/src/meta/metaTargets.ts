@@ -9,8 +9,8 @@ import type {
 
 // ponytail: this whole table is hand-transcribed from the `source` guides below
 // and has no automated check against patch drift or guide updates — the `source`
-// links are the re-verification path. Curated as of patch 6.7 (see PATCH in
-// game/genshin/adapter.ts); re-check entries after a kit rework or major meta shift.
+// links are the re-verification path. Curated as of the patch in CURATION_PATCH
+// (curation.ts); re-check entries after a kit rework or major meta shift.
 
 /** A frozen, overridable meta build recipe (ADR-0007). Adapted from KQM guides. */
 export interface MetaTarget {

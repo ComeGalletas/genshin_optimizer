@@ -2,7 +2,8 @@ Game reference data in packages/engine/src/game/genshin/data.generated.json is d
 genshin-db project (https://github.com/theBowja/genshin-db) at build time.
 Genshin Impact and all related data are property of HoYoverse. This project bundles
 only numeric stat/reference data for interoperability; no game assets are included.
-Data snapshot: patch (see "patch" field in data.generated.json).
+Data snapshot: see the "genshinDbVersion", "gameVersion" and "generatedAt" fields in
+data.generated.json.
 
 ## Meta build recipes
 

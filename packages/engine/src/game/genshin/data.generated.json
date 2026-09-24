@@ -1,5 +1,7 @@
 {
-  "patch": "6.7",
+  "genshinDbVersion": "5.2.14",
+  "gameVersion": "7.1",
+  "generatedAt": "2026-09-21",
   "characters": [
     {
       "key": "aino",
