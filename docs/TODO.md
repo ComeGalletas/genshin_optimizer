@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.8, CI cleanup
+**Next item:** 0.9, ADR-0021 local-first server architecture
 
 ## Housekeeping (done 2026-09-24)
 
@@ -59,7 +59,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `.env.example` keeps only `ANTHROPIC_API_KEY` (for the local server) and `VITE_AI_ENABLED`. ESLint, Vitest, `.gitignore` and the `typecheck` script no longer mention `api/` or `.vercel`.
   - The web explain client (`ai/`, `ExplainBuild`) stays, hidden. The "serverless bundle boundary" tripwires in `labels-core.test.ts` and `bundleBoundaries.test.ts` stay too; their comments now say the consumer is gone, and ADR-0021 (0.9) decides whether the split still matters. The CSP headers that lived in `vercel.json` went with it; Phase 3's server decides its own.
   - Docs: FILE-MAP, CONTRIBUTING, the testing runbook, and README's AI section. The rest of README (upstream demo link, badges) is 0.10.
-- [ ] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).
+- [x] 0.8 CI cleanup: remove `lighthouse.yml` (it audits upstream's production URL). Decide on `coverage-badge.yml` (it pushes a `badges` branch) and `okf.yml` (external knowledge-bundle standard).
+  - Owner's decisions (2026-09-24). `lighthouse.yml` stays in the tree but is parked: no push or schedule trigger (manual `workflow_dispatch` only), and the job skips unless the repo variable `LIGHTHOUSE_URL` names a deploy. It no longer audits upstream's Vercel site or publishes reports. `coverage-badge.yml` keeps pushing the `badges` branch for now; its comment now gives this repo's badge URL, and README keeps upstream's badge until 0.10. `okf.yml` is unchanged.
+  - Coverage badge history: 11/11 runs green since the fork, badge at 97.4% lines after 0.7.
 - [ ] 0.9 ADR-0021 "Local-first server architecture". It supersedes 0001, 0010 and 0013: mark those superseded and add ADR-0021 to `knowledge/index.md`.
 - [ ] 0.10 Update `README.md` (fork notice and attribution, keeping `LICENSE`/`DATA_LICENSE`), `package.json` metadata, `CONTEXT.md` "What this project is", `FILE-MAP.md`, and `knowledge/` component paths
 - [ ] 0.11 Review the `memory/` entries that describe upstream's GitHub setup and mark or trim them
