@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
-**Next item:** 1.1, bump `genshin-db` and regenerate the snapshot
+**Next item:** 1.2, store the snapshot's versions
 
 ## Housekeeping (done 2026-09-24)
 
@@ -81,8 +81,12 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 1: Static data refresh
 
-- [ ] 1.1 Bump `genshin-db` to the latest release and regenerate the snapshot (`npm run build:data`)
+- [x] 1.1 Bump `genshin-db` to the latest release and regenerate the snapshot (`npm run build:data`)
+  - 5.2.13 → 5.2.14 (released 2026-09-21), installed with npm 11 so the lockfile only changes that package. The snapshot gains 2 characters (Vesna, Vodyanitsa) and 6 weapons, all game version 7.1 per genshin-db. Nothing existing changed or went missing; sets and main-stat tables are identical. Rebuilding twice gives byte-identical output.
+  - 651/651 tests, benchmark explored/pruned counts unchanged, bundle +367 B gzip (size:check ok). The two build warnings (a duplicate Prized Isshin Blade entry, dropped) also appear with 5.2.13.
+  - `patch` stays `'6.7'` on purpose. The old snapshot already held 7.0 content (Alyosha, Odette, 12 weapons), so as a data version it was stale before this bump. But the same value also drives the Teams note "Curated from KQM guides for patch 6.7", and the curated tables were not re-verified for 7.0/7.1, so bumping it would make that claim false. 1.2 splits the two.
 - [ ] 1.2 Store `{genshinDbVersion, gameVersion, generatedAt}` in the snapshot. Keep `generatedAt` deterministic (for example from the package release) so the CI drift check stays reproducible.
+  - From 1.1: `patch` currently means two things, the data's game version (header chip, footer) and the patch the curated tables were checked against (Teams note). Derive `gameVersion` from genshin-db (the newest `version` among included items: 7.1 as of 5.2.14) and keep a separate curation patch for the Teams note.
 - [ ] 1.3 Show the snapshot versions in the web UI footer
 - [ ] 1.4 Add `npm run data:coverage`: per character/weapon, whether it's in genshin-db, has a curated guide or meta target, has a damage profile, and gcsim support (placeholder column until Phase 5)
 - [ ] 1.5 Update `docs/runbooks/patch-refresh.md` for the new metadata and coverage report

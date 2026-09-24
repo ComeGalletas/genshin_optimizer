@@ -5658,6 +5658,118 @@
       }
     },
     {
+      "key": "vesna",
+      "name": "Vesna",
+      "element": "anemo",
+      "weaponType": "sword",
+      "baseByLevel": {
+        "1": {
+          "hp": 1032.45,
+          "atk": 27.56,
+          "def": 56.84,
+          "crit_rate": 5
+        },
+        "20": {
+          "hp": 2678.16,
+          "atk": 71.48,
+          "def": 147.44,
+          "crit_rate": 5
+        },
+        "40": {
+          "hp": 5331.97,
+          "atk": 142.32,
+          "def": 293.54,
+          "crit_rate": 5
+        },
+        "50": {
+          "hp": 6858.15,
+          "atk": 183.05,
+          "def": 377.56,
+          "crit_rate": 9.8
+        },
+        "60": {
+          "hp": 8603.27,
+          "atk": 229.63,
+          "def": 473.63,
+          "crit_rate": 14.6
+        },
+        "70": {
+          "hp": 10147,
+          "atk": 270.83,
+          "def": 558.62,
+          "crit_rate": 14.6
+        },
+        "80": {
+          "hp": 11701.05,
+          "atk": 312.31,
+          "def": 644.17,
+          "crit_rate": 19.4
+        },
+        "90": {
+          "hp": 13262.32,
+          "atk": 353.98,
+          "def": 730.13,
+          "crit_rate": 24.2
+        }
+      }
+    },
+    {
+      "key": "vodyanitsa",
+      "name": "Vodyanitsa",
+      "element": "hydro",
+      "weaponType": "catalyst",
+      "baseByLevel": {
+        "1": {
+          "hp": 1153.52,
+          "atk": 8.38,
+          "def": 37.69,
+          "hp_pct": 0
+        },
+        "20": {
+          "hp": 2992.22,
+          "atk": 21.74,
+          "def": 97.78,
+          "hp_pct": 0
+        },
+        "40": {
+          "hp": 5957.24,
+          "atk": 43.27,
+          "def": 194.66,
+          "hp_pct": 0
+        },
+        "50": {
+          "hp": 7662.38,
+          "atk": 55.66,
+          "def": 250.38,
+          "hp_pct": 7.2
+        },
+        "60": {
+          "hp": 9612.15,
+          "atk": 69.82,
+          "def": 314.09,
+          "hp_pct": 14.4
+        },
+        "70": {
+          "hp": 11336.9,
+          "atk": 82.35,
+          "def": 370.45,
+          "hp_pct": 14.4
+        },
+        "80": {
+          "hp": 13073.19,
+          "atk": 94.96,
+          "def": 427.19,
+          "hp_pct": 21.6
+        },
+        "90": {
+          "hp": 14817.55,
+          "atk": 107.63,
+          "def": 484.19,
+          "hp_pct": 28.8
+        }
+      }
+    },
+    {
       "key": "wanderer",
       "name": "Wanderer",
       "element": "anemo",
@@ -7384,6 +7496,46 @@
       }
     },
     {
+      "key": "beyond_the_chrysalis",
+      "name": "Beyond the Chrysalis",
+      "type": "sword",
+      "rarity": 5,
+      "byLevel": {
+        "1": {
+          "atk": 47.54,
+          "crit_dmg": 9.6
+        },
+        "20": {
+          "atk": 133.29,
+          "crit_dmg": 16.96
+        },
+        "40": {
+          "atk": 260.56,
+          "crit_dmg": 24.72
+        },
+        "50": {
+          "atk": 341.43,
+          "crit_dmg": 28.6
+        },
+        "60": {
+          "atk": 423.4,
+          "crit_dmg": 32.48
+        },
+        "70": {
+          "atk": 506.22,
+          "crit_dmg": 36.35
+        },
+        "80": {
+          "atk": 589.85,
+          "crit_dmg": 40.22
+        },
+        "90": {
+          "atk": 674.33,
+          "crit_dmg": 44.1
+        }
+      }
+    },
+    {
       "key": "blackcliff_agate",
       "name": "Blackcliff Agate",
       "type": "catalyst",
@@ -7780,6 +7932,46 @@
         "90": {
           "atk": 354.38,
           "em": 187.44
+        }
+      }
+    },
+    {
+      "key": "breezeborne_refrain",
+      "name": "Breezeborne Refrain",
+      "type": "bow",
+      "rarity": 4,
+      "byLevel": {
+        "1": {
+          "atk": 42.4,
+          "crit_rate": 6
+        },
+        "20": {
+          "atk": 108.93,
+          "crit_rate": 10.6
+        },
+        "40": {
+          "atk": 204.83,
+          "crit_rate": 15.45
+        },
+        "50": {
+          "atk": 265.86,
+          "crit_rate": 17.87
+        },
+        "60": {
+          "atk": 326.78,
+          "crit_rate": 20.3
+        },
+        "70": {
+          "atk": 387.66,
+          "crit_rate": 22.72
+        },
+        "80": {
+          "atk": 448.68,
+          "crit_rate": 25.14
+        },
+        "90": {
+          "atk": 509.61,
+          "crit_rate": 27.56
         }
       }
     },
@@ -10516,6 +10708,46 @@
       }
     },
     {
+      "key": "hymn_of_the_maelstrom",
+      "name": "Hymn of the Maelstrom",
+      "type": "catalyst",
+      "rarity": 5,
+      "byLevel": {
+        "1": {
+          "atk": 44.34,
+          "hp_pct": 14.4
+        },
+        "20": {
+          "atk": 110.17,
+          "hp_pct": 25.44
+        },
+        "40": {
+          "atk": 209.82,
+          "hp_pct": 37.08
+        },
+        "50": {
+          "atk": 275.46,
+          "hp_pct": 42.9
+        },
+        "60": {
+          "atk": 341.46,
+          "hp_pct": 48.72
+        },
+        "70": {
+          "atk": 407.81,
+          "hp_pct": 54.52
+        },
+        "80": {
+          "atk": 474.55,
+          "hp_pct": 60.34
+        },
+        "90": {
+          "atk": 541.83,
+          "hp_pct": 66.15
+        }
+      }
+    },
+    {
       "key": "ibis_piercer",
       "name": "Ibis Piercer",
       "type": "bow",
@@ -11818,6 +12050,46 @@
         "90": {
           "atk": 564.78,
           "atk_pct": 27.56
+        }
+      }
+    },
+    {
+      "key": "new_bough",
+      "name": "New Bough",
+      "type": "sword",
+      "rarity": 4,
+      "byLevel": {
+        "1": {
+          "atk": 42.4,
+          "crit_dmg": 12
+        },
+        "20": {
+          "atk": 108.93,
+          "crit_dmg": 21.2
+        },
+        "40": {
+          "atk": 204.83,
+          "crit_dmg": 30.9
+        },
+        "50": {
+          "atk": 265.86,
+          "crit_dmg": 35.75
+        },
+        "60": {
+          "atk": 326.78,
+          "crit_dmg": 40.6
+        },
+        "70": {
+          "atk": 387.66,
+          "crit_dmg": 45.43
+        },
+        "80": {
+          "atk": 448.68,
+          "crit_dmg": 50.28
+        },
+        "90": {
+          "atk": 509.61,
+          "crit_dmg": 55.13
         }
       }
     },
@@ -13696,6 +13968,46 @@
         "90": {
           "atk": 401.29,
           "crit_dmg": 46.86
+        }
+      }
+    },
+    {
+      "key": "silver_light",
+      "name": "Silver Light",
+      "type": "sword",
+      "rarity": 4,
+      "byLevel": {
+        "1": {
+          "atk": 42.4,
+          "atk_pct": 9
+        },
+        "20": {
+          "atk": 108.93,
+          "atk_pct": 15.9
+        },
+        "40": {
+          "atk": 204.83,
+          "atk_pct": 23.18
+        },
+        "50": {
+          "atk": 265.86,
+          "atk_pct": 26.81
+        },
+        "60": {
+          "atk": 326.78,
+          "atk_pct": 30.45
+        },
+        "70": {
+          "atk": 387.66,
+          "atk_pct": 34.07
+        },
+        "80": {
+          "atk": 448.68,
+          "atk_pct": 37.71
+        },
+        "90": {
+          "atk": 509.61,
+          "atk_pct": 41.35
         }
       }
     },
@@ -16228,6 +16540,46 @@
         "90": {
           "atk": 564.78,
           "er_pct": 30.63
+        }
+      }
+    },
+    {
+      "key": "winter's_heavy_heart",
+      "name": "Winter's Heavy Heart",
+      "type": "catalyst",
+      "rarity": 4,
+      "byLevel": {
+        "1": {
+          "atk": 42.4,
+          "crit_dmg": 12
+        },
+        "20": {
+          "atk": 108.93,
+          "crit_dmg": 21.2
+        },
+        "40": {
+          "atk": 204.83,
+          "crit_dmg": 30.9
+        },
+        "50": {
+          "atk": 265.86,
+          "crit_dmg": 35.75
+        },
+        "60": {
+          "atk": 326.78,
+          "crit_dmg": 40.6
+        },
+        "70": {
+          "atk": 387.66,
+          "crit_dmg": 45.43
+        },
+        "80": {
+          "atk": 448.68,
+          "crit_dmg": 50.28
+        },
+        "90": {
+          "atk": 509.61,
+          "crit_dmg": 55.13
         }
       }
     },
