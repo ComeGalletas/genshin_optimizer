@@ -2,7 +2,7 @@
 type: Data Source
 title: Reference data
 description: The frozen game "rulebook" (characters, weapons, sets, stat tables) plus inventory import formats.
-resource: ../../src/import
+resource: ../../packages/engine/src/import
 tags: [data, import]
 timestamp: 2026-06-15T00:00:00Z
 ---
@@ -22,4 +22,4 @@ any live API.
 
 [ADR-0002 — frozen bundled reference dataset](../../docs/adr/0002-frozen-bundled-reference-dataset.md);
 [ADR-0006 — inventory import and build-level model](../../docs/adr/0006-inventory-import-and-build-level-model.md).
-Source: [`packages/engine/src/import`](../../src/import).
+Source: [`packages/engine/src/import`](../../packages/engine/src/import).

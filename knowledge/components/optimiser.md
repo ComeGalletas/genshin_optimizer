@@ -2,7 +2,7 @@
 type: Component
 title: Optimiser
 description: The exact branch-and-bound search returning the top-K valid builds by objective score.
-resource: ../../src/optimizer
+resource: ../../packages/engine/src/optimizer
 tags: [component, optimisation, web-worker]
 timestamp: 2026-06-15T00:00:00Z
 ---
@@ -23,4 +23,4 @@ Web Worker to keep the UI responsive (`src/workers`).
 # Citations
 
 [ADR-0004 — exact branch-and-bound optimisation](../../docs/adr/0004-exact-branch-and-bound-optimisation.md).
-Source: [`packages/engine/src/optimizer`](../../src/optimizer).
+Source: [`packages/engine/src/optimizer`](../../packages/engine/src/optimizer).

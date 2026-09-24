@@ -2,7 +2,7 @@
 type: Component
 title: genshinAdapter
 description: The concrete object that owns all game-specific data and the universal game baselines.
-resource: ../../src/game
+resource: ../../packages/engine/src/game
 tags: [component, architecture]
 timestamp: 2026-06-26T00:00:00Z
 ---
@@ -25,4 +25,4 @@ this concrete adapter ([ADR-0012](../../docs/adr/0012-collapse-gameadapter-seam-
 [ADR-0012 — collapse the GameAdapter seam to a concrete adapter](../../docs/adr/0012-collapse-gameadapter-seam-to-concrete-adapter.md)
 (supersedes [ADR-0008](../../docs/adr/0008-gameadapter-seam-for-multi-game.md));
 [ADR-0009 — adapter owns universal game baselines](../../docs/adr/0009-adapter-owns-universal-game-baselines.md).
-Source: [`packages/engine/src/game`](../../src/game).
+Source: [`packages/engine/src/game`](../../packages/engine/src/game).

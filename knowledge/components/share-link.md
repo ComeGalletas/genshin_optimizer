@@ -2,7 +2,7 @@
 type: Component
 title: Share link
 description: A self-contained URL encoding a full build snapshot, with no backend or stored state.
-resource: ../../src/share
+resource: ../../packages/engine/src/share
 tags: [component, sharing]
 timestamp: 2026-06-15T00:00:00Z
 ---
@@ -18,4 +18,4 @@ the link itself is the storage: opening it reconstructs the exact state with no 
 
 [ADR-0005 — self-contained share links](../../docs/adr/0005-self-contained-share-links.md);
 [ADR-0001 — client-side-only architecture](../../docs/adr/0001-client-side-only-architecture.md).
-Source: [`packages/engine/src/share`](../../src/share).
+Source: [`packages/engine/src/share`](../../packages/engine/src/share).
