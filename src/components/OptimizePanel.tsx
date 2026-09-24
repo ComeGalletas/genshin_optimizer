@@ -13,6 +13,7 @@ import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import {
+  formatCount,
   formatCritRatio,
   isPctStat,
   objectiveLabel,
@@ -156,7 +157,7 @@ function SearchProgressLine({ onCancel }: { onCancel: () => void }) {
   const announceElapsedSec = Math.floor(elapsedMs / 3000) * 3;
   const announcement = useMemo(
     () =>
-      `Searching: ${explored.toLocaleString()} evaluated, ${pruned.toLocaleString()} pruned, ${announceElapsedSec}s elapsed.`,
+      `Searching: ${formatCount(explored)} evaluated, ${formatCount(pruned)} pruned, ${announceElapsedSec}s elapsed.`,
     // eslint-disable-next-line react-hooks/exhaustive-deps -- counters are deliberately sampled only when the 3s bucket changes
     [announceElapsedSec],
   );

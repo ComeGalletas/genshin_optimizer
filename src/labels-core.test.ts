@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  formatCount,
   formatScore,
   formatStat,
   isPctStat,
@@ -67,6 +69,26 @@ describe('optimize worker bundle boundary', () => {
 });
 
 describe('labels-core', () => {
+  it('groups counts en-US regardless of the host locale', () => {
+    expect(formatCount(1234567)).toBe('1,234,567');
+    expect(formatCount(0)).toBe('0');
+  });
+
+  // CI runs under en-US, where a bare `toLocaleString()` looks correct; on a
+  // host like es-CO it renders `12.345`. Every UI number goes through a pinned
+  // formatter instead, so a new bare call fails here rather than on one machine.
+  it('no source file formats with the host locale', () => {
+    const root = dirname(fileURLToPath(import.meta.url));
+    const offenders = readdirSync(root, { recursive: true, encoding: 'utf8' })
+      .filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f))
+      .filter((f) =>
+        /\.toLocale(?:Date|Time)?String\(\s*\)/.test(
+          readFileSync(join(root, f), 'utf8'),
+        ),
+      );
+    expect(offenders).toEqual([]);
+  });
+
   it('labels a known stat and falls back to the raw key', () => {
     expect(statLabel('crit_rate')).toBe('CRIT Rate');
     expect(statLabel('nonsense' as never)).toBe('nonsense');

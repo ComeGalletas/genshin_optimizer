@@ -185,8 +185,12 @@ export function formatCritRatio(target: number): string {
   return scoreFormatter(1).format((1 - target) / target);
 }
 
+/** Pinned to en-US like `scoreFormatter`: a bare `toLocaleString()` follows the
+ *  host locale, so `12345` read `12.345` on an es-CO machine. */
+const countFormatter = new Intl.NumberFormat('en-US');
+
 /** A count of things the search touched, grouped for reading. One helper so
  *  every counter in the UI is grouped the same way. */
 export function formatCount(n: number): string {
-  return n.toLocaleString();
+  return countFormatter.format(n);
 }

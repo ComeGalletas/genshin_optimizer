@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 0 (fork and baseline)
-**Next item:** 0.1b, locale-deterministic number formatting
+**Next item:** 0.2, npm workspaces
 
 ## Housekeeping (done 2026-09-24)
 
@@ -14,6 +14,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] `imports/inbox/` created (contents git-ignored)
 - [x] GitHub home: public repo `ComeGalletas/genshin_optimizer` (standalone, with upstream history), pushed as `origin/main`. Single-branch workflow for now.
 - [x] Retired the fork's `ROADMAP.md`. This file replaces it, and the old version stays in git history.
+- [x] Dependabot disabled: config removed and its 5 PRs closed. Dependency upgrades happen deliberately on `main`. `CLAUDE.md` is trimmed to 59 lines to fit the OKF 60-line cap.
 
 ## Things the fork already has (these change the plan's scope)
 
@@ -29,7 +30,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 0.1 Baseline on the untouched fork: `npm test`, `typecheck`, `lint`, `docs:check`, `bench`, `build`, `size:check`. Save the numbers to `docs/baseline-phase0.md`: test count, bench timings, bundle sizes, Node version, machine.
   - Recorded in [baseline-phase0.md](baseline-phase0.md). The committed `docs/speed-report.md` is stale, and the restructure regenerates it.
   - Known: on this machine (locale `es-CO`), 659/661 tests pass. The 2 failures are the progress-counter assertions in `App.test.tsx` and `OptimizePanel.test.tsx`: `toLocaleString()` renders `12.345` where the tests expect `12,345`. CI (en-US) is unaffected, and `LANG` doesn't change ICU's locale on Windows.
-- [ ] 0.1b Make number formatting locale-deterministic: pass an explicit locale in the formatter or in the tests, so the suite is green on the owner's machine
+- [x] 0.1b Make number formatting locale-deterministic. `formatCount` now uses a pinned en-US `Intl.NumberFormat`, and the `OptimizePanel` live region goes through it. A source-scan test fails CI on any new bare `toLocaleString()`. The suite is now 663/663 green locally, and the Phase 0 "identical test results" bar is all 663 passing.
 - [ ] 0.2 Set up npm workspaces with `packages/{engine,server,web}` and tsconfig project references. Get root scripts `test`, `typecheck`, `lint` and `bench` fanning out to the packages.
 - [ ] 0.3 Move pure logic into `packages/engine`: `optimizer`, `damage`, `import`, `meta`, `game` (+ `genshin/data.generated.json`), `share`, `teams`, `plan`, `roster`, `invest`, `sample` data, and `test-fixtures`. Split mixed directories: `*.tsx` views such as `PlanView`, the roster drawer and the teams view go to `web`.
 - [ ] 0.4 Move React, `state/`, `workers/`, `hooks/`, `components/`, `ui/`, `ai/` and the entry point into `packages/web`, importing engine via the workspace package.
