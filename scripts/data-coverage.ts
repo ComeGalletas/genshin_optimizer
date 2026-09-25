@@ -46,6 +46,7 @@ genshin-db ${GENSHIN_DB_VERSION}, game version ${GAME_VERSION}; curated tables a
 - In genshin-db with no curated data (${s.charactersUncurated.length}): ${list(s.charactersUncurated)}.
 - Weapons: ${s.weapons}. Obtainability entry ${s.weaponsWithObtainability}, a meta pick ${s.weaponsAsMetaPick}.
 - Curated but missing from genshin-db: ${list(s.weaponsMissingFromGenshinDb)}.
+- Meta picks with no obtainability entry (${s.metaPicksWithoutObtainability.length}): ${list(s.metaPicksWithoutObtainability)}.
 
 ## Characters
 

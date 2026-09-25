@@ -101,5 +101,9 @@ describe('buildDataCoverage on synthetic sources', () => {
       weaponsWithObtainability: 1,
       weaponsAsMetaPick: 2,
     });
+    // `ghost` recommends `phantom_bow`, which has no obtainability entry.
+    expect(report.summary.metaPicksWithoutObtainability).toEqual([
+      'phantom_bow',
+    ]);
   });
 });

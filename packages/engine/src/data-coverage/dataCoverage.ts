@@ -64,6 +64,9 @@ export interface DataCoverage {
     weaponsMissingFromGenshinDb: string[];
     weaponsWithObtainability: number;
     weaponsAsMetaPick: number;
+    /** Meta picks without an obtainability entry. The obtainability table is
+     *  meant to cover every weapon a recipe recommends. */
+    metaPicksWithoutObtainability: string[];
   };
 }
 
@@ -193,6 +196,9 @@ export function buildDataCoverage(
         .map((w) => w.key),
       weaponsWithObtainability: weapons.filter((w) => w.obtainability).length,
       weaponsAsMetaPick: weapons.filter((w) => w.metaPickFor.length > 0).length,
+      metaPicksWithoutObtainability: weapons
+        .filter((w) => w.metaPickFor.length > 0 && !w.obtainability)
+        .map((w) => w.key),
     },
   };
 }

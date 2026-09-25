@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
-**Next item:** 1.5, update the patch-refresh runbook
+**Next item:** Phase 1 acceptance: the owner confirms, then Phase 2
 
 ## Housekeeping (done 2026-09-24)
 
@@ -99,8 +99,12 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Today: 120 characters (meta target 52, damage profile 18, in a team archetype 69), 253 weapons (obtainability 86, meta pick 71), nothing curated missing from genshin-db. 51 characters have no curated data, including the 7.0 and 7.1 releases (Alyosha, Odette, Vesna, Vodyanitsa) and older ones such as Diluc, Eula and Tighnari.
   - Fixed while testing: `--json` was cut off at 64 KiB when piped, because the script exited before stdout flushed.
   - The directory is `data-coverage/`, not `coverage/`: `.gitignore` and `.prettierignore` ignore every directory named `coverage` (test-coverage output), which would have kept the module out of git and out of `format:check`.
-- [ ] 1.5 Update `docs/runbooks/patch-refresh.md` for the new metadata and coverage report
+- [x] 1.5 Update `docs/runbooks/patch-refresh.md` for the new metadata and coverage report
+  - New "versions" table (what `genshinDbVersion`, `generatedAt`, `gameVersion` and `CURATION_PATCH` mean, where each is shown, what moves it). Steps reordered to the order the work happens: refresh data, read the coverage report, re-verify tables, add new characters, bump `CURATION_PATCH` last, test and benchmark. The coverage report is step 2, the worklist for the rest.
+  - Added the table the runbook had missed: `invest/obtainability.ts`. The report now lists meta picks with no obtainability entry: **26 today** (Hamayumi, The Alley Flash, Sacrificial Jade, …), a gap from upstream that no test enforced. Left for a curation pass (each entry needs its wiki source), not filled in here.
+  - The benchmark step now says to commit the speed report only when explored or pruned counts change, not for timing alone.
 - [ ] **Accept:** the snapshot regenerates byte-identically twice in a row, and the coverage report prints
+  - Evidence (2026-09-25): two `npm run build:data` runs give the same SHA-256 (`f8a2c879…`), identical to the committed file; CI's drift check has passed on every Phase 1 commit. `npm run data:coverage` exits 0 and prints 395 lines (summary plus both tables). Waiting on the owner's confirmation.
 
 ## Phase 2: Multi-source ingest
 

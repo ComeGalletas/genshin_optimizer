@@ -9,24 +9,57 @@ tables underneath it are not.
 > modelled as data (deferred; the shipped decision is
 > [ADR-0018](../adr/0018-mode-aware-team-recommendation.md)).
 
+## The versions, and who moves them
+
+| Value              | Where it lives                           | Shown in                              | Moves when                                   |
+| ------------------ | ---------------------------------------- | ------------------------------------- | -------------------------------------------- |
+| `genshinDbVersion` | snapshot (`data.generated.json`)         | footer                                | you bump genshin-db and rebuild (step 1)     |
+| `generatedAt`      | snapshot; pinned in `GENSHIN_DB_RELEASE` | footer ("released …")                 | same; it is that release's date, not today's |
+| `gameVersion`      | snapshot, derived from genshin-db's data | header chip, footer, speed report     | automatically, with the data (step 1)        |
+| `CURATION_PATCH`   | `packages/engine/src/curation.ts`        | Teams note, footer ("Curated tables") | by hand, only after steps 3–4 (step 5)       |
+
+`gameVersion` running ahead of `CURATION_PATCH` is normal between a data bump and the
+curation pass: new characters are optimised, just without a meta target, damage profile
+or team slot. The reverse is a bug, and a test rejects it.
+
 ## Checklist
 
 1. **Refresh the dataset.**
+
+   If the new patch's characters or weapons are missing from genshin-db, bump it
+   first, and update `GENSHIN_DB_RELEASE` in `scripts/build-dataset.ts` to match
+   (version and release date from `npm view genshin-db time`). The build refuses to run
+   while they disagree with the installed package. Then:
 
    ```bash
    npm run build:data
    ```
 
-   Bump the `genshin-db` dependency first if the new patch's characters or weapons are
-   missing from it, and update `GENSHIN_DB_RELEASE` in `scripts/build-dataset.ts` to
-   match (version and release date from `npm view genshin-db time`); the build refuses
-   to run while they disagree. The snapshot's `gameVersion` (header chip and footer) is
-   derived from the data, so it needs no hand edit.
+   It prints what it built, for example:
 
-2. **Bump the curation patch, last.** `CURATION_PATCH` in `packages/engine/src/curation.ts`
-   drives the Teams note ("Curated from KQM guides for patch …"). Bump it only after step 3
-   has re-verified the curated tables for the new patch; until then it stays behind
-   `gameVersion` on purpose.
+   ```text
+   genshin-db 5.2.14 (released 2026-09-21), game version 7.1
+   ```
+
+   Commit `data.generated.json` with the bump: CI rebuilds it and fails on any
+   difference.
+
+2. **Read the coverage report** to see what the patch added and what the curation owes it.
+
+   ```bash
+   npm run data:coverage
+   ```
+
+   - **Curated but missing from genshin-db** must say `none`. Anything listed is a key
+     genshin-db renamed or dropped, and it breaks the curated entry that uses it (a test
+     fails on it too). Fix the key in the curated table.
+   - **In genshin-db with no curated data** lists the characters without a meta target,
+     damage profile or team slot. The new patch's characters land here; they are the
+     worklist for step 4.
+   - **Meta picks with no obtainability entry** lists recommended weapons that
+     `WEAPON_OBTAINABILITY` doesn't cover yet (step 3).
+   - To see exactly what a bump added, save `npm run -s data:coverage -- --json` before
+     and after and compare the `key` lists.
 
 3. **Re-verify each curated table** against its `source` URL and the patch notes:
    - `packages/engine/src/meta/metaTargets.ts` — build recipes (set, main stats, ER floor, objective,
@@ -41,17 +74,30 @@ tables underneath it are not.
      Re-verify each entry against its `source` wiki page, and re-check
      `UNMODELLED_FOUR_PIECE`: a new patch's sets need an entry one side or the
      other, and a reworked set can move between them.
+   - `packages/engine/src/invest/obtainability.ts` — how each recommended weapon is
+     obtained. Every weapon a recipe names should have an entry; the coverage report's
+     "no obtainability entry" line is the list to work through.
 
-4. **Add entries for new characters.** Every character who is a weight-1.0 "ideal" pick
-   in any archetype needs a `META_TARGETS` recipe — the coverage test in
-   `packages/engine/src/teams/comps.test.ts` fails otherwise, because an uncovered ideal gets an
-   unconstrained solve that returns a rainbow stat-stick.
+4. **Add entries for new characters.** Take them from step 2's "no curated data" list.
+   Every character who is a weight-1.0 "ideal" pick in any archetype needs a
+   `META_TARGETS` recipe — the coverage test in `packages/engine/src/teams/comps.test.ts`
+   fails otherwise, because an uncovered ideal gets an unconstrained solve that returns a
+   rainbow stat-stick. A character nobody has curated yet still works: the optimiser
+   runs stat-only for them.
 
-5. **Verify and re-benchmark.**
+5. **Bump the curation patch, last.** Set `CURATION_PATCH` in
+   `packages/engine/src/curation.ts` to the patch you just verified, and only once steps
+   3–4 are done. It drives the Teams note ("Curated from KQM guides for patch …") and the
+   footer, so bumping it early claims a check that never happened.
+
+6. **Verify and re-benchmark.**
 
    ```bash
    npm test
    npm run bench
    ```
 
-   Commit the regenerated `docs/speed-report.md` if it changed.
+   Commit the regenerated `docs/speed-report.md` if its explored or pruned counts changed.
+   Timings alone move between machines and sessions (see
+   [baseline-phase0.md](../baseline-phase0.md)), so don't commit a report whose only
+   change is timing.
