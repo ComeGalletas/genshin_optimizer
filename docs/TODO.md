@@ -2,8 +2,8 @@
 
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
-**Current phase:** 1 (static data refresh). Phase 0 was accepted by the owner on 2026-09-24.
-**Next item:** Phase 1 acceptance: the owner confirms, then Phase 2
+**Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
+**Next item:** 2.2, the zod GOOD schema and normalization (2.0, the real exports, is the owner's)
 
 ## Housekeeping (done 2026-09-24)
 
@@ -103,13 +103,17 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - New "versions" table (what `genshinDbVersion`, `generatedAt`, `gameVersion` and `CURATION_PATCH` mean, where each is shown, what moves it). Steps reordered to the order the work happens: refresh data, read the coverage report, re-verify tables, add new characters, bump `CURATION_PATCH` last, test and benchmark. The coverage report is step 2, the worklist for the rest.
   - Added the table the runbook had missed: `invest/obtainability.ts`. The report now lists meta picks with no obtainability entry: **26 today** (Hamayumi, The Alley Flash, Sacrificial Jade, …), a gap from upstream that no test enforced. Left for a curation pass (each entry needs its wiki source), not filled in here.
   - The benchmark step now says to commit the speed report only when explored or pruned counts change, not for timing alone.
-- [ ] **Accept:** the snapshot regenerates byte-identically twice in a row, and the coverage report prints
-  - Evidence (2026-09-25): two `npm run build:data` runs give the same SHA-256 (`f8a2c879…`), identical to the committed file; CI's drift check has passed on every Phase 1 commit. `npm run data:coverage` exits 0 and prints 395 lines (summary plus both tables). Waiting on the owner's confirmation.
+- [x] **Accept:** the snapshot regenerates byte-identically twice in a row, and the coverage report prints
+  - Accepted by the owner on 2026-09-25.
+  - Evidence (2026-09-25): two `npm run build:data` runs give the same SHA-256 (`f8a2c879…`), identical to the committed file; CI's drift check has passed on every Phase 1 commit. `npm run data:coverage` exits 0 and prints 395 lines (summary plus both tables).
 
 ## Phase 2: Multi-source ingest
 
 - [ ] 2.0 Owner: provide a real Irminsul GOOD export and an OCR export (Inventory Kamera / AdeptiScanner) of the same account, taken close together in time. Store them outside git; commit only anonymized fixtures.
-- [ ] 2.1 Add `zod` to engine (ADR: runtime validation at every boundary)
+- [x] 2.1 Add `zod` to engine (ADR: runtime validation at every boundary)
+  - `zod` ^4.6.5 is the engine's first runtime dependency (lockfile via npm 11; it was already in the tree as a dev-only dependency of eslint-plugin-react-hooks, now deduped to 4.6.5). [ADR-0022](adr/0022-runtime-validation-with-zod.md): schemas in the engine, parse once at each boundary, never repair or guess, and adopt it boundary by boundary (2.2 first) rather than rewriting the existing validators at once.
+  - Engine code imports `zod/mini` only. Measured on a GOOD-artifact schema: 26.1 KB gzip with full `zod`, 6.0 KB with `zod/mini`, against about 11 KB of bundle headroom. `boundaries.test.ts` now allows exactly the modules in its `SOURCE_IMPORTS` list (`zod/mini`), flags full `zod` with a pointer to the ADR, and checks that the engine's declared dependencies match that list.
+  - Verified with a throwaway probe file (not committed): a `zod/mini` schema compiles under `tsconfig.lib.json` (no Node types, no DOM) and passes the boundary test; the same file importing `zod` fails it. No engine code uses zod yet, so the bundle is unchanged.
 - [ ] 2.2 `engine/good/normalize.ts`: zod GOOD schema, key/unit/location normalization. Reconcile it with the existing `import/good.ts` instead of forking it.
 - [ ] 2.3 Sidecar for source-specific extras (Irminsul roll data etc.), keyed by artifact fingerprint
 - [ ] 2.4 Artifact fingerprint (`set+slot+rarity+level+mainStat+sorted rounded substats`) plus a fuzzy OCR fallback. Decide in an ADR how it relates to the existing `dedupe.ts` content hash.

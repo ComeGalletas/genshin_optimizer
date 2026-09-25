@@ -77,7 +77,7 @@ Every architectural decision and its rationale lives in [`docs/adr/`](./docs/adr
 
 ## Tech stack
 
-Vite · React 19 · TypeScript (strict) · Tailwind CSS · Zustand · Web Workers · Vitest + Testing Library · native `CompressionStream`, in an npm-workspaces monorepo; CI via GitHub Actions. Planned for the server: Fastify, the MCP TypeScript SDK, SQLite (`better-sqlite3`) and the gcsim CLI. Tokens and component classes: [docs/design-system.md](docs/design-system.md).
+Vite · React 19 · TypeScript (strict) · Tailwind CSS · Zustand · Web Workers · Vitest + Testing Library · zod (`zod/mini`, runtime validation) · native `CompressionStream`, in an npm-workspaces monorepo; CI via GitHub Actions. Planned for the server: Fastify, the MCP TypeScript SDK, SQLite (`better-sqlite3`) and the gcsim CLI. Tokens and component classes: [docs/design-system.md](docs/design-system.md).
 
 ## AI: Explain this build
 

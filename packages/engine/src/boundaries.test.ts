@@ -11,7 +11,8 @@ import ts from 'typescript';
 // check can't see:
 // - a relative import that climbs out of the package (`../../web/src/...`)
 //   or an import of the `web`/`server` packages, which typechecks fine,
-// - a Node built-in or new third-party dependency in source,
+// - a Node built-in, or a third-party module not on the allowlist below, in
+//   source,
 // - tests, which that gate excludes: they may read fixtures with `node:fs`,
 //   but they must not reach into `web` or `server` either.
 // Specifiers come from TypeScript's own scanner, so `import type`,
@@ -22,6 +23,20 @@ const SRC = join(PACKAGE_ROOT, 'src');
 
 /** Bare specifiers tests may use besides Node built-ins. */
 const TEST_DEPENDENCIES = new Set(['vitest', 'typescript']);
+
+/**
+ * Third-party modules engine source may import, mapped to the package that
+ * provides them. Each package must be a declared `dependencies` entry in the
+ * engine's package.json (checked below). zod is imported only as `zod/mini`:
+ * the full API costs ~26 KB gzip in the browser bundle against ~6 KB
+ * (ADR-0022).
+ */
+const SOURCE_IMPORTS: Record<string, string> = { 'zod/mini': 'zod' };
+
+const packageOf = (spec: string) =>
+  spec.startsWith('@')
+    ? spec.split('/').slice(0, 2).join('/')
+    : spec.split('/')[0];
 
 function specifiers(text: string): string[] {
   return ts
@@ -47,9 +62,15 @@ function violations(file: string, text: string): string[] {
         out.push(
           `'${spec}' is a Node built-in: I/O belongs in packages/server`,
         );
-    } else if (!isTest || !TEST_DEPENDENCIES.has(spec.split('/')[0])) {
+    } else if (spec in SOURCE_IMPORTS) {
+      // An allowlisted runtime module (source and tests alike).
+    } else if (isTest && TEST_DEPENDENCIES.has(packageOf(spec))) {
+      // Test tooling.
+    } else if (packageOf(spec) === 'zod') {
+      out.push(`'${spec}': import 'zod/mini', not full zod (ADR-0022)`);
+    } else {
       out.push(
-        `'${spec}' is a third-party package: the engine has no runtime dependencies`,
+        `'${spec}' is not an allowed engine dependency (SOURCE_IMPORTS in boundaries.test.ts)`,
       );
     }
   }
@@ -86,6 +107,8 @@ describe('engine import boundary', () => {
       "export * from '@genshin-build-lab/server';",
       "import { labels } from '../../../web/src/labels';",
       "import { run } from '../../../server/src/index';",
+      "import { z } from 'zod';",
+      "import * as z from 'zod/v4';",
     ])('flags %s in source', (line) => {
       expect(violations(source, line)).toHaveLength(1);
     });
@@ -106,6 +129,7 @@ describe('engine import boundary', () => {
             "import type { Artifact } from '../game/types';",
             "import { score } from './score';",
             "import { formatCount } from '@genshin-build-lab/engine/labels-core';",
+            "import * as z from 'zod/mini';",
           ].join('\n'),
         ),
       ).toEqual([]);
@@ -120,6 +144,20 @@ describe('engine import boundary', () => {
         ),
       ).toEqual([]);
     });
+  });
+});
+
+describe('engine runtime dependencies', () => {
+  // A new dependency is a reviewed decision: it has to be declared in
+  // package.json *and* allowlisted above, and nothing allowlisted may be
+  // undeclared (it would only resolve through the workspace root by luck).
+  it('declares exactly the packages SOURCE_IMPORTS allows', () => {
+    const pkg = JSON.parse(
+      readFileSync(join(PACKAGE_ROOT, 'package.json'), 'utf8'),
+    ) as { dependencies?: Record<string, string> };
+    expect(Object.keys(pkg.dependencies ?? {}).sort()).toEqual(
+      [...new Set(Object.values(SOURCE_IMPORTS))].sort(),
+    );
   });
 });
 
