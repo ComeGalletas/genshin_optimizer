@@ -38,7 +38,7 @@ docs/{PLAN.md, adr/}
 
 - Before every commit, run `npm test`, `npm run typecheck`, `npm run lint`, and `npx prettier --check` on changed files (CI checks Markdown too). CI must stay green.
 - Engine code is pure with no I/O. All I/O (files, SQLite, child processes, HTTP, LLM) lives in `server`.
-- All units are the game's internal units in engine code (for example crit rate 0.311, not 31.1%). Convert only at the UI and gcsim boundaries, and test those conversions.
+- Engine stats stay in percent, as GOOD and the fork store them (crit rate 31.1, not 0.311; ADR-0023). Convert only at the gcsim boundary, and test that conversion.
 - Never overwrite an import. Each import is a timestamped snapshot, and "current account" is a view over the latest merged snapshot.
 - When game data is missing for a new character or item (genshin-db or gcsim lagging behind the game), degrade gracefully: stat-only mode with an explicit "not simulated" flag. Never crash, and never guess.
 
