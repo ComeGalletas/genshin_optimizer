@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.2, the zod GOOD schema and normalization (2.0, the real exports, is the owner's)
+**Next item:** 2.3, the sidecar for source-specific extras (2.0, the real exports, is the owner's; 2.3 needs them to know Irminsul's extra fields)
 
 ## Housekeeping (done 2026-09-24)
 
@@ -114,7 +114,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `zod` ^4.6.5 is the engine's first runtime dependency (lockfile via npm 11; it was already in the tree as a dev-only dependency of eslint-plugin-react-hooks, now deduped to 4.6.5). [ADR-0022](adr/0022-runtime-validation-with-zod.md): schemas in the engine, parse once at each boundary, never repair or guess, and adopt it boundary by boundary (2.2 first) rather than rewriting the existing validators at once.
   - Engine code imports `zod/mini` only. Measured on a GOOD-artifact schema: 26.1 KB gzip with full `zod`, 6.0 KB with `zod/mini`, against about 11 KB of bundle headroom. `boundaries.test.ts` now allows exactly the modules in its `SOURCE_IMPORTS` list (`zod/mini`), flags full `zod` with a pointer to the ADR, and checks that the engine's declared dependencies match that list.
   - Verified with a throwaway probe file (not committed): a `zod/mini` schema compiles under `tsconfig.lib.json` (no Node types, no DOM) and passes the boundary test; the same file importing `zod` fails it. No engine code uses zod yet, so the bundle is unchanged.
-- [ ] 2.2 `engine/good/normalize.ts`: zod GOOD schema, key/unit/location normalization. Reconcile it with the existing `import/good.ts` instead of forking it.
+- [x] 2.2 `engine/good/normalize.ts`: zod GOOD schema, key/unit/location normalization. Reconcile it with the existing `import/good.ts` instead of forking it.
+  - `good/schema.ts` (zod/mini): structure and types only, each artifact/character/weapon parsed on its own so one bad entry is skipped, not the file; objects are loose, so unread fields (scanner extras) survive for the 2.3 sidecar. `good/normalize.ts`: `normalizeGOOD` maps GOOD keys to dataset keys, resolves locations, passes stat values through (percent, ADR-0023), and applies the app's rules (4★/5★ only, `validateArtifactDraft`).
+  - Reconciled, not forked: `import/good.ts` is now two thin views of `normalizeGOOD`, and all 34 of its original tests pass unchanged, as do the web ImportPanel tests and a browser GOOD import on the production build.
+  - New, and previously dropped: the full weapon inventory (level, ascension, refinement, location, lock), artifact lock flags, the file's `source` and `version`, each artifact's index in the file, and an issues list (`invalid` / `unsupported` / `unresolved` / `truncated`, with the path) for everything skipped. The sample fixture normalizes with zero issues. 14 new tests.
+  - zod now ships in the web bundle: 163,128 → 169,845 B gzip (+6.7 KB, as ADR-0022 predicted); the optimize worker is unchanged. The size baseline was rebased with `size:update`, as the script prescribes for intentional growth.
 - [ ] 2.3 Sidecar for source-specific extras (Irminsul roll data etc.), keyed by artifact fingerprint
 - [ ] 2.4 Artifact fingerprint (`set+slot+rarity+level+mainStat+sorted rounded substats`) plus a fuzzy OCR fallback. Decide in an ADR how it relates to the existing `dedupe.ts` content hash.
 - [ ] 2.5 Merge with precedence Irminsul > OCR > Enka for values and newest-snapshot for location. Reconciliation report: only-in-A, only-in-B, and mismatches beyond tolerance.
