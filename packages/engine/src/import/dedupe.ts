@@ -6,15 +6,12 @@
  */
 
 import type { Artifact } from '../game/types';
+import { fingerprint } from './fingerprint';
 
-/** Stable content hash for dedupe. Independent of `id`. */
-export function artifactHash(a: Artifact): string {
-  const subs = [...a.subStats]
-    .sort((x, y) => x.key.localeCompare(y.key))
-    .map((s) => `${s.key}:${s.value}`)
-    .join(',');
-  return `${a.setKey}|${a.slot}|${a.rarity}|${a.level}|${a.mainStat}|${a.element ?? ''}|${subs}`;
-}
+/** Stable content hash for dedupe: the artifact fingerprint (ADR-0025), so
+ *  manual entry, GOOD and Enka imports all dedupe on one identity.
+ *  Independent of `id`. */
+export const artifactHash: (a: Artifact) => string = fingerprint;
 
 /**
  * The subset of `incoming` whose content (per artifactHash, id-independent) is
