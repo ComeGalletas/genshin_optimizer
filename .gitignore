@@ -51,6 +51,8 @@ imports/inbox/*
 *.sqlite-journal
 *.sqlite-wal
 *.sqlite-shm
+# The store lives in var/ (DEFAULT_STORE_PATH)
+var/
 .cache/
 # Downloaded gcsim binary (version pinned in config/tools.json)
 tools/bin/

@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.6, scaffold `packages/server` with the SQLite snapshot store
+**Next item:** 2.7, the inbox watcher that imports each dropped file as a snapshot
 
 ## Housekeeping (done 2026-09-24)
 
@@ -140,11 +140,15 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - [ADR-0027](adr/0027-merge-and-reconciliation.md). `merge/merge.ts`: `mergeSnapshots` rejects scan faults (a fingerprint 3+ times in one snapshot) before merging, merges the rest in source-rank then newest-first order, and gives each merged artifact its values from the best source (or, for a piece levelled in between, the newer reading), its location and lock from the newest snapshot (Enka's missing lock leaves the last known), and every appearance. `reconcile` pairs one to one (exact, fuzzy, then first-roll key), lists same-shape mismatches beyond one shown step without pairing them, moves, and only-in-A/B. `sourceKind` ranks a GOOD file's `source`.
   - Real data: both AdeptiScanner exports are rejected (30 pieces repeated 19–23 times), so the merged view is Irminsul's 1,650 pieces. With the second scan's repeats removed as an experiment: 1,663 merged (Irminsul's 1,650, 12 4★, 1 new goblet), 998 exact + 2 fuzzy pairs, 0 mismatches, 5 moves, all 2,663 input pieces accounted for, ~20 ms.
   - A property test (200 random rounds with misreads, levelled readings and stuck-scan repeats, a seeded PRNG) checks that every piece of every merged snapshot lands in exactly one merged artifact, and that each path is reached. Four planted bugs (dropping mismatches, dropping only-in-B, not removing levelled or mismatched pieces from the only lists) each fail it. 2.9 extends the test list.
-- [ ] 2.6 Scaffold `packages/server`: SQLite (`better-sqlite3`) with a migrations table and schema for immutable snapshots, merged view, and sidecar
+- [x] 2.6 Scaffold `packages/server`: SQLite (`better-sqlite3`) with a migrations table and schema for immutable snapshots, merged view, and sidecar
+  - [ADR-0028](adr/0028-sqlite-snapshot-store.md). `better-sqlite3` 13 (SQLite 3.53, prebuilt binary on Node 22; lockfile via npm 11, only that package and its types added). `packages/server/src/store/`: `migrations.ts` (append-only list recorded in `schema_migrations`; a database from a newer app or with renamed migrations is refused) and `store.ts` (`openStore`, default `var/store.sqlite`, git-ignored).
+  - Schema v1: `snapshots` (keyed by the file's SHA-256, so re-importing a file is idempotent; a scan fault is recorded on it), with `snapshot_artifacts`, `snapshot_sidecar`, `snapshot_characters` and `snapshot_weapons`; `merges` and `merged_artifacts`; and the `current_account` view over the latest merge. Triggers make every row immutable; deleting a snapshot cascades, and is refused while a merge uses it. Stored rows are checked on the way out (ADR-0022), and ids are by place (`s1-0`, `m2-5`).
+  - API: `importGood`, `listSnapshots`, `loadSnapshot` (pieces with lock and sidecar extras, ready for the engine's merge), `loadRoster`, `recordMerge`, `latestUsableSnapshots`, `currentAccount`. 12 tests on in-memory and file stores.
+  - Real data: Irminsul imports in ~110 ms and re-importing it writes nothing; both AdeptiScanner files are stored with their fault and rejected by the merge; the current account is Irminsul's 1,650 pieces; 5.2 MB for three snapshots and one merge.
 - [ ] 2.7 Inbox watcher: detect the source per file, import it as a timestamped snapshot tagged `{source, importedAt, gameVersion?}`, never overwrite. Flag a scan whose entries repeat in long runs as a scanner fault instead of taking it as the inventory (ADR-0026)
 - [ ] 2.8 "What changed since last import" diff: new artifacts, upgrades, re-equips
 - [ ] 2.9 Tests: idempotent re-import, precedence, fuzzy match, and a property test that merge never loses an artifact
-- [ ] ADR(s): snapshot store and merge model
+- [x] ADR(s): snapshot store and merge model: [ADR-0027](adr/0027-merge-and-reconciliation.md) (merge) and [ADR-0028](adr/0028-sqlite-snapshot-store.md) (store)
 - [ ] **Accept** (revised 2026-09-28, [ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md)): re-importing the same Irminsul file changes nothing; two Irminsul exports taken at different times give a correct "what changed" diff; a faulty OCR scan (long runs of repeats) is detected and reported, not merged
   - Was: ≥ 98% artifact match between an Irminsul and an OCR export. Both AdeptiScanner exports failed it for a scanner fault (see 2.0), while Irminsul covers the whole account; the owner chose Irminsul-first (2026-09-28).
 
