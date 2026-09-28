@@ -81,3 +81,55 @@ export const IdParam = z.object({ id: z.string().max(MAX_KEY) });
 export const SnapshotParam = z.object({
   id: z.coerce.number().int().positive(),
 });
+
+const CharacterKey = z
+  .string()
+  .max(MAX_KEY)
+  .refine((k) => !!genshinAdapter.character(k), {
+    message: 'unknown character',
+  });
+
+export const ArtifactQuery = z
+  .object({
+    setKey: SetKey.optional(),
+    slot: z.enum(SLOTS).optional(),
+    mainStat: StatKey.optional(),
+    /** Substat floors, e.g. `{ "crit_rate": 7, "crit_dmg": 14 }`. */
+    minSubstats: z.partialRecord(StatKey, z.number().finite()).optional(),
+    minLevel: z.number().int().min(0).max(20).optional(),
+    maxLevel: z.number().int().min(0).max(20).optional(),
+    /** A character key (worn by them), "" (unequipped) or "*" (worn by
+     *  anyone). */
+    location: z.string().max(MAX_KEY).optional(),
+    locked: z.boolean().optional(),
+    limit: z.number().int().min(1).max(200).optional(),
+  })
+  .strict();
+export type ArtifactQuery = z.infer<typeof ArtifactQuery>;
+
+const ArtifactIds = z.array(z.string().max(MAX_KEY)).min(1).max(5);
+
+export const CompareBody = z
+  .object({
+    characterKey: CharacterKey,
+    weaponKey: z
+      .string()
+      .max(MAX_KEY)
+      .refine((k) => !!genshinAdapter.weapon(k), { message: 'unknown weapon' })
+      .optional(),
+    buildLevel: z
+      .number()
+      .refine((l) => (BUILD_LEVELS as number[]).includes(l), {
+        message: `one of ${BUILD_LEVELS.join(', ')}`,
+      })
+      .optional(),
+    objective: z
+      .string()
+      .refine(isObjective, { message: 'a stat key, crit_value or avg_damage' })
+      .optional(),
+    /** Artifact ids (from the account, e.g. `m3-17`), one per slot. */
+    a: ArtifactIds,
+    b: ArtifactIds,
+  })
+  .strict();
+export type CompareBody = z.infer<typeof CompareBody>;

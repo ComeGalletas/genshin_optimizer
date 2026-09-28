@@ -165,3 +165,53 @@ describe('imports and later phases', () => {
     expect((await get('/nope')).statusCode).toBe(404);
   });
 });
+
+describe('queries, comparisons and MCP over HTTP', () => {
+  it('queries artifacts and compares builds', async () => {
+    const q = (
+      await post('/artifacts/query', { slot: 'sands', limit: 1 })
+    ).json();
+    expect(q.artifacts).toHaveLength(1);
+    expect(q.total).toBeGreaterThanOrEqual(1);
+    const ids = (await get('/characters/neuvillette'))
+      .json()
+      .equipped.map((a: { id: string }) => a.id);
+    const c = (
+      await post('/compare', { characterKey: 'neuvillette', a: ids, b: ids })
+    ).json();
+    expect(c.objectiveDiff).toBe(0);
+    expect(c.diff).toEqual({});
+    expect(
+      (
+        await post('/compare', {
+          characterKey: 'neuvillette',
+          a: ids,
+          b: [ids[0], ids[0]],
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect((await get('/imports/report')).json()).toMatchObject({
+      snapshots: 1,
+      faultyScans: [],
+    });
+  });
+
+  it('serves MCP at /mcp behind the same localhost guard', async () => {
+    const rpc = (headers: Record<string, string>) =>
+      app.inject({
+        method: 'POST',
+        url: '/mcp',
+        headers: {
+          ...headers,
+          'content-type': 'application/json',
+          accept: 'application/json, text/event-stream',
+        },
+        payload: { jsonrpc: '2.0', id: 1, method: 'tools/list', params: {} },
+      });
+    const r = await rpc(H);
+    expect(r.statusCode).toBe(200);
+    expect(r.json().result.tools.length).toBe(7);
+    expect((await rpc({ host: 'evil.example' })).statusCode).toBe(403);
+    expect((await get('/mcp')).statusCode).toBe(405);
+  });
+});

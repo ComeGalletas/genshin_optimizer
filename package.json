@@ -39,6 +39,7 @@
     "data:coverage": "tsx scripts/data-coverage.ts",
     "prospects": "tsx scripts/prospects.ts",
     "server": "tsx packages/server/src/cli/serve.ts",
+    "mcp": "tsx packages/server/src/cli/mcp.ts",
     "inbox": "tsx packages/server/src/cli/inbox.ts",
     "phase2:check": "tsx packages/server/src/cli/phase2-check.ts",
     "diff:sim": "tsx scripts/diff-sim.ts",

@@ -1,46 +1,31 @@
 /**
  * The local HTTP API (TODO 3.1, ADR-0030): the engine and the snapshot store
- * over JSON, for the web app (3.5) and anything else on this machine.
+ * over JSON, for the web app (3.5) and anything else on this machine, plus
+ * the MCP server over streamable HTTP at `/mcp` (TODO 3.2, ADR-0031).
  *
  * Localhost only (ADR-0021): the server listens on 127.0.0.1, and every
  * request must name a localhost Host (so a web page can't reach it through
  * DNS rebinding) and, if it comes from a browser, a localhost Origin. Errors
- * are `{ error, message, issues? }` with a matching status code.
+ * are `{ error, message, issues? }` with a matching status code. The routes
+ * are thin: what they answer is `Services`, shared with the MCP tools.
  * @packageDocumentation
  */
 
 import Fastify, { type FastifyInstance, type FastifyReply } from 'fastify';
 import * as z from 'zod';
-import type {
-  Artifact,
-  OptimizeRequest,
-  Slot,
-} from '@genshin-build-lab/engine/game/types';
-import { SLOTS } from '@genshin-build-lab/engine/game/types';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
-import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
-import {
-  defaultConstraints,
-  defaultObjective,
-} from '@genshin-build-lab/engine/optimizer/defaults';
-import { totals } from '@genshin-build-lab/engine/optimizer/score';
-import {
-  GAME_VERSION,
-  GENSHIN_DB_VERSION,
-} from '@genshin-build-lab/engine/game/genshin/adapter';
-import {
-  currentAccount,
-  currentRoster,
-  diffSincePrevious,
-  listMerges,
-  listSnapshots,
-  snapshotInfo,
-  StoreError,
-  type Store,
-} from '../store/store';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { StoreError, type Store } from '../store/store';
 import { DEFAULT_INBOX, processInbox } from '../inbox/inbox';
-import { IdParam, OptimizeBody, SnapshotParam } from './schemas';
-import { SearchRunner, SearchTimeout } from '../optimize/pool';
+import { SearchRunner } from '../optimize/pool';
+import { createMcpServer } from '../mcp/server';
+import {
+  ArtifactQuery,
+  CompareBody,
+  IdParam,
+  OptimizeBody,
+  SnapshotParam,
+} from './schemas';
+import { ServiceError, Services } from './services';
 
 export interface AppOptions {
   db: Store;
@@ -95,11 +80,10 @@ function parse<T>(
 }
 
 export function buildApp(opts: AppOptions): FastifyInstance {
-  const { db } = opts;
   const inboxDir = opts.inboxDir ?? DEFAULT_INBOX;
   const app = Fastify({ logger: opts.logger ?? false });
-  const searches = new SearchRunner(opts.searchLimitMs);
-  app.addHook('onClose', () => searches.close());
+  const services = new Services(opts.db, new SearchRunner(opts.searchLimitMs));
+  app.addHook('onClose', () => services.searches.close());
 
   // ---- localhost guard and CORS -----------------------------------------
   app.addHook('onRequest', async (req, reply) => {
@@ -122,13 +106,18 @@ export function buildApp(opts: AppOptions): FastifyInstance {
       if (req.method === 'OPTIONS')
         return reply
           .header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-          .header('Access-Control-Allow-Headers', 'Content-Type')
+          .header(
+            'Access-Control-Allow-Headers',
+            'Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version',
+          )
           .code(204)
           .send();
     }
   });
 
   app.setErrorHandler((err, _req, reply) => {
+    if (err instanceof ServiceError)
+      return fail(reply, err.status, err.code, err.message);
     if (err instanceof StoreError)
       return fail(reply, 404, 'not_found', err.message);
     const status = (err as { statusCode?: number }).statusCode ?? 500;
@@ -141,181 +130,27 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     fail(reply, 404, 'not_found', `no route ${req.method} ${req.url}`),
   );
 
-  // ---- health ------------------------------------------------------------
-  app.get('/health', async () => ({
-    ok: true,
-    genshinDbVersion: GENSHIN_DB_VERSION,
-    gameVersion: GAME_VERSION,
-  }));
-
-  // ---- account -----------------------------------------------------------
-  app.get('/account', async () => {
-    const merges = listMerges(db);
-    const latest = merges.at(-1);
-    const artifacts = currentAccount(db);
-    const { snapshotId, roster, weapons } = currentRoster(db);
-    const count = <K extends string>(keys: K[]) => {
-      const out = {} as Record<K, number>;
-      for (const k of keys) out[k] = (out[k] ?? 0) + 1;
-      return out;
-    };
-    return {
-      merge: latest ?? null,
-      artifacts: {
-        total: artifacts.length,
-        bySlot: count(artifacts.map((a) => a.artifact.slot)),
-        byRarity: count(artifacts.map((a) => String(a.artifact.rarity))),
-        atPlus20: artifacts.filter((a) => a.artifact.level === 20).length,
-        equipped: artifacts.filter((a) => a.artifact.location).length,
-      },
-      characters: Object.keys(roster).length,
-      weapons: weapons.length,
-      rosterFrom: snapshotId ?? null,
-    };
-  });
-
-  // ---- characters ----------------------------------------------------------
-  const equippedBy = (artifacts: { artifact: Artifact }[]) => {
-    const by = new Map<string, Artifact[]>();
-    for (const { artifact } of artifacts)
-      if (artifact.location)
-        by.set(artifact.location, [
-          ...(by.get(artifact.location) ?? []),
-          artifact,
-        ]);
-    return by;
-  };
-
-  app.get('/characters', async () => {
-    const { roster } = currentRoster(db);
-    const equipped = equippedBy(currentAccount(db));
-    return Object.entries(roster)
-      .map(([key, entry]) => ({
-        key,
-        name: genshinAdapter.characterName(key),
-        ...entry,
-        equippedArtifacts: equipped.get(key)?.length ?? 0,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  });
-
+  // ---- account and characters ------------------------------------------------
+  app.get('/health', async () => services.health());
+  app.get('/account', async () => services.accountSummary());
+  app.get('/characters', async () => services.listCharacters());
   app.get('/characters/:id', async (req, reply) => {
     const p = parse(IdParam, req.params, reply);
-    if (!p) return;
-    const meta = genshinAdapter.character(p.id);
-    if (!meta)
-      return fail(
-        reply,
-        404,
-        'not_found',
-        `no character "${p.id}" in the dataset`,
-      );
-    const entry = currentRoster(db).roster[p.id];
-    if (!entry)
-      return fail(
-        reply,
-        404,
-        'not_found',
-        `${meta.name} is not in the account`,
-      );
-    const equipped = equippedBy(currentAccount(db)).get(p.id) ?? [];
-    let stats = null;
-    if (entry.weaponKey) {
-      const ctx = buildContext({
-        characterKey: p.id,
-        weaponKey: entry.weaponKey,
-        buildLevel: entry.buildLevel ?? 90,
-        constraints: {},
-        objective: 'crit_value',
-      });
-      stats = totals(ctx, equipped);
-    }
-    return {
-      ...meta, // key, name, element, weaponType
-      ...entry,
-      equipped,
-      /** Sheet totals with the equipped pieces, set bonuses included
-       *  (percent stats in percent, ADR-0023). */
-      stats,
-      defaults: {
-        objective: defaultObjective(p.id),
-        constraints: defaultConstraints(p.id),
-      },
-    };
+    if (p) return services.getCharacter(p.id);
   });
 
-  // ---- optimize ------------------------------------------------------------
+  // ---- artifacts and builds --------------------------------------------------
+  app.post('/artifacts/query', async (req, reply) => {
+    const q = parse(ArtifactQuery, req.body ?? {}, reply);
+    if (q) return services.queryArtifacts(q);
+  });
   app.post('/optimize', async (req, reply) => {
     const body = parse(OptimizeBody, req.body, reply);
-    if (!body) return;
-    const entry = currentRoster(db).roster[body.characterKey];
-    const weaponKey = body.weaponKey ?? entry?.weaponKey;
-    if (!weaponKey)
-      return fail(
-        reply,
-        400,
-        'bad_request',
-        `no weapon for ${body.characterKey}: none equipped in the account, so pass weaponKey`,
-      );
-    const character = genshinAdapter.character(body.characterKey)!;
-    if (genshinAdapter.weapon(weaponKey)?.type !== character.weaponType)
-      return fail(
-        reply,
-        400,
-        'bad_request',
-        `${character.name} can't wield ${genshinAdapter.weapon(weaponKey)?.name ?? weaponKey}`,
-      );
-    const request: OptimizeRequest = {
-      characterKey: body.characterKey,
-      weaponKey,
-      buildLevel: (body.buildLevel ??
-        entry?.buildLevel ??
-        90) as OptimizeRequest['buildLevel'],
-      objective: (body.objective ??
-        defaultObjective(body.characterKey)) as OptimizeRequest['objective'],
-      constraints: body.constraints ?? defaultConstraints(body.characterKey),
-      topK: body.topK ?? 5,
-    };
-    let ctx;
-    try {
-      ctx = buildContext(request);
-    } catch (e) {
-      return fail(reply, 400, 'bad_request', (e as Error).message);
-    }
-    const account = currentAccount(db).map((m) => m.artifact);
-    const pool =
-      body.pool === 'free'
-        ? account.filter((a) => !a.location || a.location === body.characterKey)
-        : account;
-    const t0 = performance.now();
-    let result;
-    try {
-      result = await searches.run(request, pool, ctx);
-    } catch (e) {
-      if (e instanceof SearchTimeout)
-        return fail(reply, 504, 'timeout', e.message);
-      throw e;
-    }
-    const ms = Math.round(performance.now() - t0);
-    const byId = new Map(pool.map((a) => [a.id, a]));
-    return {
-      request,
-      pool: { kind: body.pool ?? 'all', artifacts: pool.length },
-      ms,
-      ...(result.status === 'ok'
-        ? {
-            status: 'ok',
-            explored: result.explored,
-            pruned: result.pruned,
-            builds: result.builds.map((b) => ({
-              ...b,
-              artifacts: Object.fromEntries(
-                SLOTS.map((s: Slot) => [s, byId.get(b.artifactIds[s])]),
-              ),
-            })),
-          }
-        : result),
-    };
+    if (body) return services.optimize(body);
+  });
+  app.post('/compare', async (req, reply) => {
+    const body = parse(CompareBody, req.body, reply);
+    if (body) return services.compareBuilds(body);
   });
 
   // ---- later phases ----------------------------------------------------------
@@ -332,17 +167,43 @@ export function buildApp(opts: AppOptions): FastifyInstance {
   );
 
   // ---- imports ---------------------------------------------------------------
-  app.get('/imports', async () => ({
-    snapshots: listSnapshots(db),
-    merges: listMerges(db),
-  }));
+  app.get('/imports', async () => services.imports());
+  app.get('/imports/report', async () => services.importReport());
   app.get('/imports/:id/changes', async (req, reply) => {
     const p = parse(SnapshotParam, req.params, reply);
-    if (!p) return;
-    snapshotInfo(db, p.id); // 404 when missing
-    return { changes: diffSincePrevious(db, p.id) ?? null };
+    if (p) return services.changes(p.id);
   });
-  app.post('/imports/scan', async () => processInbox(db, inboxDir));
+  app.post('/imports/scan', async () => processInbox(opts.db, inboxDir));
+
+  // ---- MCP over streamable HTTP (stateless) ---------------------------------
+  // One server and transport per request: no session state to keep, and the
+  // localhost guard above has already run.
+  app.post('/mcp', async (req, reply) => {
+    const server = createMcpServer(services);
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    });
+    reply.hijack();
+    reply.raw.on('close', () => {
+      void transport.close();
+      void server.close();
+    });
+    await server.connect(transport);
+    await transport.handleRequest(req.raw, reply.raw, req.body);
+  });
+  for (const method of ['GET', 'DELETE'] as const)
+    app.route({
+      method,
+      url: '/mcp',
+      handler: async (_req, reply) =>
+        fail(
+          reply,
+          405,
+          'method_not_allowed',
+          'this MCP endpoint is stateless: POST only',
+        ),
+    });
 
   return app;
 }
