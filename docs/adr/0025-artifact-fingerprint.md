@@ -28,10 +28,12 @@ has to survive:
   DEF% 18.9 vs 19.0, where the three rolls sum to 18.95). One is new since
   the Irminsul export. The 12 4★ pieces are only in the scan because this
   Irminsul export has no 4★ pieces.
-- The OCR file writes `initialValue` on every line, but on levelled pieces
-  it disagrees with Irminsul on every line (993 of them): a scanner can't see
-  the first roll. Its `totalRolls` is missing or impossible (7 at +20) on 52
-  pieces. Only the memory reader's roll data is real.
+- On levelled pieces the OCR file writes `initialValue` only where the
+  screen proves it (a line holding a single roll): about a third of the
+  lines, all of them agreeing with Irminsul. It leaves the rest out. Its
+  `totalRolls` is missing on about 50 pieces and impossible (7 at +20) on 2.
+  (Corrected 2026-09-28: the first version of this ADR counted the missing
+  values as disagreements.)
 - The unactivated fourth line matched on all 944 +0 3-line pieces in both,
   but scanners that predate the 5.5 display don't read it.
 
@@ -74,7 +76,8 @@ has to survive:
 - A levelled piece has a new fingerprint. Irminsul's `initialValue` gives a
   level-independent identity (set, slot, rarity, main stat and every line's
   first roll, unique across all 1,650 pieces); 2.8 can use it between
-  Irminsul snapshots. OCR sources can't provide it.
+  Irminsul snapshots. OCR sources give it only for pieces whose every line
+  holds a single roll.
 
 ## Rejected alternatives
 

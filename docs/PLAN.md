@@ -42,7 +42,7 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 ### 2b. Source adapters (all read files from `imports/inbox/`)
 
 - **Irminsul:** its GOOD export. This is the primary source (exact values, full inventory).
-- **OCR scanners:** Inventory Kamera, AdeptiScanner, or `genshin-agent`'s own scanner GOOD output. This is the secondary source.
+- **OCR scanners:** Inventory Kamera, AdeptiScanner, or `genshin-agent`'s own scanner GOOD output. This is the fallback source, for when a patch breaks Irminsul ([ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md)).
 - **Enka:** a UID fetch for showcase characters (equipped gear only).
 - A file watcher on the inbox auto-imports and tags each snapshot with `{source, importedAt, gameVersion?}`.
 
@@ -53,7 +53,7 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 - A **reconciliation report** lists items only in A, items only in B, and value mismatches beyond tolerance. Its main purpose: after a game patch, if Irminsul's export breaks or goes stale, the OCR cross-check exposes it.
 - Snapshot history in SQLite, plus a "what changed since last import" diff (new artifacts, upgrades, re-equips).
 
-**Accept:** merging a real Irminsul export with an OCR export of the same account reports ≥ 98% artifact matches with no unexplained mismatches, and re-importing the same file is idempotent.
+**Accept** (revised 2026-09-28, [ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md)): re-importing the same Irminsul file changes nothing; two Irminsul exports taken at different times give a correct "what changed" diff (new pieces, levelled pieces, re-equips); and a faulty OCR scan (long runs of repeated entries) is detected and reported, not merged as the inventory. Originally: ≥ 98% artifact matches between an Irminsul and an OCR export, which measured the scanner rather than the app.
 
 ## Phase 3: Local server, MCP, and LLM client
 
