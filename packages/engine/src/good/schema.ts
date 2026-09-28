@@ -72,6 +72,9 @@ export const GoodArtifact = z.looseObject({
 export const GoodSubstat = z.looseObject({
   key: z.string(),
   value: z.number(),
+  /** The line's first roll, where the source knows it (checked in
+   *  `extras.ts`). */
+  initialValue: z.optional(z.unknown()),
 });
 
 /** A character. Only `key` is required; each other field is read on its own

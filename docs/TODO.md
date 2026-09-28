@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.3, the sidecar for source-specific extras, keyed by the 2.4 fingerprint
+**Next item:** 2.5, merge with precedence (Irminsul > OCR > Enka) and the reconciliation report
 
 ## Housekeeping (done 2026-09-24)
 
@@ -127,7 +127,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `normalizeGOOD` now keeps `unactivatedSubstats` as the entry's `unactivated` line (all 956 in the export), only where the game can have one; anything else is a GOOD issue. `npm run prospects -- <file>` prints the ranking per group.
   - Back-test on the export's 309 +20 pieces, rewound to their first rolls (`initialValue`): the projected total roll mass is within 0.1% of what they rolled. Crit value is projected 3.5% under, because the +20 pieces are survivors whose crit lines got 422 rolls against 395 expected; the ADR records it. The fixture holds only substat lines, no set, slot, location or account data.
   - Scope: 5★ only; the owner chose the average outcome over best/worst case and a separate list over changing the optimizer.
-- [ ] 2.3 Sidecar for source-specific extras (Irminsul roll data etc.), keyed by artifact fingerprint
+- [x] 2.3 Sidecar for source-specific extras (Irminsul roll data etc.), keyed by artifact fingerprint
+  - `good/extras.ts`: `normalizeGOOD` now reads `totalRolls`, each line's `initialValue`, `astralMark` and `elixirCrafted` (also Irminsul's `elixerCrafted` spelling) into the entry's `extras`. Every value is checked against the game's rules whatever the source, since OCR roll data is partial (ADR-0026): a roll count must be 3 or 4 plus one per upgrade (and, below +4, the piece's line count); a first roll must sit on one of the stat's 4 tiers, equal the value below +4, and never exceed it. A failing value is dropped and reported as a GOOD issue, never corrected. Roll data is kept for 5★ only (the tiers the engine has); 4★ roll data is reported as unsupported.
+  - `good/sidecar.ts`: `buildSidecar` gives one entry per artifact with extras (`fingerprint`, file `index`, `extras`, plus `firstRollKey` when all 4 first rolls are known), with a zod `SidecarEntry` schema for the snapshot store (2.6); `indexSidecar` maps a fingerprint to all its entries, since fingerprints repeat. The first-roll key is the identity that survives levelling, for the 2.8 diff.
+  - Real data: Irminsul's 1,650 pieces all pass (1,650 roll counts, 6,600 first rolls, 21 elixir-crafted, 1 astral mark), and all 1,650 first-roll keys are distinct. The second AdeptiScanner export: the 2 impossible roll counts are caught, and every value that passes agrees with Irminsul (945/945 roll counts, 2,981/2,981 first rolls, 629/629 first-roll keys).
 - [x] 2.4 Artifact fingerprint (`set+slot+rarity+level+mainStat+sorted rounded substats`) plus a fuzzy OCR fallback. Decide in an ADR how it relates to the existing `dedupe.ts` content hash.
   - [ADR-0025](adr/0025-artifact-fingerprint.md). `import/fingerprint.ts`: `fingerprint` adds the goblet's element and rounds each active substat to what the game shows (integers for flat stats, one decimal otherwise); the unactivated line, location, lock and roll extras are left out. `dedupe.ts`'s `artifactHash` is now this function, so every importer dedupes on one identity (all existing dedupe and ImportPanel tests pass unchanged).
   - `matchArtifacts` pairs two lists one to one (fingerprints repeat: identical pieces exist, and faulty scans repeat them): exact first, then a fuzzy fallback of one shown step per substat within the same set, slot, rarity, level, main stat, element and substat keys, only when exactly one candidate fits (otherwise reported as ambiguous). `repeatedFingerprints` surfaces repeats for the 2.7 importer.

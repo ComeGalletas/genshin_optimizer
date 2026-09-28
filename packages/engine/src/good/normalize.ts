@@ -31,6 +31,11 @@ import { BUILD_LEVELS, ELEMENTS, SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { validateArtifactDraft } from '../game/artifactValidation';
 import {
+  readArtifactExtras,
+  type ArtifactExtras,
+  type ExtrasLine,
+} from './extras';
+import {
   GoodArtifact,
   GoodCharacter,
   GoodFields,
@@ -119,6 +124,9 @@ export interface GoodArtifactEntry {
    *  exports it (Irminsul does). Not part of the artifact's current stats;
    *  the levelling prospects use it (ADR-0024). */
   unactivated?: SubStat;
+  /** Source-specific extras that passed their checks (`extras.ts`), for the
+   *  sidecar. Absent when the source exported none. */
+  extras?: ArtifactExtras;
 }
 
 /**
@@ -263,6 +271,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
         );
         return;
       }
+      const lines: ExtrasLine[] = [];
       const substats = (name: 'substats' | 'unactivatedSubstats') => {
         const out: SubStat[] = [];
         if (g[name] === undefined) return out;
@@ -293,6 +302,12 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
             return;
           }
           out.push({ key, value: s.data.value });
+          lines.push({
+            key,
+            value: s.data.value,
+            initial: s.data.initialValue,
+            path: [name, j],
+          });
         });
         return out;
       };
@@ -323,6 +338,18 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
           'unactivatedSubstats dropped: only a 3-line piece below +4 has one, and never a stat it already has',
           'unactivatedSubstats',
         );
+      const extras = readArtifactExtras(
+        g,
+        {
+          rarity: g.rarity,
+          level: g.level,
+          lines: unactivatedOk
+            ? lines
+            : lines.filter((l) => l.path[0] === 'substats'),
+          activeLines: subStats.length,
+        },
+        (code, message, ...path) => report(code, message, ...path),
+      );
       const slot = g.slotKey as Slot;
       artifacts!.push({
         index,
@@ -345,6 +372,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
         },
         lock: field(GoodFields.lock, g.lock),
         ...(unactivatedOk && { unactivated }),
+        ...(extras && { extras }),
       });
     });
   }
