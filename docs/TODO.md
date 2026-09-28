@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.5, merge with precedence (Irminsul > OCR > Enka) and the reconciliation report
+**Next item:** 2.6, scaffold `packages/server` with the SQLite snapshot store
 
 ## Housekeeping (done 2026-09-24)
 
@@ -136,7 +136,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `matchArtifacts` pairs two lists one to one (fingerprints repeat: identical pieces exist, and faulty scans repeat them): exact first, then a fuzzy fallback of one shown step per substat within the same set, slot, rarity, level, main stat, element and substat keys, only when exactly one candidate fits (otherwise reported as ambiguous). `repeatedFingerprints` surfaces repeats for the 2.7 importer.
   - On the real exports: 985 of the scan's 986 distinct 5★ pieces pair with Irminsul (983 exact, 2 fuzzy: CRIT DMG 25.6/25.7 and DEF% 18.9/19.0, the latter a raw 18.95; none ambiguous), in ~55 ms; the one left is a goblet obtained after the Irminsul export. Irminsul's 1,650 fingerprints are all distinct.
   - Found for 2.3: on levelled pieces the OCR file gives `initialValue` only where the screen proves it (a single-roll line, about a third of the lines), always agreeing with Irminsul, and leaves the rest out; its `totalRolls` is missing on about 50 pieces and impossible (7 at +20) on 2. So OCR roll data is partial, not false, and the sidecar has to validate every value. (Corrected 2026-09-28: the first count read missing values as disagreements.)
-- [ ] 2.5 Merge with precedence Irminsul > OCR > Enka for values and newest-snapshot for location. Reconciliation report: only-in-A, only-in-B, and mismatches beyond tolerance.
+- [x] 2.5 Merge with precedence Irminsul > OCR > Enka for values and newest-snapshot for location. Reconciliation report: only-in-A, only-in-B, and mismatches beyond tolerance.
+  - [ADR-0027](adr/0027-merge-and-reconciliation.md). `merge/merge.ts`: `mergeSnapshots` rejects scan faults (a fingerprint 3+ times in one snapshot) before merging, merges the rest in source-rank then newest-first order, and gives each merged artifact its values from the best source (or, for a piece levelled in between, the newer reading), its location and lock from the newest snapshot (Enka's missing lock leaves the last known), and every appearance. `reconcile` pairs one to one (exact, fuzzy, then first-roll key), lists same-shape mismatches beyond one shown step without pairing them, moves, and only-in-A/B. `sourceKind` ranks a GOOD file's `source`.
+  - Real data: both AdeptiScanner exports are rejected (30 pieces repeated 19–23 times), so the merged view is Irminsul's 1,650 pieces. With the second scan's repeats removed as an experiment: 1,663 merged (Irminsul's 1,650, 12 4★, 1 new goblet), 998 exact + 2 fuzzy pairs, 0 mismatches, 5 moves, all 2,663 input pieces accounted for, ~20 ms.
+  - A property test (200 random rounds with misreads, levelled readings and stuck-scan repeats, a seeded PRNG) checks that every piece of every merged snapshot lands in exactly one merged artifact, and that each path is reached. Four planted bugs (dropping mismatches, dropping only-in-B, not removing levelled or mismatched pieces from the only lists) each fail it. 2.9 extends the test list.
 - [ ] 2.6 Scaffold `packages/server`: SQLite (`better-sqlite3`) with a migrations table and schema for immutable snapshots, merged view, and sidecar
 - [ ] 2.7 Inbox watcher: detect the source per file, import it as a timestamped snapshot tagged `{source, importedAt, gameVersion?}`, never overwrite. Flag a scan whose entries repeat in long runs as a scanner fault instead of taking it as the inventory (ADR-0026)
 - [ ] 2.8 "What changed since last import" diff: new artifacts, upgrades, re-equips
