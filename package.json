@@ -38,6 +38,7 @@
     "build:data": "tsx scripts/build-dataset.ts",
     "data:coverage": "tsx scripts/data-coverage.ts",
     "prospects": "tsx scripts/prospects.ts",
+    "inbox": "tsx packages/server/src/cli/inbox.ts",
     "bench": "tsx scripts/benchmark.ts && prettier --write docs/speed-report.md",
     "docs:check": "tsx scripts/check-docs.ts",
     "bench:check": "tsx scripts/check-bench.ts",

@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.7, the inbox watcher that imports each dropped file as a snapshot
+**Next item:** 2.8, the "what changed since last import" diff
 
 ## Housekeeping (done 2026-09-24)
 
@@ -145,7 +145,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Schema v1: `snapshots` (keyed by the file's SHA-256, so re-importing a file is idempotent; a scan fault is recorded on it), with `snapshot_artifacts`, `snapshot_sidecar`, `snapshot_characters` and `snapshot_weapons`; `merges` and `merged_artifacts`; and the `current_account` view over the latest merge. Triggers make every row immutable; deleting a snapshot cascades, and is refused while a merge uses it. Stored rows are checked on the way out (ADR-0022), and ids are by place (`s1-0`, `m2-5`).
   - API: `importGood`, `listSnapshots`, `loadSnapshot` (pieces with lock and sidecar extras, ready for the engine's merge), `loadRoster`, `recordMerge`, `latestUsableSnapshots`, `currentAccount`. 12 tests on in-memory and file stores.
   - Real data: Irminsul imports in ~110 ms and re-importing it writes nothing; both AdeptiScanner files are stored with their fault and rejected by the merge; the current account is Irminsul's 1,650 pieces; 5.2 MB for three snapshots and one merge.
-- [ ] 2.7 Inbox watcher: detect the source per file, import it as a timestamped snapshot tagged `{source, importedAt, gameVersion?}`, never overwrite. Flag a scan whose entries repeat in long runs as a scanner fault instead of taking it as the inventory (ADR-0026)
+- [x] 2.7 Inbox watcher: detect the source per file, import it as a timestamped snapshot tagged `{source, importedAt, gameVersion?}`, never overwrite. Flag a scan whose entries repeat in long runs as a scanner fault instead of taking it as the inventory (ADR-0026)
+  - `packages/server/src/inbox/inbox.ts`: `processInbox` imports every visible `.json` file in the inbox (name order) with the file's modification time as `takenAt`; the source comes from the file (`sourceKind`). A file already imported costs a hash; a file that isn't GOOD is reported as refused, never a crash; a faulty scan is stored with its fault. When at least one usable snapshot is new, it records one merge of `latestUsableSnapshots` (the newest non-faulty snapshot of each source kind), which becomes the current account. Files stay in the inbox.
+  - `watchInbox` runs a pass at start, then on changes (`fs.watch`); a file is read only once its size has held still for a settle period (1 s by default), so a half-written export isn't imported early.
+  - `npm run inbox` (`packages/server/src/cli/inbox.ts`): one pass, or `-- --watch`; `--store` and `--dir` override the defaults. One line per file, no account identifiers.
+  - Real inbox: the Irminsul export is imported and merged (1,650 artifacts); both AdeptiScanner exports are stored as faulty scans ("re-scan"); a second run finds everything already imported and records no merge. 4 new tests, including a file written in two parts while watched.
 - [ ] 2.8 "What changed since last import" diff: new artifacts, upgrades, re-equips
 - [ ] 2.9 Tests: idempotent re-import, precedence, fuzzy match, and a property test that merge never loses an artifact
 - [x] ADR(s): snapshot store and merge model: [ADR-0027](adr/0027-merge-and-reconciliation.md) (merge) and [ADR-0028](adr/0028-sqlite-snapshot-store.md) (store)
