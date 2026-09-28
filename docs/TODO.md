@@ -2,8 +2,8 @@
 
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
-**Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** the Phase 2 acceptance check: the owner's second Irminsul export, run through `npm run phase2:check` (Phase 3 can start in parallel if the owner wants)
+**Current phase:** 3 (local server, MCP, LLM client), started while Phase 2 waits on its acceptance check (the owner's second Irminsul export). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
+**Next item:** 3.2, the MCP server; Phase 2's acceptance check whenever the owner's second export is in
 
 ## Housekeeping (done 2026-09-24)
 
@@ -167,7 +167,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 3: Local server, MCP, LLM client
 
-- [ ] 3.1 Fastify API: `/account`, `/characters/:id`, `/optimize`, `/allocate`, `/sim`, `/imports` (the last three can stub until their phases)
+- [x] 3.1 Fastify API: `/account`, `/characters/:id`, `/optimize`, `/allocate`, `/sim`, `/imports` (the last three can stub until their phases)
+  - [ADR-0030](adr/0030-local-http-api.md). Fastify 5 (`packages/server/src/api/`), `npm run server` on 127.0.0.1:5198. Every request needs a localhost Host (DNS rebinding) and, from a browser, a localhost Origin (CORS only for those); others get 403.
+  - `GET /health`, `/account`, `/characters`, `/characters/:id` (roster from the best-ranked snapshot in the current merge, equipped pieces, sheet totals, defaults), `POST /optimize` (exact search over the current account; weapon, build level, objective and constraints default like the Plan page, via the new shared `optimizer/defaults.ts` that `composePlan` now uses; `pool: "free"` for unequipped pieces), `GET /imports`, `GET /imports/:id/changes`, `POST /imports/scan`; `/allocate` and `/sim` are 501 until Phases 7 and 5. zod checks every input, vocabulary included; errors are `{ error, message, issues? }`.
+  - Searches run on a worker thread (`packages/server/src/optimize/`), one at a time, with a 120 s limit (504 past it; the next request gets a fresh worker). Real account, 1,650 pieces: Furina over unequipped pieces ~3 s, with her defaults ~11 s, crit value with ER ≥ 180% and no set (the Phase 3 acceptance question) ~34 s; `/health` answers in ms meanwhile. Worker threads don't inherit tsx, so the worker starts from a bootstrap that registers it (found when the first version failed with module-not-found).
+  - 11 API tests (in-process `inject`) plus a live check with curl on the real store: health, account, the Host guard, and an optimize call.
 - [ ] 3.2 MCP server (official TS SDK) over stdio and streamable HTTP with the tools listed in PLAN Phase 3. Tool I/O schemas come from zod.
 - [ ] 3.3 `config/llm.json` + loader (`ollama` | `anthropic` | `openai_compatible`). Keys only in server-side `.env`. Update `.env.example`.
 - [ ] 3.4 Rebuild "Explain this build" on the server LLM client, reusing the `src/ai/` prompt shaping

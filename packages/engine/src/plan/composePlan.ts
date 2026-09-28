@@ -26,9 +26,9 @@ import { SLOTS } from '../game/types';
 import type { RosterEntry } from '../import/good';
 import type { Role } from '../teams/types';
 import type { TeamInstance } from '../teams/recommend';
-import { META_TARGETS, metaToConstraints } from '../meta/metaTargets';
+import { META_TARGETS } from '../meta/metaTargets';
+import { defaultConstraints, defaultObjective } from '../optimizer/defaults';
 import { computeGapReport } from '../meta/gap';
-import { getDamageProfile } from '../damage/profiles';
 import { genshinAdapter } from '../game/genshin/adapter';
 
 export interface PlanMemberBuild {
@@ -108,21 +108,8 @@ export async function composePlan(
     const key = m.characterKey;
     const entry = roster[key] ?? {};
     const meta = META_TARGETS[key];
-    const profile = getDamageProfile(key);
-    const objective: Objective = profile
-      ? 'avg_damage'
-      : (meta?.objective ?? 'crit_value');
-
-    const constraints = meta ? metaToConstraints(meta) : {};
-    if (
-      profile?.erRequirement != null &&
-      constraints.minStats?.er_pct == null
-    ) {
-      constraints.minStats = {
-        ...constraints.minStats,
-        er_pct: profile.erRequirement,
-      };
-    }
+    const objective = defaultObjective(key);
+    const constraints = defaultConstraints(key);
 
     // Pieces this member's meta set wants that someone ahead of them took.
     const wanted = new Set(metaSetKeys(key));

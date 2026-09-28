@@ -460,3 +460,80 @@ export function diffSincePrevious(
     ),
   };
 }
+
+// ---------------------------------------------------------------------------
+// Roster
+// ---------------------------------------------------------------------------
+
+export interface CurrentRoster {
+  /** The snapshot the roster comes from; undefined before any merge. */
+  snapshotId?: number;
+  roster: Record<string, RosterEntry>;
+  weapons: OwnedWeapon[];
+}
+
+const KIND_RANK: Record<SourceKind, number> = {
+  irminsul: 0,
+  ocr: 1,
+  good: 2,
+  enka: 3,
+};
+
+/**
+ * The roster (characters and weapons) behind the current account: from the
+ * best-ranked snapshot in the latest merge that has characters, newest
+ * first on a tie (ADR-0027's precedence). OCR scans often carry artifacts
+ * only, so the roster can come from a different snapshot than the newest.
+ */
+export function currentRoster(db: Store): CurrentRoster {
+  const merge = db
+    .prepare('SELECT snapshot_ids FROM merges ORDER BY id DESC LIMIT 1')
+    .get() as { snapshot_ids: string } | undefined;
+  if (!merge) return { roster: {}, weapons: [] };
+  const ids = JSON.parse(merge.snapshot_ids) as number[];
+  const withRoster = ids
+    .map((id) => ({
+      info: snapshotInfo(db, id),
+      characters: (
+        db
+          .prepare(
+            'SELECT count(*) AS n FROM snapshot_characters WHERE snapshot_id = ?',
+          )
+          .get(id) as { n: number }
+      ).n,
+    }))
+    .filter((s) => s.characters > 0)
+    .sort(
+      (a, b) =>
+        KIND_RANK[a.info.kind] - KIND_RANK[b.info.kind] ||
+        b.info.takenAt.localeCompare(a.info.takenAt),
+    );
+  const best = withRoster[0];
+  if (!best) return { roster: {}, weapons: [] };
+  return { snapshotId: best.info.id, ...loadRoster(db, best.info.id) };
+}
+
+/** Every recorded merge, oldest first (the last is the current account). */
+export function listMerges(db: Store): MergeRecord[] {
+  return (
+    db
+      .prepare(
+        `SELECT m.id, m.created_at, m.snapshot_ids, m.rejected_json,
+           (SELECT count(*) FROM merged_artifacts a WHERE a.merge_id = m.id) AS artifacts
+         FROM merges m ORDER BY m.id`,
+      )
+      .all() as {
+      id: number;
+      created_at: string;
+      snapshot_ids: string;
+      rejected_json: string;
+      artifacts: number;
+    }[]
+  ).map((r) => ({
+    id: r.id,
+    createdAt: r.created_at,
+    snapshotIds: JSON.parse(r.snapshot_ids) as number[],
+    rejected: JSON.parse(r.rejected_json) as MergeResult['rejected'],
+    artifacts: r.artifacts,
+  }));
+}
