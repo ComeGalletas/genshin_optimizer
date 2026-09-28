@@ -17,7 +17,7 @@
  * @packageDocumentation
  */
 
-import type { Artifact } from '../game/types';
+import type { Artifact, SubStat } from '../game/types';
 import {
   displaySteps,
   matchArtifacts,
@@ -44,6 +44,8 @@ export function sourceKind(source: string | undefined): SourceKind {
 export interface SnapshotPiece {
   artifact: Artifact;
   lock?: boolean;
+  /** A 3-line piece's fourth line before +4 activates it, if known. */
+  unactivated?: SubStat;
   extras?: ArtifactExtras;
 }
 

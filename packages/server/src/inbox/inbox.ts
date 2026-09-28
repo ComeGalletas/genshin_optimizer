@@ -13,11 +13,13 @@
 import { readdirSync, readFileSync, statSync, watch } from 'node:fs';
 import { basename, join } from 'node:path';
 import {
+  diffSincePrevious,
   importGood,
   latestUsableSnapshots,
   recordMerge,
   StoreError,
   type MergeRecord,
+  type SnapshotDiff,
   type SnapshotInfo,
   type Store,
 } from '../store/store';
@@ -26,7 +28,15 @@ import {
 export const DEFAULT_INBOX = 'imports/inbox';
 
 export type InboxEvent =
-  | { file: string; status: 'imported'; snapshot: SnapshotInfo; issues: number }
+  | {
+      file: string;
+      status: 'imported';
+      snapshot: SnapshotInfo;
+      issues: number;
+      /** What changed since the previous snapshot from the same kind of
+       *  source; absent for the first. */
+      changes?: SnapshotDiff;
+    }
   | { file: string; status: 'faulty-scan'; snapshot: SnapshotInfo }
   | { file: string; status: 'already-imported'; snapshot: SnapshotInfo }
   | { file: string; status: 'refused'; reason: string };
@@ -64,11 +74,13 @@ export function importFile(db: Store, path: string): InboxEvent {
       return { file, status: 'already-imported', snapshot: r.snapshot };
     if (r.snapshot.fault)
       return { file, status: 'faulty-scan', snapshot: r.snapshot };
+    const changes = diffSincePrevious(db, r.snapshot.id);
     return {
       file,
       status: 'imported',
       snapshot: r.snapshot,
       issues: r.issues.length,
+      ...(changes && { changes }),
     };
   } catch (e) {
     if (e instanceof StoreError)

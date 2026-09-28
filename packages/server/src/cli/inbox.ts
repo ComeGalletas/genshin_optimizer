@@ -40,8 +40,20 @@ function line(e: InboxEvent): string {
   }
 }
 
+/** "What changed" in one line, then the upgrades and moves one by one. */
+function changes(e: InboxEvent): string[] {
+  if (e.status !== 'imported' || !e.changes) return [];
+  const { from, diff: d } = e.changes;
+  const out = [
+    `  since snapshot ${from}: ${d.added.length} new, ${d.removed.length} gone, ${d.upgraded.length} upgraded, ${d.moved.length} moved, ${d.lockChanged.length} lock changes, ${d.unexplained.length} unexplained, ${d.unchanged} unchanged`,
+  ];
+  for (const x of d.unexplained) out.push(`  ? ${x.why}`);
+  return out;
+}
+
 function print(run: InboxRun): void {
-  for (const e of run.events) console.log(line(e));
+  for (const e of run.events)
+    [line(e), ...changes(e)].forEach((l) => console.log(l));
   if (run.merge)
     console.log(
       `merged        snapshots ${run.merge.snapshotIds.join(', ')} → merge ${run.merge.id}, ${run.merge.artifacts} artifacts (current account)`,

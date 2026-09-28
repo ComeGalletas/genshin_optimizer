@@ -5,6 +5,7 @@ import Database from 'better-sqlite3';
 import { MIGRATIONS, migrate, MigrationError } from './migrations';
 import {
   currentAccount,
+  diffSincePrevious,
   importGood,
   latestUsableSnapshots,
   listSnapshots,
@@ -225,5 +226,42 @@ describe('merges', () => {
       expect(db.prepare(`SELECT count(*) AS n FROM ${t}`).get()).toEqual({
         n: 0,
       });
+  });
+});
+
+describe('diffSincePrevious', () => {
+  it('diffs a snapshot against the previous one from the same kind of source', () => {
+    const db = openStore(':memory:');
+    importGood(db, { text: good('Irminsul', [fresh]) });
+    expect(diffSincePrevious(db, 1)).toBeUndefined();
+    const scan = importGood(db, { text: good('AdeptiScanner', [fresh]) });
+    expect(diffSincePrevious(db, scan.snapshot.id)).toBeUndefined(); // no earlier OCR
+    const levelled = {
+      ...fresh,
+      level: 4,
+      substats: [
+        ...fresh.substats,
+        { key: 'critDMG_', value: 7, initialValue: 7 },
+      ],
+      unactivatedSubstats: [],
+      totalRolls: 4,
+      location: 'Furina',
+    };
+    const later = importGood(db, { text: good('Irminsul', [levelled]) });
+    const d = diffSincePrevious(db, later.snapshot.id)!;
+    expect(d).toMatchObject({ from: 1, to: later.snapshot.id });
+    expect(d.diff.upgraded).toEqual([
+      { before: 0, after: 0, by: 'first-rolls' },
+    ]);
+    expect(d.diff.moved).toEqual([{ before: 0, after: 0, to: 'furina' }]);
+  });
+
+  it('keeps the unactivated line through the store', () => {
+    const db = openStore(':memory:');
+    importGood(db, { text: good('Irminsul', [fresh]) });
+    expect(loadSnapshot(db, 1).pieces[0].unactivated).toEqual({
+      key: 'crit_dmg',
+      value: 7,
+    });
   });
 });

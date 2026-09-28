@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.8, the "what changed since last import" diff
+**Next item:** 2.9, the remaining Phase 2 tests; then the acceptance check, which needs the owner's second Irminsul export
 
 ## Housekeeping (done 2026-09-24)
 
@@ -150,7 +150,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `watchInbox` runs a pass at start, then on changes (`fs.watch`); a file is read only once its size has held still for a settle period (1 s by default), so a half-written export isn't imported early.
   - `npm run inbox` (`packages/server/src/cli/inbox.ts`): one pass, or `-- --watch`; `--store` and `--dir` override the defaults. One line per file, no account identifiers.
   - Real inbox: the Irminsul export is imported and merged (1,650 artifacts); both AdeptiScanner exports are stored as faulty scans ("re-scan"); a second run finds everything already imported and records no merge. 4 new tests, including a file written in two parts while watched.
-- [ ] 2.8 "What changed since last import" diff: new artifacts, upgrades, re-equips
+- [x] 2.8 "What changed since last import" diff: new artifacts, upgrades, re-equips
+  - [ADR-0029](adr/0029-import-diff.md). `diff/diff.ts`: `diffSnapshots` pairs by fingerprint, fuzzy match, first rolls, then roll arithmetic (`couldBeUpgrade`: every line's gain must be makeable from the rolls the upgrades in between give, with the real tiers; one candidate on both sides), and reports new, gone, upgraded, moved, lock changes and unexplained. Same-shape pieces with different first rolls are two pieces; without first rolls they stay unexplained.
+  - Server: `diffSincePrevious` diffs a new usable snapshot against the previous usable one from the same source kind; `npm run inbox` prints it. Migration 2 stores the unactivated line (checked against the real v1 store from 2.6: it migrates and all 1,650 pieces load).
+  - Owner's choice: tested against simulated play on the real export. `test-fixtures/simulatePlay.ts` (seeded) levels pieces with real rolls, re-equips, re-locks, consumes fodder and adds drops, and records the truth. On the 1,650-piece export over 5 seeds × 3 source types (`npm run diff:sim`): 0 false pairings in 15 runs; exact with first rolls; without them 1–2 pieces per run can stay unexplained. The simulator's own truth had a bug (a piece moved away and back counted as moved), found by the diff and fixed.
+  - Committed tests: `couldBeUpgrade` cases, ambiguity, first-roll separation, and exact recovery on a synthetic 420-piece account (3 seeds, with and without first rolls).
 - [ ] 2.9 Tests: idempotent re-import, precedence, fuzzy match, and a property test that merge never loses an artifact
 - [x] ADR(s): snapshot store and merge model: [ADR-0027](adr/0027-merge-and-reconciliation.md) (merge) and [ADR-0028](adr/0028-sqlite-snapshot-store.md) (store)
 - [ ] **Accept** (revised 2026-09-28, [ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md)): re-importing the same Irminsul file changes nothing; two Irminsul exports taken at different times give a correct "what changed" diff; a faulty OCR scan (long runs of repeats) is detected and reported, not merged

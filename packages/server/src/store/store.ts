@@ -10,7 +10,11 @@ import { createHash } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import Database from 'better-sqlite3';
-import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import {
+  isStatKey,
+  type Artifact,
+  type SubStat,
+} from '@genshin-build-lab/engine/game/types';
 import { isPersistedArtifact } from '@genshin-build-lab/engine/game/artifactValidation';
 import {
   normalizeGOOD,
@@ -32,6 +36,10 @@ import {
   type SourceKind,
   type SourceSnapshot,
 } from '@genshin-build-lab/engine/merge/merge';
+import {
+  diffSnapshots,
+  type ImportDiff,
+} from '@genshin-build-lab/engine/diff/diff';
 import { migrate } from './migrations';
 
 /** Where the store lives unless told otherwise. Git-ignored. */
@@ -148,7 +156,7 @@ export function importGood(db: Store, input: ImportInput): ImportResult {
       );
     const sid = Number(lastInsertRowid);
     const art = db.prepare(
-      'INSERT INTO snapshot_artifacts (snapshot_id, idx, fingerprint, artifact_json, lock) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO snapshot_artifacts (snapshot_id, idx, fingerprint, artifact_json, lock, unactivated_json) VALUES (?, ?, ?, ?, ?, ?)',
     );
     for (const e of artifacts)
       art.run(
@@ -157,6 +165,7 @@ export function importGood(db: Store, input: ImportInput): ImportResult {
         fingerprint(e.artifact),
         JSON.stringify(withoutId(e.artifact)),
         e.lock === undefined ? null : Number(e.lock),
+        e.unactivated ? JSON.stringify(e.unactivated) : null,
       );
     const side = db.prepare(
       'INSERT INTO snapshot_sidecar (snapshot_id, idx, fingerprint, first_roll_key, extras_json) VALUES (?, ?, ?, ?, ?)',
@@ -236,12 +245,18 @@ function readArtifact(json: string, id: string, where: string): Artifact {
   return a;
 }
 
+const isSubStatLine = (x: unknown): x is SubStat =>
+  typeof x === 'object' &&
+  x !== null &&
+  isStatKey((x as SubStat).key) &&
+  Number.isFinite((x as SubStat).value);
+
 /** One snapshot's pieces, with their sidecar extras, ready to merge. */
 export function loadSnapshot(db: Store, id: number): SourceSnapshot {
   const info = snapshotInfo(db, id);
   const rows = db
     .prepare(
-      `SELECT a.idx, a.artifact_json, a.lock, s.extras_json
+      `SELECT a.idx, a.artifact_json, a.lock, a.unactivated_json, s.extras_json
        FROM snapshot_artifacts a
        LEFT JOIN snapshot_sidecar s ON s.snapshot_id = a.snapshot_id AND s.idx = a.idx
        WHERE a.snapshot_id = ? ORDER BY a.idx`,
@@ -250,6 +265,7 @@ export function loadSnapshot(db: Store, id: number): SourceSnapshot {
     idx: number;
     artifact_json: string;
     lock: number | null;
+    unactivated_json: string | null;
     extras_json: string | null;
   }[];
   const pieces: SnapshotPiece[] = rows.map((r) => {
@@ -258,6 +274,12 @@ export function loadSnapshot(db: Store, id: number): SourceSnapshot {
       artifact: readArtifact(r.artifact_json, artifactId(id, r.idx), where),
     };
     if (r.lock !== null) piece.lock = r.lock === 1;
+    if (r.unactivated_json !== null) {
+      const u = JSON.parse(r.unactivated_json) as unknown;
+      if (!isSubStatLine(u))
+        throw new StoreError(`${where}: stored unactivated line is not valid`);
+      piece.unactivated = u;
+    }
     if (r.extras_json !== null) {
       const extras = ArtifactExtras.safeParse(JSON.parse(r.extras_json));
       if (!extras.success)
@@ -399,4 +421,42 @@ export function currentAccount(db: Store): MergedArtifact[] {
     locationFrom: String(r.location_from),
     seenIn: JSON.parse(r.seen_in_json) as MergedArtifact['seenIn'],
   }));
+}
+
+// ---------------------------------------------------------------------------
+// What changed
+// ---------------------------------------------------------------------------
+
+export interface SnapshotDiff {
+  from: number;
+  to: number;
+  diff: ImportDiff;
+}
+
+/**
+ * What changed since the previous usable snapshot of the same source kind
+ * (TODO 2.8): the same exporter, so like is compared with like. Undefined
+ * for the first one, or for a faulty scan.
+ */
+export function diffSincePrevious(
+  db: Store,
+  snapshotId: number,
+): SnapshotDiff | undefined {
+  const info = snapshotInfo(db, snapshotId);
+  if (info.fault) return undefined;
+  const prev = db
+    .prepare(
+      `SELECT max(id) AS id FROM snapshots
+       WHERE kind = ? AND fault_json IS NULL AND id < ?`,
+    )
+    .get(info.kind, snapshotId) as { id: number | null };
+  if (prev.id === null) return undefined;
+  return {
+    from: prev.id,
+    to: snapshotId,
+    diff: diffSnapshots(
+      loadSnapshot(db, prev.id).pieces,
+      loadSnapshot(db, snapshotId).pieces,
+    ),
+  };
 }

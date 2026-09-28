@@ -114,6 +114,15 @@ CREATE VIEW current_account AS
   WHERE merge_id = (SELECT max(id) FROM merges);
 `,
   },
+  {
+    version: 2,
+    name: 'unactivated fourth line',
+    sql: `
+-- A 3-line piece's greyed-out fourth line (TODO 2.8): not part of its stats,
+-- but the diff and the levelling prospects need it. NULL for older imports.
+ALTER TABLE snapshot_artifacts ADD COLUMN unactivated_json TEXT;
+`,
+  },
 ];
 
 export class MigrationError extends Error {}
