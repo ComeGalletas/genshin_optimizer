@@ -15,6 +15,7 @@ import {
   type SubStatKey,
 } from '../game/genshin/substatRolls';
 import { fingerprint } from '../import/fingerprint';
+import { genshinAdapter } from '../game/genshin/adapter';
 import type { SnapshotPiece } from '../merge/merge';
 
 export interface PlayCounts {
@@ -92,6 +93,7 @@ function levelUp(p: SnapshotPiece, n: number, rng: ReturnType<typeof seeded>) {
     20,
     (Math.floor(a.level / UPGRADE_EVERY) + n) * UPGRADE_EVERY,
   );
+  a.mainStatValue = genshinAdapter.mainStatValue(a.mainStat, 5, a.level);
 }
 
 /** A new +0 5★ drop shaped like an existing piece (set, slot, main stat). */
@@ -115,7 +117,7 @@ function newDrop(
       rarity: 5,
       level: 0,
       mainStat: t.mainStat,
-      mainStatValue: t.mainStatValue,
+      mainStatValue: genshinAdapter.mainStatValue(t.mainStat, 5, 0),
       subStats: threeLine ? lines.slice(0, 3) : lines,
       ...(t.element && { element: t.element }),
     },

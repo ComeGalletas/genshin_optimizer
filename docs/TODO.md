@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.9, the remaining Phase 2 tests; then the acceptance check, which needs the owner's second Irminsul export
+**Next item:** the Phase 2 acceptance check: the owner's second Irminsul export, run through `npm run phase2:check` (Phase 3 can start in parallel if the owner wants)
 
 ## Housekeeping (done 2026-09-24)
 
@@ -155,9 +155,14 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Server: `diffSincePrevious` diffs a new usable snapshot against the previous usable one from the same source kind; `npm run inbox` prints it. Migration 2 stores the unactivated line (checked against the real v1 store from 2.6: it migrates and all 1,650 pieces load).
   - Owner's choice: tested against simulated play on the real export. `test-fixtures/simulatePlay.ts` (seeded) levels pieces with real rolls, re-equips, re-locks, consumes fodder and adds drops, and records the truth. On the 1,650-piece export over 5 seeds × 3 source types (`npm run diff:sim`): 0 false pairings in 15 runs; exact with first rolls; without them 1–2 pieces per run can stay unexplained. The simulator's own truth had a bug (a piece moved away and back counted as moved), found by the diff and fixed.
   - Committed tests: `couldBeUpgrade` cases, ambiguity, first-roll separation, and exact recovery on a synthetic 420-piece account (3 seeds, with and without first rolls).
-- [ ] 2.9 Tests: idempotent re-import, precedence, fuzzy match, and a property test that merge never loses an artifact
+- [x] 2.9 Tests: idempotent re-import, precedence, fuzzy match, and a property test that merge never loses an artifact
+  - Already covered by 2.5–2.8: idempotent re-import (store, inbox), precedence (merge), fuzzy match (fingerprint, merge), and the property test that the merge never loses a piece. Added here:
+  - `good/export.ts`: `toGOOD` writes pieces back as GOOD (stat keys, the goblet's element, GOOD character keys, unactivated line, first rolls, roll count); `normalizeGOOD(toGOOD(x))` round-trips (tested). It lets simulated exports go through the real file path. The simulator now sets main-stat values from the game's table when levelling (it had copied a template's).
+  - `packages/server/src/acceptance.test.ts`, end to end through inbox files: re-importing the same file, or the same export saved with different whitespace, changes nothing; two Irminsul exports taken apart give the exact "what changed" (2 seeds); a stuck OCR scan is reported and not merged; a newer OCR scan moves a piece but never overrides Irminsul's values.
+  - Diff partition property (30 seeds, with and without first rolls, with consumed near-twins so some upgrades have two possible sources): every piece on each side lands in exactly one category and no upgrade is false. A planted bug (a doubtful piece also listed as new) fails it; the first version didn't reach that path and didn't, so it now asserts the path is reached.
+  - `npm run phase2:check -- <earlier> <later> [scans...]` runs the acceptance on real files in a throwaway store and prints the "what changed" list for the owner to confirm. Run on the real export plus a simulated later one (built with `toGOOD`) and both OCR scans: all checks pass, the list matches the simulated truth, both scans are caught. It first showed a false pass (re-import checked against an empty account); fixed, and it now also checks the account isn't empty.
 - [x] ADR(s): snapshot store and merge model: [ADR-0027](adr/0027-merge-and-reconciliation.md) (merge) and [ADR-0028](adr/0028-sqlite-snapshot-store.md) (store)
-- [ ] **Accept** (revised 2026-09-28, [ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md)): re-importing the same Irminsul file changes nothing; two Irminsul exports taken at different times give a correct "what changed" diff; a faulty OCR scan (long runs of repeats) is detected and reported, not merged
+- [ ] **Accept** (revised 2026-09-28, [ADR-0026](adr/0026-irminsul-primary-ocr-fallback.md); run `npm run phase2:check -- <earlier Irminsul> <later Irminsul> [OCR scans]`): re-importing the same Irminsul file changes nothing; two Irminsul exports taken at different times give a correct "what changed" diff; a faulty OCR scan (long runs of repeats) is detected and reported, not merged
   - Was: ≥ 98% artifact match between an Irminsul and an OCR export. Both AdeptiScanner exports failed it for a scanner fault (see 2.0), while Irminsul covers the whole account; the owner chose Irminsul-first (2026-09-28).
 
 ## Phase 3: Local server, MCP, LLM client

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Artifact, SubStat } from '../game/types';
 import type { SnapshotPiece } from '../merge/merge';
+import { SUBSTAT_TIERS_5, type SubStatKey } from '../game/genshin/substatRolls';
 import { normalizeGOOD } from '../good/normalize';
 import { loadSampleGOOD } from '../test-fixtures/sampleAccount';
 import {
@@ -212,4 +213,89 @@ describe('diff against simulated play', () => {
       expect(d.upgraded.every((u) => u.by === 'rolls')).toBe(true);
     },
   );
+});
+
+// Property: whatever happened, every piece on each side is in exactly one
+// category, and no upgrade is ever made up (TODO 2.9).
+describe('diff partition property', () => {
+  const sample = normalizeGOOD(loadSampleGOOD())!.artifacts!;
+  const account = simulatePlay(
+    sample,
+    { upgrades: 0, moves: 0, locks: 0, consumed: 0, drops: 300 },
+    5,
+  ).after;
+
+  // A consumed near-twin of an upgraded piece (one line a tier apart):
+  // two earlier pieces could each have become it, which must stay doubtful.
+  const twinOf = (p: SnapshotPiece): SnapshotPiece => {
+    const [first, ...rest] = p.artifact.subStats;
+    const tiers = SUBSTAT_TIERS_5[first.key as SubStatKey];
+    const other = tiers.find(
+      (t) => Math.abs(t - first.value) > 0.3 && Math.abs(t - first.value) < 1,
+    );
+    return {
+      ...p,
+      artifact: {
+        ...p.artifact,
+        subStats: [{ ...first, value: other ?? first.value }, ...rest],
+      },
+      extras: undefined,
+    };
+  };
+
+  it('accounts for every piece once, and never pairs wrongly', () => {
+    let doubtful = 0;
+    for (let seed = 1; seed <= 30; seed++) {
+      const n = (k: number) => (seed * k) % 37;
+      const { after, truth } = simulatePlay(
+        account,
+        {
+          upgrades: n(7),
+          moves: n(5),
+          locks: n(3),
+          consumed: n(11),
+          drops: n(13),
+        },
+        seed,
+      );
+      const twins = truth.upgraded
+        .filter(([b]) => account[b].artifact.level === 0)
+        .slice(0, 3)
+        .map(([b]) => twinOf(account[b]));
+      const before = [...account, ...twins];
+      const noRolls = seed % 2 === 0;
+      const d = noRolls
+        ? diffSnapshots(withoutRollData(before), withoutRollData(after))
+        : diffSnapshots(before, after);
+      doubtful += d.unexplained.filter((u) => u.before === undefined).length;
+
+      const side = (
+        key: 'before' | 'after',
+        total: number,
+        alone: number[],
+      ) => {
+        const paired = new Set(
+          [...d.upgraded, ...d.moved, ...d.lockChanged].map((p) => p[key]),
+        );
+        const doubt = d.unexplained
+          .map((u) => u[key])
+          .filter((x): x is number => x !== undefined);
+        for (const x of alone) expect(paired.has(x)).toBe(false);
+        for (const x of doubt)
+          expect(paired.has(x) || alone.includes(x)).toBe(false);
+        expect(alone.length + doubt.length + paired.size + d.unchanged).toBe(
+          total,
+        );
+      };
+      side('before', before.length, d.removed);
+      side('after', after.length, d.added);
+
+      const truthUp = new Set(truth.upgraded.map(([b, a]) => `${b}>${a}`));
+      for (const u of d.upgraded)
+        expect(truthUp.has(`${u.before}>${u.after}`)).toBe(true);
+    }
+    // The twins must actually make some upgrades doubtful, or the property
+    // never tests that path.
+    expect(doubtful).toBeGreaterThan(0);
+  });
 });
