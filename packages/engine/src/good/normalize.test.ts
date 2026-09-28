@@ -74,6 +74,59 @@ describe('normalizeGOOD', () => {
     expect(n.artifacts).toHaveLength(1);
   });
 
+  it("keeps a 3-line piece's unactivated fourth line, apart from its stats", () => {
+    const three = [
+      { key: 'critRate_', value: 3.9 },
+      { key: 'hp', value: 299 },
+      { key: 'def', value: 23 },
+    ];
+    const n = good({
+      artifacts: [
+        art({
+          level: 0,
+          substats: three,
+          unactivatedSubstats: [{ key: 'critDMG_', value: 7.8 }],
+        }),
+        art({ unactivatedSubstats: [] }),
+      ],
+    });
+    expect(n.issues).toEqual([]);
+    expect(n.artifacts![0].artifact.subStats).toHaveLength(3);
+    expect(n.artifacts![0].unactivated).toEqual({
+      key: 'crit_dmg',
+      value: 7.8,
+    });
+    expect(n.artifacts![1]).not.toHaveProperty('unactivated');
+  });
+
+  it.each<[string, { level: number; fourLines?: true; line?: string }]>([
+    ['on a piece at +4', { level: 4 }],
+    ['next to 4 active lines', { level: 0, fourLines: true }],
+    ['repeating an active line', { level: 0, line: 'critRate_' }],
+    ['matching the main stat', { level: 0, line: 'atk_' }],
+  ])('drops an unactivated line %s, keeping the artifact', (_, o) => {
+    const subs = [
+      { key: 'critRate_', value: 3.9 },
+      { key: 'hp', value: 299 },
+      { key: 'def', value: 23 },
+    ];
+    if (o.fourLines) subs.push({ key: 'atk', value: 19 });
+    const n = good({
+      artifacts: [
+        art({
+          level: o.level,
+          substats: subs,
+          unactivatedSubstats: [{ key: o.line ?? 'critDMG_', value: 7.8 }],
+        }),
+      ],
+    });
+    expect(n.artifacts).toHaveLength(1);
+    expect(n.artifacts![0]).not.toHaveProperty('unactivated');
+    expect(n.issues.map((i) => [i.path, i.code])).toEqual([
+      [['artifacts', 0, 'unactivatedSubstats'], 'invalid'],
+    ]);
+  });
+
   it('keeps an empty artifact list distinct from a missing one', () => {
     expect(good({ artifacts: [] }).artifacts).toEqual([]);
     expect(good({ characters: [] }).artifacts).toBeNull();

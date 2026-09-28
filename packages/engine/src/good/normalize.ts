@@ -115,6 +115,10 @@ export interface GoodArtifactEntry {
   index: number;
   artifact: Artifact;
   lock?: boolean;
+  /** A 3-line piece's fourth line before +4 activates it, when the source
+   *  exports it (Irminsul does). Not part of the artifact's current stats;
+   *  the levelling prospects use it (ADR-0024). */
+  unactivated?: SubStat;
 }
 
 /**
@@ -259,36 +263,40 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
         );
         return;
       }
-      const subStats: SubStat[] = [];
-      if (g.substats !== undefined) {
-        const subs = GoodList.safeParse(g.substats);
-        if (!subs.success)
-          report('invalid', 'substats: expected a list', 'substats');
-        else
-          subs.data.forEach((rawSub, j) => {
-            const s = GoodSubstat.safeParse(rawSub);
-            if (!s.success) {
-              report(
-                'invalid',
-                `substat dropped: ${describe(s.error.issues[0])}`,
-                'substats',
-                j,
-              );
-              return;
-            }
-            const key = GOOD_STAT_KEYS[s.data.key];
-            if (!key) {
-              report(
-                'unsupported',
-                `substat "${s.data.key}" is not a known stat`,
-                'substats',
-                j,
-              );
-              return;
-            }
-            subStats.push({ key, value: s.data.value });
-          });
-      }
+      const substats = (name: 'substats' | 'unactivatedSubstats') => {
+        const out: SubStat[] = [];
+        if (g[name] === undefined) return out;
+        const subs = GoodList.safeParse(g[name]);
+        if (!subs.success) {
+          report('invalid', `${name}: expected a list`, name);
+          return out;
+        }
+        subs.data.forEach((rawSub, j) => {
+          const s = GoodSubstat.safeParse(rawSub);
+          if (!s.success) {
+            report(
+              'invalid',
+              `substat dropped: ${describe(s.error.issues[0])}`,
+              name,
+              j,
+            );
+            return;
+          }
+          const key = GOOD_STAT_KEYS[s.data.key];
+          if (!key) {
+            report(
+              'unsupported',
+              `substat "${s.data.key}" is not a known stat`,
+              name,
+              j,
+            );
+            return;
+          }
+          out.push({ key, value: s.data.value });
+        });
+        return out;
+      };
+      const subStats = substats('substats');
       const rollProblem = validateArtifactDraft({
         mainStat,
         level: g.level,
@@ -298,6 +306,23 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
         report('invalid', rollProblem);
         return;
       }
+      // The game shows the fourth line of a 3-line piece before +4 activates
+      // it. Anything else is dropped (the artifact is kept): it would feed the
+      // levelling projection a line the piece can't have.
+      const [unactivated, ...extra] = substats('unactivatedSubstats');
+      const unactivatedOk =
+        unactivated !== undefined &&
+        extra.length === 0 &&
+        subStats.length === 3 &&
+        g.level < 4 &&
+        unactivated.key !== mainStat &&
+        !subStats.some((s) => s.key === unactivated.key);
+      if (unactivated && !unactivatedOk)
+        report(
+          'invalid',
+          'unactivatedSubstats dropped: only a 3-line piece below +4 has one, and never a stat it already has',
+          'unactivatedSubstats',
+        );
       const slot = g.slotKey as Slot;
       artifacts!.push({
         index,
@@ -319,6 +344,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
           location: resolveLocation(g.location, report),
         },
         lock: field(GoodFields.lock, g.lock),
+        ...(unactivatedOk && { unactivated }),
       });
     });
   }

@@ -61,6 +61,9 @@ export const GoodArtifact = z.looseObject({
   level: z.number(),
   mainStatKey: z.string(),
   substats: z.optional(z.unknown()),
+  /** A 3-line piece's fourth line, shown greyed out in game until +4
+   *  activates it (Irminsul exports it; `[]` when there is none). */
+  unactivatedSubstats: z.optional(z.unknown()),
   location: z.optional(z.unknown()),
   lock: z.optional(z.unknown()),
 });

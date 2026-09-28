@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 2 (multi-source ingest). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 2.3, the sidecar for source-specific extras (2.0, the real exports, is the owner's; 2.3 needs them to know Irminsul's extra fields)
+**Next item:** 2.4, the artifact fingerprint, then 2.3, the sidecar (the owner's order: the fingerprint is what the sidecar is keyed by)
 
 ## Housekeeping (done 2026-09-24)
 
@@ -110,6 +110,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 ## Phase 2: Multi-source ingest
 
 - [ ] 2.0 Owner: provide a real Irminsul GOOD export and an OCR export (Inventory Kamera / AdeptiScanner) of the same account, taken close together in time. Store them outside git; commit only anonymized fixtures.
+  - Irminsul export received 2026-09-27 (GOOD v3: 1,650 5★ artifacts, 97 characters, 329 weapons), kept in the git-ignored `imports/inbox/`. It has no UID or other account identifier. `normalizeGOOD` reads all 1,650 artifacts and 329 weapons; the unresolved entries are the Traveler and the two Manekins (not in genshin-db as playable characters) and the 8 items they wear. Irminsul's extras: per artifact `totalRolls`, `astralMark`, `elixerCrafted` (sic), `unactivatedSubstats`; per substat `initialValue`. Still needed: the OCR export of the same account.
 - [x] 2.1 Add `zod` to engine (ADR: runtime validation at every boundary)
   - `zod` ^4.6.5 is the engine's first runtime dependency (lockfile via npm 11; it was already in the tree as a dev-only dependency of eslint-plugin-react-hooks, now deduped to 4.6.5). [ADR-0022](adr/0022-runtime-validation-with-zod.md): schemas in the engine, parse once at each boundary, never repair or guess, and adopt it boundary by boundary (2.2 first) rather than rewriting the existing validators at once.
   - Engine code imports `zod/mini` only. Measured on a GOOD-artifact schema: 26.1 KB gzip with full `zod`, 6.0 KB with `zod/mini`, against about 11 KB of bundle headroom. `boundaries.test.ts` now allows exactly the modules in its `SOURCE_IMPORTS` list (`zod/mini`), flags full `zod` with a pointer to the ADR, and checks that the engine's declared dependencies match that list.
@@ -119,6 +120,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Reconciled, not forked: `import/good.ts` is now two thin views of `normalizeGOOD`, and all 34 of its original tests pass unchanged, as do the web ImportPanel tests and a browser GOOD import on the production build.
   - New, and previously dropped: the full weapon inventory (level, ascension, refinement, location, lock), artifact lock flags, the file's `source` and `version`, each artifact's index in the file, and an issues list (`invalid` / `unsupported` / `unresolved` / `truncated`, with the path) for everything skipped. The sample fixture normalizes with zero issues. 14 new tests.
   - zod now ships in the web bundle: 163,128 → 169,845 B gzip (+6.7 KB, as ADR-0022 predicted); the optimize worker is unchanged. The size baseline was rebased with `size:update`, as the script prescribes for intentional growth.
+- [x] 2.2b Levelling prospects (owner's request, 2026-09-27): rank which artifacts are worth levelling by their expected substats at +20, apart from the optimizer ([ADR-0024](adr/0024-levelling-prospects-by-expected-value.md))
+  - `game/genshin/substatRolls.ts`: the 5★ roll tiers, sourced from the wiki and checked against the export (all 6,600 first rolls sit on a tier, the four tiers about equally often). `prospects/prospects.ts`: `projectTo20` adds (random rolls left ÷ 4) × the mean roll (85% of max) to each line, activating a 3-line piece's fourth line first; `rankProspects` ranks by the objective over the +20 substats within slot and main stat, and on a tie at the shown precision the upgraded piece wins. Pieces it can't project (4★, a 3-line piece whose fourth line the source didn't export, impossible line counts) are listed with the reason, never guessed.
+  - `normalizeGOOD` now keeps `unactivatedSubstats` as the entry's `unactivated` line (all 956 in the export), only where the game can have one; anything else is a GOOD issue. `npm run prospects -- <file>` prints the ranking per group.
+  - Back-test on the export's 309 +20 pieces, rewound to their first rolls (`initialValue`): the projected total roll mass is within 0.1% of what they rolled. Crit value is projected 3.5% under, because the +20 pieces are survivors whose crit lines got 422 rolls against 395 expected; the ADR records it. The fixture holds only substat lines, no set, slot, location or account data.
+  - Scope: 5★ only; the owner chose the average outcome over best/worst case and a separate list over changing the optimizer.
 - [ ] 2.3 Sidecar for source-specific extras (Irminsul roll data etc.), keyed by artifact fingerprint
 - [ ] 2.4 Artifact fingerprint (`set+slot+rarity+level+mainStat+sorted rounded substats`) plus a fuzzy OCR fallback. Decide in an ADR how it relates to the existing `dedupe.ts` content hash.
 - [ ] 2.5 Merge with precedence Irminsul > OCR > Enka for values and newest-snapshot for location. Reconciliation report: only-in-A, only-in-B, and mismatches beyond tolerance.
