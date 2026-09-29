@@ -26,6 +26,7 @@ import {
   SnapshotParam,
 } from './schemas';
 import { ServiceError, Services } from './services';
+import { describeLlm, type LlmConfig } from '../llm/config';
 
 export interface AppOptions {
   db: Store;
@@ -34,6 +35,9 @@ export interface AppOptions {
   logger?: boolean;
   /** Time limit for one exact search (default 120 s). */
   searchLimitMs?: number;
+  /** The language model config (TODO 3.3); `GET /llm` describes it, key
+   *  never included. */
+  llm?: LlmConfig;
 }
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
@@ -132,6 +136,11 @@ export function buildApp(opts: AppOptions): FastifyInstance {
 
   // ---- account and characters ------------------------------------------------
   app.get('/health', async () => services.health());
+  app.get('/llm', async (_req, reply) =>
+    opts.llm
+      ? describeLlm(opts.llm)
+      : fail(reply, 404, 'not_found', 'no language model configured'),
+  );
   app.get('/account', async () => services.accountSummary());
   app.get('/characters', async () => services.listCharacters());
   app.get('/characters/:id', async (req, reply) => {

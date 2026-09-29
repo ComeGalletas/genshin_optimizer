@@ -9,6 +9,8 @@
 
 import { DEFAULT_STORE_PATH, openStore } from '../store/store';
 import { buildApp } from '../api/app';
+import { loadServerEnv } from '../env';
+import { loadLlmConfig } from '../llm/config';
 
 const args = process.argv.slice(2);
 const option = (name: string) => {
@@ -17,8 +19,13 @@ const option = (name: string) => {
 };
 export const DEFAULT_PORT = 5198;
 
+loadServerEnv();
 const db = openStore(option('store') ?? DEFAULT_STORE_PATH);
-const app = buildApp({ db, logger: true });
+// A bad config/llm.json stops the server with the reason: better than
+// starting with LLM features that can't work.
+const llm = loadLlmConfig();
+const app = buildApp({ db, logger: true, llm });
+if (llm.notReady) app.log.warn(`language model not ready: ${llm.notReady}`);
 const port = Number(option('port') ?? DEFAULT_PORT);
 await app.listen({ host: '127.0.0.1', port });
 for (const signal of ['SIGINT', 'SIGTERM'] as const)

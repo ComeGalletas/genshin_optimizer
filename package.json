@@ -41,6 +41,7 @@
     "server": "tsx packages/server/src/cli/serve.ts",
     "mcp": "tsx packages/server/src/cli/mcp.ts",
     "inbox": "tsx packages/server/src/cli/inbox.ts",
+    "llm:check": "tsx packages/server/src/cli/llm-check.ts",
     "phase2:check": "tsx packages/server/src/cli/phase2-check.ts",
     "diff:sim": "tsx scripts/diff-sim.ts",
     "bench": "tsx scripts/benchmark.ts && prettier --write docs/speed-report.md",

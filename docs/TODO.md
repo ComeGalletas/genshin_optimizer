@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 3 (local server, MCP, LLM client), started while Phase 2 waits on its acceptance check (the owner's second Irminsul export). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 3.3, `config/llm.json` and its loader; Phase 2's acceptance check whenever the owner's second export is in
+**Next item:** 3.4, "Explain this build" on the server's LLM client; Phase 2's acceptance check whenever the owner's second export is in
 
 ## Housekeeping (done 2026-09-24)
 
@@ -177,7 +177,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - The HTTP routes and the tools now share one service layer (`api/services.ts`) and the same zod input schemas; the REST API gains `POST /artifacts/query`, `POST /compare` and `GET /imports/report`. Results are compact JSON objects (stats to one decimal, artifacts as set/slot/level/main/subs, lists capped). Errors are readable tool errors.
   - Transports: stdio (`npm run mcp`) and stateless streamable HTTP at `POST /mcp` behind the localhost guards. Checked on the real store with the official client over both: every tool answers (6–30 ms; `optimize_build` 1.5 s over unequipped pieces), `compare_builds` works on ids from the other tools, a foreign Host gets 403. The first run found `list_characters` returning a bare array, which MCP rejects; fixed, and the result helper now refuses non-objects.
   - 7 new tests (in-memory MCP client over every tool, errors, rounding; `/mcp` and the new routes through the app).
-- [ ] 3.3 `config/llm.json` + loader (`ollama` | `anthropic` | `openai_compatible`). Keys only in server-side `.env`. Update `.env.example`.
+- [x] 3.3 `config/llm.json` + loader (`ollama` | `anthropic` | `openai_compatible`). Keys only in server-side `.env`. Update `.env.example`.
+  - [ADR-0032](adr/0032-llm-provider-config.md). `config/llm.json` (committed): Ollama with `qwen3:8b` by default; `anthropic` and `openai_compatible` by editing it. `packages/server/src/llm/config.ts` checks it with zod, refuses any secret-looking field ("API keys go in .env"), fills provider defaults, and reads `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` from the server's environment (`packages/server/src/env.ts` loads `.env.local`, then `.env`). A missing required key marks the provider not ready, with the reason, without stopping the server.
+  - `npm run llm:check` asks the provider whether the model exists with free calls (Ollama `/api/tags`, OpenAI-compatible `/models`, Anthropic `/v1/models/{model}`), and says how to fix it (`ollama pull …`, which variable to set). `GET /llm` describes the config. Neither ever returns the key (tested). `.env.example` lists both keys.
+  - In this container there is no Ollama, so `llm:check` reports it can't reach `localhost:11434`; the provider checks are tested with a fake `fetch`. 10 new tests.
 - [ ] 3.4 Rebuild "Explain this build" on the server LLM client, reusing the `src/ai/` prompt shaping
 - [ ] 3.5 Web talks to the server when it's reachable and falls back to client-only
 - [ ] 3.6 Chat panel with a server-side tool loop (the same tools as MCP). An answer can't contain numbers that aren't in tool results: add a test with a fake model.
