@@ -22,7 +22,7 @@ describe('explainBuild', () => {
     const text = await explainBuild(payload);
     expect(text).toBe('Strong build.');
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/explain',
+      'http://127.0.0.1:5198/explain',
       expect.objectContaining({ method: 'POST' }),
     );
     const body = JSON.parse(
@@ -32,12 +32,26 @@ describe('explainBuild', () => {
     expect(body.characterKey).toBe('furina');
   });
 
-  it('throws on a non-OK response', async () => {
+  it('throws on a non-OK response, with the server’s reason when it gives one', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) })),
     );
-    await expect(explainBuild(payload)).rejects.toThrow();
+    await expect(explainBuild(payload)).rejects.toThrow(/answered 500/);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: false,
+        status: 504,
+        json: async () => ({
+          error: 'llm_timeout',
+          message: "qwen3:8b didn't answer within 120 s",
+        }),
+      })),
+    );
+    await expect(explainBuild(payload)).rejects.toThrow(
+      "qwen3:8b didn't answer within 120 s",
+    );
   });
 
   it('throws on a malformed body', async () => {

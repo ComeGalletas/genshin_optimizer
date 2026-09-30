@@ -81,7 +81,7 @@ Vite · React 19 · TypeScript (strict) · Tailwind CSS · Zustand · Web Worker
 
 ## AI: Explain this build
 
-An optional Claude-powered plain-English explanation of the optimised build. Upstream serves it through a Vercel serverless function so the API key stays server-side ([ADR-0010](docs/adr/0010-serverless-proxy-for-ai-explain.md)). This fork removed that function and serves it from the local server instead: `POST /explain` calls whichever model `config/llm.json` selects, a local Ollama model by default ([ADR-0021](docs/adr/0021-local-first-server-architecture.md), [ADR-0033](docs/adr/0033-llm-provider-client.md)). The button stays hidden behind the `VITE_AI_ENABLED` build flag until the web app talks to the server (Phase 3.5).
+An optional Claude-powered plain-English explanation of the optimised build. Upstream serves it through a Vercel serverless function so the API key stays server-side ([ADR-0010](docs/adr/0010-serverless-proxy-for-ai-explain.md)). This fork removed that function and serves it from the local server instead: `POST /explain` calls whichever model `config/llm.json` selects, a local Ollama model by default ([ADR-0021](docs/adr/0021-local-first-server-architecture.md), [ADR-0033](docs/adr/0033-llm-provider-client.md)). The web app shows the button while the server is running with a ready model, and hides it when it runs client-only ([ADR-0034](docs/adr/0034-web-and-local-server.md)). With the server running, the import panel can also load the account it merged from your imports.
 
 ## Non-goals
 

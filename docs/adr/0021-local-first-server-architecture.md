@@ -78,7 +78,9 @@ job that audited upstream's deploy (TODO 0.8). There is no public deployment.
   holds for the client-only mode.
 - [0010] and [0013] are superseded: `api/explain.ts`, `vercel.json`, Upstash
   and their environment variables are gone. `.env.example` keeps
-  `ANTHROPIC_API_KEY` for the server and `VITE_AI_ENABLED`.
+  `ANTHROPIC_API_KEY` for the server and `VITE_AI_ENABLED` (removed by
+  [0034](0034-web-and-local-server.md), which shows explain whenever the
+  server can serve it).
 - The security headers that lived in `vercel.json` went with it. When the
   server starts serving the web app (Phase 3), it sets its own.
 - The full feature set needs the server running. The client-only app stays

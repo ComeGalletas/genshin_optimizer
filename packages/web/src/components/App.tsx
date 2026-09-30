@@ -15,6 +15,8 @@ import {
   useState,
 } from 'react';
 import { ImportPanel } from './ImportPanel';
+import { ServerChip } from './ServerChip';
+import { useServer } from '../local-server/status';
 import { ArtifactForm } from './ArtifactForm';
 import { OptimizePanel } from './OptimizePanel';
 import { Results } from './Results';
@@ -90,6 +92,16 @@ export function App() {
     null,
   );
   const [sharedError, setSharedError] = useState(false);
+
+  // Is the local server running (TODO 3.5)? Checked on start and on every
+  // return to the tab, so starting it later needs no reload; without it the
+  // app stays client-only (ADR-0021 §3).
+  useEffect(() => {
+    const check = () => void useServer.getState().check();
+    check();
+    window.addEventListener('focus', check);
+    return () => window.removeEventListener('focus', check);
+  }, []);
 
   // The hero's demo solve is independent of the user's own inventory/state and
   // reasonably cheap (~tens of ms — see heroExample.ts), so it's computed in an
@@ -236,10 +248,13 @@ export function App() {
           {/* Not the h1 again a line above the h1 — the eyebrow's job is to
               say what kind of thing this is. */}
           <p className="eyebrow">Exact search · proven optimal</p>
-          <span className="chip">
-            <span className="h-1.5 w-1.5 rounded-full bg-jade" />
-            {GAME_SOURCE} · patch {GAME_VERSION}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="chip">
+              <span className="h-1.5 w-1.5 rounded-full bg-jade" />
+              {GAME_SOURCE} · patch {GAME_VERSION}
+            </span>
+            <ServerChip />
+          </div>
         </div>
         {showSolvedHero ? (
           <SolvedHero hero={hero} />

@@ -7,6 +7,8 @@ import { fetchUidArtifacts, type UidError } from '../import/uid';
 import { mergeNew } from '@genshin-build-lab/engine/import/dedupe';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
+import { useServer } from '../local-server/status';
+import { fetchServerAccount } from '../local-server/client';
 import { scrollToId } from '../ui/scroll';
 import { Callout } from './ui/Callout';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
@@ -58,6 +60,11 @@ export function ImportPanel() {
   const [uid, setUid] = useState('');
   const [busy, setBusy] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
+  // Loading the local server's account (TODO 3.5): offered only while the
+  // server runs, and two-step when it would replace gear the player owns.
+  const serverOnline = useServer((s) => s.status === 'online');
+  const [serverBusy, setServerBusy] = useState(false);
+  const [confirmingReplace, setConfirmingReplace] = useState(false);
   const clearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputId = useId();
   const uidInputId = useId();
@@ -74,6 +81,13 @@ export function ImportPanel() {
       if (clearTimeoutRef.current) clearTimeout(clearTimeoutRef.current);
     };
   }, [confirmingClear]);
+
+  // Same idle reset as Clear's confirm.
+  useEffect(() => {
+    if (!confirmingReplace) return;
+    const t = setTimeout(() => setConfirmingReplace(false), 5000);
+    return () => clearTimeout(t);
+  }, [confirmingReplace]);
 
   function mergeDedupe(incoming: Artifact[], suffix = '') {
     // An import replaces the demo bag rather than merging with it. The sample
@@ -170,6 +184,55 @@ export function ImportPanel() {
       );
     } catch {
       setNotice({ tone: 'error', text: BAD_FILE });
+    }
+  }
+
+  async function onServerAccount() {
+    if (serverBusy) return;
+    // Replace, not merge: the server's account is already the merge of every
+    // import (ADR-0027), and deduping it against an older browser copy would
+    // keep a levelled piece twice. Only owned gear needs the second press;
+    // the sample bag is replaced by any import.
+    const owned = useInventory
+      .getState()
+      .artifacts.some((a) => !isSampleArtifact(a));
+    if (owned && !confirmingReplace) {
+      setConfirmingReplace(true);
+      setNotice({
+        tone: 'info',
+        text: 'Press Confirm replace to swap the inventory and roster in this browser for the local server’s account.',
+      });
+      return;
+    }
+    setConfirmingReplace(false);
+    setServerBusy(true);
+    setNotice(null);
+    try {
+      const json = await fetchServerAccount();
+      const out = parseGOOD(json);
+      if ('error' in out) {
+        setNotice({
+          tone: 'error',
+          text: 'The local server sent an account this app can’t read.',
+        });
+        return;
+      }
+      const roster = parseGOODRoster(json);
+      const characters = Object.keys(roster).length;
+      replaceAll(out);
+      useRoster.getState().setRoster(roster);
+      setNotice({
+        tone: 'success',
+        text: `Loaded the local server’s account: ${out.length} ${plural(out.length, 'artifact')}, ${characters} ${plural(characters, 'character')}.`,
+      });
+      if (characters > 0) setTimeout(() => scrollToId('step-roster'), 150);
+    } catch (e) {
+      setNotice({
+        tone: 'error',
+        text: `Couldn’t load the server’s account: ${(e as Error).message}.`,
+      });
+    } finally {
+      setServerBusy(false);
     }
   }
 
@@ -302,6 +365,43 @@ export function ImportPanel() {
           )}
         </div>
       </div>
+
+      {serverOnline && (
+        <div className="well rounded-xl p-4">
+          <p className="field-label">From the Local Server</p>
+          <p className="mb-3 text-xs text-muted">
+            The account the server merged from your imports. Replaces what’s
+            loaded here.
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className={confirmingReplace ? 'btn-danger' : 'btn-primary'}
+              onClick={() => void onServerAccount()}
+              aria-busy={serverBusy}
+              aria-disabled={serverBusy}
+            >
+              {serverBusy
+                ? 'Loading…'
+                : confirmingReplace
+                  ? 'Confirm Replace'
+                  : 'Load Account'}
+            </button>
+            {confirmingReplace && (
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => {
+                  setConfirmingReplace(false);
+                  setNotice(null);
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Persistent live regions. A region created in the same commit as its
           text isn't being observed yet, so nothing is announced — these two

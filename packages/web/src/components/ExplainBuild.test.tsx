@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ExplainBuild } from './ExplainBuild';
 import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
+import { useServer } from '../local-server/status';
 
 vi.mock('../ai/explainClient', () => ({ explainBuild: vi.fn() }));
 import { explainBuild } from '../ai/explainClient';
@@ -25,20 +26,39 @@ function renderIt() {
   );
 }
 
+const READY = { provider: 'ollama', model: 'qwen3:8b', ready: true };
+const serverIs = (s: Partial<ReturnType<typeof useServer.getState>>) =>
+  useServer.setState({ status: 'checking', llm: null, ...s });
+
 afterEach(() => {
-  vi.unstubAllEnvs();
+  serverIs({});
   vi.clearAllMocks();
 });
 
 describe('ExplainBuild', () => {
-  it('renders nothing when the flag is off', () => {
-    vi.stubEnv('VITE_AI_ENABLED', '');
-    const { container } = renderIt();
-    expect(container).toBeEmptyDOMElement();
+  it('renders nothing client-only, or when the server has no ready model', () => {
+    for (const s of [
+      { status: 'checking' as const },
+      { status: 'offline' as const },
+      { status: 'online' as const, llm: null },
+      {
+        status: 'online' as const,
+        llm: {
+          ...READY,
+          ready: false,
+          notReady: 'ANTHROPIC_API_KEY is not set',
+        },
+      },
+    ]) {
+      serverIs(s);
+      const { container, unmount } = renderIt();
+      expect(container).toBeEmptyDOMElement();
+      unmount();
+    }
   });
 
-  describe('with flag on', () => {
-    beforeEach(() => vi.stubEnv('VITE_AI_ENABLED', 'true'));
+  describe('with the server and a ready model', () => {
+    beforeEach(() => serverIs({ status: 'online', llm: READY }));
 
     it('shows the button', () => {
       renderIt();
@@ -61,14 +81,16 @@ describe('ExplainBuild', () => {
     });
 
     it('shows an inline error and keeps the button on failure', async () => {
-      vi.mocked(explainBuild).mockRejectedValue(new Error('boom'));
+      vi.mocked(explainBuild).mockRejectedValue(
+        new Error("qwen3:8b didn't answer within 120 s"),
+      );
       renderIt();
       await userEvent.click(
         screen.getByRole('button', { name: /Explain this build/i }),
       );
       await waitFor(() =>
         expect(screen.getByRole('alert')).toHaveTextContent(
-          /generate an explanation/i,
+          /generate an explanation: qwen3:8b didn't answer within 120 s/i,
         ),
       );
       expect(

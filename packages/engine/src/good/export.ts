@@ -5,13 +5,19 @@
  * (unactivated line, first rolls, roll count) where known. Values pass
  * through (percent, ADR-0023). `normalizeGOOD(toGOOD(x))` gives `x` back,
  * ids aside; tests use it to feed simulated exports through the real
- * import path.
+ * import path. `toGOODAccount` adds the roster and weapons, so the server
+ * can hand a whole account to the web app's GOOD import (TODO 3.5).
  * @packageDocumentation
  */
 
 import type { StatKey, SubStat } from '../game/types';
+import { BUILD_LEVELS } from '../game/types';
 import type { SnapshotPiece } from '../merge/merge';
-import { GOOD_STAT_KEYS } from './normalize';
+import {
+  GOOD_STAT_KEYS,
+  type OwnedWeapon,
+  type RosterEntry,
+} from './normalize';
 
 const GOOD_KEY_OF = new Map<StatKey, string>(
   Object.entries(GOOD_STAT_KEYS)
@@ -84,5 +90,45 @@ export function toGOOD(
         }),
       };
     }),
+  };
+}
+
+/** A GOOD file for a whole account: `toGOOD`'s artifacts plus the owned
+ *  characters and weapons. `normalizeGOOD` reads the roster and weapons
+ *  back unchanged (weapon indexes aside). A character's ascension is
+ *  written from its build level, the cap that ascension gives (ADR-0015). */
+export function toGOODAccount(
+  account: {
+    pieces: readonly SnapshotPiece[];
+    roster: Readonly<Record<string, RosterEntry>>;
+    weapons: readonly OwnedWeapon[];
+  },
+  source: string,
+): GoodExport & {
+  characters: Record<string, unknown>[];
+  weapons: Record<string, unknown>[];
+} {
+  return {
+    ...toGOOD(account.pieces, source),
+    characters: Object.entries(account.roster).map(([key, e]) => {
+      const ascension = e.buildLevel && BUILD_LEVELS.indexOf(e.buildLevel) - 1;
+      return {
+        key: goodCharacterKey(key),
+        ...(e.level !== undefined && { level: e.level }),
+        ...(ascension !== undefined && ascension >= 0 && { ascension }),
+        ...(e.constellation !== undefined && {
+          constellation: e.constellation,
+        }),
+        ...(e.talents && { talent: { ...e.talents } }),
+      };
+    }),
+    weapons: account.weapons.map((w) => ({
+      key: goodCharacterKey(w.key),
+      ...(w.level !== undefined && { level: w.level }),
+      ...(w.ascension !== undefined && { ascension: w.ascension }),
+      ...(w.refinement !== undefined && { refinement: w.refinement }),
+      location: w.location ? goodCharacterKey(w.location) : '',
+      ...(w.lock !== undefined && { lock: w.lock }),
+    })),
   };
 }

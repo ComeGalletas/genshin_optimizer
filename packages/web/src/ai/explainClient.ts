@@ -1,22 +1,27 @@
 /**
- * The client side of the AI-explain feature: the fetch call to the
- * `/api/explain` endpoint and the request/response shapes it shares
- * with that endpoint.
+ * The client side of the AI-explain feature: sends the engine's explain
+ * payload to the local server's `POST /explain` (TODO 3.5, ADR-0033), which
+ * asks whichever model `config/llm.json` selects.
  * @packageDocumentation
  */
 
 import type { ExplainPayload } from '@genshin-build-lab/engine/explain/explain';
+import { serverJson, ServerError } from '../local-server/client';
 
-/** Calls `/api/explain`. Throws on transport or shape errors. */
+/** The server waits up to its model's `timeoutMs` (120 s by default); a cold
+ *  local model can take most of that on the first call. */
+const EXPLAIN_TIMEOUT_MS = 130_000;
+
+/** Calls `POST /explain`. Throws a `ServerError` with a readable message on
+ *  transport, server or model errors, and on a malformed reply. */
 export async function explainBuild(payload: ExplainPayload): Promise<string> {
-  const res = await fetch('/api/explain', {
+  const data = await serverJson<{ explanation?: unknown }>('/explain', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
+    timeoutMs: EXPLAIN_TIMEOUT_MS,
   });
-  if (!res.ok) throw new Error(`explain failed: ${res.status}`);
-  const data = (await res.json()) as { explanation?: unknown };
-  if (typeof data.explanation !== 'string')
-    throw new Error('explain: malformed response');
+  if (typeof data?.explanation !== 'string')
+    throw new ServerError('the local server sent a malformed explanation');
   return data.explanation;
 }

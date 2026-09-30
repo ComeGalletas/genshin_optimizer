@@ -5,6 +5,7 @@ import { ImportPanel } from './ImportPanel';
 import { useInventory } from '../state/inventory';
 import { SAMPLE_INVENTORY } from '@genshin-build-lab/engine/sample/sampleInventory';
 import { useRoster } from '../state/roster';
+import { useServer } from '../local-server/status';
 
 const goodJson = JSON.stringify({
   format: 'GOOD',
@@ -391,5 +392,114 @@ describe('ImportPanel', () => {
     expect(
       screen.queryByRole('button', { name: /Clear inventory/i }),
     ).toBeNull();
+  });
+});
+
+describe('ImportPanel: the local server’s account (TODO 3.5)', () => {
+  const account = {
+    ...JSON.parse(goodJson),
+    source: 'genshin-build-lab',
+    characters: [
+      {
+        key: 'Furina',
+        level: 90,
+        ascension: 6,
+        constellation: 0,
+        talent: { auto: 1, skill: 9, burst: 9 },
+      },
+    ],
+    weapons: [],
+  };
+  const serveAccount = (body: unknown = account, status = 200) => {
+    const f = vi.fn(async () => ({
+      ok: status === 200,
+      status,
+      json: async () => body,
+    }));
+    vi.stubGlobal('fetch', f);
+    return f;
+  };
+  beforeEach(() => useServer.setState({ status: 'online', llm: null }));
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    useServer.setState({ status: 'checking', llm: null });
+  });
+  const loadButton = () => screen.getByRole('button', { name: /Load Account/ });
+
+  it('is offered only while the server runs', () => {
+    useServer.setState({ status: 'offline' });
+    render(<ImportPanel />);
+    expect(
+      screen.queryByRole('button', { name: /Load Account/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('replaces the sample bag with the server’s artifacts and roster in one press', async () => {
+    useInventory.setState({ artifacts: SAMPLE_INVENTORY });
+    const f = serveAccount();
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent(
+        /Loaded the local server’s account: 1 artifact, 1 character\./,
+      ),
+    );
+    expect(f).toHaveBeenCalledWith(
+      'http://127.0.0.1:5198/account/good',
+      expect.anything(),
+    );
+    const arts = useInventory.getState().artifacts;
+    expect(arts).toHaveLength(1);
+    expect(arts[0].setKey).toBe('EmblemOfSeveredFate');
+    expect(Object.keys(useRoster.getState().entries)).toEqual(['furina']);
+  });
+
+  it('asks before replacing owned gear, and replaces rather than merges', async () => {
+    const owned = { ...SAMPLE_INVENTORY[0], id: 'mine-1' };
+    useInventory.setState({ artifacts: [owned] });
+    const f = serveAccount();
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    expect(f).not.toHaveBeenCalled();
+    expect(screen.getByRole('status')).toHaveTextContent(/Confirm replace/);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Confirm Replace/ }),
+    );
+    await waitFor(() =>
+      expect(useInventory.getState().artifacts).toHaveLength(1),
+    );
+    expect(useInventory.getState().artifacts[0].id).not.toBe('mine-1');
+  });
+
+  it('can back out of the replace', async () => {
+    useInventory.setState({
+      artifacts: [{ ...SAMPLE_INVENTORY[0], id: 'mine-1' }],
+    });
+    const f = serveAccount();
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(loadButton()).toBeInTheDocument();
+    expect(f).not.toHaveBeenCalled();
+    expect(useInventory.getState().artifacts[0].id).toBe('mine-1');
+  });
+
+  it('shows the server’s reason when it has no account, and keeps what is loaded', async () => {
+    useInventory.setState({ artifacts: SAMPLE_INVENTORY });
+    serveAccount(
+      {
+        error: 'not_found',
+        message: 'no account imported yet: drop a GOOD file in imports/inbox/',
+      },
+      404,
+    );
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        /Couldn’t load the server’s account: no account imported yet/,
+      ),
+    );
+    expect(useInventory.getState().artifacts).toBe(SAMPLE_INVENTORY);
   });
 });

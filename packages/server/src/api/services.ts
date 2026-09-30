@@ -39,6 +39,7 @@ import {
   snapshotInfo,
   type Store,
 } from '../store/store';
+import { toGOODAccount } from '@genshin-build-lab/engine/good/export';
 import { SearchRunner, SearchTimeout } from '../optimize/pool';
 import type { ArtifactQuery, CompareBody, OptimizeBody } from './schemas';
 
@@ -102,6 +103,29 @@ export class Services {
       weapons: weapons.length,
       rosterFrom: snapshotId ?? null,
     };
+  }
+
+  /** The current account as one GOOD file (TODO 3.5): the merged
+   *  artifacts with their locks, and the roster and weapons from the
+   *  best-ranked snapshot, for the web app's GOOD import. */
+  accountGood() {
+    const merged = currentAccount(this.db);
+    if (!listMerges(this.db).length)
+      throw notFound(
+        'no account imported yet: drop a GOOD file in imports/inbox/ and run npm run inbox',
+      );
+    const { roster, weapons } = currentRoster(this.db);
+    return toGOODAccount(
+      {
+        pieces: merged.map((m) => ({
+          artifact: m.artifact,
+          ...(m.lock !== undefined && { lock: m.lock }),
+        })),
+        roster,
+        weapons,
+      },
+      'genshin-build-lab',
+    );
   }
 
   listCharacters(filter: { element?: string; weaponType?: string } = {}) {

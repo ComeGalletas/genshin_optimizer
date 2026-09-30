@@ -169,6 +169,7 @@ export function buildApp(opts: AppOptions): FastifyInstance {
       : fail(reply, 404, 'not_found', 'no language model configured'),
   );
   app.get('/account', async () => services.accountSummary());
+  app.get('/account/good', async () => services.accountGood());
   app.get('/characters', async () => services.listCharacters());
   app.get('/characters/:id', async (req, reply) => {
     const p = parse(IdParam, req.params, reply);

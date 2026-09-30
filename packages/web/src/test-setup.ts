@@ -23,3 +23,10 @@ window.matchMedia ??= (query: string) =>
     removeListener: () => {},
     dispatchEvent: () => false,
   }) as unknown as MediaQueryList;
+
+// No test reaches the network: the app probes the local server on start, and
+// a developer's running `npm run server` must not change test results. A test
+// that needs fetch stubs it with vi.stubGlobal, which restores this after.
+globalThis.fetch = (async (input: RequestInfo | URL) => {
+  throw new TypeError(`network disabled in tests: ${String(input)}`);
+}) as typeof fetch;

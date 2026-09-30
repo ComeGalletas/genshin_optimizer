@@ -1,5 +1,13 @@
 import { readFileSync } from 'node:fs';
-import { importGood, openStore, recordMerge, type Store } from '../store/store';
+import { normalizeGOOD } from '@genshin-build-lab/engine/good/normalize';
+import {
+  currentAccount,
+  currentRoster,
+  importGood,
+  openStore,
+  recordMerge,
+  type Store,
+} from '../store/store';
 import { buildApp } from './app';
 
 const SAMPLE = readFileSync(
@@ -65,6 +73,33 @@ describe('account and characters', () => {
       weapons: 8,
       rosterFrom: 1,
     });
+  });
+
+  it('returns the account as a GOOD file the web import reads back', async () => {
+    const r = await get('/account/good');
+    expect(r.statusCode).toBe(200);
+    const good = normalizeGOOD(r.json())!;
+    expect(good.issues).toEqual([]);
+    expect(good.source).toBe('genshin-build-lab');
+    expect(good.artifacts).toHaveLength(20);
+    const { roster, weapons } = currentRoster(db);
+    expect(good.roster).toEqual(roster);
+    expect(good.weapons.map((w) => w.key)).toEqual(weapons.map((w) => w.key));
+    // The merged pieces, lock flags included.
+    const merged = currentAccount(db);
+    expect(good.artifacts!.map((e) => [e.artifact.setKey, e.lock])).toEqual(
+      merged.map((m) => [m.artifact.setKey, m.lock]),
+    );
+    // Nothing imported yet: a 404 that says what to do.
+    const empty = buildApp({ db: openStore(':memory:') });
+    const none = await empty.inject({
+      method: 'GET',
+      url: '/account/good',
+      headers: H,
+    });
+    expect(none.statusCode).toBe(404);
+    expect(none.json().message).toMatch(/imports\/inbox/);
+    await empty.close();
   });
 
   it('lists characters and shows one with its equipped stats', async () => {

@@ -4,6 +4,7 @@ import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
 import { explainBuild } from '../ai/explainClient';
 import { toExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 import { Callout } from './ui/Callout';
+import { selectExplainReady, useServer } from '../local-server/status';
 
 export function ExplainBuild({
   characterKey,
@@ -16,10 +17,13 @@ export function ExplainBuild({
   totals: StatVec;
   report: GapReport;
 }) {
-  const enabled = import.meta.env.VITE_AI_ENABLED === 'true';
+  // Shown only while the local server runs with a ready model (ADR-0021
+  // §3); client-only, there is nothing to ask.
+  const enabled = useServer(selectExplainReady);
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState<string | null>(null);
-  const [error, setError] = useState(false);
+  // The server's reason (a model timeout, a missing key...), or null.
+  const [error, setError] = useState<string | null>(null);
   // Announcements are keyed by this so a second attempt that produces the same
   // sentence still counts as a change to the live region.
   const [statusNonce, setStatusNonce] = useState(0);
@@ -32,7 +36,7 @@ export function ExplainBuild({
     if (loading) return;
     setStatusNonce((n) => n + 1);
     setLoading(true);
-    setError(false);
+    setError(null);
     try {
       const text = await explainBuild(
         toExplainPayload(characterKey, objective, totals, report),
@@ -42,7 +46,7 @@ export function ExplainBuild({
       // Log so a real backend regression is distinguishable from the expected
       // "feature unavailable" path during debugging; UI behaviour is unchanged.
       console.error('Explain build failed', err);
-      setError(true);
+      setError((err as Error).message || 'unknown error');
     } finally {
       setStatusNonce((n) => n + 1);
       setLoading(false);
@@ -66,7 +70,7 @@ export function ExplainBuild({
       {/* The visible Callout is created on demand, so it cannot carry the
           alert role itself; this one is always mounted. */}
       <p className="sr-only" role="alert">
-        {error ? 'Couldn’t generate an explanation right now.' : ''}
+        {error ? `Couldn’t generate an explanation: ${error}.` : ''}
       </p>
       <div>
         {(explanation || loading) && (
@@ -105,7 +109,7 @@ export function ExplainBuild({
       </button>
       {error && (
         <Callout tone="error" className="mt-2">
-          Couldn’t generate an explanation right now. Try again.
+          Couldn’t generate an explanation: {error}. Try again.
         </Callout>
       )}
     </div>
