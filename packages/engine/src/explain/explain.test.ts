@@ -3,9 +3,9 @@ import {
   parseExplainPayload,
   buildExplainPrompt,
   toExplainPayload,
-} from './explainShared';
-import type { ExplainPayload } from './explainShared';
-import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
+} from './explain';
+import type { ExplainPayload } from './explain';
+import type { GapReport } from '../meta/gap';
 
 // ---------------------------------------------------------------------------
 // parseExplainPayload (ported from explainPayload.test.ts)

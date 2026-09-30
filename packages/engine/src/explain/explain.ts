@@ -1,18 +1,20 @@
-import type {
-  Objective,
-  StatKey,
-  StatVec,
-} from '@genshin-build-lab/engine/game/types';
-import { isStatKey, isObjective } from '@genshin-build-lab/engine/game/types';
-import {
-  objectiveLabel,
-  statLabel,
-} from '@genshin-build-lab/engine/labels-core';
-import { MAX_KEY_LEN } from '@genshin-build-lab/engine/game/artifactValidation';
-import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
+/**
+ * "Explain this build": the payload the web app sends, its strict
+ * validation, and the prompt built from it. Pure, so the server's
+ * `POST /explain` (TODO 3.4, ADR-0033) and the web client share one
+ * definition. Moved from the web app's `ai/` module, where it served the
+ * fork's serverless proxy (ADR-0010, superseded by ADR-0021).
+ * @packageDocumentation
+ */
+
+import type { Objective, StatKey, StatVec } from '../game/types';
+import { isStatKey, isObjective } from '../game/types';
+import { objectiveLabel, statLabel } from '../labels-core';
+import { MAX_KEY_LEN } from '../game/artifactValidation';
+import type { GapReport } from '../meta/gap';
 
 // ---------------------------------------------------------------------------
-// ExplainPayload — the validated request shape sent to the AI proxy
+// ExplainPayload — the validated request shape of POST /explain
 // ---------------------------------------------------------------------------
 
 export interface ExplainPayload {
@@ -67,9 +69,9 @@ function parseTotals(x: unknown): StatVec | null {
 }
 
 /**
- * Strict structural validation of an untrusted /api/explain request body.
+ * Strict structural validation of an untrusted POST /explain request body.
  * Returns the typed payload, or null if anything is malformed/oversized.
- * This is the cost/abuse guard: it bounds the prompt the proxy will ever build.
+ * It bounds the prompt the server will ever build.
  */
 export function parseExplainPayload(input: unknown): ExplainPayload | null {
   if (typeof input !== 'object' || input === null) return null;

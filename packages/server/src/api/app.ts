@@ -1,7 +1,8 @@
 /**
  * The local HTTP API (TODO 3.1, ADR-0030): the engine and the snapshot store
  * over JSON, for the web app (3.5) and anything else on this machine, plus
- * the MCP server over streamable HTTP at `/mcp` (TODO 3.2, ADR-0031).
+ * the MCP server over streamable HTTP at `/mcp` (TODO 3.2, ADR-0031) and
+ * "explain this build" on the configured model (TODO 3.4, ADR-0033).
  *
  * Localhost only (ADR-0021): the server listens on 127.0.0.1, and every
  * request must name a localhost Host (so a web page can't reach it through
@@ -27,6 +28,9 @@ import {
 } from './schemas';
 import { ServiceError, Services } from './services';
 import { describeLlm, type LlmConfig } from '../llm/config';
+import { createLlmClient, LlmError, type LlmClient } from '../llm/client';
+import { explainBuild } from '../llm/explain';
+import { parseExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 
 export interface AppOptions {
   db: Store;
@@ -38,7 +42,26 @@ export interface AppOptions {
   /** The language model config (TODO 3.3); `GET /llm` describes it, key
    *  never included. */
   llm?: LlmConfig;
+  /** The model client; built from `llm` when not given (tests pass a
+   *  fake). */
+  llmClient?: LlmClient;
 }
+
+/** An explain request is a few hundred bytes (`parseExplainPayload` bounds
+ *  every field); this refuses anything far larger before parsing it. */
+const EXPLAIN_BODY_LIMIT = 16_000;
+
+/** A model that is down, slow or misconfigured is a gateway problem, not
+ *  the caller's; a missing key means the feature isn't available yet. */
+const LLM_STATUS: Record<LlmError['kind'], number> = {
+  not_ready: 503,
+  timeout: 504,
+  unreachable: 502,
+  auth: 502,
+  no_model: 502,
+  upstream: 502,
+  bad_response: 502,
+};
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 
@@ -87,6 +110,8 @@ export function buildApp(opts: AppOptions): FastifyInstance {
   const inboxDir = opts.inboxDir ?? DEFAULT_INBOX;
   const app = Fastify({ logger: opts.logger ?? false });
   const services = new Services(opts.db, new SearchRunner(opts.searchLimitMs));
+  const llmClient =
+    opts.llmClient ?? (opts.llm ? createLlmClient(opts.llm) : undefined);
   app.addHook('onClose', () => services.searches.close());
 
   // ---- localhost guard and CORS -----------------------------------------
@@ -124,6 +149,8 @@ export function buildApp(opts: AppOptions): FastifyInstance {
       return fail(reply, err.status, err.code, err.message);
     if (err instanceof StoreError)
       return fail(reply, 404, 'not_found', err.message);
+    if (err instanceof LlmError)
+      return fail(reply, LLM_STATUS[err.kind], `llm_${err.kind}`, err.message);
     const status = (err as { statusCode?: number }).statusCode ?? 500;
     if (status < 500)
       return fail(reply, status, 'bad_request', (err as Error).message);
@@ -161,6 +188,30 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     const body = parse(CompareBody, req.body, reply);
     if (body) return services.compareBuilds(body);
   });
+
+  // ---- language model (TODO 3.4, ADR-0033) ---------------------------------
+  app.post(
+    '/explain',
+    { bodyLimit: EXPLAIN_BODY_LIMIT },
+    async (req, reply) => {
+      if (!llmClient)
+        return fail(
+          reply,
+          503,
+          'llm_not_ready',
+          'no language model configured',
+        );
+      const payload = parseExplainPayload(req.body);
+      if (!payload)
+        return fail(
+          reply,
+          400,
+          'bad_request',
+          'not a valid explain payload: characterKey, objective, totals and gap, within their limits',
+        );
+      return explainBuild(llmClient, payload);
+    },
+  );
 
   // ---- later phases ----------------------------------------------------------
   app.post('/allocate', async (_req, reply) =>

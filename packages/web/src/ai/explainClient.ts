@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import type { ExplainPayload } from './explainShared';
+import type { ExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 
 /** Calls `/api/explain`. Throws on transport or shape errors. */
 export async function explainBuild(payload: ExplainPayload): Promise<string> {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { explainBuild } from './explainClient';
-import type { ExplainPayload } from './explainShared';
+import type { ExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 
 const payload: ExplainPayload = {
   characterKey: 'furina',

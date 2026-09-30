@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Objective, StatVec } from '@genshin-build-lab/engine/game/types';
 import type { GapReport } from '@genshin-build-lab/engine/meta/gap';
 import { explainBuild } from '../ai/explainClient';
-import { toExplainPayload } from '../ai/explainShared';
+import { toExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 import { Callout } from './ui/Callout';
 
 export function ExplainBuild({
