@@ -74,7 +74,7 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 ## Phase 4: Conditions → ConstraintSpec
 
 - `engine/constraints/spec.ts` is a versioned zod schema:
-  - `setRequirements` (4-piece, 2+2, any), `mainStats` per slot, `minStats` (for example `er >= 1.8`), `maxStats`
+  - `setRequirements` (4-piece, 2+2, any), `mainStats` per slot, `minStats` (for example `er_pct >= 180`, in percent per ADR-0023), `maxStats`
   - `objective`: stat-weight vector | crit value | `sim` (Phase 5)
   - `exclusions`: artifacts locked to other characters, `keepEquippedOn: [...]`
   - `teamBuffs` and `enemy` (for example a resistance override), which are passed through to the sim

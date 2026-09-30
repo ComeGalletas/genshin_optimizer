@@ -218,7 +218,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 4: Conditions → ConstraintSpec
 
-- [ ] 4.1 `engine/constraints/spec.ts`: versioned zod schema (set requirements, mainStats, min/max stats, objective, exclusions, `keepEquippedOn`, teamBuffs, enemy)
+- [x] 4.1 `engine/constraints/spec.ts`: versioned zod schema (set requirements, mainStats, min/max stats, objective, exclusions, `keepEquippedOn`, teamBuffs, enemy)
+  - [ADR-0036](adr/0036-constraint-spec.md). `packages/engine/src/constraints/spec.ts` (`zod/mini`): `version` 1, `character`, `weapon`, `buildLevel`, `defaults` (`extend`, the default, or `replace`), `set` (`4pc`/`2pc`/`2+2`/`any`), `mainStats` for sands/goblet/circlet (a stat or `any`), `minStats`, `maxStats`, `objective` (`crit_value`, `avg_damage`, a stat or `{ weights }`), `keepEquippedOn` (characters or `all`), `excludeArtifacts`, `teamBuffs`, `enemy` (`level`, `res`). Percent throughout, enemy resistance included; PLAN's `er >= 1.8` example now reads 180.
+  - "Extend the defaults" comes from the Phase 3 acceptance: replacing them turned "Furina with ≥ 180% ER" into a search that timed out for the local model.
+  - `parseConstraintSpec` checks the shape (strict at every level: an invented field like `pool` is an error) and then the meaning: keys exist, with the closest key suggested (`furnia` → `furina`, `GoldenTrope` → `GoldenTroupe`); the weapon suits the character; a 2+2 names two sets; each main stat can roll on its slot (listing the ones that can); no minimum above its maximum; `avg_damage` only with a damage profile; weights not all zero. It returns every issue at once, each with a path and a message written for a model, because zod/mini has no English messages. `sim` waits for Phase 5; account checks (owned character, artifact ids) belong to the mapping (4.2).
+  - 14 tests (valid specs of every kind, strictness, each message, each meaning check, all issues at once). Loosening the schema or dropping the min/max check each turns them red.
 - [ ] 4.2 Spec → optimizer request mapping, with tests that each field changes optimizer behavior as intended
 - [ ] 4.3 LLM translator prompt → zod validation → readable "I understood: ..." summary before running
 - [ ] 4.4 Golden set: 30 NL requests with expected specs, plus an eval script that reports exact-match per model
