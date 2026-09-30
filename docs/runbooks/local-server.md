@@ -28,7 +28,7 @@ tools), [ADR-0032](../adr/0032-llm-provider-config.md) (model config),
 | `npm run dev:web`    | The web app alone (client-only).                                                                                                                                                                   |
 | `npm run server`     | The server alone: the HTTP API, MCP over HTTP at `/mcp`, explain and chat. `-- --port <n>` and `-- --store <path>` override the defaults.                                                          |
 | `npm run mcp`        | The MCP server over stdio, for MCP clients that start it themselves (Claude Desktop). `-- --store <path>` overrides the store.                                                                     |
-| `npm run mcp:config` | Prints the Claude Desktop and Claude Code configuration for this checkout, with absolute paths.                                                                                                    |
+| `npm run mcp:config` | Prints the Claude Desktop and Claude Code configuration for this checkout, with absolute paths; `-- --install` adds it to Claude Desktop (quit it first).                                          |
 | `npm run inbox`      | Imports every new file in `imports/inbox/` (`-- --watch` keeps watching).                                                                                                                          |
 | `npm run llm:check`  | Says which model `config/llm.json` selects and whether the provider has it.                                                                                                                        |
 
@@ -69,15 +69,18 @@ app's header chip shows the model in use, or why there is none.
 Claude Desktop starts the MCP server itself, so the server doesn't need to
 be running.
 
-1. `npm run mcp:config` and copy the JSON it prints. It names this Node,
-   tsx's CLI and `packages/server/src/cli/mcp.ts` by absolute path, because
-   Claude Desktop starts servers from its own directory and often without
-   your terminal's `PATH`.
-2. In Claude Desktop: **Settings → Developer → Edit Config**. Merge the
-   `genshin-build-lab` entry into `mcpServers` in
-   `claude_desktop_config.json` (keep any servers already there) and save.
-3. Quit Claude Desktop fully (from the tray or menu bar, not just the
-   window) and start it again.
+1. Quit Claude Desktop completely: from the tray icon (Windows) or the menu
+   bar (macOS), not just the window. While it runs it rewrites
+   `claude_desktop_config.json` from memory, and an entry added from
+   outside is lost within seconds (seen on Windows, 2026-09-30).
+2. In a terminal at the repository root: `npm run mcp:config -- --install`.
+   It refuses while Claude Desktop is running, backs the file up next to
+   itself, and adds only the `genshin-build-lab` entry to `mcpServers`,
+   with absolute paths to this Node, tsx's CLI and
+   `packages/server/src/cli/mcp.ts` (Claude Desktop starts servers from its
+   own directory, often without your terminal's `PATH`). To do it by hand
+   instead, `npm run mcp:config` prints the entry to merge.
+3. Start Claude Desktop.
 4. The tools appear under the `genshin-build-lab` server in the chat's
    tools menu: `get_account_summary`, `list_characters`, `get_character`,
    `query_artifacts`, `optimize_build`, `compare_builds`,
