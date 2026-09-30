@@ -5,26 +5,13 @@ import type {
   OptimizeResult,
 } from '@genshin-build-lab/engine/game/types';
 import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { zeroOffElementGoblets } from '@genshin-build-lab/engine/optimizer/element';
 import { runSearchRequest, readSearchResponse } from './protocol';
 import type { WorkerRequest, WorkerResponse } from './protocol';
 
-// A goblet's element (ADR-0014) is only meaningful relative to the character
-// being optimised for. Off-element goblets are still legal gear (their
-// sub-stats count) but their elemental_dmg main stat is dead weight in-game,
-// so zero it out before the solver ever sees it — no solver changes needed.
-export function zeroOffElementGoblets(
-  inventory: Artifact[],
-  characterKey: string,
-): Artifact[] {
-  const character = genshinAdapter.character(characterKey);
-  if (!character) return inventory;
-  return inventory.map((a) =>
-    a.element && a.element !== character.element
-      ? { ...a, mainStatValue: 0 }
-      : a,
-  );
-}
+// Off-element goblets are zeroed before the solver sees them (ADR-0014);
+// the rule lives in the engine so the server applies it too.
+export { zeroOffElementGoblets };
 
 /** Mid-flight counters from a run in progress. */
 export interface OptimizeProgress {

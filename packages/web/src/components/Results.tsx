@@ -27,7 +27,7 @@ import {
   unreachableMinStats,
   type StatCeiling,
 } from '@genshin-build-lab/engine/optimizer/diagnostics';
-import { zeroOffElementGoblets } from '../workers/optimizeClient';
+import { zeroOffElementGoblets } from '@genshin-build-lab/engine/optimizer/element';
 import { setRequirementGap } from '@genshin-build-lab/engine/meta/gap';
 import { useInventory } from '../state/inventory';
 

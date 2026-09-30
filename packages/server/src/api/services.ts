@@ -40,6 +40,7 @@ import {
   type Store,
 } from '../store/store';
 import { toGOODAccount } from '@genshin-build-lab/engine/good/export';
+import { zeroOffElementGoblets } from '@genshin-build-lab/engine/optimizer/element';
 import { SearchRunner, SearchTimeout } from '../optimize/pool';
 import type { ArtifactQuery, CompareBody, OptimizeBody } from './schemas';
 
@@ -164,7 +165,7 @@ export class Services {
           constraints: {},
           objective: 'crit_value',
         }),
-        equipped,
+        zeroOffElementGoblets(equipped, id),
       );
     return {
       ...meta,
@@ -221,10 +222,13 @@ export class Services {
       throw badRequest((e as Error).message);
     }
     const account = this.artifacts();
-    const pool =
+    const owned =
       body.pool === 'free'
         ? account.filter((a) => !a.location || a.location === body.characterKey)
         : account;
+    // An off-element goblet's DMG% counts for nothing (ADR-0014); the
+    // builds still show each piece as it is.
+    const pool = zeroOffElementGoblets(owned, body.characterKey);
     const t0 = performance.now();
     let result;
     try {
@@ -234,7 +238,7 @@ export class Services {
         throw new ServiceError(504, 'timeout', e.message);
       throw e;
     }
-    const byId = new Map(pool.map((a) => [a.id, a]));
+    const byId = new Map(owned.map((a) => [a.id, a]));
     return {
       request,
       pool: { kind: body.pool ?? 'all', artifacts: pool.length },
@@ -316,7 +320,7 @@ export class Services {
     };
     const side = (ids: string[], name: string) => {
       const build = pieces(ids, name);
-      const t = totals(ctx, build);
+      const t = totals(ctx, zeroOffElementGoblets(build, body.characterKey));
       return {
         artifacts: build,
         totals: t,

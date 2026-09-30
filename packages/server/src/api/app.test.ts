@@ -124,6 +124,54 @@ describe('account and characters', () => {
   });
 });
 
+describe('off-element goblets (ADR-0014)', () => {
+  it('count for nothing in compare, optimize and character totals', async () => {
+    const goblets = (
+      await post('/artifacts/query', {
+        slot: 'goblet',
+        mainStat: 'elemental_dmg',
+      })
+    ).json().artifacts as {
+      id: string;
+      element: string;
+      mainStatValue: number;
+    }[];
+    const hydro = goblets.find((g) => g.element === 'hydro')!;
+    const electro = goblets.find((g) => g.element === 'electro')!;
+    // Furina is Hydro: the Electro goblet's 46.6% is dead weight.
+    const c = (
+      await post('/compare', {
+        characterKey: 'furina',
+        objective: 'elemental_dmg',
+        a: [hydro.id],
+        b: [electro.id],
+      })
+    ).json();
+    expect(c.a.totals.elemental_dmg).toBeCloseTo(hydro.mainStatValue, 1);
+    expect(c.b.totals.elemental_dmg ?? 0).toBe(0);
+    // The piece itself is shown as it is.
+    expect(c.b.artifacts[0].mainStatValue).toBe(electro.mainStatValue);
+
+    const o = (
+      await post('/optimize', {
+        characterKey: 'furina',
+        objective: 'elemental_dmg',
+        constraints: {},
+      })
+    ).json();
+    expect(o.builds[0].artifacts.goblet.element).toBe('hydro');
+
+    // Raiden wears the Electro goblet; Xiangling (Pyro) would get nothing
+    // from it, and her own sheet counts her own Pyro goblet.
+    const x = (await get('/characters/xiangling')).json();
+    const own = x.equipped.find((a: { slot: string }) => a.slot === 'goblet');
+    expect(own.element).toBe('pyro');
+    expect(x.stats.elemental_dmg).toBeGreaterThanOrEqual(
+      own.mainStatValue - 0.05,
+    );
+  });
+});
+
 describe('/optimize', () => {
   it('fills defaults from the roster and meta, and resolves the pieces', async () => {
     const r = await post('/optimize', { characterKey: 'neuvillette', topK: 2 });
