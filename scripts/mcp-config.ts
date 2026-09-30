@@ -18,6 +18,7 @@ import { execFileSync } from 'node:child_process';
 import {
   copyFileSync,
   existsSync,
+  readdirSync,
   readFileSync,
   renameSync,
   writeFileSync,
@@ -43,15 +44,31 @@ const desktop = {
   },
 };
 
-/** Where Claude Desktop keeps its config (on Windows the Store app
- *  redirects this path into its package folder). */
+/** Where Claude Desktop keeps its config. On Windows the Store (MSIX) app
+ *  keeps it in its package folder; `%APPDATA%\Claude` is only a view of
+ *  that folder, and it isn't there while the app is closed (seen
+ *  2026-09-30), so the package folder wins when it exists. */
 function desktopConfigPath(): string {
-  if (process.platform === 'win32')
+  if (process.platform === 'win32') {
+    const packages = join(
+      process.env.LOCALAPPDATA ?? join(homedir(), 'AppData/Local'),
+      'Packages',
+    );
+    const store = existsSync(packages)
+      ? readdirSync(packages)
+          .filter((d) => /^Claude_/.test(d))
+          .map((d) => join(packages, d, 'LocalCache/Roaming/Claude'))
+          .find((d) => existsSync(d))
+      : undefined;
     return join(
-      process.env.APPDATA ?? join(homedir(), 'AppData/Roaming'),
-      'Claude',
+      store ??
+        join(
+          process.env.APPDATA ?? join(homedir(), 'AppData/Roaming'),
+          'Claude',
+        ),
       'claude_desktop_config.json',
     );
+  }
   if (process.platform === 'darwin')
     return join(
       homedir(),
@@ -97,6 +114,15 @@ function install() {
       'Claude Desktop is running. Quit it completely first (tray or menu bar > Quit): while it runs it rewrites ' +
         file +
         ' and would drop this entry. Then run this again.',
+    );
+    process.exitCode = 1;
+    return;
+  }
+  // Never start a config in a folder Claude Desktop didn't make: a wrong
+  // guess would leave a file with only this entry that the app never reads.
+  if (!existsSync(dirname(file))) {
+    console.error(
+      `Can't find Claude Desktop's config folder (looked for ${dirname(file)}). Open Claude Desktop once, or add the entry by hand: Settings > Developer > Edit Config, with what \`npm run mcp:config\` prints.`,
     );
     process.exitCode = 1;
     return;

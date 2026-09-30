@@ -108,6 +108,13 @@ Check with `claude mcp list`, or `/mcp` inside a session.
 
 ## Troubleshooting
 
+- **Where the Claude Desktop config is on Windows.** The Microsoft Store
+  version keeps it in its package folder,
+  `%LOCALAPPDATA%\Packages\Claude_…\LocalCache\Roaming\Claude\claude_desktop_config.json`;
+  `%APPDATA%\Claude` is only a view of that folder while the app runs.
+  `--install` looks in the package folder first, and refuses rather than
+  start a new config where the app wouldn't read it.
+
 - **Claude Desktop shows the server as failed.** Its log is
   `mcp-server-genshin-build-lab.log` in Claude's logs folder
   (`%APPDATA%\Claude\logs` on Windows, `~/Library/Logs/Claude` on macOS).
