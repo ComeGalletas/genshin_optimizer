@@ -7,8 +7,11 @@
  */
 
 import { existsSync } from 'node:fs';
+import { fromRoot } from './paths';
 
-export function loadServerEnv(files = ['.env.local', '.env']): string[] {
+export function loadServerEnv(
+  files = [fromRoot('.env.local'), fromRoot('.env')],
+): string[] {
   const loaded: string[] = [];
   for (const f of files)
     if (existsSync(f)) {

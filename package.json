@@ -25,7 +25,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "npm run dev -w @genshin-build-lab/web --",
+    "dev": "tsx scripts/dev.ts",
+    "dev:web": "npm run dev -w @genshin-build-lab/web --",
     "build": "tsc -b && npm run build -w @genshin-build-lab/web",
     "preview": "npm run preview -w @genshin-build-lab/web --",
     "test": "vitest run",
@@ -40,6 +41,7 @@
     "prospects": "tsx scripts/prospects.ts",
     "server": "tsx packages/server/src/cli/serve.ts",
     "mcp": "tsx packages/server/src/cli/mcp.ts",
+    "mcp:config": "tsx scripts/mcp-config.ts",
     "inbox": "tsx packages/server/src/cli/inbox.ts",
     "llm:check": "tsx packages/server/src/cli/llm-check.ts",
     "phase2:check": "tsx packages/server/src/cli/phase2-check.ts",

@@ -12,6 +12,7 @@
 
 import { readdirSync, readFileSync, statSync, watch } from 'node:fs';
 import { basename, join } from 'node:path';
+import { fromRoot } from '../paths';
 import {
   diffSincePrevious,
   importGood,
@@ -25,7 +26,7 @@ import {
 } from '../store/store';
 
 /** The inbox, relative to the repository root. */
-export const DEFAULT_INBOX = 'imports/inbox';
+export const DEFAULT_INBOX = fromRoot('imports/inbox');
 
 export type InboxEvent =
   | {

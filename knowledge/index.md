@@ -40,4 +40,5 @@ The v2 Endgame Planner turned the single-character optimiser into an account-lev
 planner; its decisions are ADR-0016 (damage objective) through ADR-0019 (the Plan),
 linked above, and its terms are defined once in [`CONTEXT.md`](../CONTEXT.md). Team and
 meta data are hand-curated per patch; the refresh checklist is
-[`docs/runbooks/patch-refresh.md`](../docs/runbooks/patch-refresh.md).
+[`docs/runbooks/patch-refresh.md`](../docs/runbooks/patch-refresh.md). Running the local
+server and connecting Claude over MCP: [`docs/runbooks/local-server.md`](../docs/runbooks/local-server.md).

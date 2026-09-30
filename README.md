@@ -14,7 +14,7 @@ A local Genshin Impact account advisor. It imports your whole inventory, finds t
 
 ## Status
 
-Phase 0 of the [roadmap](docs/PLAN.md), fork and baseline, is nearly done; [docs/TODO.md](docs/TODO.md) is the live checklist. The code is now three packages, the Vercel parts are gone, and the architecture is recorded in [ADR-0021](docs/adr/0021-local-first-server-architecture.md). Nothing user-visible has changed yet. The phases after it:
+Phases 0 and 1 of the [roadmap](docs/PLAN.md) are done, Phase 2 (multi-source import) waits only on its acceptance run, and Phase 3 (local server, MCP, LLM chat) is in its acceptance stage; [docs/TODO.md](docs/TODO.md) is the live checklist. The architecture is recorded in [ADR-0021](docs/adr/0021-local-first-server-architecture.md). The phases:
 
 1. Refresh the static game data and report what each character and weapon supports.
 2. Import from several sources (Irminsul, OCR scanners, Enka), merge them, and keep snapshot history.
@@ -47,8 +47,10 @@ Requires Node 22 or newer.
 
 ```bash
 npm install
-npm run dev   # the web app on http://localhost:5199
+npm run dev   # the web app on http://localhost:5199 and the local server on 127.0.0.1:5198
 ```
+
+The web app also works on its own (`npm run dev:web`). With the server it can load the account you imported into `imports/inbox/`, explain builds, and answer questions in a chat, using a local [Ollama](https://ollama.com) model by default. To use your account from Claude Desktop or Claude Code over MCP, run `npm run mcp:config`. Both are covered in the [local server runbook](docs/runbooks/local-server.md).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the dev workflow and [FILE-MAP.md](FILE-MAP.md) for the code layout.
 

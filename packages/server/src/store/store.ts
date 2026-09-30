@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import Database from 'better-sqlite3';
+import { fromRoot } from '../paths';
 import {
   isStatKey,
   type Artifact,
@@ -43,7 +44,7 @@ import {
 import { migrate } from './migrations';
 
 /** Where the store lives unless told otherwise. Git-ignored. */
-export const DEFAULT_STORE_PATH = 'var/store.sqlite';
+export const DEFAULT_STORE_PATH = fromRoot('var/store.sqlite');
 
 export type Store = Database.Database;
 

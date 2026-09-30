@@ -12,6 +12,7 @@
 
 import { readFileSync } from 'node:fs';
 import * as z from 'zod';
+import { fromRoot } from '../paths';
 
 export const LLM_PROVIDERS = [
   'ollama',
@@ -20,7 +21,8 @@ export const LLM_PROVIDERS = [
 ] as const;
 export type LlmProvider = (typeof LLM_PROVIDERS)[number];
 
-/** The config file, relative to the repository root. */
+/** The config file, relative to the repository root (where
+ *  `loadLlmConfig` reads it from, whatever the working directory). */
 export const DEFAULT_LLM_CONFIG = 'config/llm.json';
 
 /** Where each provider is by default, and the environment variable its key
@@ -122,14 +124,18 @@ export function resolveLlmConfig(
 }
 
 /** Read `config/llm.json` and resolve it against `process.env`. */
-export function loadLlmConfig(path = DEFAULT_LLM_CONFIG): LlmConfig {
+export function loadLlmConfig(path?: string): LlmConfig {
+  // Named as written in messages; read from the repository root by default.
+  const where = path ?? DEFAULT_LLM_CONFIG;
   let raw: unknown;
   try {
-    raw = JSON.parse(readFileSync(path, 'utf8'));
+    raw = JSON.parse(
+      readFileSync(path ?? fromRoot(DEFAULT_LLM_CONFIG), 'utf8'),
+    );
   } catch (e) {
-    throw new LlmConfigError(`${path}: ${(e as Error).message}`);
+    throw new LlmConfigError(`${where}: ${(e as Error).message}`);
   }
-  return resolveLlmConfig(raw, process.env, path);
+  return resolveLlmConfig(raw, process.env, where);
 }
 
 /** The config as it may be shown or returned: no key, only whether one is
