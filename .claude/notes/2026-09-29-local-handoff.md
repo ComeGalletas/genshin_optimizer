@@ -37,7 +37,7 @@ answered `/health` and `/llm` (no key in the output).
    in `config/llm.json`).
 3. `npm run llm:check`. It never succeeded in the cloud (no Ollama there); the
    provider checks were only tested against a fake `fetch`, so this is the first
-   real run.
+   real run. Done 2026-09-30: OK on the owner's machine (see TODO 3.3).
 4. Optional: copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` to try
    `"provider": "anthropic"`.
 5. The server store is `var/store.sqlite` (git-ignored, created on first run).
