@@ -32,8 +32,11 @@ let db: Store;
 let services: Services;
 beforeEach(() => {
   db = openStore(':memory:');
-  importGood(db, { text: SAMPLE });
-  recordMerge(db, [1]);
+  // Fixed times: tool results carry them, and grounding reads every number
+  // in a result, so "now" made these tests depend on the clock (at 21:xx
+  // UTC an invented "21" matched the merge's timestamp).
+  importGood(db, { text: SAMPLE, importedAt: '2026-01-02T03:04:05.000Z' });
+  recordMerge(db, [1], '2026-01-02T03:04:05.000Z');
   services = new Services(db);
 });
 afterEach(() => services.searches.close());
