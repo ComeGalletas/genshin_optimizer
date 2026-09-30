@@ -16,6 +16,7 @@ import {
 } from 'react';
 import { ImportPanel } from './ImportPanel';
 import { ServerChip } from './ServerChip';
+import { ChatPanel } from './ChatPanel';
 import { useServer } from '../local-server/status';
 import { ArtifactForm } from './ArtifactForm';
 import { OptimizePanel } from './OptimizePanel';
@@ -528,6 +529,7 @@ export function App() {
         <span className="whitespace-nowrap">patch {CURATION_PATCH}</span> · Not
         affiliated with the game’s publisher.
       </footer>
+      <ChatPanel />
     </div>
   );
 }

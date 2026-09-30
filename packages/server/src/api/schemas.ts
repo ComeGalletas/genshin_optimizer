@@ -133,3 +133,26 @@ export const CompareBody = z
   })
   .strict();
 export type CompareBody = z.infer<typeof CompareBody>;
+
+/** A chat request (TODO 3.6): the conversation so far, text only, ending
+ *  with the owner's question. Bounded so one request can't flood a local
+ *  model's context. */
+export const ChatBody = z
+  .object({
+    messages: z
+      .array(
+        z
+          .object({
+            role: z.enum(['user', 'assistant']),
+            content: z.string().min(1).max(4_000),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(40)
+      .refine((m) => m.at(-1)?.role === 'user', {
+        message: 'the last message must be the owner’s question',
+      }),
+  })
+  .strict();
+export type ChatBody = z.infer<typeof ChatBody>;

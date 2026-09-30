@@ -2,7 +2,8 @@
  * The local HTTP API (TODO 3.1, ADR-0030): the engine and the snapshot store
  * over JSON, for the web app (3.5) and anything else on this machine, plus
  * the MCP server over streamable HTTP at `/mcp` (TODO 3.2, ADR-0031) and
- * "explain this build" on the configured model (TODO 3.4, ADR-0033).
+ * "explain this build" and the chat on the configured model (TODO 3.4 and
+ * 3.6, ADR-0033 and ADR-0035).
  *
  * Localhost only (ADR-0021): the server listens on 127.0.0.1, and every
  * request must name a localhost Host (so a web page can't reach it through
@@ -21,6 +22,7 @@ import { SearchRunner } from '../optimize/pool';
 import { createMcpServer } from '../mcp/server';
 import {
   ArtifactQuery,
+  ChatBody,
   CompareBody,
   IdParam,
   OptimizeBody,
@@ -30,6 +32,8 @@ import { ServiceError, Services } from './services';
 import { describeLlm, type LlmConfig } from '../llm/config';
 import { createLlmClient, LlmError, type LlmClient } from '../llm/client';
 import { explainBuild } from '../llm/explain';
+import { runChat } from '../chat/loop';
+import { accountTools } from '../mcp/tools';
 import { parseExplainPayload } from '@genshin-build-lab/engine/explain/explain';
 
 export interface AppOptions {
@@ -112,6 +116,7 @@ export function buildApp(opts: AppOptions): FastifyInstance {
   const services = new Services(opts.db, new SearchRunner(opts.searchLimitMs));
   const llmClient =
     opts.llmClient ?? (opts.llm ? createLlmClient(opts.llm) : undefined);
+  const tools = accountTools(services);
   app.addHook('onClose', () => services.searches.close());
 
   // ---- localhost guard and CORS -----------------------------------------
@@ -213,6 +218,17 @@ export function buildApp(opts: AppOptions): FastifyInstance {
       return explainBuild(llmClient, payload);
     },
   );
+
+  // The chat (TODO 3.6, ADR-0035): the same tools as MCP, run by the server
+  // for the configured model, numbers held to the tool results.
+  app.post('/chat', async (req, reply) => {
+    if (!llmClient)
+      return fail(reply, 503, 'llm_not_ready', 'no language model configured');
+    const body = parse(ChatBody, req.body, reply);
+    if (!body) return;
+    const r = await runChat(llmClient, tools, body.messages);
+    return { ...r, provider: llmClient.provider, model: llmClient.model };
+  });
 
   // ---- later phases ----------------------------------------------------------
   app.post('/allocate', async (_req, reply) =>
