@@ -119,6 +119,9 @@ export interface OptimizeRequest {
   characterKey: string;
   weaponKey: string;
   buildLevel: BuildLevel; // drives character + weapon (ADR-0006)
+  /** The weapon's refinement, 1 to 5, for its passive (ADR-0042). Unset
+   *  means R1, which every copy has, so a passive is never overstated. */
+  refinement?: number;
   constraints: OptimizeConstraints;
   objective: Objective;
   topK?: number; // default 10
@@ -126,7 +129,9 @@ export interface OptimizeRequest {
 
 /** Plain, structured-clone-safe context the worker needs (no adapter, no DOM). */
 export interface OptimizeContext {
-  /** character base @ buildLevel + weapon main + secondary stat line, with elemental_dmg pre-resolved. */
+  /** character base @ buildLevel + weapon main + secondary stat line, with
+   *  elemental_dmg pre-resolved, plus the curated weapon and character
+   *  passives (ADR-0042). */
   base: StatVec;
   /** scored flat-stat set bonuses, elemental bonuses pre-resolved to elemental_dmg. */
   setBonuses: Record<string, { two?: StatVec; four?: StatVec }>;

@@ -20,6 +20,8 @@ const WATCHED = [
   // Base stats feed every score (the crit baselines of ADR-0040 moved the
   // crit-value counts through the crit-ratio tiebreak).
   'packages/engine/src/game/genshin/adapter.ts',
+  // Curated weapon and character passives join the base (ADR-0042).
+  'packages/engine/src/game/genshin/passives.ts',
   'packages/engine/src/damage/setBonuses.ts',
   'packages/engine/src/damage/profiles.ts',
 ];

@@ -292,3 +292,43 @@ describe('specToRun: what only the account can tell', () => {
     ]);
   });
 });
+
+describe('specToRun: the weapon’s refinement (ADR-0042)', () => {
+  const spec = (over: object) => {
+    const parsed = parseConstraintSpec({ version: 1, ...over });
+    if (!parsed.ok) throw new Error(JSON.stringify(parsed.issues));
+    return parsed.spec;
+  };
+  const refinementFor = (over: object, acct: SpecAccount = account) => {
+    const mapped = specToRun(spec(over), acct);
+    if (!mapped.ok) throw new Error(JSON.stringify(mapped.issues));
+    return mapped.run.request.refinement;
+  };
+
+  it('is the held copy’s for the held weapon', () => {
+    // The sample account's Furina holds a Favonius Sword at R3.
+    expect(refinementFor({ character: 'furina' })).toBe(3);
+  });
+
+  it('is the best owned copy’s for another weapon, with the inventory', () => {
+    const withWeapons: SpecAccount = {
+      ...account,
+      weapons: [
+        { index: 0, key: 'aquila_favonia', refinement: 2, location: 'bennett' },
+        { index: 1, key: 'aquila_favonia', refinement: 4 },
+      ],
+    };
+    expect(
+      refinementFor(
+        { character: 'furina', weapon: 'aquila_favonia' },
+        withWeapons,
+      ),
+    ).toBe(4);
+  });
+
+  it('is unset (R1) for a weapon the account doesn’t own', () => {
+    expect(
+      refinementFor({ character: 'furina', weapon: 'mistsplitter_reforged' }),
+    ).toBeUndefined();
+  });
+});

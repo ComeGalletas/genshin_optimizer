@@ -191,12 +191,18 @@ export const useOptimizeRequest = create<OptimizeRequestState>((set, get) => ({
   reset: () => set(defaults()),
 }));
 
-/** Project the store state into an OptimizeRequest (no merge logic needed). */
+/** Project the store state into an OptimizeRequest. The refinement is the
+ *  roster's, when the weapon is the one the character holds (ADR-0042);
+ *  any other weapon counts at R1. */
 export function currentRequest(s: OptimizeRequestState): OptimizeRequest {
+  const held = useRoster.getState().entries[s.characterKey];
+  const refinement =
+    held?.weaponKey === s.weaponKey ? held.weaponRefinement : undefined;
   return {
     characterKey: s.characterKey,
     weaponKey: s.weaponKey,
     buildLevel: s.buildLevel,
+    ...(refinement !== undefined && { refinement }),
     constraints: s.constraints,
     objective: s.objective,
     topK: 10,

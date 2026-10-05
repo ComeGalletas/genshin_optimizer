@@ -141,6 +141,9 @@ export async function composePlan(
       characterKey: key,
       weaponKey: entry.weaponKey,
       buildLevel: entry.buildLevel ?? 90,
+      ...(entry.weaponRefinement !== undefined && {
+        refinement: entry.weaponRefinement,
+      }),
       constraints,
       objective,
       topK: 1,

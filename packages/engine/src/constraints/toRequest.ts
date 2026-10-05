@@ -22,7 +22,8 @@ import type {
   StatKey,
   StatVec,
 } from '../game/types';
-import type { RosterEntry } from '../good/normalize';
+import type { OwnedWeapon, RosterEntry } from '../good/normalize';
+import { ownedRefinement } from '../roster/refinement';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { defaultConstraints, defaultObjective } from '../optimizer/defaults';
 import type { ContextExtras } from '../optimizer/context';
@@ -34,6 +35,9 @@ export interface SpecAccount {
   roster: Readonly<Record<string, RosterEntry>>;
   /** Every artifact; `location` says who wears it. */
   artifacts: readonly Artifact[];
+  /** The weapon inventory, for the refinement of a weapon the character
+   *  doesn't hold (ADR-0042). Optional: without it, the held weapon's. */
+  weapons?: readonly OwnedWeapon[];
 }
 
 export interface SpecRun {
@@ -73,6 +77,11 @@ export function specToRun(
         : `${character.name} isn't in the account; name a weapon to build them with`,
     );
   const buildLevel = (spec.buildLevel ?? entry?.buildLevel ?? 90) as BuildLevel;
+  // The passive's refinement is the owner's copy's (ADR-0042); a weapon
+  // they don't own counts at R1.
+  const refinement = weaponKey
+    ? ownedRefinement(spec.character, weaponKey, account)
+    : undefined;
 
   // ---- constraints: the defaults, then the spec on top ------------------
   const constraints: OptimizeConstraints = extend
@@ -158,6 +167,7 @@ export function specToRun(
         characterKey: spec.character,
         weaponKey: weaponKey!,
         buildLevel,
+        ...(refinement !== undefined && { refinement }),
         constraints,
         objective,
         ...(options.topK !== undefined && { topK: options.topK }),

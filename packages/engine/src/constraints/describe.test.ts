@@ -23,7 +23,7 @@ describe('describeRun', () => {
     expect(
       understood({ character: 'furina', minStats: { er_pct: 180 } }).text,
     ).toBe(
-      'I understood: build Furina (Favonius Sword, level 90) for average damage (estimated; default), ' +
+      'I understood: build Furina (Favonius Sword R3, level 90) for average damage (estimated; default), ' +
         'with 4-piece Golden Troupe (default); sands main stat HP% (default); ' +
         'goblet main stat Elemental DMG (default); Energy Recharge at least 180%.',
     );
@@ -38,7 +38,7 @@ describe('describeRun', () => {
       objective: 'crit_value',
     });
     expect(u.goal).toBe(
-      'build Neuvillette (Tome of the Eternal Flow, level 90) for crit value',
+      'build Neuvillette (Tome of the Eternal Flow R1, level 90) for crit value',
     );
     expect(u.conditions).toEqual([
       { text: 'any artifact sets', source: 'asked' },
@@ -60,7 +60,7 @@ describe('describeRun', () => {
       enemy: { level: 95, res: -20 },
     });
     expect(u.goal).toBe(
-      'build Neuvillette (Tome of the Eternal Flow, level 90) for a weighted sum of HP% × 1 + CRIT Rate × 2',
+      'build Neuvillette (Tome of the Eternal Flow R1, level 90) for a weighted sum of HP% × 1 + CRIT Rate × 2',
     );
     expect(u.conditions.map((l) => l.text)).toEqual([
       'leaving the pieces Furina, Raiden Shogun wear',

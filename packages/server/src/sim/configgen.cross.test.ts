@@ -6,9 +6,9 @@
  * `npm run sim:check` installed the binary (not in CI).
  *
  * Our side has 2-piece set bonuses and no 4-piece effects (conditional, so
- * not in gcsim's opening snapshot). Static weapon and character passives
- * aren't modelled by the stat engine (a separate task), so a character with
- * one differs by exactly that passive, which is checked too.
+ * not in gcsim's opening snapshot), and the curated static passives
+ * (ADR-0042), ER-derived ones resolved at the build's own ER (as
+ * `sheetTotals` does). So every character equals gcsim's stats.
  */
 
 import { existsSync } from 'node:fs';
@@ -89,14 +89,22 @@ async function compare(
       character_details: { snapshot: number[] }[];
     }
   ).character_details[0].snapshot;
-  const ctx = buildContext({
-    characterKey: key,
-    weaponKey: weapon.key,
-    buildLevel: 90,
-    constraints: {},
-    objective: 'crit_value',
-  });
-  for (const b of Object.values(ctx.setBonuses)) delete b.four;
+  // Our context without 4-piece effects (gcsim's opening snapshot has
+  // none), ER-derived passives at the build's own ER, as `sheetTotals`
+  // resolves them.
+  const at = (er?: number) => {
+    const ctx = buildContext({
+      characterKey: key,
+      weaponKey: weapon.key,
+      buildLevel: 90,
+      refinement: weapon.refinement ?? 1,
+      constraints: er === undefined ? {} : { minStats: { er_pct: er } },
+      objective: 'crit_value',
+    });
+    for (const b of Object.values(ctx.setBonuses)) delete b.four;
+    return ctx;
+  };
+  const ctx = at(totals(at(), pieces).er_pct);
   const t: StatVec = totals(ctx, pieces);
   const element = genshinAdapter.character(key)!.element;
   const ours: Sheet = {
@@ -132,44 +140,20 @@ function differing(ours: Sheet, theirs: Sheet): string[] {
   );
 }
 
+const keys = Object.keys(good.roster).filter((k) =>
+  good.weapons.some((w) => w.location === k),
+);
+
 describe.skipIf(!installed)(
   'gcsimConfig against gcsim’s own stats (TODO 5.5)',
   () => {
-    it.each(['furina', 'kaedehara_kazuha', 'charlotte', 'xiangling'])(
-      '%s: our totals equal gcsim’s (no static weapon or character passive)',
+    it.each(keys)(
+      '%s: our totals equal gcsim’s',
       async (key) => {
         const { ours, theirs } = await compare(key);
         expect(differing(ours, theirs)).toEqual([]);
       },
       60_000,
     );
-
-    it('a static passive is the only difference, by exactly its value', async () => {
-      // Weapons. Tome of the Eternal Flow R1: +16% HP.
-      const neuvillette = await compare('neuvillette');
-      expect(differing(neuvillette.ours, neuvillette.theirs)).toEqual(['hp']);
-      expect(neuvillette.theirs.hp - neuvillette.ours.hp).toBeCloseTo(
-        (neuvillette.base.hp ?? 0) * 0.16,
-        0,
-      );
-      // Aquila Favonia R1: +20% ATK.
-      const bennett = await compare('bennett');
-      expect(differing(bennett.ours, bennett.theirs)).toEqual(['atk']);
-      expect(bennett.theirs.atk - bennett.ours.atk).toBeCloseTo(
-        (bennett.base.atk ?? 0) * 0.2,
-        0,
-      );
-      // Characters. Xingqiu's ascension passive: +20% Hydro DMG.
-      const xingqiu = await compare('xingqiu');
-      expect(differing(xingqiu.ours, xingqiu.theirs)).toEqual(['dmg']);
-      expect(xingqiu.theirs.dmg - xingqiu.ours.dmg).toBeCloseTo(0.2, 6);
-      // Raiden's: 0.4% Electro DMG for each 1% ER above 100%.
-      const raiden = await compare('raiden_shogun');
-      expect(differing(raiden.ours, raiden.theirs)).toEqual(['dmg']);
-      expect(raiden.theirs.dmg - raiden.ours.dmg).toBeCloseTo(
-        0.4 * (raiden.ours.er - 1),
-        6,
-      );
-    }, 120_000);
   },
 );

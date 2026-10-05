@@ -90,7 +90,7 @@ describe('MCP server', () => {
     });
     expect(best.status).toBe('ok');
     expect(best.understood).toMatch(
-      /^I understood: build Neuvillette \(Tome of the Eternal Flow, level 90\) for average damage/,
+      /^I understood: build Neuvillette \(Tome of the Eternal Flow R1, level 90\) for average damage/,
     );
     const ids = Object.values(best.builds[0].artifacts).map(
       (a) => (a as Json).id,

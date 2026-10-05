@@ -375,6 +375,7 @@ describe('parseGOODRoster — richer entries (v2)', () => {
       talents: { auto: 9, skill: 9, burst: 9 },
       weaponKey: 'splendor_of_tranquil_waters',
       weaponLevel: 90,
+      weaponRefinement: 1,
     });
   });
 

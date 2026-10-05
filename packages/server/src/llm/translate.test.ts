@@ -58,7 +58,7 @@ describe('translateSpec', () => {
       spec: { version: 1, character: 'furina', minStats: { er_pct: 180 } },
     });
     expect(r.understood).toMatch(
-      /^I understood: build Furina \(Favonius Sword, level 90\) for average damage \(estimated; default\), with 4-piece Golden Troupe \(default\);.* Energy Recharge at least 180%\.$/,
+      /^I understood: build Furina \(Favonius Sword R3, level 90\) for average damage \(estimated; default\), with 4-piece Golden Troupe \(default\);.* Energy Recharge at least 180%\.$/,
     );
     expect(r.conditions.at(-1)).toEqual({
       text: 'Energy Recharge at least 180%',

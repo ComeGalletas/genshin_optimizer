@@ -99,6 +99,8 @@ export interface RosterEntry {
   talents?: { auto: number; skill: number; burst: number };
   weaponKey?: string;
   weaponLevel?: number;
+  /** The held weapon's refinement (1..5), for its passive (ADR-0042). */
+  weaponRefinement?: number;
 }
 
 /** One weapon from the file's inventory, equipped or not. */
@@ -451,6 +453,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
       const entry = (roster[location] ??= {});
       entry.weaponKey = key;
       if (level !== undefined) entry.weaponLevel = level;
+      if (ref !== undefined) entry.weaponRefinement = ref;
     }
   });
 

@@ -122,6 +122,25 @@ describe('decodeBuild validation', () => {
     expect(await decodeBuild(bad)).toEqual({ error: 'UNREADABLE' });
   });
 
+  it('keeps a refinement, and rejects one outside 1 to 5 (ADR-0042)', async () => {
+    const refined = { ...request, refinement: 5 };
+    expect(
+      await decodeBuild(
+        await encodeBuild({ request: refined, build, artifacts }),
+      ),
+    ).toEqual({ request: refined, build, artifacts });
+    for (const refinement of [0, 6, 2.5, '5'])
+      expect(
+        await decodeBuild(
+          await encodeBuild({
+            request: { ...request, refinement: refinement as never },
+            build,
+            artifacts,
+          }),
+        ),
+      ).toEqual({ error: 'UNREADABLE' });
+  });
+
   it('rejects an unknown stat key in build.totals', async () => {
     const bad = await encodeBuild({
       request,

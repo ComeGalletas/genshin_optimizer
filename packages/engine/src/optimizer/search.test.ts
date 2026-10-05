@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { searchBuilds, bruteForce } from './search';
 import { totals } from './score';
+import { buildContext } from './context';
 import { effectiveStat } from '../damage/formula';
 import type {
   Artifact,
@@ -684,6 +685,93 @@ describe('searchBuilds with the avg_damage objective', () => {
           );
           expect(setA.length).toBeGreaterThanOrEqual(4);
         }
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+  // ADR-0042: passives reach the search through `buildContext`'s base, a
+  // constant per run, so the bound and the leaf read the same vector. Held
+  // to the oracle through the real context, not a hand-built one.
+  it('avg_damage with weapon and character passives from buildContext: still exact (ADR-0042)', () => {
+    // Raiden with R5 Engulfing: both ER-derived passives, resolved at the
+    // ER floor; Xingqiu with Mistsplitter: static ones.
+    const runs: OptimizeRequest[] = [
+      {
+        characterKey: 'raiden_shogun',
+        weaponKey: 'engulfing_lightning',
+        refinement: 5,
+        buildLevel: 90,
+        constraints: { minStats: { er_pct: 180 } },
+        objective: 'avg_damage',
+        topK: 3,
+      },
+      {
+        characterKey: 'xingqiu',
+        weaponKey: 'mistsplitter_reforged',
+        refinement: 2,
+        buildLevel: 90,
+        constraints: {},
+        objective: 'avg_damage',
+        topK: 3,
+      },
+    ];
+    for (const run of runs) {
+      const real = buildContext(run);
+      // Same character with a Favonius weapon (no stat passive): the
+      // weapon's passive is in the base.
+      const bare = buildContext({
+        ...run,
+        weaponKey:
+          run.weaponKey === 'engulfing_lightning'
+            ? 'favonius_lance'
+            : 'favonius_sword',
+      });
+      expect(real.base).not.toEqual(bare.base);
+      expect(
+        (real.base.atk_pct ?? 0) + (real.base.elemental_dmg ?? 0),
+      ).toBeGreaterThan(
+        (bare.base.atk_pct ?? 0) + (bare.base.elemental_dmg ?? 0),
+      );
+      let checked = 0;
+      let pruned = 0;
+      for (let seed = 0; seed < 12; seed++) {
+        const inv = randomInventory(seed, 6);
+        const fast = searchBuilds(run, inv, real);
+        const slow = bruteForce(run, inv, real);
+        expect(fast.status).toBe(slow.status);
+        if (fast.status === 'ok' && slow.status === 'ok') {
+          expectScoresClose(scoresOf(fast), scoresOf(slow));
+          pruned += fast.pruned;
+          checked++;
+        }
+      }
+      expect(checked).toBeGreaterThan(0);
+      expect(pruned).toBeGreaterThan(0);
+    }
+  });
+
+  it('crit value with a negative passive (Kokomi’s CRIT Rate) and a crit floor: still exact (ADR-0042)', () => {
+    const run: OptimizeRequest = {
+      characterKey: 'sangonomiya_kokomi',
+      weaponKey: 'skyward_atlas',
+      buildLevel: 90,
+      constraints: { minStats: { crit_rate: 0 } },
+      objective: 'crit_value',
+      topK: 3,
+    };
+    const real = buildContext(run);
+    expect(real.base.crit_rate).toBe(-95);
+    let checked = 0;
+    for (let seed = 0; seed < 12; seed++) {
+      const inv = randomInventory(seed, 6);
+      const fast = searchBuilds(run, inv, real);
+      const slow = bruteForce(run, inv, real);
+      expect(fast.status).toBe(slow.status);
+      if (fast.status === 'ok' && slow.status === 'ok') {
+        expect(scoresOf(fast)).toEqual(scoresOf(slow));
+        for (const b of fast.builds)
+          expect(b.totals.crit_rate ?? 0).toBeGreaterThanOrEqual(0);
         checked++;
       }
     }

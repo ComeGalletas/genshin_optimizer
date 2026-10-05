@@ -74,6 +74,14 @@ or team slot. The reverse is a bug, and a test rejects it.
      Re-verify each entry against its `source` wiki page, and re-check
      `UNMODELLED_FOUR_PIECE`: a new patch's sets need an entry one side or the
      other, and a reworked set can move between them.
+   - `packages/engine/src/game/genshin/passives.ts` — curated weapon and character
+     passives ([ADR-0042](../adr/0042-curated-weapon-and-character-passives.md)).
+     The values are held to the installed genshin-db by `passives.test.ts`, so a
+     bump that changes one fails there. A new weapon needs an entry in
+     `WEAPON_PASSIVES` (with `param`, the genshin-db value index) or in
+     `UNMODELLED_WEAPON_PASSIVES`. Run the gcsim cross-check
+     (`passives.cross.test.ts`, with `npm run sim:check` done) after a gcsim bump:
+     `GCSIM_GAPS` lists the known differences.
    - `packages/engine/src/invest/obtainability.ts` — how each recommended weapon is
      obtained. Every weapon a recipe names should have an entry; the coverage report's
      "no obtainability entry" line is the list to work through.

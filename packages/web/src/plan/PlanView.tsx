@@ -371,6 +371,7 @@ export function PlanView({
                                 entries[b.characterKey].weaponKey as string,
                                 entries[b.characterKey]?.buildLevel ?? 90,
                                 equippedByChar[b.characterKey] ?? [],
+                                entries[b.characterKey]?.weaponRefinement,
                               )
                             : null
                         }

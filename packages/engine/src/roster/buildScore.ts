@@ -16,12 +16,8 @@
  */
 import type { Artifact, BuildLevel } from '../game/types';
 import type { RosterEntry } from '../import/good';
-import {
-  artifactContribution,
-  objectiveValue,
-  totals,
-} from '../optimizer/score';
-import { buildContext } from '../optimizer/context';
+import { artifactContribution, objectiveValue } from '../optimizer/score';
+import { sheetTotals } from '../optimizer/sheet';
 import { gradeBuild, type Grade } from '../meta/grade';
 import { META_TARGETS } from '../meta/metaTargets';
 
@@ -133,20 +129,27 @@ export function equippedGrade(
   weaponKey: string,
   buildLevel: BuildLevel,
   equipped: Artifact[],
+  /** The held weapon's refinement, for its passive (ADR-0042); R1 if unset. */
+  refinement?: number,
 ): Grade | null {
   const targets = META_TARGETS[characterKey]?.statTargets;
   if (!targets || equipped.length === 0) return null;
   // Objective doesn't affect base stats or set bonuses for non-damage
   // objectives, so any scalar objective is a safe stand-in here — grading
   // doesn't optimise anything.
-  const ctx = buildContext({
-    characterKey,
-    weaponKey,
-    buildLevel,
-    constraints: {},
-    objective: 'crit_value',
-  });
-  return gradeBuild(totals(ctx, equipped), targets)?.grade ?? null;
+  // A concrete build, so its sheet: ER-derived passives at its own ER.
+  const { totals } = sheetTotals(
+    {
+      characterKey,
+      weaponKey,
+      buildLevel,
+      ...(refinement !== undefined && { refinement }),
+      constraints: {},
+      objective: 'crit_value',
+    },
+    equipped,
+  );
+  return gradeBuild(totals, targets)?.grade ?? null;
 }
 
 /** Build-score totals for a whole roster — the shape `recommendAbyss` and the

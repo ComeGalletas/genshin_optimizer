@@ -14,6 +14,7 @@ import type {
 import { isStatKey, isObjective, BUILD_LEVELS, SLOTS } from '../game/types';
 import { isPersistedArtifact, MAX_KEY_LEN } from '../game/artifactValidation';
 import { genshinAdapter } from '../game/genshin/adapter';
+import { isRefinement } from '../game/genshin/passives';
 
 export interface BuildSnapshot {
   request: OptimizeRequest;
@@ -175,6 +176,9 @@ function isOptimizeRequest(x: unknown): x is OptimizeRequest {
     return false;
   if (!(BUILD_LEVELS as number[]).includes(r.buildLevel as number))
     return false;
+  // Optional (older links have none: R1); when present, 1 to 5, or
+  // `buildContext` would throw on re-run.
+  if (r.refinement !== undefined && !isRefinement(r.refinement)) return false;
   if (!isObjective(r.objective)) return false;
   if (typeof r.constraints !== 'object' || r.constraints === null) return false;
   // The whole constraints object reaches the optimizer should a shared request

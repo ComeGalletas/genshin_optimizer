@@ -63,6 +63,8 @@ export const OptimizeBody = z
         message: `one of ${BUILD_LEVELS.join(', ')}`,
       })
       .optional(),
+    /** The weapon's refinement (ADR-0042); the owner's copy's when unset. */
+    refinement: z.number().int().min(1).max(5).optional(),
     objective: z
       .string()
       .refine(isObjective, { message: 'a stat key, crit_value or avg_damage' })
@@ -123,6 +125,8 @@ export const CompareBody = z
         message: `one of ${BUILD_LEVELS.join(', ')}`,
       })
       .optional(),
+    /** The weapon's refinement (ADR-0042); the owner's copy's when unset. */
+    refinement: z.number().int().min(1).max(5).optional(),
     objective: z
       .string()
       .refine(isObjective, { message: 'a stat key, crit_value or avg_damage' })

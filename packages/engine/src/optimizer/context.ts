@@ -8,6 +8,12 @@ import {
 } from '../damage/setBonuses';
 import { META_TARGETS } from '../meta/metaTargets';
 import { DEFAULT_ENEMY } from '../damage/types';
+import {
+  passiveAssumptions,
+  passiveVector,
+  type PassiveQuery,
+} from '../game/genshin/passives';
+import { addInto } from './score';
 import type { DamageContext, HitKind } from '../damage/types';
 
 /** What a request can't say but a ConstraintSpec can (TODO 4.2). */
@@ -21,17 +27,65 @@ export interface ContextExtras {
   enemy?: { level?: number; res?: number };
 }
 
+/** The ER a request's build is optimised toward (ADR-0020, ADR-0042): its
+ *  own `minStats.er_pct`, else the character's damage-profile requirement,
+ *  else 100. */
+export function requestErFloor(req: OptimizeRequest): number {
+  return (
+    req.constraints.minStats?.er_pct ??
+    getDamageProfile(req.characterKey)?.erRequirement ??
+    100
+  );
+}
+
+/** The passive lookup for a request, resolved at `erFloor`. */
+export function passiveQuery(
+  req: OptimizeRequest,
+  erFloor = requestErFloor(req),
+): PassiveQuery {
+  return {
+    characterKey: req.characterKey,
+    weaponKey: req.weaponKey,
+    refinement: req.refinement,
+    buildLevel: req.buildLevel,
+    erFloor,
+  };
+}
+
+/** One line per passive a request's build carries: what is counted, at
+ *  which ER, and what is left out (ADR-0042). `erFloor` overrides the
+ *  request's own, for a concrete build resolved at its ER. */
+export function passiveNotes(req: OptimizeRequest, erFloor?: number): string[] {
+  return passiveAssumptions(passiveQuery(req, erFloor), {
+    weapon: genshinAdapter.weapon(req.weaponKey)?.name ?? req.weaponKey,
+    character: genshinAdapter.characterName(req.characterKey),
+  });
+}
+
 export function buildContext(
   req: OptimizeRequest,
   extras: ContextExtras = {},
 ): OptimizeContext {
   if (req.objective === 'weighted' && !extras.weights)
     throw new Error('the weighted objective requires weights');
+  // The ER a build is optimised toward: the user's own floor first, because
+  // that is the number they told the search to hit, then the profile's
+  // default. Emblem's Burst DMG (ADR-0020) and the ER-derived passives
+  // (ADR-0042) scale with ER, which is not a constant across candidates, so
+  // both are resolved once, here, against it.
+  const erFloor = requestErFloor(req);
+
+  // Base stats from the snapshot, plus the curated passives (ADR-0042): a
+  // passive is the weapon's or the character's, the same for every
+  // candidate, so it belongs with the base. The damage formula scales
+  // `base.atk/hp/def` by the percentages, and a passive adds none of those
+  // three flat, so it only ever adds to the percentages.
   const base = genshinAdapter.baseStats(
     req.characterKey,
     req.weaponKey,
     req.buildLevel,
   );
+  addInto(base, passiveVector(passiveQuery(req, erFloor)));
 
   let damage: DamageContext | undefined;
   if (req.objective === 'avg_damage') {
@@ -70,13 +124,6 @@ export function buildContext(
       },
       damage,
     );
-
-  // Emblem's Burst DMG scales with ER, which is not a constant across
-  // candidates — so it is resolved once against the ER the build is being
-  // optimised *toward*. The user's own floor wins over the profile's default,
-  // because that is the number they told the search to hit.
-  const erFloor =
-    req.constraints.minStats?.er_pct ?? damage?.profile.erRequirement ?? 100;
 
   // 4pc bonuses come from the curated table, not the snapshot (ADR-0020): the
   // frozen dataset carries no `fourPiece` at all, because a 4pc effect is prose

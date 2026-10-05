@@ -21,15 +21,17 @@ import {
   GENSHIN_DB_VERSION,
   genshinAdapter,
 } from '@genshin-build-lab/engine/game/genshin/adapter';
-import { buildContext } from '@genshin-build-lab/engine/optimizer/context';
+import {
+  buildContext,
+  passiveNotes,
+} from '@genshin-build-lab/engine/optimizer/context';
+import { sheetTotals } from '@genshin-build-lab/engine/optimizer/sheet';
+import { ownedRefinement } from '@genshin-build-lab/engine/roster/refinement';
 import {
   defaultConstraints,
   defaultObjective,
 } from '@genshin-build-lab/engine/optimizer/defaults';
-import {
-  evaluateObjective,
-  totals,
-} from '@genshin-build-lab/engine/optimizer/score';
+import { evaluateObjective } from '@genshin-build-lab/engine/optimizer/score';
 import {
   currentAccount,
   currentRoster,
@@ -205,28 +207,39 @@ export class Services {
   getCharacter(id: string) {
     const meta = genshinAdapter.character(id);
     if (!meta) throw notFound(`no character "${id}" in the dataset`);
-    const entry = currentRoster(this.db).roster[id];
+    const current = currentRoster(this.db);
+    const entry = current.roster[id];
     if (!entry) throw notFound(`${meta.name} is not in the account`);
     const equipped = this.equippedBy().get(id) ?? [];
     let stats: StatVec | null = null;
-    if (entry.weaponKey)
-      stats = totals(
-        buildContext({
-          characterKey: id,
-          weaponKey: entry.weaponKey,
-          buildLevel: entry.buildLevel ?? 90,
-          constraints: {},
-          objective: 'crit_value',
+    let passives: string[] = [];
+    let weaponRefinement: number | undefined;
+    if (entry.weaponKey) {
+      weaponRefinement = ownedRefinement(id, entry.weaponKey, current);
+      const request: OptimizeRequest = {
+        characterKey: id,
+        weaponKey: entry.weaponKey,
+        buildLevel: entry.buildLevel ?? 90,
+        ...(weaponRefinement !== undefined && {
+          refinement: weaponRefinement,
         }),
-        zeroOffElementGoblets(equipped, id),
-      );
+        constraints: {},
+        objective: 'crit_value',
+      };
+      stats = sheetTotals(request, zeroOffElementGoblets(equipped, id)).totals;
+      passives = passiveNotes(request, stats.er_pct);
+    }
     return {
       ...meta,
       ...entry,
+      ...(weaponRefinement !== undefined && { weaponRefinement }),
       equipped,
-      /** Sheet totals with the equipped pieces, set bonuses included
-       *  (percent stats in percent, ADR-0023). */
+      /** Sheet totals with the equipped pieces, set bonuses and passives
+       *  included, ER-derived passives at the build's own ER (percent stats
+       *  in percent, ADR-0023, ADR-0042). */
       stats,
+      /** What the weapon and character passives add, one line each. */
+      passives,
       defaults: {
         objective: defaultObjective(id),
         constraints: defaultConstraints(id),
@@ -234,14 +247,17 @@ export class Services {
     };
   }
 
-  /** The character, weapon and build level a request resolves to. */
+  /** The character, weapon, refinement and build level a request resolves
+   *  to. The refinement is the owner's copy's (ADR-0042) unless given. */
   private resolve(body: {
     characterKey: string;
     weaponKey?: string;
+    refinement?: number;
     buildLevel?: number;
   }) {
     const character = genshinAdapter.character(body.characterKey)!;
-    const entry = currentRoster(this.db).roster[body.characterKey];
+    const current = currentRoster(this.db);
+    const entry = current.roster[body.characterKey];
     const weaponKey = body.weaponKey ?? entry?.weaponKey;
     if (!weaponKey)
       throw badRequest(
@@ -254,15 +270,18 @@ export class Services {
     const buildLevel = (body.buildLevel ??
       entry?.buildLevel ??
       90) as OptimizeRequest['buildLevel'];
-    return { character, weaponKey, buildLevel };
+    const refinement =
+      body.refinement ?? ownedRefinement(body.characterKey, weaponKey, current);
+    return { character, weaponKey, buildLevel, refinement };
   }
 
   async optimize(body: OptimizeBody) {
-    const { weaponKey, buildLevel } = this.resolve(body);
+    const { weaponKey, buildLevel, refinement } = this.resolve(body);
     const request: OptimizeRequest = {
       characterKey: body.characterKey,
       weaponKey,
       buildLevel,
+      ...(refinement !== undefined && { refinement }),
       objective: (body.objective ??
         defaultObjective(body.characterKey)) as Objective,
       constraints: body.constraints ?? defaultConstraints(body.characterKey),
@@ -282,16 +301,15 @@ export class Services {
     return {
       request,
       pool: { kind: body.pool ?? 'all', artifacts: owned.length },
+      passives: passiveNotes(request),
       ...(await this.search(request, owned, ctx)),
     };
   }
 
   /** The account as a spec sees it: roster and every artifact. */
   private specAccount(): SpecAccount {
-    return {
-      roster: currentRoster(this.db).roster,
-      artifacts: this.artifacts(),
-    };
+    const { roster, weapons } = currentRoster(this.db);
+    return { roster, weapons, artifacts: this.artifacts() };
   }
 
   /** Check a spec and map it onto the account, without running it: the
@@ -370,6 +388,7 @@ export class Services {
       spec,
       request: run.request,
       pool: { artifacts: run.pool.length },
+      passives: passiveNotes(run.request),
       ...result,
       ...(result.status === 'infeasible' && {
         why: whyInfeasible(run, ctx),
@@ -449,16 +468,17 @@ export class Services {
   /** Two builds for one character, side by side: sheet totals, the
    *  objective's value for each, and the difference (b − a). */
   compareBuilds(body: CompareBody) {
-    const { weaponKey, buildLevel } = this.resolve(body);
+    const { weaponKey, buildLevel, refinement } = this.resolve(body);
     const objective = (body.objective ??
       defaultObjective(body.characterKey)) as Objective;
-    const ctx = buildContext({
+    const request: OptimizeRequest = {
       characterKey: body.characterKey,
       weaponKey,
       buildLevel,
+      ...(refinement !== undefined && { refinement }),
       constraints: {},
       objective,
-    });
+    };
     const byId = new Map(this.artifacts().map((a) => [a.id, a]));
     const pieces = (ids: string[], name: string) => {
       const out = ids.map((id) => {
@@ -476,7 +496,12 @@ export class Services {
     };
     const side = (ids: string[], name: string) => {
       const build = pieces(ids, name);
-      const t = totals(ctx, zeroOffElementGoblets(build, body.characterKey));
+      // Two concrete builds, so each is its sheet: ER-derived passives at
+      // its own ER (ADR-0042).
+      const { ctx, totals: t } = sheetTotals(
+        request,
+        zeroOffElementGoblets(build, body.characterKey),
+      );
       return {
         artifacts: build,
         totals: t,
@@ -497,6 +522,7 @@ export class Services {
       characterKey: body.characterKey,
       weaponKey,
       buildLevel,
+      ...(refinement !== undefined && { refinement }),
       objective,
       a,
       b,

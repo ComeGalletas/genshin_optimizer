@@ -113,6 +113,19 @@ describe('account and characters', () => {
     expect(c.defaults.objective).toBeDefined();
   });
 
+  it('counts the weapon and character passives in a character’s sheet (ADR-0042)', async () => {
+    const n = (await get('/characters/neuvillette')).json();
+    expect(n.weaponRefinement).toBe(1);
+    expect(n.passives).toEqual([
+      expect.stringMatching(/^Tome of the Eternal Flow R1 passive: \+16% HP%/),
+    ]);
+    // Raiden's own passive, resolved at her sheet's own ER.
+    const r = (await get('/characters/raiden_shogun')).json();
+    const er = Math.round(r.stats.er_pct * 100) / 100;
+    expect(r.passives.at(-1)).toMatch(/^Raiden Shogun’s passive: \+/);
+    expect(r.passives.at(-1)).toContain(`counted at ${er}% Energy Recharge`);
+  });
+
   it('404s an unknown or unowned character', async () => {
     expect((await get('/characters/nobody')).json()).toMatchObject({
       error: 'not_found',
@@ -180,8 +193,12 @@ describe('/optimize', () => {
     expect(b.request).toMatchObject({
       characterKey: 'neuvillette',
       weaponKey: 'tome_of_the_eternal_flow',
+      refinement: 1, // the owner's copy (ADR-0042)
       buildLevel: 90,
     });
+    expect(b.passives).toEqual([
+      expect.stringMatching(/^Tome of the Eternal Flow R1 passive/),
+    ]);
     expect(b.status).toBe('ok');
     expect(Object.keys(b.builds[0].artifacts).sort()).toEqual([
       'circlet',

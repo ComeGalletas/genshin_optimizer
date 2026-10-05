@@ -53,8 +53,9 @@ export function describeRun(spec: ConstraintSpec, run: SpecRun): Understood {
   const character =
     genshinAdapter.character(request.characterKey)?.name ??
     request.characterKey;
-  const weapon =
-    genshinAdapter.weapon(request.weaponKey)?.name ?? request.weaponKey;
+  const weapon = `${genshinAdapter.weapon(request.weaponKey)?.name ?? request.weaponKey}${
+    request.refinement ? ` R${request.refinement}` : ''
+  }`;
   const lines: UnderstoodLine[] = [];
   const line = (text: string, asked: boolean) =>
     lines.push({ text, source: asked ? 'asked' : 'default' });
