@@ -10,7 +10,23 @@ import { META_TARGETS } from '../meta/metaTargets';
 import { DEFAULT_ENEMY } from '../damage/types';
 import type { DamageContext, HitKind } from '../damage/types';
 
-export function buildContext(req: OptimizeRequest): OptimizeContext {
+/** What a request can't say but a ConstraintSpec can (TODO 4.2). */
+export interface ContextExtras {
+  /** Stats teammates add, on top of every build's totals. */
+  buffs?: StatVec;
+  /** The weights of the `weighted` objective. */
+  weights?: StatVec;
+  /** The enemy for `avg_damage`; resistance in percent (10 = 10%, ADR-0023),
+   *  converted here to the damage engine's fraction. */
+  enemy?: { level?: number; res?: number };
+}
+
+export function buildContext(
+  req: OptimizeRequest,
+  extras: ContextExtras = {},
+): OptimizeContext {
+  if (req.objective === 'weighted' && !extras.weights)
+    throw new Error('the weighted objective requires weights');
   const base = genshinAdapter.baseStats(
     req.characterKey,
     req.weaponKey,
@@ -24,7 +40,17 @@ export function buildContext(req: OptimizeRequest): OptimizeContext {
     // silently stat-only "damage" ranking would be worse than an error.
     if (!profile)
       throw new Error(`Unknown damage profile: ${req.characterKey}`);
-    damage = { profile, enemy: DEFAULT_ENEMY, charLevel: req.buildLevel };
+    damage = {
+      profile,
+      enemy: {
+        level: extras.enemy?.level ?? DEFAULT_ENEMY.level,
+        res:
+          extras.enemy?.res !== undefined
+            ? extras.enemy.res / 100
+            : DEFAULT_ENEMY.res,
+      },
+      charLevel: req.buildLevel,
+    };
   }
 
   // The hit-kind shares a 4pc's restricted DMG% is folded against (ADR-0020).
@@ -73,5 +99,8 @@ export function buildContext(req: OptimizeRequest): OptimizeContext {
 
   const ctx: OptimizeContext = { base, setBonuses, setNames };
   if (damage) ctx.damage = damage;
+  if (extras.buffs && Object.keys(extras.buffs).length)
+    ctx.buffs = extras.buffs;
+  if (extras.weights) ctx.weights = extras.weights;
   return ctx;
 }

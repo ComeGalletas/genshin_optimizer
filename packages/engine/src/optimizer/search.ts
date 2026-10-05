@@ -20,6 +20,7 @@ import type {
 import { SLOTS } from '../game/types';
 import {
   totals,
+  sheetBase,
   objectiveValue,
   evaluateObjective,
   satisfies,
@@ -80,8 +81,8 @@ function relevantSetBonuses(
   const out: RelevantSetBonus[] = [];
   for (const key of Object.keys(ctx.setBonuses)) {
     const b = ctx.setBonuses[key];
-    const two = b.two ? objectiveValue(b.two, objective) : 0;
-    const four = b.four ? objectiveValue(b.four, objective) : 0;
+    const two = b.two ? objectiveValue(b.two, objective, ctx.weights) : 0;
+    const four = b.four ? objectiveValue(b.four, objective, ctx.weights) : 0;
     if (two || four) {
       out.push({
         key,
@@ -263,7 +264,7 @@ export function reachableCeiling(
   const contributions = new Map<string, StatVec>();
   for (const s of order)
     for (const a of pools[s]) contributions.set(a.id, artifactContribution(a));
-  const ceiling: StatVec = { ...ctx.base };
+  const ceiling: StatVec = sheetBase(ctx);
   addInto(ceiling, suffixMaxVectors(pools, order, contributions)[0]);
   addInto(
     ceiling,
@@ -357,7 +358,7 @@ export function searchBuilds(
   const scalarValues = new Map<string, number>();
   if (scalarObjective)
     for (const [id, c] of contributions) {
-      const v = objectiveValue(c, scalarObjective);
+      const v = objectiveValue(c, scalarObjective, ctx.weights);
       // A NaN/Infinity here (corrupt import, a substat parsed as text) would
       // poison every comparison in the bound — `NaN <= x` is false, so the
       // branch never prunes, while `Infinity` prunes everything. Either way the
@@ -373,6 +374,9 @@ export function searchBuilds(
       scalarValues.set(id, v);
     }
   const scalarOf = (a: Artifact) => scalarValues.get(a.id) ?? 0;
+  // Base stats plus team buffs: where every build's totals start, so where
+  // every bound below starts too.
+  const sheet = sheetBase(ctx);
 
   // Surface high-contribution pieces first so the kept list fills with strong
   // builds early and the admissible bound tightens sooner. Iteration order only —
@@ -408,11 +412,11 @@ export function searchBuilds(
   if (!scalarObjective) {
     // Ordering heuristic only (the oracle test proves the optimum is unchanged):
     // rank each piece by the damage it adds on its own.
-    const baseDamage = evaluateObjective(ctx, 'avg_damage', ctx.base);
+    const baseDamage = evaluateObjective(ctx, 'avg_damage', sheet);
     const gain = new Map<string, number>();
     for (const s of order)
       for (const a of pools[s]) {
-        const t: StatVec = { ...ctx.base };
+        const t: StatVec = { ...sheet };
         addInto(t, contributions.get(a.id)!);
         gain.set(a.id, evaluateObjective(ctx, 'avg_damage', t) - baseDamage);
       }
@@ -427,7 +431,7 @@ export function searchBuilds(
   // The base stats always contribute to the objective (e.g. crit_rate/crit_dmg from character/weapon).
   // Include this in the upper bound so pruning remains admissible.
   const baseObjective = scalarObjective
-    ? objectiveValue(ctx.base, scalarObjective)
+    ? objectiveValue(sheet, scalarObjective, ctx.weights)
     : 0;
 
   // A setRequirement (e.g. 4pc) is otherwise only checked at the leaf via
@@ -463,7 +467,7 @@ export function searchBuilds(
   // because no real completion can beat the statwise maximum.
   const minKeys = Object.keys(req.constraints.minStats ?? {}) as StatKey[];
   const minNeed = minKeys.map((k) => req.constraints.minStats?.[k] ?? 0);
-  const minBase = minKeys.map((k) => (ctx.base[k] ?? 0) + (setCeilVec[k] ?? 0));
+  const minBase = minKeys.map((k) => (sheet[k] ?? 0) + (setCeilVec[k] ?? 0));
   const minSuffix = minKeys.map((k) => suffixMaxVec.map((v) => v[k] ?? 0));
   const runningMin = new Array<number>(minKeys.length).fill(0);
   /** The same contributions, projected onto just the constrained stats. */
@@ -475,6 +479,22 @@ export function searchBuilds(
         minKeys.map((k) => c[k] ?? 0),
       );
   }
+
+  // A maxStats ceiling, the floor's mirror image: every pick and every set
+  // bonus only adds, so a branch already over a ceiling can only end over
+  // it. Admissible with the running sum alone (no look-ahead needed).
+  const maxKeys = Object.keys(req.constraints.maxStats ?? {}) as StatKey[];
+  const maxAllowed = maxKeys.map(
+    (k) => (req.constraints.maxStats?.[k] ?? 0) - (sheet[k] ?? 0),
+  );
+  const runningMax = new Array<number>(maxKeys.length).fill(0);
+  const maxContrib = new Map<string, number[]>();
+  if (maxKeys.length > 0)
+    for (const [id, c] of contributions)
+      maxContrib.set(
+        id,
+        maxKeys.map((k) => c[k] ?? 0),
+      );
 
   const kept: BuildResult[] = [];
   let explored = 0;
@@ -587,7 +607,7 @@ export function searchBuilds(
         return;
       }
     } else {
-      const optimistic: StatVec = { ...ctx.base };
+      const optimistic: StatVec = { ...sheet };
       addInto(optimistic, runningVec);
       addInto(optimistic, suffixMaxVec[slotIndex]);
       addInto(optimistic, setCeilVec);
@@ -602,6 +622,12 @@ export function searchBuilds(
         return;
       }
     }
+    for (let j = 0; j < maxKeys.length; j++) {
+      if (runningMax[j] > maxAllowed[j]) {
+        pruned++;
+        return;
+      }
+    }
     if (remainingA && matchedA + remainingA[slotIndex] < neededA) {
       pruned++;
       return;
@@ -611,10 +637,10 @@ export function searchBuilds(
       return;
     }
     const hasRelevant = relevantSets.length > 0;
-    // `chosen`, `runningVec`, `runningMin` and `matchedRelevant` are pushed
-    // before the recursive call and popped after it. Any early return added
-    // inside this loop must undo all four, or the bounds silently stop being
-    // admissible.
+    // `chosen`, `runningVec`, `runningMin`, `runningMax` and `matchedRelevant`
+    // are pushed before the recursive call and popped after it. Any early
+    // return added inside this loop must undo all five, or the bounds
+    // silently stop being admissible.
     for (const a of pools[order[slotIndex]]) {
       chosen.push(a);
       const contribution = scalarObjective
@@ -623,6 +649,8 @@ export function searchBuilds(
       if (contribution) addInto(runningVec, contribution);
       const mc = minContrib.get(a.id);
       if (mc) for (let j = 0; j < mc.length; j++) runningMin[j] += mc[j];
+      const xc = maxContrib.get(a.id);
+      if (xc) for (let j = 0; j < xc.length; j++) runningMax[j] += xc[j];
       const relIdx = hasRelevant ? relevantIndex.get(a.setKey) : undefined;
       if (relIdx !== undefined) matchedRelevant[relIdx]++;
       recurse(
@@ -634,6 +662,7 @@ export function searchBuilds(
       if (relIdx !== undefined) matchedRelevant[relIdx]--;
       if (contribution) subFrom(runningVec, contribution);
       if (mc) for (let j = 0; j < mc.length; j++) runningMin[j] -= mc[j];
+      if (xc) for (let j = 0; j < xc.length; j++) runningMax[j] -= xc[j];
       chosen.pop();
     }
   }

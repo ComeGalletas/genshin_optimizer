@@ -33,9 +33,19 @@ export function artifactContribution(a: Artifact): StatVec {
   return v;
 }
 
+/** What every build starts from: the character and weapon base, plus the
+ *  team's buffs. The bounds in the search start here too, so they and the
+ *  leaf totals can never disagree. */
+export function sheetBase(ctx: OptimizeContext): StatVec {
+  const t: StatVec = { ...ctx.base };
+  if (ctx.buffs) addInto(t, ctx.buffs);
+  return t;
+}
+
 export function totals(ctx: OptimizeContext, build: Artifact[]): StatVec {
   const t: StatVec = {};
   addInto(t, ctx.base);
+  if (ctx.buffs) addInto(t, ctx.buffs);
   for (const a of build) addInto(t, artifactContribution(a));
   const counts = countSets(build);
   for (const setKey of Object.keys(counts)) {
@@ -54,9 +64,23 @@ export function critValue(cr: number, cd: number): number {
   return cr * 2 + cd;
 }
 
-export function objectiveValue(t: StatVec, objective: ScalarObjective): number {
+/** A scalar objective's value for a stat vector. Every one is additive over
+ *  stats (crit value, one stat, or a weighted sum with non-negative
+ *  weights), which is what makes the search's scalar bound admissible. */
+export function objectiveValue(
+  t: StatVec,
+  objective: ScalarObjective,
+  weights?: StatVec,
+): number {
   if (objective === 'crit_value')
     return critValue(t.crit_rate ?? 0, t.crit_dmg ?? 0);
+  if (objective === 'weighted') {
+    if (!weights) throw new Error('the weighted objective requires weights');
+    let v = 0;
+    for (const k of Object.keys(weights) as StatKey[])
+      v += (weights[k] ?? 0) * (t[k] ?? 0);
+    return v;
+  }
   return t[objective] ?? 0;
 }
 
@@ -73,7 +97,7 @@ export function evaluateObjective(
       throw new Error('avg_damage objective requires ctx.damage');
     return targetFunctionScore(ctx.base, t, ctx.damage);
   }
-  return objectiveValue(t, objective);
+  return objectiveValue(t, objective, ctx.weights);
 }
 
 function meetsSetRequirement(
@@ -117,6 +141,13 @@ export function satisfies(
       // build whose stats are not even numbers — reject non-finite outright.
       const have = t[k] ?? 0;
       if (!Number.isFinite(have) || have < (constraints.minStats[k] ?? 0))
+        return false;
+    }
+  }
+  if (constraints.maxStats) {
+    for (const k of Object.keys(constraints.maxStats) as StatKey[]) {
+      const have = t[k] ?? 0;
+      if (!Number.isFinite(have) || have > (constraints.maxStats[k] ?? 0))
         return false;
     }
   }

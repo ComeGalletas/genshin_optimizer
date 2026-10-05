@@ -96,11 +96,16 @@ export type SetRequirement =
 export interface OptimizeConstraints {
   setRequirement?: SetRequirement;
   minStats?: StatVec;
+  /** Stat ceilings (TODO 4.2): a build over any of them is not a build. */
+  maxStats?: StatVec;
   mainStatLocks?: Partial<Record<Slot, StatKey>>;
   critRatioTarget?: number; // soft tiebreak only
 }
 
-export type Objective = StatKey | 'crit_value' | 'avg_damage';
+/** `weighted`: a weighted sum of stats, the weights in
+ *  `OptimizeContext.weights` (TODO 4.2, from a ConstraintSpec). Never chosen
+ *  in the web app, so `isObjective` (its input guard) doesn't accept it. */
+export type Objective = StatKey | 'crit_value' | 'avg_damage' | 'weighted';
 
 /** Objectives whose value is a plain sum over stat contributions, so the
  *  scalar-additive pruning bound applies. `avg_damage` is not one of them. */
@@ -127,6 +132,11 @@ export interface OptimizeContext {
   setBonuses: Record<string, { two?: StatVec; four?: StatVec }>;
   /** damage profile + enemy assumptions; required by the `avg_damage` objective. */
   damage?: DamageContext;
+  /** Stats teammates add (TODO 4.2), part of every build's totals; not part
+   *  of `base`, which the damage formula scales by its own percentages. */
+  buffs?: StatVec;
+  /** The weights of the `weighted` objective; required by it. */
+  weights?: StatVec;
   /** dataset set key -> display name, for the worker's set-requirement
    *  diagnostics (`setRequirementLabelFrom`). Populated once here, on the
    *  main thread where the adapter is available, and structured-cloned to

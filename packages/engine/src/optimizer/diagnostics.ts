@@ -44,6 +44,12 @@ export function buildDiagnostics(
     if (have - need < need * BINDING_MARGIN)
       binding.push(`${statLabel(k)} ≥ ${need} (build has ${have.toFixed(1)})`);
   }
+  for (const k of Object.keys(req.constraints.maxStats ?? {}) as StatKey[]) {
+    const cap = req.constraints.maxStats![k] ?? 0;
+    const have = b.totals[k] ?? 0;
+    if (cap - have < cap * BINDING_MARGIN)
+      binding.push(`${statLabel(k)} ≤ ${cap} (build has ${have.toFixed(1)})`);
+  }
 
   const marginalBySlot: Partial<Record<Slot, number>> = {};
   const fullObj = evaluateObjective(ctx, req.objective, totals(ctx, chosen));

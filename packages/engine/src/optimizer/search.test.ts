@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { searchBuilds, bruteForce } from './search';
+import { totals } from './score';
+import { effectiveStat } from '../damage/formula';
 import type {
   Artifact,
   OptimizeContext,
@@ -599,6 +601,65 @@ describe('searchBuilds with the avg_damage objective', () => {
     expect(totalPruned).toBeGreaterThan(0);
   });
 
+  it('avg_damage with team buffs and a maxStats ceiling: still exact (TODO 4.2)', () => {
+    // A flat ATK buff must count as flat ATK, not be scaled by ATK% as the
+    // base is; the leaf and the vector bound both read it from the totals.
+    const buffed: OptimizeContext = {
+      ...dmgCtx,
+      buffs: { atk: 1000, elemental_dmg: 20 },
+    };
+    const capped: OptimizeRequest = {
+      ...dmgReq,
+      topK: 3,
+      constraints: { maxStats: { crit_rate: 50 } },
+    };
+    let checked = 0;
+    for (let seed = 0; seed < 20; seed++) {
+      const inv = randomInventory(seed, 6);
+      const fast = searchBuilds(capped, inv, buffed);
+      const slow = bruteForce(capped, inv, buffed);
+      expect(fast.status).toBe(slow.status);
+      if (fast.status === 'ok' && slow.status === 'ok') {
+        expectScoresClose(scoresOf(fast), scoresOf(slow));
+        for (const b of fast.builds)
+          expect(b.totals.crit_rate ?? 0).toBeLessThanOrEqual(50);
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(10);
+    // The buff raises damage, and its ATK is flat: on the same five pieces,
+    // effective ATK rises by exactly 1000 whatever ATK% the pieces carry.
+    const inv = randomInventory(0, 6);
+    const plain = expectOk(searchBuilds(dmgReq, inv, dmgCtx));
+    const more = expectOk(searchBuilds(dmgReq, inv, buffed));
+    expect(more.builds[0].score).toBeGreaterThan(plain.builds[0].score);
+    const pieces = SLOTS.map((slot) =>
+      inv.find((a) => a.id === plain.builds[0].artifactIds[slot])!,
+    );
+    const atkOf = (c: OptimizeContext) =>
+      effectiveStat(c.base, totals(c, pieces), 'atk');
+    expect(atkOf(buffed) - atkOf(dmgCtx)).toBeCloseTo(1000, 9);
+  });
+
+  it('avg_damage scales with the enemy: lower resistance, more damage, same ranking', () => {
+    const inv = randomInventory(4, 6);
+    const tenPct = expectOk(searchBuilds({ ...dmgReq, topK: 3 }, inv, dmgCtx));
+    const shredded = expectOk(
+      searchBuilds({ ...dmgReq, topK: 3 }, inv, {
+        ...dmgCtx,
+        damage: { ...dmgCtx.damage!, enemy: { level: 100, res: -0.2 } },
+      }),
+    );
+    expect(shredded.builds.map((b) => b.artifactIds)).toEqual(
+      tenPct.builds.map((b) => b.artifactIds),
+    );
+    // resMult: 0.9 at 10%, 1.1 at -20%.
+    expect(shredded.builds[0].score / tenPct.builds[0].score).toBeCloseTo(
+      1.1 / 0.9,
+      9,
+    );
+  });
+
   it('avg_damage honours constraints (ER floor + 4pc) exactly', () => {
     const constrained: OptimizeRequest = {
       ...dmgReq,
@@ -627,5 +688,176 @@ describe('searchBuilds with the avg_damage objective', () => {
       }
     }
     expect(checked).toBeGreaterThan(0);
+  });
+});
+
+// TODO 4.2: maxStats, the weighted objective and team buffs, each held to
+// the brute-force oracle like every other dimension (ADR-0004).
+describe('searchBuilds with maxStats, weights and team buffs', () => {
+  const STATS = [
+    'crit_rate',
+    'crit_dmg',
+    'atk_pct',
+    'er_pct',
+    'em',
+    'hp_pct',
+  ] as const;
+  function mixedInventory(seed: number, perSlot: number): Artifact[] {
+    let n = seed * 7919 + 1;
+    const rnd = () => {
+      n = (n * 1103515245 + 12345) & 0x7fffffff;
+      return n;
+    };
+    const inv: Artifact[] = [];
+    let id = 0;
+    for (const slot of SLOTS)
+      for (let i = 0; i < perSlot; i++) {
+        const main = STATS[rnd() % STATS.length];
+        inv.push({
+          id: `w${seed}-${id++}`,
+          setKey: rnd() % 2 === 0 ? 'SetA' : 'SetB',
+          slot,
+          rarity: 5,
+          level: 20,
+          mainStat: main,
+          mainStatValue: 3 + (rnd() % 30),
+          subStats: STATS.filter((s) => s !== main && rnd() % 3 === 0).map(
+            (key) => ({ key, value: 1 + (rnd() % 12) }),
+          ),
+        });
+      }
+    return inv;
+  }
+  const mixedCtx: OptimizeContext = {
+    base: { crit_rate: 5, crit_dmg: 50, er_pct: 100, atk: 800 },
+    setBonuses: {
+      SetA: { two: { er_pct: 20 }, four: { crit_rate: 12 } },
+      SetB: { two: { atk_pct: 18 } },
+    },
+  };
+  const base: OptimizeRequest = {
+    characterKey: 'c',
+    weaponKey: 'w',
+    buildLevel: 90,
+    constraints: {},
+    objective: 'crit_value',
+    topK: 5,
+  };
+  /** Runs both searches on 20 inventories; returns how many were feasible
+   *  and how much the fast one pruned. */
+  function matchOracle(
+    req: OptimizeRequest,
+    ctx: OptimizeContext,
+    check?: (b: { totals: Record<string, number | undefined> }) => void,
+  ) {
+    let feasible = 0;
+    let pruned = 0;
+    for (let seed = 0; seed < 20; seed++) {
+      const inv = mixedInventory(seed, 5);
+      const fast = searchBuilds(req, inv, ctx);
+      const slow = bruteForce(req, inv, ctx);
+      expect(fast.status).toBe(slow.status);
+      if (fast.status === 'ok' && slow.status === 'ok') {
+        expectScoresClose(scoresOf(fast), scoresOf(slow));
+        for (const b of fast.builds) check?.(b);
+        feasible++;
+        pruned += fast.pruned;
+      }
+    }
+    return { feasible, pruned };
+  }
+
+  it('maxStats: matches brute force, every build under each ceiling, and the ceiling prunes', () => {
+    const capped: OptimizeRequest = {
+      ...base,
+      constraints: { maxStats: { crit_rate: 45, er_pct: 160 } },
+    };
+    const r = matchOracle(capped, mixedCtx, (b) => {
+      expect(b.totals.crit_rate ?? 0).toBeLessThanOrEqual(45);
+      expect(b.totals.er_pct ?? 0).toBeLessThanOrEqual(160);
+    });
+    expect(r.feasible).toBeGreaterThan(10);
+    expect(r.pruned).toBeGreaterThan(0);
+    // A ceiling below the base is unreachable for every inventory.
+    expect(
+      searchBuilds(
+        { ...base, constraints: { maxStats: { crit_dmg: 40 } } },
+        mixedInventory(1, 5),
+        mixedCtx,
+      ).status,
+    ).toBe('infeasible');
+  });
+
+  it('maxStats with minStats and a 4pc: still exact', () => {
+    const both: OptimizeRequest = {
+      ...base,
+      constraints: {
+        minStats: { er_pct: 120 },
+        maxStats: { crit_rate: 60 },
+        setRequirement: { kind: '4pc', setKey: 'SetA' },
+      },
+    };
+    const r = matchOracle(both, mixedCtx, (b) => {
+      expect(b.totals.er_pct ?? 0).toBeGreaterThanOrEqual(120);
+      expect(b.totals.crit_rate ?? 0).toBeLessThanOrEqual(60);
+    });
+    expect(r.feasible).toBeGreaterThan(0);
+  });
+
+  it('weighted: matches brute force, and 2:1 crit weights rank exactly like crit value', () => {
+    const weights = { crit_rate: 2, crit_dmg: 1, atk_pct: 0.5, em: 0.25 };
+    const weighted: OptimizeRequest = { ...base, objective: 'weighted' };
+    const r = matchOracle(weighted, { ...mixedCtx, weights });
+    expect(r.feasible).toBe(20);
+    expect(r.pruned).toBeGreaterThan(0);
+    for (let seed = 0; seed < 5; seed++) {
+      const inv = mixedInventory(seed, 5);
+      const cv = expectOk(searchBuilds(base, inv, mixedCtx));
+      const w = expectOk(
+        searchBuilds(weighted, inv, {
+          ...mixedCtx,
+          weights: { crit_rate: 2, crit_dmg: 1 },
+        }),
+      );
+      expect(w.builds.map((b) => b.artifactIds)).toEqual(
+        cv.builds.map((b) => b.artifactIds),
+      );
+    }
+  });
+
+  it('weighted without weights is an error, not a silent zero', () => {
+    expect(() =>
+      searchBuilds(
+        { ...base, objective: 'weighted' },
+        mixedInventory(0, 3),
+        mixedCtx,
+      ),
+    ).toThrow(/requires weights/);
+  });
+
+  it('team buffs: in every total, still exact, and they can meet a floor the gear alone cannot', () => {
+    const buffs = { crit_rate: 20, er_pct: 30 };
+    const buffed = { ...mixedCtx, buffs };
+    matchOracle(base, buffed);
+    const inv = mixedInventory(3, 5);
+    const plain = expectOk(searchBuilds(base, inv, mixedCtx));
+    const withBuffs = expectOk(searchBuilds(base, inv, buffed));
+    // Same pieces, and crit value up by exactly 2 × 20.
+    expect(withBuffs.builds[0].artifactIds).toEqual(
+      plain.builds[0].artifactIds,
+    );
+    expect(withBuffs.builds[0].objectiveValue).toBeCloseTo(
+      plain.builds[0].objectiveValue + 40,
+      6,
+    );
+    // An ER floor only the buff makes reachable.
+    const floor: OptimizeRequest = {
+      ...base,
+      constraints: { minStats: { er_pct: 300 } },
+    };
+    expect(searchBuilds(floor, inv, mixedCtx).status).toBe('infeasible');
+    matchOracle(floor, { ...mixedCtx, buffs: { er_pct: 200 } }, (b) =>
+      expect(b.totals.er_pct ?? 0).toBeGreaterThanOrEqual(300),
+    );
   });
 });
