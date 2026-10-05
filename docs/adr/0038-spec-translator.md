@@ -47,9 +47,10 @@ out for the local model.
    the model to say first. An infeasible run carries `why`: a main stat no
    owned piece has, a floor provably out of reach (with the most this
    spec can reach), or, when no single condition is to blame, what to
-   relax. The chat now checks tool arguments strictly, so an invented
-   argument is reported rather than dropped; MCP clients go through the
-   SDK's own validation.
+   relax. The chat and the MCP server both check tool arguments strictly
+   (a `z.strictObject` per tool), so an invented argument is reported
+   rather than dropped; given a bare shape, the MCP SDK's own object is
+   lenient (found by 4.5).
 
 ## Consequences
 

@@ -10,6 +10,7 @@
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import * as z from 'zod';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { ServiceError, type Services } from '../api/services';
 import { accountTools, TOOL_INSTRUCTIONS } from './tools';
@@ -60,8 +61,13 @@ export function createMcpServer(services: Services, version = '0.0.0') {
     };
     const body = t.run as (a: unknown) => ReturnType<typeof t.run>;
     if (t.input)
-      server.registerTool(t.name, { ...config, inputSchema: t.input }, (args) =>
-        run(() => body(args)),
+      // Strict, as in the chat: given a bare shape, the SDK builds a lenient
+      // object that silently drops an invented argument (TODO 4.5 found a
+      // spec with an extra field running without it).
+      server.registerTool(
+        t.name,
+        { ...config, inputSchema: z.strictObject(t.input) },
+        (args) => run(() => body(args)),
       );
     else server.registerTool(t.name, config, () => run(() => body({})));
   }
