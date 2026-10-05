@@ -248,7 +248,8 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - `packages/server/src/spec-guard.test.ts` watches the optimizer's one door, `SearchRunner.run`, and pushes 15 invalid specs (shape: not an object, no character, an invented field, a wrong type, out of range, another version; meaning: unknown character or set, a main stat the slot lacks, min above max, a weapon she can't wield, damage without a profile; account: no weapon for an unowned character, an unknown artifact id, a default floor above the ceiling) through every path: the service, REST `/spec/run` and `/spec/check`, MCP `optimize_build`, the chat's tool loop and the translator. Each is refused with its issue's path and nothing is searched.
   - A seeded fuzz of 400 mutations of the golden specs checks the invariant both ways against the engine's own checks: the optimizer runs exactly the specs that pass `parseConstraintSpec` and `specToRun`, once each, and nothing else.
   - It found a hole: given a bare field shape, the MCP SDK builds a lenient object, so `optimize_build` with an invented field (`pool`) ran the rest of the spec instead of refusing it. Every MCP tool now registers a `z.strictObject`, as the chat already did (ADR-0038 corrected). Reverting that, or letting the spec checks be skipped, turns the tests red.
-- [ ] **Accept:** ≥ 90% exact-match with the cloud model, and the local model's score is reported
+- [x] **Accept:** ≥ 90% exact-match with the cloud model, and the local model's score is reported
+  - Accepted by the owner on 2026-10-05, on the results below.
   - Results (2026-10-05, [docs/spec-eval/](spec-eval/)): Claude (claude-opus-5-5 through Claude Code, no API key) 30/30 equivalent and exact; qwen3:8b 25/30 (83%); qwen3:14b 25/30 (83%, one miss a cold-load timeout). The cloud run went through Claude Code rather than the in-app `anthropic` provider (no API key; ADR-0039 §4). Waiting for the owner's acceptance.
 
 ## Phase 5: gcsim
