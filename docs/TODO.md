@@ -254,8 +254,20 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 5: gcsim
 
-- [ ] 5.0 Owner: list the teams actually played (seeds the rotation library)
-- [ ] 5.1 Research: current gcsim release, CLI flags, JSON output shape, GOOD import. Check against docs.gcsim.app and the repo, not PLAN.md. Pin it in `config/tools.json`.
+- [x] 5.0 Owner: list the teams actually played (seeds the rotation library)
+  - Owner's choice (2026-10-05): start with the five strongest curated archetypes the account can field, to check functionality and accuracy; more teams later. Inferred from the account (GOOD has no party setups): build scores of the members and who wears team-buff sets.
+    1. Skirk Mono-Cryo: Skirk, Escoffier, Furina, Charlotte
+    2. Mualani Vaporize: Mualani, Xilonen, Citlali, Bennett
+    3. Nahida Aggravate: Nahida, Raiden Shogun, Fischl, Kuki Shinobu
+    4. Raiden National: Raiden Shogun, Xiangling, Yelan, Bennett
+    5. Ayaka Freeze: Kamisato Ayaka, Shenhe, Mona, Kaedehara Kazuha
+  - Noted: many of the most-built characters (Chiori, Columbina, Sandrone, Varesa, Zibai, Chasca, Emilie, Ineffa, Mavuika) are in no curated archetype (tables from patch 6.7); their teams come from the owner later.
+- [x] 5.1 Research: current gcsim release, CLI flags, JSON output shape, GOOD import. Check against docs.gcsim.app and the repo, not PLAN.md. Pin it in `config/tools.json`.
+  - [Research note](research/2026-10-05-gcsim-v2.48.8.md), checked against the repository at `v2.48.8` and docs.gcsim.app. Pinned in `config/tools.json`: **v2.48.8** (2026-10-03), the six `gcsim_<os>_<arch>` CLI binaries with their sizes and the SHA-256 digests GitHub reports (the release has no checksum file).
+  - CLI: `-c <config> -out <result.json>`, `-nb`, `-version`, `-sample` for frame-by-frame review; iterations, duration and workers live in the config's `options` line. Results: `statistics.dps {min,max,mean,sd}`, `character_dps[]`, `source_reactions[]`, `total_source_energy[]`, `end_stats[].ending_energy`, `warnings`, `failed_actions[]`, per-character `stats`/`snapshot`, `incomplete_characters[]`, `sim_version`.
+  - Config stats are **fractions** (`cr=0.311`, `er=0.518`, `resist=0.1`) with one DMG key per element (`hydro%`…), and `add stats` carries only the artifacts' lines (gcsim adds base, weapon and set bonuses): 5.5 converts from percent at this boundary. Names: lowercase without separators (`raidenshogun`, `noblesseoblige`), which our dataset keys become with the separators removed.
+  - Two findings against PLAN: gcsim's GOOD import exists only in its web UI, not the CLI, so 5.5 cross-checks against the stats gcsim reports for our config. And **gcsim is AGPL-3.0 since 2026-09-19** (MIT up to v2.47.2): running the official binary as a separate program is what CLAUDE.md prescribes and stays fine, but no gcsim source may be copied here (its GOOD-to-config converter included).
+  - All eighteen characters of the five seed teams are implemented. Of the owner's most-built characters, Sandrone and Zibai are not (their teams will be stat-only, 5.9).
 - [ ] 5.2 `npm run sim:check`: download or verify the release binary into `tools/bin/` by checksum (no Go toolchain needed), print its version, run the golden configs
 - [ ] 5.3 `server/sim/runner.ts`: temp config, timeout, iterations, JSON parse (mean/SD DPS, per-character damage, reactions, energy warnings)
 - [ ] 5.4 Bounded worker pool plus a result cache keyed by hash(config + gcsim version)

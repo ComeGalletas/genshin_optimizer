@@ -1,0 +1,46 @@
+{
+  "gcsim": {
+    "version": "v2.48.8",
+    "released": "2026-10-03",
+    "repository": "https://github.com/genshinsim/gcsim",
+    "license": "AGPL-3.0-or-later since 2026-09-19 (v2.47.2 and earlier: MIT). Run as a separate, unmodified program downloaded from the release; no gcsim source is copied into this repository. See docs/research/2026-10-05-gcsim-v2.48.8.md.",
+    "binaries": {
+      "win32-x64": {
+        "file": "gcsim_windows_amd64.exe",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_windows_amd64.exe",
+        "size": 37094400,
+        "sha256": "e8017c594cc5f887bf4b0a2d64d679488f0f5ca558c378b83938bbbe894d6dae"
+      },
+      "win32-arm64": {
+        "file": "gcsim_windows_arm64.exe",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_windows_arm64.exe",
+        "size": 34299392,
+        "sha256": "dd3ea1f307952fd0c210c5382a3a3b4b9a2f15e845949356ee6297a7103539e2"
+      },
+      "linux-x64": {
+        "file": "gcsim_linux_amd64",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_linux_amd64",
+        "size": 36832965,
+        "sha256": "82123df916d3c006b8abc0a9f6dbe999ce7db552555b7ecef7f0c3558c70476c"
+      },
+      "linux-arm64": {
+        "file": "gcsim_linux_arm64",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_linux_arm64",
+        "size": 34410998,
+        "sha256": "5f29a31fad0b8ce466af1b2344ed4453d705fffee8a77b4b6a772b2fb7a11091"
+      },
+      "darwin-x64": {
+        "file": "gcsim_darwin_amd64",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_darwin_amd64",
+        "size": 37606096,
+        "sha256": "4cde19033ea5129415020e306bed2aa2cdcfcb8a93d6a28efff53975dcd7c7f5"
+      },
+      "darwin-arm64": {
+        "file": "gcsim_darwin_arm64",
+        "url": "https://github.com/genshinsim/gcsim/releases/download/v2.48.8/gcsim_darwin_arm64",
+        "size": 35434930,
+        "sha256": "33efa12af521c88a4e9de38f9af7cf63fc757ecbcc283c3c1a4adacc82cf7578"
+      }
+    }
+  }
+}
