@@ -1,6 +1,6 @@
 # 0009. Game-universal stat baselines live in the GameAdapter, not the snapshot
 
-- Status: Accepted
+- Status: Accepted; amended by [0040](0040-universal-crit-baselines.md) (the crit baselines)
 - Date: 2026-06-11
 
 ## Context

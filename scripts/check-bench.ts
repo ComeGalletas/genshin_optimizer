@@ -17,6 +17,9 @@ const WATCHED = [
   'packages/engine/src/optimizer/score.ts',
   'packages/engine/src/optimizer/benchmark.ts',
   'packages/engine/src/optimizer/context.ts',
+  // Base stats feed every score (the crit baselines of ADR-0040 moved the
+  // crit-value counts through the crit-ratio tiebreak).
+  'packages/engine/src/game/genshin/adapter.ts',
   'packages/engine/src/damage/setBonuses.ts',
   'packages/engine/src/damage/profiles.ts',
 ];

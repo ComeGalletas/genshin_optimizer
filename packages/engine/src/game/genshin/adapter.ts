@@ -112,6 +112,10 @@ const WEAPONS_BY_TYPE: ReadonlyMap<WeaponType, readonly WeaponMeta[]> = (() => {
 
 const NO_WEAPONS: readonly WeaponMeta[] = Object.freeze([]);
 
+/** Every character's base crit, in percent (ADR-0040). */
+export const CRIT_RATE_BASELINE = 5;
+export const CRIT_DMG_BASELINE = 50;
+
 export const genshinAdapter = {
   statKeys: [...STAT_KEYS] as StatKey[],
 
@@ -195,6 +199,16 @@ export const genshinAdapter = {
     // (see ADR-0009). Add it so ER totals and ER constraints are correct
     // across the app.
     out.er_pct = (out.er_pct ?? 0) + 100;
+    // The universal 5% CRIT Rate and 50% CRIT DMG (ADR-0040). genshin-db
+    // folds them into the ascension stat of characters who ascend in that
+    // stat (Furina's CRIT Rate reads 5 at level 1, 24.2 at 90) and leaves
+    // them out for everyone else, so add each only where level 1 doesn't
+    // already carry it. Found by the gcsim cross-check (TODO 5.5).
+    const first = c.baseByLevel['1'] ?? {};
+    if (first.crit_rate !== CRIT_RATE_BASELINE)
+      out.crit_rate = (out.crit_rate ?? 0) + CRIT_RATE_BASELINE;
+    if (first.crit_dmg !== CRIT_DMG_BASELINE)
+      out.crit_dmg = (out.crit_dmg ?? 0) + CRIT_DMG_BASELINE;
     return out;
   },
 

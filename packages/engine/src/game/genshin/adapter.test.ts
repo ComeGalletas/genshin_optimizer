@@ -136,6 +136,36 @@ describe('baseStats base Energy Recharge', () => {
   });
 });
 
+describe('baseStats base crit (ADR-0040)', () => {
+  // Favonius Sword's secondary stat is ER, so crit here is the character's.
+  const W = 'favonius_sword';
+  const at = (key: string, level: 1 | 20 | 40 | 50 | 60 | 70 | 80 | 90) =>
+    genshinAdapter.baseStats(key, W, level);
+
+  it('every character, at every level, has at least 5% CRIT Rate and 50% CRIT DMG', () => {
+    for (const c of genshinAdapter.characters())
+      for (const level of [1, 20, 40, 50, 60, 70, 80, 90] as const) {
+        const b = at(c.key, level);
+        expect(b.crit_rate ?? 0, `${c.key} ${level}`).toBeGreaterThanOrEqual(5);
+        expect(b.crit_dmg ?? 0, `${c.key} ${level}`).toBeGreaterThanOrEqual(50);
+      }
+  });
+
+  it('adds the baseline once: not again where genshin-db folds it into the ascension stat', () => {
+    // No crit ascension: exactly the baselines.
+    expect(at('kaedehara_kazuha', 90)).toMatchObject({
+      crit_rate: 5,
+      crit_dmg: 50,
+    });
+    // CRIT Rate ascension (genshin-db: 5 at level 1, 24.2 at 90): CR as is.
+    expect(at('furina', 1)).toMatchObject({ crit_rate: 5, crit_dmg: 50 });
+    expect(at('furina', 90)).toMatchObject({ crit_rate: 24.2, crit_dmg: 50 });
+    // CRIT DMG ascension (50 at level 1, 88.4 at 90): CD as is.
+    expect(at('skirk', 1)).toMatchObject({ crit_rate: 5, crit_dmg: 50 });
+    expect(at('skirk', 90)).toMatchObject({ crit_rate: 5, crit_dmg: 88.4 });
+  });
+});
+
 describe('artifact set snapshot', () => {
   it('retains conditional-2pc meta sets (Golden Troupe, Marechaussee Hunter)', () => {
     const keys = new Set(genshinAdapter.sets().map((s) => s.key));
