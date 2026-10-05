@@ -1,0 +1,10 @@
+{
+  "about": "Configs npm run sim:check runs with the pinned gcsim (TODO 5.2). A config with `expected` must land within its tolerance of that mean DPS; one without only has to run cleanly. Community configs with published DPS (the Phase 5 acceptance) are added with their source.",
+  "configs": [
+    {
+      "id": "raiden-national-smoke",
+      "file": "raiden-national-smoke.txt",
+      "purpose": "smoke: the binary runs a four-character config and writes a parseable result"
+    }
+  ]
+}

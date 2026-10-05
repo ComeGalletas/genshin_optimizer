@@ -45,6 +45,7 @@
     "inbox": "tsx packages/server/src/cli/inbox.ts",
     "llm:check": "tsx packages/server/src/cli/llm-check.ts",
     "spec:eval": "tsx packages/server/src/cli/spec-eval.ts",
+    "sim:check": "tsx packages/server/src/cli/sim-check.ts",
     "phase2:check": "tsx packages/server/src/cli/phase2-check.ts",
     "diff:sim": "tsx scripts/diff-sim.ts",
     "bench": "tsx scripts/benchmark.ts && prettier --write docs/speed-report.md",

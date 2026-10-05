@@ -2,6 +2,7 @@
   "gcsim": {
     "version": "v2.48.8",
     "released": "2026-10-03",
+    "commit": "1f9c1f2e9698239a24b44e38a21358a00fd16bff",
     "repository": "https://github.com/genshinsim/gcsim",
     "license": "AGPL-3.0-or-later since 2026-09-19 (v2.47.2 and earlier: MIT). Run as a separate, unmodified program downloaded from the release; no gcsim source is copied into this repository. See docs/research/2026-10-05-gcsim-v2.48.8.md.",
     "binaries": {
