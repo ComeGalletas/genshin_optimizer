@@ -24,6 +24,8 @@ import {
   ArtifactQuery,
   ChatBody,
   CompareBody,
+  SpecBody,
+  TranslateBody,
   IdParam,
   OptimizeBody,
   SnapshotParam,
@@ -151,7 +153,7 @@ export function buildApp(opts: AppOptions): FastifyInstance {
 
   app.setErrorHandler((err, _req, reply) => {
     if (err instanceof ServiceError)
-      return fail(reply, err.status, err.code, err.message);
+      return fail(reply, err.status, err.code, err.message, err.issues);
     if (err instanceof StoreError)
       return fail(reply, 404, 'not_found', err.message);
     if (err instanceof LlmError)
@@ -190,6 +192,32 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     const body = parse(OptimizeBody, req.body, reply);
     if (body) return services.optimize(body);
   });
+  // ---- ConstraintSpec (TODO 4.3, ADR-0038) --------------------------------
+  // check: the "I understood" summary, nothing run. run: checked, mapped,
+  // searched. translate: words to a checked spec, nothing run.
+  app.post('/spec/check', async (req, reply) => {
+    const body = parse(SpecBody, req.body, reply);
+    if (!body) return;
+    const { spec, run, understood } = services.checkSpec(body.spec, body.topK);
+    return {
+      understood: understood.text,
+      conditions: understood.conditions,
+      spec,
+      request: run.request,
+      pool: { artifacts: run.pool.length },
+    };
+  });
+  app.post('/spec/run', async (req, reply) => {
+    const body = parse(SpecBody, req.body, reply);
+    if (body) return services.runSpec(body.spec, body.topK);
+  });
+  app.post('/spec/translate', async (req, reply) => {
+    if (!llmClient)
+      return fail(reply, 503, 'llm_not_ready', 'no language model configured');
+    const body = parse(TranslateBody, req.body, reply);
+    if (body) return services.translateSpec(llmClient, body.text);
+  });
+
   app.post('/compare', async (req, reply) => {
     const body = parse(CompareBody, req.body, reply);
     if (body) return services.compareBuilds(body);

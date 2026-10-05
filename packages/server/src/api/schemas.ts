@@ -156,3 +156,19 @@ export const ChatBody = z
   })
   .strict();
 export type ChatBody = z.infer<typeof ChatBody>;
+
+/** A ConstraintSpec to check or run (TODO 4.3). The spec itself is checked
+ *  by the engine's `parseConstraintSpec`, whose messages are written for a
+ *  model; this only frames it. */
+export const SpecBody = z
+  .object({
+    spec: z.unknown(),
+    topK: z.number().int().min(1).max(20).optional(),
+  })
+  .strict();
+export type SpecBody = z.infer<typeof SpecBody>;
+
+/** A request in words for the translator (TODO 4.3). */
+export const TranslateBody = z
+  .object({ text: z.string().trim().min(1).max(1000) })
+  .strict();

@@ -157,7 +157,7 @@ describe('runChat', () => {
     const optimize = offered.find((t) => t.name === 'optimize_build')!;
     expect(optimize.parameters).toMatchObject({
       type: 'object',
-      required: ['characterKey'],
+      required: ['character'],
     });
     expect(optimize.parameters).not.toHaveProperty('$schema');
     await client.close();
@@ -241,7 +241,8 @@ describe('runChat', () => {
       turn === 0
         ? {
             toolCalls: [
-              call('optimize_build', { characterKey: 'nobody' }),
+              call('optimize_build', { character: 'nobody' }),
+              call('get_character', { characterKey: 'furina', pool: 'free' }),
               call('delete_account', {}),
               call('query_artifacts', { limit: 200 }),
             ],
@@ -253,6 +254,7 @@ describe('runChat', () => {
     });
     expect(r.steps.map((s) => [s.tool, s.ok])).toEqual([
       ['optimize_build', false],
+      ['get_character', false],
       ['delete_account', false],
       ['query_artifacts', false],
     ]);
@@ -260,12 +262,14 @@ describe('runChat', () => {
       .filter((m) => m.role === 'tool')
       .map((m) => m.content);
     expect(shown[0]).toMatch(
-      /^error: invalid arguments: characterKey: unknown character/,
+      /^error: invalid_spec: the spec has a problem: character: unknown character "nobody"/,
     );
-    expect(shown[1]).toMatch(
+    // Strict arguments: an invented field is named, not dropped.
+    expect(shown[1]).toMatch(/^error: invalid arguments: .*pool/);
+    expect(shown[2]).toMatch(
       /^error: no tool named delete_account; the tools are get_account_summary/,
     );
-    expect(shown[2]).toMatch(/^error: the result is too large/);
+    expect(shown[3]).toMatch(/^error: the result is too large/);
     expect(r.answer).toBe('I couldn’t get that.');
   });
 

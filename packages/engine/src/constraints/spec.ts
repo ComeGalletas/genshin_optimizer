@@ -94,13 +94,9 @@ export const ConstraintSpecSchema = z.strictObject({
   character: Key,
   /** Dataset weapon key; the equipped one when left out. */
   weapon: z.optional(Key),
-  buildLevel: z.optional(
-    z.number().check(
-      z.refine((n) => (BUILD_LEVELS as number[]).includes(n), {
-        message: `one of ${BUILD_LEVELS.join(', ')}`,
-      }),
-    ),
-  ),
+  /** A literal list rather than a refine, so the JSON Schema a model sees
+   *  names the levels. */
+  buildLevel: z.optional(z.literal(BUILD_LEVELS)),
   defaults: z.optional(z.enum(['extend', 'replace'])),
   set: z.optional(SetRule),
   mainStats: z.optional(
@@ -212,7 +208,11 @@ function checkMeaning(s: z.infer<typeof ConstraintSpecSchema>): SpecIssue[] {
 
   if (s.weapon !== undefined) {
     const weapon = genshinAdapter.weapon(s.weapon);
-    if (!weapon) add('weapon', unknown('weapon', s.weapon, k.weapons));
+    if (!weapon)
+      add(
+        'weapon',
+        `${unknown('weapon', s.weapon, k.weapons)}; leave "weapon" out to use the equipped one`,
+      );
     else if (character && weapon.type !== character.weaponType)
       add(
         'weapon',

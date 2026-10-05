@@ -123,7 +123,7 @@ describe('ConstraintSpec: shape', () => {
       one({ character: 'furina', mainStats: { sands: 'energy' } }).message,
     ).toBe('must be a stat key or "any"');
     expect(one({ character: 'furina', buildLevel: 85 }).message).toBe(
-      'one of 1, 20, 40, 50, 60, 70, 80, 90',
+      'must be 1, 20, 40, 50, 60, 70, 80, 90',
     );
   });
 
@@ -185,7 +185,9 @@ describe('ConstraintSpec: meaning', () => {
       issues({ character: 'furina', weapon: 'splendor' })[0],
     ).toMatchObject({
       path: 'weapon',
-      message: expect.stringMatching(/^unknown weapon "splendor"/),
+      message: expect.stringMatching(
+        /^unknown weapon "splendor".*; leave "weapon" out to use the equipped one$/,
+      ),
     });
     // Nothing close: no guess.
     expect(issues({ character: 'zzzzzzzz' })[0].message).toBe(

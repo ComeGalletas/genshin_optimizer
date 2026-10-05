@@ -81,11 +81,17 @@ describe('MCP server', () => {
   });
 
   it('optimizes, and compares the result with the equipped build', async () => {
+    // A ConstraintSpec (ADR-0036): her defaults, any set (the sample
+    // account is small), one build.
     const { data: best } = await call('optimize_build', {
-      characterKey: 'neuvillette',
+      character: 'neuvillette',
+      set: { kind: 'any' },
       topK: 1,
     });
     expect(best.status).toBe('ok');
+    expect(best.understood).toMatch(
+      /^I understood: build Neuvillette \(Tome of the Eternal Flow, level 90\) for average damage/,
+    );
     const ids = Object.values(best.builds[0].artifacts).map(
       (a) => (a as Json).id,
     );
@@ -114,12 +120,14 @@ describe('MCP server', () => {
       b: ['nope'],
     });
     expect(wrong.text).toMatch(/no artifact "nope"/);
-    // Bad input is rejected by the schema before any tool code runs.
-    const bad = await client.callTool({
-      name: 'optimize_build',
-      arguments: { characterKey: 'nobody' },
+    // A spec's problems come back together, each with where it is.
+    const bad = await call('optimize_build', {
+      character: 'nobody',
+      mainStats: { sands: 'crit_rate' },
     });
-    expect(bad.isError).toBe(true);
-    expect(JSON.stringify(bad.content)).toMatch(/unknown character/);
+    expect(bad.r.isError).toBe(true);
+    expect(bad.text).toMatch(
+      /^invalid_spec: the spec has 2 problems: character: unknown character "nobody"; mainStats.sands: a sands can't have crit_rate/,
+    );
   });
 });

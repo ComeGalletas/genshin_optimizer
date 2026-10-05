@@ -15,13 +15,15 @@ import * as z from 'zod';
 import type { Artifact, StatVec } from '@genshin-build-lab/engine/game/types';
 import { ELEMENTS, WEAPON_TYPES } from '@genshin-build-lab/engine/game/types';
 import type { Services } from '../api/services';
-import { ArtifactQuery, CompareBody, OptimizeBody } from '../api/schemas';
+import { ArtifactQuery, CompareBody } from '../api/schemas';
+import { ConstraintSpecSchema } from '@genshin-build-lab/engine/constraints/spec';
 
 export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact account: imported artifacts, characters and weapons, an exact build optimizer, and import history.
 - Every number you give the owner must come from a tool result. If a tool fails, say so; never estimate.
 - Stats are in percent where the game shows percent (crit_rate 62.3 means 62.3%). Stat keys: hp, hp_pct, atk, atk_pct, def, def_pct, em, er_pct, crit_rate, crit_dmg, elemental_dmg, physical_dmg, healing.
 - Character, weapon and set keys are dataset keys (furina, splendor_of_tranquil_waters, GoldenTroupe); list_characters and get_character show them.
-- optimize_build is exact and can take tens of seconds on a large account; narrow it (a set requirement, main stats, or pool "free") when you can.`;
+- optimize_build takes a ConstraintSpec that extends the character's curated defaults: pass only what the owner asked for. It is exact and can take tens of seconds on a large account; when it times out, narrow the spec (a set, main stats, or keepEquippedOn "all").
+- When you report builds, start with optimize_build's "understood" sentence, so the owner can check the request was read right.`;
 
 const r1 = (x: number) => Math.round(x * 10) / 10;
 const round = (v: StatVec) =>
@@ -130,10 +132,13 @@ export function accountTools(services: Services): ToolDef[] {
       name: 'optimize_build',
       title: 'Optimize a build',
       description:
-        'Exact best builds for a character from the account\'s artifacts. Only characterKey is required: the weapon defaults to the equipped one, the objective and constraints to the character\'s curated targets. constraints (setRequirement, minStats like {"er_pct": 180}, mainStatLocks, critRatioTarget) replaces the defaults entirely when given: to add a condition (an ER floor, say) and keep the curated set and main stats, call get_character first and pass its defaults.constraints with your addition merged in. Leave objective out unless the owner asks for a different one. pool "free" uses only unequipped pieces plus the character\'s own. Returns the top builds with totals, the objective value and binding constraints.',
-      input: OptimizeBody.shape,
-      run: async (args) => {
-        const r = await services.optimize(args);
+        'Exact best builds for one character from the account\'s artifacts, from a ConstraintSpec (ADR-0036). Only `character` is required. The spec EXTENDS the character\'s curated defaults (their usual set, main stats, ER floor and objective), so give only what the owner asked for: "best Furina with at least 180% ER" is {"character":"furina","minStats":{"er_pct":180}}. Fields: set ({"kind":"4pc"|"2pc","setKey"}, {"kind":"2+2","setKeys":[a,b]}, or {"kind":"any"} to drop the default set), mainStats ({"sands"|"goblet"|"circlet": a stat, or "any"}), minStats and maxStats (percent where the game shows percent), objective ("avg_damage", "crit_value", a stat, or {"weights":{stat:weight}}), keepEquippedOn (character keys whose pieces stay put, or "all" for unequipped pieces only), excludeArtifacts (artifact ids), teamBuffs (stats teammates add), enemy ({"level", "res" in percent}), weapon and buildLevel (else the equipped ones), defaults ("replace" to ignore the curated ones), topK. Returns `understood`, the plain-words reading of the spec (tell it to the owner), then the top builds with totals, objective value and binding constraints. Problems come back all at once, each with where it is.',
+      input: {
+        ...ConstraintSpecSchema.shape,
+        topK: z.number().int().min(1).max(20).optional(),
+      },
+      run: async ({ topK, ...spec }) => {
+        const r = await services.runSpec(spec, topK);
         if (r.status !== 'ok') return r;
         return {
           ...r,

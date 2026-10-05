@@ -132,7 +132,12 @@ export function specToRun(
   const ids = new Set(account.artifacts.map((a) => a.id));
   (spec.excludeArtifacts ?? []).forEach((id, i) => {
     if (!ids.has(id))
-      add(`excludeArtifacts.${i}`, `no artifact "${id}" in the account`);
+      add(
+        `excludeArtifacts.${i}`,
+        genshinAdapter.character(id)
+          ? `"${id}" is a character, not an artifact id; to leave a character's pieces alone, use keepEquippedOn`
+          : `no artifact "${id}" in the account`,
+      );
   });
   const excluded = new Set(spec.excludeArtifacts ?? []);
   const keep = spec.keepEquippedOn;

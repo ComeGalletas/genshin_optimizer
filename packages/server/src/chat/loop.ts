@@ -106,7 +106,8 @@ async function runTool(
     return fail(
       `no tool named ${call.name}; the tools are ${[...byName.keys()].join(', ')}`,
     );
-  const parsed = z.object(def.input ?? {}).safeParse(call.arguments);
+  // Strict: an invented argument is reported to the model, not dropped.
+  const parsed = z.strictObject(def.input ?? {}).safeParse(call.arguments);
   if (!parsed.success)
     return fail(`invalid arguments: ${issues(parsed.error).join('; ')}`);
   try {

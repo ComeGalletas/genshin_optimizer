@@ -182,6 +182,13 @@ describe('specToRun: each field changes the search as intended', () => {
     const without = run({ ...FREE, excludeArtifacts: [circlet] });
     for (const b of without.builds)
       expect(b.artifactIds.circlet).not.toBe(circlet);
+    // A model that means "leave Furina's pieces alone" is pointed the right way.
+    expect(issuesOf({ ...FREE, excludeArtifacts: ['furina'] })).toEqual([
+      {
+        path: 'excludeArtifacts.0',
+        message: `"furina" is a character, not an artifact id; to leave a character's pieces alone, use keepEquippedOn`,
+      },
+    ]);
     expect(issuesOf({ ...FREE, excludeArtifacts: ['m9-999'] })).toEqual([
       {
         path: 'excludeArtifacts.0',

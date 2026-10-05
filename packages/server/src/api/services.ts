@@ -42,6 +42,25 @@ import {
 import { toGOODAccount } from '@genshin-build-lab/engine/good/export';
 import { zeroOffElementGoblets } from '@genshin-build-lab/engine/optimizer/element';
 import { SearchRunner, SearchTimeout } from '../optimize/pool';
+import {
+  parseConstraintSpec,
+  type ConstraintSpec,
+  type SpecIssue,
+} from '@genshin-build-lab/engine/constraints/spec';
+import {
+  specToRun,
+  type SpecAccount,
+  type SpecRun,
+} from '@genshin-build-lab/engine/constraints/toRequest';
+import { describeRun } from '@genshin-build-lab/engine/constraints/describe';
+import {
+  emptySlotCause,
+  unreachableMinStats,
+} from '@genshin-build-lab/engine/optimizer/diagnostics';
+import { statLabel } from '@genshin-build-lab/engine/labels-core';
+import { translateRequest } from '../llm/translate';
+import type { LlmClient } from '../llm/client';
+import type { OptimizeContext } from '@genshin-build-lab/engine/game/types';
 import type { ArtifactQuery, CompareBody, OptimizeBody } from './schemas';
 
 export class ServiceError extends Error {
@@ -49,9 +68,43 @@ export class ServiceError extends Error {
     readonly status: number,
     readonly code: string,
     message: string,
+    /** Every problem, with where it is, when there are several (a spec). */
+    readonly issues?: SpecIssue[],
   ) {
     super(message);
   }
+}
+
+/** Why no build fits a spec, as far as can be proven, with what to relax:
+ *  a model that reads "infeasible" alone can only give up. */
+function whyInfeasible(run: SpecRun, ctx: OptimizeContext): string[] {
+  const pool = zeroOffElementGoblets(run.pool, run.request.characterKey);
+  const empty = emptySlotCause(run.request, pool);
+  if (empty)
+    return [
+      `${empty} Drop that main stat (mainStats {"slot": "any"}) or allow more pieces.`,
+    ];
+  const floors = unreachableMinStats(ctx, run.request, pool).map(
+    (f) =>
+      `${statLabel(f.key)} at least ${f.need} is out of reach: no build under these conditions can pass ${f.best.toFixed(1)}. Lower it, or relax the set or main stats.`,
+  );
+  return floors.length
+    ? floors
+    : [
+        'No single condition is out of reach on its own; together they leave no build. Relax one at a time: the set (set {"kind": "any"}), a main stat (mainStats {"sands": "any"}), or a floor.',
+      ];
+}
+
+/** A spec that failed its checks, as one error naming every problem. */
+function invalidSpec(issues: SpecIssue[]): ServiceError {
+  return new ServiceError(
+    400,
+    'invalid_spec',
+    `the spec has ${issues.length === 1 ? 'a problem' : `${issues.length} problems`}: ${issues
+      .map((i) => `${i.path}: ${i.message}`)
+      .join('; ')}`,
+    issues,
+  );
 }
 const notFound = (m: string) => new ServiceError(404, 'not_found', m);
 const badRequest = (m: string) => new ServiceError(400, 'bad_request', m);
@@ -226,9 +279,115 @@ export class Services {
       body.pool === 'free'
         ? account.filter((a) => !a.location || a.location === body.characterKey)
         : account;
+    return {
+      request,
+      pool: { kind: body.pool ?? 'all', artifacts: owned.length },
+      ...(await this.search(request, owned, ctx)),
+    };
+  }
+
+  /** The account as a spec sees it: roster and every artifact. */
+  private specAccount(): SpecAccount {
+    return {
+      roster: currentRoster(this.db).roster,
+      artifacts: this.artifacts(),
+    };
+  }
+
+  /** Check a spec and map it onto the account, without running it: the
+   *  spec, the run and the "I understood" summary (TODO 4.3). Any problem,
+   *  in the spec or against the account, is one `invalid_spec` error naming
+   *  them all. */
+  checkSpec(
+    input: unknown,
+    topK?: number,
+  ): {
+    spec: ConstraintSpec;
+    run: SpecRun;
+    understood: ReturnType<typeof describeRun>;
+  } {
+    const parsed = parseConstraintSpec(input);
+    if (!parsed.ok) throw invalidSpec(parsed.issues);
+    const mapped = specToRun(parsed.spec, this.specAccount(), {
+      topK: topK ?? 5,
+    });
+    if (!mapped.ok) throw invalidSpec(mapped.issues);
+    return {
+      spec: parsed.spec,
+      run: mapped.run,
+      understood: describeRun(parsed.spec, mapped.run),
+    };
+  }
+
+  /** A request in words, as a checked spec and its "I understood"
+   *  summary (TODO 4.3), without running it. The model sees the spec checks
+   *  and the account mapping, so it can fix what either finds. */
+  async translateSpec(client: LlmClient, text: string) {
+    const catalog = {
+      characters: genshinAdapter
+        .characters()
+        .map((c) => ({ key: c.key, name: c.name })),
+      sets: genshinAdapter.sets().map((s) => ({ key: s.key, name: s.name })),
+    };
+    const t = await translateRequest(client, text, catalog, (input) => {
+      try {
+        return { ok: true, value: this.checkSpec(input) };
+      } catch (e) {
+        if (e instanceof ServiceError && e.issues)
+          return { ok: false, issues: e.issues };
+        throw e;
+      }
+    });
+    if (!t.ok)
+      throw new ServiceError(
+        422,
+        'not_understood',
+        `${client.model} couldn't turn the request into a valid spec in ${t.attempts} tries: ${t.issues
+          .map((i) => `${i.path}: ${i.message}`)
+          .join('; ')}`,
+        t.issues,
+      );
+    return {
+      understood: t.value.understood.text,
+      conditions: t.value.understood.conditions,
+      spec: t.value.spec,
+      attempts: t.attempts,
+      model: client.model,
+    };
+  }
+
+  /** Run a spec (TODO 4.3): checked, mapped, summarised, searched. */
+  async runSpec(input: unknown, topK?: number) {
+    const { spec, run, understood } = this.checkSpec(input, topK);
+    let ctx;
+    try {
+      ctx = buildContext(run.request, run.extras);
+    } catch (e) {
+      throw badRequest((e as Error).message);
+    }
+    const result = await this.search(run.request, run.pool, ctx);
+    return {
+      understood: understood.text,
+      spec,
+      request: run.request,
+      pool: { artifacts: run.pool.length },
+      ...result,
+      ...(result.status === 'infeasible' && {
+        why: whyInfeasible(run, ctx),
+      }),
+    };
+  }
+
+  /** One exact search over `owned`, on the worker thread, its builds shown
+   *  with each piece as it is. */
+  private async search(
+    request: OptimizeRequest,
+    owned: Artifact[],
+    ctx: OptimizeContext,
+  ) {
     // An off-element goblet's DMG% counts for nothing (ADR-0014); the
     // builds still show each piece as it is.
-    const pool = zeroOffElementGoblets(owned, body.characterKey);
+    const pool = zeroOffElementGoblets(owned, request.characterKey);
     const t0 = performance.now();
     let result;
     try {
@@ -240,8 +399,6 @@ export class Services {
     }
     const byId = new Map(owned.map((a) => [a.id, a]));
     return {
-      request,
-      pool: { kind: body.pool ?? 'all', artifacts: pool.length },
       ms: Math.round(performance.now() - t0),
       ...(result.status === 'ok'
         ? {

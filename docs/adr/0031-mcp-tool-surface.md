@@ -1,6 +1,6 @@
 # 0031. MCP tool surface: one service layer, compact results, no dead tools
 
-- Status: Accepted
+- Status: Accepted; amended by [0038](0038-spec-translator.md) (`optimize_build` takes a ConstraintSpec)
 - Date: 2026-09-28
 
 ## Context
