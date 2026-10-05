@@ -1,9 +1,10 @@
 # Smoke config for npm run sim:check (TODO 5.2): Raiden National with plausible
 # endgame stats, written for this repository from the documented syntax
 # (docs.gcsim.app, reference/config). Stats are gcsim's units: fractions, each
-# key once per line (the summed artifact lines).
+# key once per line (the summed artifact lines). No target hp: with one, gcsim
+# fights until the target dies instead of for the duration.
 options iteration=200 duration=90 swap_delay=12;
-target lvl=100 resist=0.1 hp=999999999;
+target lvl=100 resist=0.1;
 energy every interval=480,720 amount=1;
 
 raiden char lvl=90/90 cons=0 talent=9,9,9;

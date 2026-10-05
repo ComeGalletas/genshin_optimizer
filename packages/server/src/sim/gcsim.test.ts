@@ -18,7 +18,7 @@ import {
   runGcsim,
   type GcsimTool,
 } from './gcsim';
-import { summarizeResult, SimResultError } from './result';
+import { SimRunner, SimTimeout } from './runner';
 import { loadGolden } from './golden';
 
 describe('the pin (config/tools.json)', () => {
@@ -120,40 +120,6 @@ describe('ensureGcsim', () => {
   });
 });
 
-describe('summarizeResult', () => {
-  const result = {
-    sim_version: 'abc',
-    character_details: [{ name: 'raidenshogun' }, { name: 'bennett' }],
-    statistics: {
-      iterations: 100,
-      dps: { mean: 17798.4, sd: 629.1, min: 16000, max: 19000 },
-      character_dps: [{ mean: 6049 }, { mean: 582 }],
-      warnings: { insufficient_energy: true, swap_cd: false, burst_cd: true },
-    },
-  };
-
-  it('reads mean and spread, per-character DPS and the warnings raised', () => {
-    expect(summarizeResult(result)).toEqual({
-      simVersion: 'abc',
-      iterations: 100,
-      dps: { mean: 17798.4, sd: 629.1, min: 16000, max: 19000 },
-      characters: [
-        { name: 'raidenshogun', dps: 6049 },
-        { name: 'bennett', dps: 582 },
-      ],
-      warnings: ['insufficient_energy', 'burst_cd'],
-      incomplete: [],
-    });
-  });
-
-  it('refuses a result without the numbers, rather than reading zero', () => {
-    expect(() =>
-      summarizeResult({ statistics: { iterations: 1, dps: {} } }),
-    ).toThrow(/no mean DPS/);
-    expect(() => summarizeResult({ nope: true })).toThrow(SimResultError);
-  });
-});
-
 describe('the golden configs', () => {
   it('list existing files, each with a purpose', () => {
     const golden = loadGolden();
@@ -179,13 +145,14 @@ const installed = (() => {
 describe.skipIf(!installed)('the installed gcsim', () => {
   it('runs the smoke config and its result parses', async () => {
     const smoke = loadGolden().find((g) => g.id === 'raiden-national-smoke')!;
-    const config = readFileSync(smoke.path, 'utf8').replace(
-      /iteration=\d+/,
-      'iteration=20',
+    const s = await new SimRunner(installed!).run(
+      readFileSync(smoke.path, 'utf8'),
+      { iterations: 20 },
     );
-    const s = summarizeResult(await runGcsim(installed!, config));
     expect(s.iterations).toBe(20);
     expect(s.dps.mean).toBeGreaterThan(1000);
+    expect(s.mode).toBe('duration');
+    expect(s.durationSec).toBe(90);
     expect(s.characters.map((c) => c.name)).toEqual([
       'raidenshogun',
       'xiangling',
@@ -194,6 +161,19 @@ describe.skipIf(!installed)('the installed gcsim', () => {
     ]);
     expect(s.incomplete).toEqual([]);
   }, 120_000);
+
+  it('stops a run past its time limit, as a SimTimeout, leaving no process', async () => {
+    const smoke = loadGolden().find((g) => g.id === 'raiden-national-smoke')!;
+    const runner = new SimRunner(installed!);
+    const t0 = performance.now();
+    await expect(
+      runner.run(readFileSync(smoke.path, 'utf8'), {
+        iterations: 1_000_000,
+        timeoutMs: 1500,
+      }),
+    ).rejects.toBeInstanceOf(SimTimeout);
+    expect(performance.now() - t0).toBeLessThan(10_000);
+  }, 30_000);
 
   it('reports a broken config as gcsim’s own error', async () => {
     await expect(runGcsim(installed!, 'this is not a config;')).rejects.toThrow(

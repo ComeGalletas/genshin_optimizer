@@ -17,9 +17,8 @@ import {
   gcsimVersion,
   loadGcsimTool,
   platformKey,
-  runGcsim,
 } from '../sim/gcsim';
-import { summarizeResult } from '../sim/result';
+import { SimRunner } from '../sim/runner';
 import { loadGolden } from '../sim/golden';
 
 const args = process.argv.slice(2);
@@ -44,14 +43,11 @@ const version = await gcsimVersion(ensured.path);
 if (version === tool.commit) console.log(`ok    gcsim -version: ${version}`);
 else fail(`gcsim -version printed ${version}, the pin says ${tool.commit}`);
 
+const runner = new SimRunner(ensured.path, { timeoutMs: 300_000 });
 for (const g of loadGolden().filter((c) => !only || only.includes(c.id))) {
   const t0 = performance.now();
   try {
-    const s = summarizeResult(
-      await runGcsim(ensured.path, readFileSync(g.path, 'utf8'), {
-        timeoutMs: 300_000,
-      }),
-    );
+    const s = await runner.run(readFileSync(g.path, 'utf8'));
     const seconds = ((performance.now() - t0) / 1000).toFixed(1);
     const line = `${g.id}: ${s.dps.mean.toFixed(0)} DPS ± ${s.dps.sd.toFixed(0)} (${s.iterations} iterations, ${seconds} s)${s.warnings.length ? `, warnings: ${s.warnings.join(', ')}` : ''}`;
     if (s.incomplete.length)
@@ -68,7 +64,15 @@ for (const g of loadGolden().filter((c) => !only || only.includes(c.id))) {
         );
     } else console.log(`ok    ${line}`);
     for (const c of s.characters)
-      console.log(`        ${c.name.padEnd(12)} ${c.dps.toFixed(0)}`);
+      console.log(
+        `        ${c.name.padEnd(13)} ${c.dps.mean.toFixed(0).padStart(6)} DPS (${(100 * c.share).toFixed(0)}%), on field ${c.fieldTimeSec.toFixed(1)} s, waited ${c.energyWaitSec.toFixed(1)} s for energy`,
+      );
+    if (Object.keys(s.reactions).length)
+      console.log(
+        `        reactions per run: ${Object.entries(s.reactions)
+          .map(([k, v]) => `${k} ${v.toFixed(0)}`)
+          .join(', ')}`,
+      );
   } catch (e) {
     fail(`${g.id}: ${(e as Error).message}`);
   }
