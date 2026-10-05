@@ -12,11 +12,14 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { DEFAULT_STORE_PATH, openStore } from '../store/store';
 import { Services } from '../api/services';
 import { createMcpServer } from '../mcp/server';
+import { installedRotationDeps } from '../sim/drafts';
 
 const args = process.argv.slice(2);
 const i = args.indexOf('--store');
 const db = openStore(i >= 0 ? args[i + 1] : DEFAULT_STORE_PATH);
-const services = new Services(db);
+const services = new Services(db, undefined, {
+  deps: installedRotationDeps(),
+});
 const server = createMcpServer(services);
 await server.connect(new StdioServerTransport());
 console.error('genshin-build-lab MCP server on stdio');

@@ -45,6 +45,14 @@ import { toGOODAccount } from '@genshin-build-lab/engine/good/export';
 import { zeroOffElementGoblets } from '@genshin-build-lab/engine/optimizer/element';
 import { SearchRunner, SearchTimeout } from '../optimize/pool';
 import {
+  draftRotation,
+  type DraftInput,
+  type RotationDeps,
+} from '../sim/drafts';
+import { loadRotation, RotationError, ROTATIONS_DIR } from '../sim/rotations';
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import {
   parseConstraintSpec,
   type ConstraintSpec,
   type SpecIssue,
@@ -121,6 +129,9 @@ export class Services {
   constructor(
     readonly db: Store,
     readonly searches: SearchRunner = new SearchRunner(),
+    /** The rotation library, and gcsim to run drafts (TODO 5.7); without
+     *  `deps` (gcsim not installed) drafting is refused, listing works. */
+    readonly rotations: { dir?: string; deps?: RotationDeps } = {},
   ) {}
 
   health() {
@@ -572,5 +583,78 @@ export class Services {
         unchanged: changes.diff.unchanged,
       },
     };
+  }
+
+  private get rotationsDir() {
+    return this.rotations.dir ?? ROTATIONS_DIR;
+  }
+
+  /** The rotation library at a glance; a rotation that fails its checks
+   *  is listed with why, not dropped. */
+  listRotations() {
+    const dir = this.rotationsDir;
+    const ids = existsSync(dir)
+      ? readdirSync(dir, { withFileTypes: true })
+          .filter((d) => d.isDirectory())
+          .map((d) => d.name)
+          .sort()
+      : [];
+    return {
+      rotations: ids.map((id) => {
+        try {
+          const { meta } = loadRotation(id, dir);
+          return {
+            id,
+            name: meta.name,
+            status: meta.status,
+            archetype: meta.archetype,
+            characters: meta.slots.map((s) => s.characters.join(' or ')),
+            source: meta.source.kind,
+            ...(meta.validation && {
+              dps: meta.validation.dps,
+              gcsim: meta.validation.gcsim,
+            }),
+            reviewed: !!meta.review,
+          };
+        } catch (e) {
+          if (e instanceof RotationError) return { id, problems: e.issues };
+          throw e;
+        }
+      }),
+    };
+  }
+
+  /** One rotation: its meta and template (an example to draft from). */
+  getRotation(id: string) {
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id))
+      throw badRequest(`"${id}" is not a rotation id`);
+    if (!existsSync(join(this.rotationsDir, id, 'meta.json')))
+      throw notFound(`no rotation "${id}"`);
+    try {
+      const r = loadRotation(id, this.rotationsDir);
+      return { meta: r.meta, template: r.template };
+    } catch (e) {
+      if (e instanceof RotationError)
+        throw new ServiceError(422, 'invalid_rotation', e.message);
+      throw e;
+    }
+  }
+
+  /** Draft a rotation for characters the owner has (TODO 5.7): saved only
+   *  as a draft, and only once gcsim runs it cleanly on their builds. */
+  async draftRotation(input: DraftInput) {
+    const deps = this.rotations.deps;
+    if (!deps)
+      throw new ServiceError(
+        503,
+        'gcsim_unavailable',
+        'gcsim is not installed here: run npm run sim:check',
+      );
+    const { roster, weapons } = currentRoster(this.db);
+    return draftRotation(
+      input,
+      { roster, weapons, artifacts: this.artifacts() },
+      { ...deps, dir: this.rotationsDir },
+    );
   }
 }

@@ -11,6 +11,15 @@ Combat rotations for gcsim, one folder per rotation
 `npm run sim:check` runs every rotation on its reference builds; `--record` saves the
 result as its validation.
 
+## Drafts and review
+
+A language model can draft a rotation for a team with no published config (the
+`draft_rotation` tool). It runs on the owner's builds and is saved only once gcsim runs it
+cleanly, always as `draft` ([ADR-0043](../docs/adr/0043-drafted-rotations-and-owner-review.md)).
+The owner reviews it with `npm run rotations -- review <id>`, which writes `review.md` with
+the fight step by step, and promotes it with `npm run rotations -- promote <id>`. Any
+change after the review needs a new one.
+
 ## Credits
 
 The rotations come from the [KQM Sim Database](https://db.kqm.gg) (KeqingMains), the

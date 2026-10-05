@@ -17,13 +17,15 @@ import { ELEMENTS, WEAPON_TYPES } from '@genshin-build-lab/engine/game/types';
 import type { Services } from '../api/services';
 import { ArtifactQuery, CompareBody } from '../api/schemas';
 import { ConstraintSpecSchema } from '@genshin-build-lab/engine/constraints/spec';
+import { DraftInput } from '../sim/drafts';
 
 export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact account: imported artifacts, characters and weapons, an exact build optimizer, and import history.
 - Every number you give the owner must come from a tool result. If a tool fails, say so; never estimate.
 - Stats are in percent where the game shows percent (crit_rate 62.3 means 62.3%). Stat keys: hp, hp_pct, atk, atk_pct, def, def_pct, em, er_pct, crit_rate, crit_dmg, elemental_dmg, physical_dmg, healing.
 - Character, weapon and set keys are dataset keys (furina, splendor_of_tranquil_waters, GoldenTroupe); list_characters and get_character show them.
 - optimize_build takes a ConstraintSpec that extends the character's curated defaults: pass only what the owner asked for. It is exact and can take tens of seconds on a large account; when it times out, narrow the spec (a set, main stats, or keepEquippedOn "all").
-- When you report builds, start with optimize_build's "understood" sentence, so the owner can check the request was read right.`;
+- When you report builds, start with optimize_build's "understood" sentence, so the owner can check the request was read right.
+- Rotations (gcsim action lists for a team) are in list_rotations and get_rotation. draft_rotation saves a new one only as a draft; tell the owner it needs their review (npm run rotations -- review <id>) before it counts, and never call a draft validated.`;
 
 const r1 = (x: number) => Math.round(x * 10) / 10;
 const round = (v: StatVec) =>
@@ -53,6 +55,9 @@ export interface ToolDef {
   title: string;
   description: string;
   input?: z.ZodRawShape;
+  /** The tool changes something (saves a file); every other tool only
+   *  reads. */
+  writes?: true;
   run: (args: never) => ToolResult | Promise<ToolResult>;
 }
 
@@ -62,6 +67,7 @@ function tool<S extends z.ZodRawShape = Record<never, never>>(def: {
   title: string;
   description: string;
   input?: S;
+  writes?: true;
   run: (args: z.output<z.ZodObject<S>>) => ToolResult | Promise<ToolResult>;
 }): ToolDef {
   return def as ToolDef;
@@ -182,6 +188,30 @@ export function accountTools(services: Services): ToolDef[] {
       description:
         "The latest import at a glance: how many snapshots, faulty scans left out, the current merge, and what the newest import changed (new, gone, upgraded, moved, lock changes, and anything it couldn't explain).",
       run: () => services.importReport(),
+    }),
+    tool({
+      name: 'list_rotations',
+      title: 'List rotations',
+      description:
+        'The gcsim rotation library (ADR-0041): each rotation\'s id, name, status ("validated": reproduces a published config or the owner reviewed it; "draft": not reviewed yet), curated archetype, characters, source and the DPS of its last check on its reference builds.',
+      run: () => services.listRotations(),
+    }),
+    tool({
+      name: 'get_rotation',
+      title: 'Get a rotation',
+      description:
+        'One rotation by id: its meta (slots, fight, source, validation) and its template, the gcsim action list with {{slot}} placeholders. Read one or two before drafting: they show the syntax that works.',
+      input: { id: z.string().max(60) },
+      run: ({ id }) => services.getRotation(id),
+    }),
+    tool({
+      name: 'draft_rotation',
+      title: 'Draft a rotation',
+      description:
+        'Draft a gcsim rotation for a team the owner has, when the library has none for it. The template is a gcsim action list with {{slot}} wherever a character acts ("{{raiden}} burst, attack:4, dash;"), as get_rotation shows; loops ("for let i = 0; i < 4; i = i + 1 { … }"), "if .{{x}}.burst.ready { … }" and fn are gcsim\'s own. The fight is KQM\'s standard: one target too big to die, so the run lasts as long as the action list, which must end (a for loop of 4 or 5 rotations, never while 1). It runs on the owner\'s equipped builds, which become its reference builds. It is saved only if it passes the library\'s checks and gcsim runs it cleanly; otherwise the problems come back (gcsim\'s own error message included) to fix and try again. It is always saved as a draft: only the owner can promote it, after reviewing it. Burst waits are filled with attacks unless energyWait is "idle". Never replaces a rotation that isn\'t an LLM draft.',
+      input: DraftInput.shape,
+      writes: true,
+      run: (args) => services.draftRotation(args),
     }),
   ];
 }

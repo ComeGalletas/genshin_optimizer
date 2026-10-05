@@ -3,16 +3,26 @@
  * `meta.json`, `rotation.gcsl.tmpl` and, for a rotation checked on
  * reference builds, `reference.gcsl`. Every rotation is checked as it loads
  * (`rotationIssues`), and one that fails is refused with its reasons,
- * never half-used.
+ * never half-used. A rotation the owner reviewed (5.7) carries the
+ * fingerprint of its files as reviewed; a validated one changed since is
+ * refused until it's reviewed again.
  * @packageDocumentation
  */
 
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import {
   rotationIssues,
   RotationMetaSchema,
   type Rotation,
+  type RotationMeta,
 } from '@genshin-build-lab/engine/sim/rotation';
 import { fromRoot } from '../paths';
 
@@ -53,11 +63,57 @@ export function loadRotation(id: string, dir = ROTATIONS_DIR): Rotation {
     throw new RotationError(id, [
       `meta.id "${parsed.id}" is not its folder's name`,
     ]);
-  return {
+  const rotation = {
     meta: parsed,
     template,
     ...(reference !== undefined && { reference }),
   };
+  if (
+    parsed.status === 'validated' &&
+    parsed.review &&
+    parsed.review.fingerprint !== rotationFingerprint(rotation)
+  )
+    throw new RotationError(id, [
+      `changed since the owner's review on ${parsed.review.date}: review it again (npm run rotations -- review ${id})`,
+    ]);
+  return rotation;
+}
+
+/** What the owner reviews: the template, the reference builds and the
+ *  meta without its status, validation and review (which change when a
+ *  rotation is checked or promoted, not what it does). */
+export function rotationFingerprint(r: Rotation): string {
+  const meta: Partial<RotationMeta> = { ...r.meta };
+  delete meta.status;
+  delete meta.validation;
+  delete meta.review;
+  return createHash('sha256')
+    .update(
+      JSON.stringify({
+        meta,
+        template: r.template.replace(/\r\n/g, '\n'),
+        reference: r.reference?.replace(/\r\n/g, '\n') ?? null,
+      }),
+    )
+    .digest('hex');
+}
+
+/** Write a rotation's files (meta, template, reference builds). */
+export function writeRotation(r: Rotation, dir = ROTATIONS_DIR): void {
+  const at = join(dir, r.meta.id);
+  mkdirSync(at, { recursive: true });
+  writeMeta(r.meta, dir);
+  writeFileSync(join(at, 'rotation.gcsl.tmpl'), r.template);
+  if (r.reference !== undefined)
+    writeFileSync(join(at, 'reference.gcsl'), r.reference);
+}
+
+/** Write a rotation's meta.json alone. */
+export function writeMeta(meta: RotationMeta, dir = ROTATIONS_DIR): void {
+  writeFileSync(
+    join(dir, meta.id, 'meta.json'),
+    `${JSON.stringify(meta, null, 2)}\n`,
+  );
 }
 
 /** Every rotation in the library, in folder order. */

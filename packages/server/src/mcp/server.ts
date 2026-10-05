@@ -47,6 +47,13 @@ async function run(
 }
 
 const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
+/** Saves a file, never deletes or overwrites what isn't its own (a draft). */
+const writes = {
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: false,
+} as const;
 
 export function createMcpServer(services: Services, version = '0.0.0') {
   const server = new McpServer(
@@ -57,7 +64,7 @@ export function createMcpServer(services: Services, version = '0.0.0') {
     const config = {
       title: t.title,
       description: t.description,
-      annotations: readOnly,
+      annotations: t.writes ? writes : readOnly,
     };
     const body = t.run as (a: unknown) => ReturnType<typeof t.run>;
     if (t.input)

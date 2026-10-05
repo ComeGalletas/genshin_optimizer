@@ -38,18 +38,29 @@ const call = async (name: string, args: Json = {}) => {
 };
 
 describe('MCP server', () => {
-  it('offers the Phase 3 tools, read-only, with instructions', async () => {
+  it('offers its tools with instructions, all read-only but drafting a rotation', async () => {
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name).sort()).toEqual([
       'compare_builds',
+      'draft_rotation',
       'get_account_summary',
       'get_character',
       'get_import_report',
+      'get_rotation',
       'list_characters',
+      'list_rotations',
       'optimize_build',
       'query_artifacts',
     ]);
-    expect(tools.every((t) => t.annotations?.readOnlyHint)).toBe(true);
+    expect(
+      tools.filter((t) => !t.annotations?.readOnlyHint).map((t) => t.name),
+    ).toEqual(['draft_rotation']);
+    // It saves a draft, never deletes or replaces what isn't its own.
+    expect(
+      tools.find((t) => t.name === 'draft_rotation')!.annotations,
+    ).toMatchObject({ readOnlyHint: false, destructiveHint: false });
+    // Promotion is the owner's alone: no tool for it.
+    expect(tools.some((t) => /promote|review/.test(t.name))).toBe(false);
     expect(client.getInstructions()).toMatch(/must come from a tool result/);
   });
 
@@ -60,6 +71,8 @@ describe('MCP server', () => {
       ['get_character', { characterKey: 'neuvillette' }],
       ['query_artifacts', { slot: 'sands' }],
       ['get_import_report', {}],
+      ['list_rotations', {}],
+      ['get_rotation', { id: 'raiden-national' }],
     ] as const) {
       const { r, text, data } = await call(name, args);
       expect(r.isError).toBeFalsy();

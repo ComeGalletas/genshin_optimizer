@@ -37,6 +37,7 @@ import { explainBuild } from '../llm/explain';
 import { runChat } from '../chat/loop';
 import { accountTools } from '../mcp/tools';
 import { parseExplainPayload } from '@genshin-build-lab/engine/explain/explain';
+import { installedRotationDeps, type RotationDeps } from '../sim/drafts';
 
 export interface AppOptions {
   db: Store;
@@ -51,6 +52,9 @@ export interface AppOptions {
   /** The model client; built from `llm` when not given (tests pass a
    *  fake). */
   llmClient?: LlmClient;
+  /** The rotation library and the gcsim that runs drafts (TODO 5.7); by
+   *  default the repository's library and gcsim if installed. */
+  rotations?: { dir?: string; deps?: RotationDeps };
 }
 
 /** An explain request is a few hundred bytes (`parseExplainPayload` bounds
@@ -115,7 +119,11 @@ function parse<T>(
 export function buildApp(opts: AppOptions): FastifyInstance {
   const inboxDir = opts.inboxDir ?? DEFAULT_INBOX;
   const app = Fastify({ logger: opts.logger ?? false });
-  const services = new Services(opts.db, new SearchRunner(opts.searchLimitMs));
+  const services = new Services(
+    opts.db,
+    new SearchRunner(opts.searchLimitMs),
+    opts.rotations ?? { deps: installedRotationDeps() },
+  );
   const llmClient =
     opts.llmClient ?? (opts.llm ? createLlmClient(opts.llm) : undefined);
   const tools = accountTools(services);

@@ -32,9 +32,9 @@
     "enemy": {
       "level": 100,
       "res": 10,
-      "hp": 999999999,
       "radius": 2,
-      "pos": [0, 2.4]
+      "pos": [0, 2.4],
+      "hp": 999999999
     },
     "energy": "energy every interval=480,720 amount=1;"
   },
@@ -45,15 +45,15 @@
     "title": "KQM Sim Database: Raiden Aggravate with Kuki Nahida Kazuha",
     "url": "https://db.kqm.gg/db/kntc7TFbnPKp",
     "retrieved": "2026-10-05",
-    "changes": "Fischl in Kazuha's place: her skill (even rotations) or burst (odd) and two normal attacks where Kazuha's skill, plunge and burst were; Kazuha's second skill and plunge dropped. Of N2, N3 and N4 as the filler, N2 scored best on the reference builds; Nahida still runs short of energy. Kuki's start_hp and the print() call left out."
+    "changes": "Fischl in Kazuha's place: her skill (even rotations) or burst (odd) and two normal attacks where Kazuha's skill, plunge and burst were; Kazuha's second skill and plunge dropped. Of N2, N3 and N4 as the filler, N2 scored best on the reference builds; Nahida ran short of energy, so burst waits are filled with attacks. Kuki's start_hp and the print() call left out."
   },
   "validation": {
     "gcsim": "v2.48.8",
     "date": "2026-10-05",
     "iterations": 1000,
-    "dps": 47078,
-    "sd": 1063,
-    "durationSec": 72.57,
+    "dps": 47049,
+    "sd": 1007,
+    "durationSec": 72.6,
     "warnings": []
   }
 }

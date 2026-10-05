@@ -26,7 +26,12 @@
 import * as z from 'zod/mini';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { COMP_ARCHETYPES } from '../teams/comps';
-import { gcsimConfig, gcsimName, type SimCharacter } from './configgen';
+import {
+  DEFAULT_ENERGY,
+  gcsimConfig,
+  gcsimName,
+  type SimCharacter,
+} from './configgen';
 
 const Id = z.string().check(z.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/));
 const SlotId = z.string().check(z.regex(/^[a-z][a-z0-9_]*$/));
@@ -89,10 +94,12 @@ export const RotationMetaSchema = z.strictObject({
   rotationSec: z.optional(z.number().check(z.positive(), z.maximum(120))),
   source: z.strictObject({
     /** `community`: taken from a published config, only renamed.
-     *  `adapted`: changed from one (`changes` says how). */
+     *  `adapted`: changed from one (`changes` says how). `llm`: drafted by
+     *  a language model (5.7); `owner`: written by the owner. */
     kind: z.enum(['community', 'adapted', 'owner', 'llm']),
     title: z.string().check(z.minLength(1)),
-    url: z.url(),
+    /** Where it came from; required for `community` and `adapted`. */
+    url: z.optional(z.url()),
     retrieved: z.iso.date(),
     /** The published mean DPS, for a config taken whole. */
     publishedDps: z.optional(z.number().check(z.positive())),
@@ -112,9 +119,32 @@ export const RotationMetaSchema = z.strictObject({
       offPct: z.optional(z.number()),
     }),
   ),
+  /** The owner's review (5.7), which validates a rotation that isn't a
+   *  published config taken whole. `fingerprint` is of the files as
+   *  reviewed (template, reference builds, meta without status, validation
+   *  and review), so a later change shows. */
+  review: z.optional(
+    z.strictObject({
+      by: z.literal('owner'),
+      date: z.iso.date(),
+      gcsim: z.string().check(z.regex(/^v\d+\.\d+\.\d+$/)),
+      fingerprint: z.string().check(z.regex(/^[0-9a-f]{64}$/)),
+      note: z.optional(z.string().check(z.maxLength(600))),
+    }),
+  ),
 });
 
 export type RotationMeta = z.infer<typeof RotationMetaSchema>;
+
+/** KQM's standard fight, as every seed rotation has it: one level 100
+ *  target at 10% resistance, too big to die (the run lasts as long as the
+ *  actions), a particle every 8 to 12 s. A drafted rotation gets it unless
+ *  it says otherwise. */
+export const STANDARD_FIGHT: RotationMeta['fight'] = {
+  mode: 'actions',
+  enemy: { level: 100, res: 10, hp: 999999999, radius: 2, pos: [0, 2.4] },
+  energy: DEFAULT_ENERGY,
+};
 
 export interface Rotation {
   meta: RotationMeta;
@@ -126,6 +156,13 @@ export interface Rotation {
 }
 
 const PLACEHOLDER = /\{\{([^{}]*)\}\}/g;
+
+const KIND: Record<RotationMeta['source']['kind'], string> = {
+  community: 'a community',
+  adapted: 'an adapted',
+  owner: "an owner's",
+  llm: 'an LLM-drafted',
+};
 
 /** Problems with a rotation as a whole: the meta's shape, then its slots,
  *  its placeholders and the rules for its status. Empty when it's sound. */
@@ -161,10 +198,19 @@ export function rotationIssues(input: {
     out.push('template has an unclosed placeholder');
   if (meta.status === 'validated' && !meta.validation)
     out.push('a validated rotation needs its validation run');
-  if (meta.status === 'validated' && meta.source.kind === 'llm')
+  if (
+    meta.status === 'validated' &&
+    meta.source.kind !== 'community' &&
+    !meta.review
+  )
     out.push(
-      'an LLM-drafted rotation stays a draft until the owner reviews it',
+      `${KIND[meta.source.kind]} rotation stays a draft until the owner reviews it`,
     );
+  if (
+    (meta.source.kind === 'community' || meta.source.kind === 'adapted') &&
+    !meta.source.url
+  )
+    out.push(`${KIND[meta.source.kind]} rotation links its source`);
   if (
     meta.source.kind === 'community' &&
     meta.source.publishedDps === undefined

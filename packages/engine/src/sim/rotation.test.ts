@@ -180,6 +180,40 @@ describe('rotationIssues', () => {
     ]);
   });
 
+  it('validates anything but a published config only through the owner’s review (5.7)', () => {
+    const drafted = {
+      ...META,
+      source: { ...without(META.source, 'publishedDps'), kind: 'llm' },
+    };
+    expect(issues(drafted)).toEqual([
+      'an LLM-drafted rotation stays a draft until the owner reviews it',
+    ]);
+    expect(
+      issues({ ...drafted, source: { ...drafted.source, kind: 'adapted' } }),
+    ).toEqual(['an adapted rotation stays a draft until the owner reviews it']);
+    const review = {
+      by: 'owner',
+      date: '2026-10-05',
+      gcsim: 'v2.48.8',
+      fingerprint: 'a'.repeat(64),
+    };
+    expect(issues({ ...drafted, review })).toEqual([]);
+    expect(issues({ ...drafted, review: { ...review, by: 'llm' } })).toEqual([
+      'meta.review.by: must be "owner"',
+    ]);
+    // A model's draft needs no link; a published or adapted one does.
+    expect(
+      issues({
+        ...drafted,
+        status: 'draft',
+        source: without(drafted.source, 'url'),
+      }),
+    ).toEqual([]);
+    expect(
+      issues(meta({ source: without(META.source, 'url') as never })),
+    ).toEqual(['a community rotation links its source']);
+  });
+
   it('checks the reference builds belong to the slots', () => {
     expect(
       issues(META, TEMPLATE, `${REFERENCE}yelan char lvl=90/90;\n`),

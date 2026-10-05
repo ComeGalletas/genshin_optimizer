@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import { GcsimError, runGcsim } from './gcsim';
+import { GcsimError, runGcsim, runGcsimWithSample } from './gcsim';
 import { readResult, type SimResult } from './result';
 
 export interface SimOptions {
@@ -73,5 +73,26 @@ export class SimRunner {
       throw e;
     }
     return readResult(json);
+  }
+
+  /** `run`, plus gcsim's sample of one iteration (for a review, 5.7). */
+  async runWithSample(
+    config: string,
+    options: SimOptions = {},
+  ): Promise<{ result: SimResult; sample: unknown }> {
+    const opts = { ...this.defaults, ...options };
+    const timeoutMs = opts.timeoutMs ?? DEFAULT_SIM_TIMEOUT_MS;
+    try {
+      const { result, sample } = await runGcsimWithSample(
+        this.binary,
+        withOptions(config, opts),
+        { timeoutMs },
+      );
+      return { result: readResult(result), sample };
+    } catch (e) {
+      if (e instanceof GcsimError && /didn't finish within/.test(e.message))
+        throw new SimTimeout(e.message);
+      throw e;
+    }
   }
 }

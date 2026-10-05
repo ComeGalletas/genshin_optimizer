@@ -165,17 +165,49 @@ export async function runGcsim(
   config: string,
   options: { timeoutMs?: number } = {},
 ): Promise<unknown> {
+  return (await invoke(path, config, options, false)).result;
+}
+
+/** Run one config and also write gcsim's sample (`-sample`): the event log
+ *  of one iteration, frame by frame, for a review (TODO 5.7). */
+export async function runGcsimWithSample(
+  path: string,
+  config: string,
+  options: { timeoutMs?: number } = {},
+): Promise<{ result: unknown; sample: unknown }> {
+  const { result, sample } = await invoke(path, config, options, true);
+  return { result, sample };
+}
+
+async function invoke(
+  path: string,
+  config: string,
+  options: { timeoutMs?: number },
+  withSample: boolean,
+): Promise<{ result: unknown; sample?: unknown }> {
   const dir = mkdtempSync(join(tmpdir(), 'gbl-gcsim-'));
   try {
     const cfg = join(dir, 'config.txt');
     const out = join(dir, 'result.json');
+    const sample = join(dir, 'sample.json');
     writeFileSync(cfg, config);
     try {
-      await run(path, ['-c', cfg, '-out', out, '-nb'], {
-        cwd: dir,
-        timeout: options.timeoutMs ?? 120_000,
-        maxBuffer: 16 * 1024 * 1024,
-      });
+      await run(
+        path,
+        [
+          '-c',
+          cfg,
+          '-out',
+          out,
+          '-nb',
+          ...(withSample ? ['-sample', sample] : []),
+        ],
+        {
+          cwd: dir,
+          timeout: options.timeoutMs ?? 120_000,
+          maxBuffer: 16 * 1024 * 1024,
+        },
+      );
     } catch (e) {
       const err = e as { stderr?: string; stdout?: string; killed?: boolean };
       throw new GcsimError(
@@ -184,7 +216,12 @@ export async function runGcsim(
           : `gcsim failed: ${(err.stderr || err.stdout || (e as Error).message).trim().slice(0, 500)}`,
       );
     }
-    return JSON.parse(readFileSync(out, 'utf8')) as unknown;
+    return {
+      result: JSON.parse(readFileSync(out, 'utf8')) as unknown,
+      ...(withSample && {
+        sample: JSON.parse(readFileSync(sample, 'utf8')) as unknown,
+      }),
+    };
   } finally {
     rmSync(dir, {
       recursive: true,

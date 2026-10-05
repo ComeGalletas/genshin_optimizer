@@ -33,6 +33,7 @@ tools), [ADR-0032](../adr/0032-llm-provider-config.md) (model config),
 | `npm run llm:check`  | Says which model `config/llm.json` selects and whether the provider has it.                                                                                                                                                                     |
 | `npm run spec:eval`  | Scores a model on the translator's golden set (30 requests, sample account): `-- --model <name>`, `-- --provider anthropic --model <id>`, `-- --via claude-code` (Claude on the subscription, no API key), `-- --out docs/spec-eval/<file>.md`. |
 | `npm run sim:check`  | Installs the gcsim binary `config/tools.json` pins into `tools/bin/` (checked by SHA-256 before it is ever run), confirms its version, and runs the golden configs.                                                                             |
+| `npm run rotations`  | The rotation library: lists each rotation's status; `-- review <id>` runs one and writes `rotations/<id>/review.md` (the fight step by step); `-- promote <id>` validates a reviewed draft (yours to run: a model can only draft, ADR-0043).    |
 
 Ollama listens on 11434. Everything listens on localhost only.
 

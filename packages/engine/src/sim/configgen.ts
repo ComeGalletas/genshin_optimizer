@@ -142,6 +142,24 @@ function targetLine(enemy: SimEnemy = {}): string {
   return `target ${parts.join(' ')};`;
 }
 
+/** One character's build lines: level, constellation and talents, weapon,
+ *  sets and the summed artifact stats. */
+export function characterLines(c: SimCharacter): string[] {
+  const n = gcsimName(c.key);
+  const lines = [
+    `${n} char lvl=${c.level}/${c.maxLevel} cons=${c.constellation} talent=${c.talents.auto},${c.talents.skill},${c.talents.burst};`,
+    `${n} add weapon="${gcsimName(c.weapon.key)}" refine=${c.weapon.refinement} lvl=${c.weapon.level}/${c.weapon.maxLevel};`,
+  ];
+  for (const [set, count] of gcsimSets(c.artifacts))
+    lines.push(`${n} add set="${set}" count=${count};`);
+  const stats = gcsimStats(c.artifacts);
+  if (stats.length)
+    lines.push(
+      `${n} add stats ${stats.map(([k, v]) => `${k}=${num(v)}`).join(' ')};`,
+    );
+  return lines;
+}
+
 /** The config text. */
 export function gcsimConfig(team: SimTeam): string {
   const lines: string[] = [];
@@ -160,19 +178,7 @@ export function gcsimConfig(team: SimTeam): string {
       lines.push(c.trim(), '');
       continue;
     }
-    const n = gcsimName(c.key);
-    lines.push(
-      `${n} char lvl=${c.level}/${c.maxLevel} cons=${c.constellation} talent=${c.talents.auto},${c.talents.skill},${c.talents.burst};`,
-      `${n} add weapon="${gcsimName(c.weapon.key)}" refine=${c.weapon.refinement} lvl=${c.weapon.level}/${c.weapon.maxLevel};`,
-    );
-    for (const [set, count] of gcsimSets(c.artifacts))
-      lines.push(`${n} add set="${set}" count=${count};`);
-    const stats = gcsimStats(c.artifacts);
-    if (stats.length)
-      lines.push(
-        `${n} add stats ${stats.map(([k, v]) => `${k}=${num(v)}`).join(' ')};`,
-      );
-    lines.push('');
+    lines.push(...characterLines(c), '');
   }
   lines.push(`active ${gcsimName(team.active)};`, '', team.rotation.trim(), '');
   return lines.join('\n');
