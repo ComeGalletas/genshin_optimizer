@@ -57,20 +57,33 @@ Two things turned out differently from PLAN:
   test holds every validated rotation to the pinned version.
 - Config generation writes a target hp, radius and position only when asked
   for, and leaves the duration out when there is an hp (gcsim ignores it).
+- **Burst waits** (added the same day, at the owner's request). gcsim holds
+  a burst until the character has the energy and the cooldown is over,
+  standing idle meanwhile. `energyWait: "attack"` (in `meta.json`, or for one
+  run) splits each statement before its burst and has the character do
+  their slot's `filler` (normal attacks unless set; `false` for someone who
+  can't) until the burst is ready. Published rotations keep their authors'
+  assumption, idle; our drafts fill.
+- **Credit.** The KQM Sim Database is credited in `DATA_LICENSE`, the README
+  and `rotations/README.md`, besides each rotation's own entry link.
 
 ## Consequences
 
-- Results compare directly with published ones: the three seed rotations
-  taken whole (Skirk Mono-Cryo, Raiden National, Ayaka Freeze) land within
-  0.04% of their published DPS through our own config generation, which
-  is also half of the Phase 5 acceptance.
+- Results compare directly with published ones: the four seed rotations
+  taken whole (Skirk Mono-Cryo, Raiden National, Ayaka Freeze and the
+  owner's Mualani Burn-Vape) land within 0.2% of their published DPS
+  through our own config generation, which is also half of the Phase 5
+  acceptance.
 - A team that can't keep the rotation going makes the fight longer
   instead of skipping actions: the result shows each character's wait for
   energy, which 5.8 has to report next to a build's DPS (the sample
-  account's Xiangling waits 250 s in Raiden National).
-- Two seed teams have no published config (Mualani with Bennett, Nahida
-  Aggravate with Raiden and Fischl): their rotations are adapted drafts and
-  say so until the owner reviews them.
+  account's Xiangling waits 250 s in Raiden National, 356 s in all at
+  7,123 DPS). Filling the waits puts the character on field, where enemy
+  energy drops count in full, so the same builds finish in 153 s at
+  21,995 DPS: 5.8 should run the owner's builds with waits filled.
+- One seed team has no published config (Nahida Aggravate with Raiden,
+  Fischl and Kuki): its rotation is an adapted draft and says so until the
+  owner reviews it.
 - Slots name the characters that share a set of actions; a teammate swap
   with different actions needs another rotation. Changing the enemy
   (Phase 6) edits the fight in `meta.json`, not the template.

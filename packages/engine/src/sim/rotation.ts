@@ -15,6 +15,11 @@
  * - **Status**: `validated` rotations reproduce a published result, or were
  *   reviewed by the owner; `draft` ones (adapted or drafted, 5.7) have only
  *   run cleanly, and say so.
+ * - **Burst waits**: gcsim holds a burst until the character has the energy
+ *   (and the cooldown is over), standing idle meanwhile. With
+ *   `energyWait: "attack"` the character attacks while waiting instead
+ *   (their slot's `filler`, normal attacks unless set; `false` for someone
+ *   who can't). Published rotations keep their authors' assumption, idle.
  * @packageDocumentation
  */
 
@@ -50,6 +55,15 @@ export const RotationMetaSchema = z.strictObject({
         id: SlotId,
         characters: z.array(Key).check(z.minLength(1), z.maxLength(8)),
         role: z.string().check(z.minLength(1), z.maxLength(40)),
+        /** What the character does while waiting for their burst, with
+         *  `energyWait: "attack"`: a gcsim action (default `attack`), or
+         *  `false` to wait idle. */
+        filler: z.optional(
+          z.union([
+            z.string().check(z.regex(/^[a-z_]+(\[[a-z0-9_=,.]*\])?$/)),
+            z.literal(false),
+          ]),
+        ),
       }),
     )
     .check(z.minLength(1), z.maxLength(4)),
@@ -68,6 +82,9 @@ export const RotationMetaSchema = z.strictObject({
       energy: Energy,
     }),
   ]),
+  /** Burst waits: idle (gcsim's default, and every published config's) or
+   *  filled with the slot's `filler`. Default idle. */
+  energyWait: z.optional(z.enum(['idle', 'attack'])),
   /** One rotation's length, as its author gives it. */
   rotationSec: z.optional(z.number().check(z.positive(), z.maximum(120))),
   source: z.strictObject({
@@ -233,6 +250,59 @@ export function assignSlots(
   return { ok: true, slots };
 }
 
+/** The template with every burst wait filled (`energyWait: "attack"`):
+ *  each `{{slot}} …, burst, …;` statement is split before the burst, and
+ *  the character does their filler until the burst is ready (energy and
+ *  cooldown), instead of standing idle. Statements are the lines that start
+ *  with a placeholder; a burst inside a condition is left alone. */
+export function fillBurstWaits(
+  template: string,
+  fillers: Record<string, string | false>,
+): string {
+  return template.replace(
+    /^([ \t]*)\{\{([a-z][a-z0-9_]*)\}\}[ \t]+([^;{}]*);/gm,
+    (statement, indent: string, id: string, list: string) => {
+      const filler = fillers[id];
+      const actions = splitActions(list);
+      if (!filler || !actions.some(isBurst)) return statement;
+      const out: string[] = [];
+      let run: string[] = [];
+      for (const a of actions) {
+        if (isBurst(a)) {
+          if (run.length) out.push(`${indent}{{${id}}} ${run.join(', ')};`);
+          run = [];
+          out.push(
+            `${indent}while !.{{${id}}}.burst.ready { {{${id}}} ${filler}; }`,
+          );
+        }
+        run.push(a);
+      }
+      out.push(`${indent}{{${id}}} ${run.join(', ')};`);
+      return out.join('\n');
+    },
+  );
+}
+
+const isBurst = (action: string) => /^burst(?![a-z_])/.test(action);
+
+/** An action list split at its top-level commas (not those inside a
+ *  `[param=…, …]`). */
+function splitActions(list: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of list) {
+    if (ch === '[') depth++;
+    if (ch === ']') depth--;
+    if (ch === ',' && depth === 0) {
+      out.push(cur.trim());
+      cur = '';
+    } else cur += ch;
+  }
+  out.push(cur.trim());
+  return out.filter(Boolean);
+}
+
 /** The template with each slot's character in gcsim's name. */
 export function renderTemplate(
   template: string,
@@ -249,6 +319,9 @@ export interface RotationRun {
   iterations?: number;
   /** Only for `mode: "duration"`; overrides the rotation's seconds. */
   duration?: number;
+  /** Overrides the rotation's `energyWait`, e.g. to fill waits with the
+   *  owner's builds while keeping a published rotation's own (idle). */
+  energyWait?: 'idle' | 'attack';
 }
 
 /** A config for this rotation: our characters (one per slot, keyed by slot
@@ -281,10 +354,19 @@ export function rotationConfig(
     }
   }
   const { fight } = meta;
+  const template =
+    (run.energyWait ?? meta.energyWait ?? 'idle') === 'attack'
+      ? fillBurstWaits(
+          rotation.template,
+          Object.fromEntries(
+            meta.slots.map((s) => [s.id, s.filler ?? 'attack']),
+          ),
+        )
+      : rotation.template;
   return gcsimConfig({
     characters: blocks,
     active: slots[meta.active],
-    rotation: renderTemplate(rotation.template, slots),
+    rotation: renderTemplate(template, slots),
     enemy: fight.enemy,
     energy: fight.energy,
     iterations: run.iterations,

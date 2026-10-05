@@ -1,0 +1,60 @@
+{
+  "id": "mualani-burn-vape",
+  "archetype": "mualani-burn-vape",
+  "name": "Mualani Burn-Vape",
+  "status": "validated",
+  "summary": "The owner's Mualani team: Mualani's 3-stacked bites vaporize off the Burning that Emilie and Mavuika keep up, Xilonen shreds. Four rotations of about 16 s, everyone bursting every other one.",
+  "slots": [
+    {
+      "id": "mualani",
+      "characters": ["mualani"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "mavuika",
+      "characters": ["mavuika"],
+      "role": "applicator"
+    },
+    {
+      "id": "emilie",
+      "characters": ["emilie"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "xilonen",
+      "characters": ["xilonen"],
+      "role": "buffer"
+    }
+  ],
+  "active": "mavuika",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 999999999,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 16,
+  "source": {
+    "kind": "community",
+    "title": "KQM Sim Database: Mualani Emilie Mavuika Xilonen",
+    "url": "https://db.kqm.gg/db/jH7Jc6tMWrNn",
+    "retrieved": "2026-10-05",
+    "publishedDps": 79441,
+    "changes": "Names as slot placeholders."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-05",
+    "iterations": 1000,
+    "dps": 79467,
+    "sd": 1337,
+    "durationSec": 65.19,
+    "warnings": ["swap_cd"],
+    "offPct": 0.03
+  }
+}

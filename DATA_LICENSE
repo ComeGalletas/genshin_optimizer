@@ -12,3 +12,18 @@ and stat targets per character) are hand-adapted from the community guides at
 KQM (KeqingMains, https://keqingmains.com). They are summaries of public guidance,
 not copied text, and are used as an optional, overridable comparison target. Genshin
 Impact and all related data are property of HoYoverse.
+
+## Combat rotations
+
+The rotations in `rotations/` and the gcsim configs they produce use community simulation
+configs from the KQM Sim Database (KeqingMains, https://db.kqm.gg; formerly gcsim's own
+database). Credit goes to KQM and the configs' submitters. Each rotation names its entry
+(`source.url` in its `meta.json`, and the header of its `reference.gcsl`), and the
+published assumptions are kept as they are: the action list, the reference builds, the
+target and the energy drops. Only character names are turned into placeholders; a
+rotation adapted for another team is marked `draft` and says what was changed. The
+curated "Mualani Burn-Vape" comp archetype also comes from a KQM Sim Database entry.
+
+Simulations run on gcsim (https://github.com/genshinsim/gcsim, AGPL-3.0 since v2.48) as
+an unmodified external program downloaded at a pinned version; no gcsim source is
+included in this repository.

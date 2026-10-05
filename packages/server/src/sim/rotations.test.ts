@@ -24,10 +24,10 @@ describe('the rotation library (TODO 5.6)', () => {
   const library = loadRotations();
   const tool = loadGcsimTool();
 
-  it('covers the five seed teams of TODO 5.0', () => {
+  it('covers the five seed teams (TODO 5.0, Mualani as the owner plays her)', () => {
     expect(library.map((r) => r.meta.id)).toEqual([
       'ayaka-freeze',
-      'mualani-vape',
+      'mualani-burn-vape',
       'nahida-aggravate',
       'raiden-national',
       'skirk-mono-cryo',
@@ -46,7 +46,16 @@ describe('the rotation library (TODO 5.6)', () => {
       library
         .filter((r) => r.meta.status === 'validated')
         .map((r) => r.meta.id),
-    ).toEqual(['ayaka-freeze', 'raiden-national', 'skirk-mono-cryo']);
+    ).toEqual([
+      'ayaka-freeze',
+      'mualani-burn-vape',
+      'raiden-national',
+      'skirk-mono-cryo',
+    ]);
+    // Published rotations keep their authors' idle burst waits.
+    for (const { meta } of library)
+      if (meta.source.kind === 'community')
+        expect(meta.energyWait ?? 'idle', meta.id).toBe('idle');
   });
 
   it('each renders on its reference builds, against a target that outlasts its actions', () => {
@@ -178,17 +187,15 @@ describe.skipIf(!installed)('the library over the installed gcsim', () => {
       };
     };
     // The sample has no Yelan: she joins with a weapon and no artifacts.
+    const team = {
+      raiden: ours('raiden_shogun'),
+      xiangling: ours('xiangling'),
+      yelan: ours('yelan'),
+      bennett: ours('bennett'),
+    };
+    const national = loadRotation('raiden-national');
     const s = await runner().run(
-      rotationConfig(
-        loadRotation('raiden-national'),
-        {
-          raiden: ours('raiden_shogun'),
-          xiangling: ours('xiangling'),
-          yelan: ours('yelan'),
-          bennett: ours('bennett'),
-        },
-        { iterations: 100 },
-      ),
+      rotationConfig(national, team, { iterations: 100 }),
     );
     expect(s.incomplete).toEqual([]);
     expect(s.characters.map((c) => c.name)).toEqual([
@@ -205,7 +212,15 @@ describe.skipIf(!installed)('the library over the installed gcsim', () => {
     const xiangling = s.characters[1];
     expect(xiangling.energyWaitSec).toBeGreaterThan(60);
     expect(s.durationSec).toBeGreaterThan(
-      loadRotation('raiden-national').meta.validation!.durationSec + 60,
+      national.meta.validation!.durationSec + 60,
     );
+    // Filling those waits with attacks: nobody stands idle, and the team
+    // deals more over the same rotation.
+    const filled = await runner().run(
+      rotationConfig(national, team, { iterations: 100, energyWait: 'attack' }),
+    );
+    expect(filled.incomplete).toEqual([]);
+    expect(filled.characters[1].energyWaitSec).toBeLessThan(1);
+    expect(filled.dps.mean).toBeGreaterThan(s.dps.mean);
   }, 120_000);
 });

@@ -730,9 +730,12 @@ export const COMP_ARCHETYPES: CompArchetype[] = [
         ],
       },
       {
+        // Pyro for the bites to vaporize off. Citlali (Cryo) was listed here
+        // until the owner's correction (2026-10-05): she doesn't go with
+        // Mualani.
         role: 'applicator',
         options: [
-          { characterKey: 'citlali', weight: 1 },
+          { characterKey: 'mavuika', weight: 1 },
           { characterKey: 'xiangling', weight: 0.7 },
         ],
       },
@@ -741,6 +744,36 @@ export const COMP_ARCHETYPES: CompArchetype[] = [
         options: [
           { characterKey: 'bennett', weight: 1 },
           { characterKey: 'furina', weight: 0.85 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'mualani-burn-vape',
+    name: 'Mualani Burn-Vape',
+    modes: ABYSS_ONLY,
+    tier: 1,
+    source: 'https://db.kqm.gg/db/jH7Jc6tMWrNn',
+    notes:
+      "Mualani's bites vaporize off a Burning aura that Emilie's Dendro and Mavuika's Pyro keep up; Xilonen shreds. The owner's own Mualani team.",
+    slots: [
+      {
+        role: 'on-field-dps',
+        options: [{ characterKey: 'mualani', weight: 1 }],
+      },
+      { role: 'buffer', options: [{ characterKey: 'xilonen', weight: 1 }] },
+      {
+        role: 'applicator',
+        options: [
+          { characterKey: 'mavuika', weight: 1 },
+          { characterKey: 'xiangling', weight: 0.7 },
+        ],
+      },
+      {
+        role: 'off-field-dps',
+        options: [
+          { characterKey: 'emilie', weight: 1 },
+          { characterKey: 'nahida', weight: 0.85 },
         ],
       },
     ],

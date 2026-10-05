@@ -38,6 +38,7 @@
     },
     "energy": "energy every interval=480,720 amount=1;"
   },
+  "energyWait": "attack",
   "rotationSec": 18,
   "source": {
     "kind": "adapted",
@@ -50,9 +51,9 @@
     "gcsim": "v2.48.8",
     "date": "2026-10-05",
     "iterations": 1000,
-    "dps": 46376,
-    "sd": 1096,
-    "durationSec": 71.77,
-    "warnings": ["insufficient_energy", "burst_cd"]
+    "dps": 47078,
+    "sd": 1063,
+    "durationSec": 72.57,
+    "warnings": []
   }
 }

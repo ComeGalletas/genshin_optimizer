@@ -94,6 +94,6 @@ An optional Claude-powered plain-English explanation of the optimised build. Ups
 
 ## Data & license
 
-Game reference data is derived at build time from [genshin-db](https://github.com/theBowja/genshin-db) and bundled as a frozen snapshot — numeric data only, no game assets ([`DATA_LICENSE`](./DATA_LICENSE)). On top of it sits a hand-curated layer transcribed from KQM sources — 52 meta build recipes, 30 comp archetypes, 18 damage profiles — re-verified each patch ([docs/runbooks/patch-refresh.md](docs/runbooks/patch-refresh.md)).
+Game reference data is derived at build time from [genshin-db](https://github.com/theBowja/genshin-db) and bundled as a frozen snapshot — numeric data only, no game assets ([`DATA_LICENSE`](./DATA_LICENSE)). On top of it sits a hand-curated layer transcribed from KQM sources — 52 meta build recipes, 31 comp archetypes, 18 damage profiles — re-verified each patch ([docs/runbooks/patch-refresh.md](docs/runbooks/patch-refresh.md)). The combat rotations in [`rotations/`](./rotations/) come from community gcsim configs in the [KQM Sim Database](https://db.kqm.gg), credited per rotation and kept with their published assumptions; simulations run on [gcsim](https://github.com/genshinsim/gcsim) as an external program ([`DATA_LICENSE`](./DATA_LICENSE)).
 
 Code is [MIT](./LICENSE) licensed; upstream's copyright notice stays in `LICENSE`. Not affiliated with HoYoverse.

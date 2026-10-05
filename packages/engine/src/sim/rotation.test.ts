@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import type { SimCharacter } from './configgen';
 import {
   assignSlots,
+  fillBurstWaits,
   renderTemplate,
   rotationConfig,
   rotationIssues,
@@ -208,6 +209,93 @@ describe('assignSlots', () => {
       missing: ['xiangling or bennett'],
       extra: ['yelan'],
     });
+  });
+});
+
+describe('fillBurstWaits', () => {
+  it('splits each statement before its burst and attacks until the burst is ready', () => {
+    expect(
+      fillBurstWaits(
+        [
+          '{{raiden}} skill;',
+          'for let x = 0; x < 2; x = x + 1 {',
+          '  {{pyro}} burst, skill[hold=1, x=2];',
+          '  {{raiden}} attack, burst,',
+          '    attack:4, dash;',
+          '}',
+        ].join('\n'),
+        { raiden: 'attack', pyro: 'charge' },
+      ),
+    ).toBe(
+      [
+        '{{raiden}} skill;',
+        'for let x = 0; x < 2; x = x + 1 {',
+        '  while !.{{pyro}}.burst.ready { {{pyro}} charge; }',
+        '  {{pyro}} burst, skill[hold=1, x=2];',
+        '  {{raiden}} attack;',
+        '  while !.{{raiden}}.burst.ready { {{raiden}} attack; }',
+        '  {{raiden}} burst, attack:4, dash;',
+        '}',
+      ].join('\n'),
+    );
+  });
+
+  it('leaves alone a slot without a filler, conditions, and actions that only start with "burst"', () => {
+    const t = [
+      'if .{{pyro}}.burst.ready { x(); }',
+      '{{pyro}} burst;',
+      '{{raiden}} bursty;',
+    ].join('\n');
+    expect(fillBurstWaits(t, { pyro: false, raiden: 'attack' })).toBe(t);
+  });
+});
+
+describe('energyWait', () => {
+  const ours = (key: string): SimCharacter => ({
+    key,
+    level: 90,
+    maxLevel: 90,
+    constellation: 0,
+    talents: { auto: 9, skill: 9, burst: 9 },
+    weapon: { key: 'the_catch', level: 90, maxLevel: 90, refinement: 5 },
+    artifacts: [],
+  });
+  const team = { raiden: ours('raiden_shogun'), pyro: ours('bennett') };
+
+  it('idle by default: a published rotation keeps its author’s assumption', () => {
+    expect(rotationConfig(ROTATION, team)).not.toContain('while !');
+  });
+
+  it('"attack" fills every burst wait with the slot’s filler; a run can override either way', () => {
+    const filling: Rotation = {
+      ...ROTATION,
+      meta: {
+        ...META,
+        energyWait: 'attack',
+        slots: [META.slots[0], { ...META.slots[1], filler: false }],
+      },
+    };
+    const c = rotationConfig(filling, team);
+    expect(c).toContain(
+      '  while !.raidenshogun.burst.ready { raidenshogun attack; }\n  raidenshogun burst, attack:4;',
+    );
+    expect(c).not.toContain('while !.bennett');
+    expect(rotationConfig(filling, team, { energyWait: 'idle' })).not.toContain(
+      'while !',
+    );
+    expect(rotationConfig(ROTATION, team, { energyWait: 'attack' })).toContain(
+      'while !.bennett.burst.ready { bennett attack; }',
+    );
+  });
+
+  it('a filler is one gcsim action', () => {
+    expect(
+      issues(
+        meta({
+          slots: [{ ...META.slots[0], filler: 'attack; skill' }, META.slots[1]],
+        }),
+      ),
+    ).toEqual([expect.stringMatching(/^meta\.slots\.0\.filler: /)]);
   });
 });
 
