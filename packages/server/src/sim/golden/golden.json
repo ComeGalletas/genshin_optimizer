@@ -1,5 +1,5 @@
 {
-  "about": "Configs npm run sim:check runs with the pinned gcsim (TODO 5.2). A config with `expected` must land within its tolerance of that mean DPS; one without only has to run cleanly. Community configs with published DPS (the Phase 5 acceptance) are added with their source.",
+  "about": "Configs npm run sim:check runs with the pinned gcsim (TODO 5.2). A config with `expected` must land within its tolerance of that mean DPS; one without only has to run cleanly. Community configs with a published DPS live in the rotation library (rotations/, ADR-0041), which sim:check runs after these.",
   "configs": [
     {
       "id": "raiden-national-smoke",

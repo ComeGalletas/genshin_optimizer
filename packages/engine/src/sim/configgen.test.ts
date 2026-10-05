@@ -214,4 +214,33 @@ describe('gcsimConfig', () => {
     // A target hp would make gcsim fight to the death instead (TODO 5.3).
     expect(c).not.toMatch(/^target[^\n]*\bhp=/m);
   });
+
+  it('a target with hp, radius and position, for a fight as long as its actions', () => {
+    const c = gcsimConfig({
+      characters: [furina],
+      active: 'furina',
+      rotation: 'furina attack;',
+      enemy: { hp: 999999999, radius: 2, pos: [0, 2.4] },
+    });
+    expect(c).toMatch(
+      /^target lvl=100 resist=0\.1 radius=2 pos=0,2\.4 hp=999999999;$/m,
+    );
+    // gcsim ignores the duration then, so the config doesn't claim one.
+    expect(c).toMatch(/^options iteration=1000 swap_delay=12;$/m);
+  });
+
+  it('passes a block of build lines through as written', () => {
+    const block = [
+      'furina char lvl=90/90 cons=0 talent=9,9,9;',
+      'furina add weapon="favsword" refine=3 lvl=90/90;',
+    ].join('\n');
+    const c = gcsimConfig({
+      characters: [`\n${block}\n\n`],
+      active: 'furina',
+      rotation: 'furina attack;',
+    });
+    expect(c).toContain(
+      `energy every interval=480,720 amount=1;\n\n${block}\n\nactive furina;`,
+    );
+  });
 });

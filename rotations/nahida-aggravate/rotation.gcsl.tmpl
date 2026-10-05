@@ -1,0 +1,16 @@
+# Nahida Aggravate with Raiden on field, four rotations of about 20 s:
+# Nahida E Q > Kuki E Q > Fischl E N2 (even rotations) or Q N2 (odd) >
+# Raiden Q N4D N4 E N4D N3
+# DRAFT: adapted from a Raiden/Kuki/Nahida/Kazuha config, Fischl in
+# Kazuha's place; not yet reviewed by the owner.
+{{raiden}} skill;
+for let i = 0; i < 4; i = i + 1 {
+  {{nahida}} skill, burst;
+  {{kuki}} skill, burst;
+  if is_even(i) {
+    {{fischl}} skill, attack:2;
+  } else {
+    {{fischl}} burst, attack:2;
+  }
+  {{raiden}} burst, attack:4, dash, attack:4, skill, attack:4, dash, attack:3;
+}

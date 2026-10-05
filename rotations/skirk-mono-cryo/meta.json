@@ -1,0 +1,60 @@
+{
+  "id": "skirk-mono-cryo",
+  "archetype": "skirk-mono-cryo",
+  "name": "Skirk Mono-Cryo",
+  "status": "validated",
+  "summary": "Skirk on field in her Seven-Phase Flash mode (N5 dash strings), fed by Escoffier's Cryo, Furina's buff and Charlotte. Four rotations of about 21 s against one freezable target, the first opening with Skirk's burst.",
+  "slots": [
+    {
+      "id": "skirk",
+      "characters": ["skirk"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "escoffier",
+      "characters": ["escoffier"],
+      "role": "applicator"
+    },
+    {
+      "id": "furina",
+      "characters": ["furina"],
+      "role": "buffer"
+    },
+    {
+      "id": "charlotte",
+      "characters": ["charlotte"],
+      "role": "sustain"
+    }
+  ],
+  "active": "furina",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 999999999,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 21,
+  "source": {
+    "kind": "community",
+    "title": "KQM Sim Database: [N5D] Skirk Furina Charlotte Escoffier",
+    "url": "https://db.kqm.gg/db/M8dHqNTHtRmm",
+    "retrieved": "2026-10-05",
+    "publishedDps": 118821,
+    "changes": "Names as slot placeholders; the target's freeze_resist=0 (the default) and Skirk's default +params left out."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-05",
+    "iterations": 1000,
+    "dps": 118779,
+    "sd": 1540,
+    "durationSec": 86.23,
+    "warnings": [],
+    "offPct": -0.04
+  }
+}

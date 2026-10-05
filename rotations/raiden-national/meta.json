@@ -1,0 +1,60 @@
+{
+  "id": "raiden-national",
+  "archetype": "raiden-national",
+  "name": "Raiden National",
+  "status": "validated",
+  "summary": "Raiden on field after the off-field Pyro and Hydro bursts (Xiangling, Yelan) and Bennett's buff. Five rotations of about 21 s against one target, with no particle-delay tricks.",
+  "slots": [
+    {
+      "id": "raiden",
+      "characters": ["raiden_shogun"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "xiangling",
+      "characters": ["xiangling"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "yelan",
+      "characters": ["yelan"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "bennett",
+      "characters": ["bennett"],
+      "role": "buffer"
+    }
+  ],
+  "active": "raiden",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 999999999,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 21,
+  "source": {
+    "kind": "community",
+    "title": "KQM Sim Database: Raiden Bennett Yelan Xiangling",
+    "url": "https://db.kqm.gg/db/nRMmHwqrFrMn",
+    "retrieved": "2026-10-05",
+    "publishedDps": 66102,
+    "changes": "Names as slot placeholders."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-05",
+    "iterations": 1000,
+    "dps": 66103,
+    "sd": 1763,
+    "durationSec": 106,
+    "warnings": ["skill_cd"],
+    "offPct": 0
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "ayaka-freeze",
+  "archetype": "ayaka-freeze",
+  "name": "Ayaka Freeze",
+  "status": "validated",
+  "summary": "Ayaka on field in a Freeze aura from Mona; Shenhe and Kazuha buff Cryo. Five rotations of about 21 s against one target. Written for C0 with Mistsplitter.",
+  "slots": [
+    {
+      "id": "ayaka",
+      "characters": ["kamisato_ayaka"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "kazuha",
+      "characters": ["kaedehara_kazuha"],
+      "role": "buffer"
+    },
+    {
+      "id": "shenhe",
+      "characters": ["shenhe"],
+      "role": "buffer"
+    },
+    {
+      "id": "mona",
+      "characters": ["mona"],
+      "role": "applicator"
+    }
+  ],
+  "active": "ayaka",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 1000000000,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 21,
+  "source": {
+    "kind": "community",
+    "title": "KQM Sim Database: Mistsplitter Ayaka Shenhe Mona Kazuha",
+    "url": "https://db.kqm.gg/db/w7BJn6WncNQK",
+    "retrieved": "2026-10-05",
+    "publishedDps": 67106,
+    "changes": "Names as slot placeholders; its print() call dropped."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-05",
+    "iterations": 1000,
+    "dps": 67082,
+    "sd": 949,
+    "durationSec": 103.86,
+    "warnings": ["swap_cd"],
+    "offPct": -0.04
+  }
+}

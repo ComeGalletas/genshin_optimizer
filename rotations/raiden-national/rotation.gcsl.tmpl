@@ -1,0 +1,13 @@
+# Raiden National, five rotations of about 21 s:
+# Yelan Q > Bennett Q N1 E > Xiangling N1 Q N1 E dash > Yelan N2 E N1 >
+# Raiden Q N4 E N4D N4D N3 > Yelan E N2 > Bennett N1 E
+{{raiden}} skill;
+for let x = 0; x < 5; x = x + 1 {
+  {{yelan}} burst;
+  {{bennett}} burst, attack, skill;
+  {{xiangling}} attack, burst, attack, skill, dash;
+  {{yelan}} attack:2, skill, attack;
+  {{raiden}} burst, attack:4, skill, attack:4, dash, attack:4, dash, attack:3;
+  {{yelan}} skill, attack:2;
+  {{bennett}} attack, skill;
+}

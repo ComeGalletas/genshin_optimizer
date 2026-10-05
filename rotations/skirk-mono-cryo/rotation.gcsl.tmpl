@@ -1,0 +1,36 @@
+# Skirk Mono-Cryo, four rotations of about 21 s:
+# Furina E dash N1 Q > Escoffier E N1 Q (or E N3) > Charlotte E N3 (or E Q N1) >
+# Skirk tE N2 Q 3[N5 dash] N2 CD N5 dash N2/N3. The first rotation opens
+# with Skirk's burst nuke (worth ~5k DPS); set First_Rot_Nuke to false to drop it.
+let First_Rot_Nuke = true;
+
+for let i = 0; i < 4; i = i + 1 {
+  {{furina}} skill, dash, attack, burst;
+  if is_even(i) {
+    {{escoffier}} skill, attack, burst;
+    {{charlotte}} skill, attack:3;
+  } else {
+    {{escoffier}} skill, attack:3;
+    {{charlotte}} skill, burst, attack;
+  }
+  if i == 0 && First_Rot_Nuke == true {
+    {{skirk}} burst;
+    {{skirk}} skill,
+      attack:5, dash,
+      attack:2, charge, dash,
+      attack:5, dash,
+      attack:5, dash,
+      attack:2, charge, dash,
+      attack:5, dash,
+      attack:2;
+  } else {
+    {{skirk}} skill,
+      attack:2, burst,
+      attack:5, dash,
+      attack:5, dash,
+      attack:5, dash,
+      attack:2, charge, dash,
+      attack:5, dash,
+      attack:3;
+  }
+}

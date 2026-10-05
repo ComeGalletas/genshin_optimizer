@@ -1,0 +1,58 @@
+{
+  "id": "nahida-aggravate",
+  "archetype": "nahida-aggravate",
+  "name": "Nahida Aggravate (Raiden)",
+  "status": "draft",
+  "summary": "Raiden on field under Nahida's Quicken, with Fischl's Oz and Kuki's ring adding Electro off field. Four rotations of about 20 s against one target. A draft: no published config has this exact team.",
+  "slots": [
+    {
+      "id": "raiden",
+      "characters": ["raiden_shogun"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "nahida",
+      "characters": ["nahida"],
+      "role": "applicator"
+    },
+    {
+      "id": "fischl",
+      "characters": ["fischl"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "kuki",
+      "characters": ["kuki_shinobu"],
+      "role": "sustain"
+    }
+  ],
+  "active": "raiden",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 999999999,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 18,
+  "source": {
+    "kind": "adapted",
+    "title": "KQM Sim Database: Raiden Aggravate with Kuki Nahida Kazuha",
+    "url": "https://db.kqm.gg/db/kntc7TFbnPKp",
+    "retrieved": "2026-10-05",
+    "changes": "Fischl in Kazuha's place: her skill (even rotations) or burst (odd) and two normal attacks where Kazuha's skill, plunge and burst were; Kazuha's second skill and plunge dropped. Of N2, N3 and N4 as the filler, N2 scored best on the reference builds; Nahida still runs short of energy. Kuki's start_hp and the print() call left out."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-05",
+    "iterations": 1000,
+    "dps": 46376,
+    "sd": 1096,
+    "durationSec": 71.77,
+    "warnings": ["insufficient_energy", "burst_cd"]
+  }
+}

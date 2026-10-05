@@ -11,6 +11,11 @@
  * character's base, the weapon and the set bonuses itself, so only the
  * artifacts' lines are passed. Names follow gcsim's at the pinned version
  * (research note 2026-10-05): lowercase without separators.
+ *
+ * The fight runs one of two ways (ADR-0041): for a `duration` (no target
+ * hp), or, when the enemy has an `hp`, until the action list ends, which is
+ * how community rotations are written (a finite loop of rotations against a
+ * target too big to die).
  * @packageDocumentation
  */
 
@@ -61,19 +66,33 @@ export interface SimCharacter {
 }
 
 export interface SimTeam {
-  characters: readonly SimCharacter[];
+  /** Each character from our data, or a block of build lines as written
+   *  (a rotation's reference builds), passed through unchanged. */
+  characters: readonly (SimCharacter | string)[];
   /** Dataset key of the character on field at the start. */
   active: string;
   /** The action list, in gcsim's syntax, using gcsim names. */
   rotation: string;
-  enemy?: { level?: number; /** percent */ res?: number };
-  /** Fight length in seconds. */
+  enemy?: SimEnemy;
+  /** Fight length in seconds; ignored when the enemy has an `hp`. */
   duration?: number;
   iterations?: number;
   /** Frames between swaps. */
   swapDelay?: number;
   /** A gcsim `energy` line; particles from the enemy over the fight. */
   energy?: string;
+}
+
+export interface SimEnemy {
+  level?: number;
+  /** Resistance, percent (10 = 10%). */
+  res?: number;
+  /** With an hp the run lasts until the action list ends (or the target
+   *  dies); without one, for the duration. */
+  hp?: number;
+  /** Hitbox radius and position, in gcsim's units. */
+  radius?: number;
+  pos?: readonly [number, number];
 }
 
 /** One build's artifact lines, summed per stat in gcsim's names and units.
@@ -110,22 +129,37 @@ const num = (x: number) => String(x);
 
 export const DEFAULT_ENERGY = 'energy every interval=480,720 amount=1;';
 
+/** The target. No hp unless asked for: with one, gcsim fights until the
+ *  target dies or the actions run out, not for the duration (TODO 5.3). */
+function targetLine(enemy: SimEnemy = {}): string {
+  const parts = [
+    `lvl=${enemy.level ?? 100}`,
+    `resist=${num((enemy.res ?? 10) / 100)}`,
+  ];
+  if (enemy.radius !== undefined) parts.push(`radius=${num(enemy.radius)}`);
+  if (enemy.pos) parts.push(`pos=${enemy.pos.map(num).join(',')}`);
+  if (enemy.hp !== undefined) parts.push(`hp=${num(enemy.hp)}`);
+  return `target ${parts.join(' ')};`;
+}
+
 /** The config text. */
 export function gcsimConfig(team: SimTeam): string {
   const lines: string[] = [];
+  // Against a target with hp the duration means nothing, so it isn't written.
   const opts = [
     `iteration=${team.iterations ?? 1000}`,
-    `duration=${team.duration ?? 90}`,
+    ...(team.enemy?.hp === undefined
+      ? [`duration=${team.duration ?? 90}`]
+      : []),
     `swap_delay=${team.swapDelay ?? 12}`,
   ];
   lines.push(`options ${opts.join(' ')};`);
-  // No target hp: with one, gcsim fights until the target dies instead of
-  // for the duration (TODO 5.3).
-  lines.push(
-    `target lvl=${team.enemy?.level ?? 100} resist=${num((team.enemy?.res ?? 10) / 100)};`,
-  );
-  lines.push(team.energy ?? DEFAULT_ENERGY, '');
+  lines.push(targetLine(team.enemy), team.energy ?? DEFAULT_ENERGY, '');
   for (const c of team.characters) {
+    if (typeof c === 'string') {
+      lines.push(c.trim(), '');
+      continue;
+    }
     const n = gcsimName(c.key);
     lines.push(
       `${n} char lvl=${c.level}/${c.maxLevel} cons=${c.constellation} talent=${c.talents.auto},${c.talents.skill},${c.talents.burst};`,
