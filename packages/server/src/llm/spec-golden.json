@@ -1,0 +1,325 @@
+{
+  "about": "TODO 4.4 / ADR-0039: natural-language requests with the ConstraintSpec each should translate to, against the committed sample account (packages/engine/src/import/__fixtures__/sample-account.good.json; its artifacts are m1-0 ... m1-19 in a fresh store). Expected specs are minimal: only what the request says, extending the character's defaults. npm run spec:eval scores a model on them.",
+  "cases": [
+    {
+      "id": "furina-er-floor",
+      "request": "What's my best Furina build with at least 180% ER?",
+      "expected": {
+        "character": "furina",
+        "minStats": {
+          "er_pct": 180
+        }
+      }
+    },
+    {
+      "id": "neuvillette-crit-floor",
+      "request": "Neuvillette with at least 70% crit rate",
+      "expected": {
+        "character": "neuvillette",
+        "minStats": {
+          "crit_rate": 70
+        }
+      }
+    },
+    {
+      "id": "xiangling-two-floors",
+      "request": "Build Xiangling with 200 ER and at least 300 elemental mastery",
+      "expected": {
+        "character": "xiangling",
+        "minStats": {
+          "er_pct": 200,
+          "em": 300
+        }
+      }
+    },
+    {
+      "id": "raiden-4pc",
+      "request": "Raiden Shogun in 4-piece Emblem of Severed Fate",
+      "expected": {
+        "character": "raiden_shogun",
+        "set": {
+          "kind": "4pc",
+          "setKey": "EmblemOfSeveredFate"
+        }
+      }
+    },
+    {
+      "id": "bennett-4pc-sands",
+      "request": "Bennett with 4pc Noblesse Oblige and an HP% sands",
+      "expected": {
+        "character": "bennett",
+        "set": {
+          "kind": "4pc",
+          "setKey": "NoblesseOblige"
+        },
+        "mainStats": {
+          "sands": "hp_pct"
+        }
+      }
+    },
+    {
+      "id": "kazuha-full-em",
+      "request": "Kazuha in 4-piece Viridescent Venerer with EM on the sands, goblet and circlet",
+      "expected": {
+        "character": "kaedehara_kazuha",
+        "set": {
+          "kind": "4pc",
+          "setKey": "ViridescentVenerer"
+        },
+        "mainStats": {
+          "sands": "em",
+          "goblet": "em",
+          "circlet": "em"
+        }
+      }
+    },
+    {
+      "id": "neuvillette-2plus2",
+      "request": "Neuvillette with 2-piece Marechaussee Hunter and 2-piece Golden Troupe",
+      "expected": {
+        "character": "neuvillette",
+        "set": {
+          "kind": "2+2",
+          "setKeys": ["GoldenTroupe", "MarechausseeHunter"]
+        }
+      }
+    },
+    {
+      "id": "furina-any-set",
+      "request": "Best Furina build with any artifact set",
+      "expected": {
+        "character": "furina",
+        "set": {
+          "kind": "any"
+        }
+      }
+    },
+    {
+      "id": "xingqiu-2pc",
+      "request": "Xingqiu with 2-piece Noblesse Oblige",
+      "expected": {
+        "character": "xingqiu",
+        "set": {
+          "kind": "2pc",
+          "setKey": "NoblesseOblige"
+        }
+      }
+    },
+    {
+      "id": "charlotte-healing",
+      "request": "Charlotte, no set requirement, maximise healing bonus",
+      "expected": {
+        "character": "charlotte",
+        "set": {
+          "kind": "any"
+        },
+        "objective": "healing"
+      }
+    },
+    {
+      "id": "kazuha-max-em",
+      "request": "Maximise elemental mastery on Kazuha",
+      "expected": {
+        "character": "kaedehara_kazuha",
+        "objective": "em"
+      }
+    },
+    {
+      "id": "raiden-crit-value",
+      "request": "Raiden Shogun build ranked by crit value",
+      "expected": {
+        "character": "raiden_shogun",
+        "objective": "crit_value"
+      }
+    },
+    {
+      "id": "xiangling-damage",
+      "request": "Give me the Xiangling build that does the most damage",
+      "expected": {
+        "character": "xiangling",
+        "objective": "avg_damage"
+      }
+    },
+    {
+      "id": "bennett-weights-equal",
+      "request": "Bennett: maximise HP% and energy recharge, weighted equally",
+      "expected": {
+        "character": "bennett",
+        "objective": {
+          "weights": {
+            "hp_pct": 1,
+            "er_pct": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "neuvillette-weights-crit",
+      "request": "Neuvillette, but weigh crit rate twice as much as crit damage",
+      "expected": {
+        "character": "neuvillette",
+        "objective": {
+          "weights": {
+            "crit_rate": 2,
+            "crit_dmg": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "furina-crit-cap",
+      "request": "Furina with crit rate no higher than 60%",
+      "expected": {
+        "character": "furina",
+        "maxStats": {
+          "crit_rate": 60
+        }
+      }
+    },
+    {
+      "id": "raiden-er-range",
+      "request": "Raiden Shogun with energy recharge between 250% and 300%",
+      "expected": {
+        "character": "raiden_shogun",
+        "minStats": {
+          "er_pct": 250
+        },
+        "maxStats": {
+          "er_pct": 300
+        }
+      }
+    },
+    {
+      "id": "kazuha-keep-furina",
+      "request": "Kazuha, but don't take Furina's artifacts",
+      "expected": {
+        "character": "kaedehara_kazuha",
+        "keepEquippedOn": ["furina"]
+      }
+    },
+    {
+      "id": "bennett-keep-two",
+      "request": "Build Bennett without touching Neuvillette's or Raiden Shogun's gear",
+      "expected": {
+        "character": "bennett",
+        "keepEquippedOn": ["neuvillette", "raiden_shogun"]
+      }
+    },
+    {
+      "id": "xingqiu-unequipped",
+      "request": "Xingqiu using only unequipped artifacts",
+      "expected": {
+        "character": "xingqiu",
+        "keepEquippedOn": "all"
+      }
+    },
+    {
+      "id": "neuvillette-exclude",
+      "request": "Neuvillette, but never use artifact m1-8",
+      "expected": {
+        "character": "neuvillette",
+        "excludeArtifacts": ["m1-8"]
+      }
+    },
+    {
+      "id": "xiangling-atk-buff",
+      "request": "Xiangling with Bennett's 1000 ATK buff",
+      "expected": {
+        "character": "xiangling",
+        "teamBuffs": {
+          "atk": 1000
+        }
+      }
+    },
+    {
+      "id": "neuvillette-dmg-buff",
+      "request": "Neuvillette assuming teammates give him 20% Hydro DMG bonus",
+      "expected": {
+        "character": "neuvillette",
+        "teamBuffs": {
+          "elemental_dmg": 20
+        }
+      }
+    },
+    {
+      "id": "xiangling-shred",
+      "request": "Xiangling against an enemy with -30% resistance",
+      "expected": {
+        "character": "xiangling",
+        "enemy": {
+          "res": -30
+        }
+      }
+    },
+    {
+      "id": "raiden-enemy",
+      "request": "Raiden Shogun against a level 95 enemy with 10% resistance",
+      "expected": {
+        "character": "raiden_shogun",
+        "enemy": {
+          "level": 95,
+          "res": 10
+        }
+      }
+    },
+    {
+      "id": "furina-weapon",
+      "request": "Furina with Splendor of Tranquil Waters",
+      "expected": {
+        "character": "furina",
+        "weapon": "splendor_of_tranquil_waters"
+      }
+    },
+    {
+      "id": "neuvillette-level",
+      "request": "Neuvillette at level 80",
+      "expected": {
+        "character": "neuvillette",
+        "buildLevel": 80
+      }
+    },
+    {
+      "id": "bennett-replace",
+      "request": "Bennett, ignore his usual build and just maximise energy recharge",
+      "expected": {
+        "character": "bennett",
+        "defaults": "replace",
+        "objective": "er_pct"
+      }
+    },
+    {
+      "id": "kazuha-any-sands",
+      "request": "Kazuha with 4pc Viridescent Venerer but any sands main stat",
+      "expected": {
+        "character": "kaedehara_kazuha",
+        "set": {
+          "kind": "4pc",
+          "setKey": "ViridescentVenerer"
+        },
+        "mainStats": {
+          "sands": "any"
+        }
+      }
+    },
+    {
+      "id": "furina-everything",
+      "request": "Furina: 4-piece Golden Troupe, HP% sands, Hydro DMG goblet, crit DMG circlet, at least 160% ER, and leave Charlotte's pieces alone",
+      "expected": {
+        "character": "furina",
+        "set": {
+          "kind": "4pc",
+          "setKey": "GoldenTroupe"
+        },
+        "mainStats": {
+          "sands": "hp_pct",
+          "goblet": "elemental_dmg",
+          "circlet": "crit_dmg"
+        },
+        "minStats": {
+          "er_pct": 160
+        },
+        "keepEquippedOn": ["charlotte"]
+      }
+    }
+  ]
+}

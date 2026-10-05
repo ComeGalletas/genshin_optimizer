@@ -31,6 +31,7 @@ tools), [ADR-0032](../adr/0032-llm-provider-config.md) (model config),
 | `npm run mcp:config` | Prints the Claude Desktop and Claude Code configuration for this checkout, with absolute paths; `-- --install` adds it to Claude Desktop (quit it first).                                          |
 | `npm run inbox`      | Imports every new file in `imports/inbox/` (`-- --watch` keeps watching).                                                                                                                          |
 | `npm run llm:check`  | Says which model `config/llm.json` selects and whether the provider has it.                                                                                                                        |
+| `npm run spec:eval`  | Scores a model on the translator's golden set (30 requests, sample account): `-- --model <name>`, `-- --provider anthropic --model <id>`, `-- --out docs/spec-eval/<file>.md`.                     |
 
 Ollama listens on 11434. Everything listens on localhost only.
 
