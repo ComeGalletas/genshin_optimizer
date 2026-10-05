@@ -123,6 +123,24 @@ CREATE VIEW current_account AS
 ALTER TABLE snapshot_artifacts ADD COLUMN unactivated_json TEXT;
 `,
   },
+  {
+    version: 3,
+    name: 'simulation cache',
+    sql: `
+-- gcsim results (TODO 5.4), keyed by the SHA-256 of the gcsim commit, the
+-- result reader's version and the config as run. A cache: a row may be
+-- deleted at any time and is never updated (a new run is a new key).
+CREATE TABLE sim_cache (
+  key           TEXT PRIMARY KEY,
+  gcsim_commit  TEXT NOT NULL,
+  iterations    INTEGER NOT NULL,
+  result_json   TEXT NOT NULL,
+  ms            INTEGER NOT NULL,
+  created_at    TEXT NOT NULL
+);
+${immutable('sim_cache')}
+`,
+  },
 ];
 
 export class MigrationError extends Error {}
