@@ -42,6 +42,20 @@ without it, and `"defaults": "extend"` written out is the default.
    the field-by-field difference) and writes Markdown with `--out`;
    reports are kept in `docs/spec-eval/`.
 
+4. **Claude without an API key** (`--via claude-code`). The owner has a
+   Claude subscription, not an API account, and the in-app `anthropic`
+   provider needs an API key. So the cloud score can also come from
+   Claude Code (`claude -p`, the subscription's model): each request gets
+   the app's translator prompt as the system prompt and one tool, the
+   app's own `submit_spec`, served by an evaluation-only MCP server
+   (`cli/spec-eval-mcp.ts`, the SDK's low-level server so neither the
+   schema nor the checks change). Every submission is checked by the same
+   `checkSpec` and problems come back with the same message and the same
+   three-attempt cap. What differs from the app's path is the loop around
+   them (Claude Code's agent loop instead of `translateRequest`, with no
+   reminder after a text answer); the report names the provider
+   `claude-code`, so the two are never confused.
+
 ## Consequences
 
 - A translator or prompt change can be measured before it ships, on the
@@ -49,8 +63,11 @@ without it, and `"defaults": "extend"` written out is the default.
 - The set is a floor, not the whole space: it uses the sample account's
   eight characters, and phrasings a model sees here may differ from the
   owner's. Cases are added when a real request is misread.
-- The cloud model's run needs an API key in `.env`; its score is what the
-  Phase 4 acceptance reads.
+- The cloud score can come from the Anthropic API (a key in `.env`, the
+  app's exact path) or from Claude Code on the subscription (point 4).
+- The golden set was written with Claude's help, and Claude scored 30/30
+  on it: its phrasings may suit Claude more than independent requests
+  would. Cases from the owner's real requests are the remedy.
 
 ## Rejected alternatives
 

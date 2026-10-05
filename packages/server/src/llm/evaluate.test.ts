@@ -8,7 +8,19 @@ import {
 } from '@genshin-build-lab/engine/constraints/spec';
 import type { ChatRequest, LlmClient } from './client';
 import { SUBMIT_SPEC } from './translate';
-import { evaluateGolden, evaluationReport, loadGolden } from './evaluate';
+import {
+  appTranslator,
+  evaluateGolden as evaluate,
+  evaluationReport,
+  loadGolden,
+  type GoldenCase,
+} from './evaluate';
+
+const evaluateGolden = (
+  client: LlmClient,
+  services: Services,
+  cases: readonly GoldenCase[],
+) => evaluate(client, appTranslator(client, services), services, cases);
 
 const SAMPLE = readFileSync(
   new URL(

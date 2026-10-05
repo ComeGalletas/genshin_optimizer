@@ -15,6 +15,7 @@ import {
   type SpecIssue,
 } from '@genshin-build-lab/engine/constraints/spec';
 import { STAT_KEYS } from '@genshin-build-lab/engine/game/types';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import type { ChatMessage, ChatTool, LlmClient } from './client';
 
 /** The tool the model answers with. */
@@ -42,6 +43,17 @@ export const MAX_ATTEMPTS = 3;
 
 /** A spec is short; this caps a model that rambles before calling. */
 const TRANSLATE_MAX_OUTPUT_TOKENS = 1200;
+
+/** Every character and set in the dataset: a character the account lacks
+ *  can still be built, with a weapon named. */
+export function translationCatalog(): Catalog {
+  return {
+    characters: genshinAdapter
+      .characters()
+      .map((c) => ({ key: c.key, name: c.name })),
+    sets: genshinAdapter.sets().map((s) => ({ key: s.key, name: s.name })),
+  };
+}
 
 export function translatorPrompt(catalog: Catalog): string {
   const list = (xs: { key: string; name: string }[]) =>
@@ -82,7 +94,8 @@ export function submitSpecTool(): ChatTool {
   };
 }
 
-const retry = (issues: SpecIssue[]) =>
+/** What the model hears when a submission fails its checks. */
+export const retryMessage = (issues: SpecIssue[]) =>
   `error: the spec has ${issues.length === 1 ? 'a problem' : `${issues.length} problems`}:\n${issues
     .map((i) => `- ${i.path}: ${i.message}`)
     .join(
@@ -137,7 +150,7 @@ export async function translateRequest<T>(
         role: 'tool',
         toolCallId: call.id,
         name: SUBMIT_SPEC,
-        content: retry(issues),
+        content: retryMessage(issues),
       },
     );
   }

@@ -22,16 +22,16 @@ tools), [ADR-0032](../adr/0032-llm-provider-config.md) (model config),
 
 ## Commands and ports
 
-| Command              | What it runs                                                                                                                                                                                       |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`        | The web app (Vite, <http://localhost:5199>) and the server (<http://127.0.0.1:5198>) together, output prefixed `[web]` / `[server]`; the server restarts on its source changes. Ctrl+C stops both. |
-| `npm run dev:web`    | The web app alone (client-only).                                                                                                                                                                   |
-| `npm run server`     | The server alone: the HTTP API, MCP over HTTP at `/mcp`, explain and chat. `-- --port <n>` and `-- --store <path>` override the defaults.                                                          |
-| `npm run mcp`        | The MCP server over stdio, for MCP clients that start it themselves (Claude Desktop). `-- --store <path>` overrides the store.                                                                     |
-| `npm run mcp:config` | Prints the Claude Desktop and Claude Code configuration for this checkout, with absolute paths; `-- --install` adds it to Claude Desktop (quit it first).                                          |
-| `npm run inbox`      | Imports every new file in `imports/inbox/` (`-- --watch` keeps watching).                                                                                                                          |
-| `npm run llm:check`  | Says which model `config/llm.json` selects and whether the provider has it.                                                                                                                        |
-| `npm run spec:eval`  | Scores a model on the translator's golden set (30 requests, sample account): `-- --model <name>`, `-- --provider anthropic --model <id>`, `-- --out docs/spec-eval/<file>.md`.                     |
+| Command              | What it runs                                                                                                                                                                                                                                    |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`        | The web app (Vite, <http://localhost:5199>) and the server (<http://127.0.0.1:5198>) together, output prefixed `[web]` / `[server]`; the server restarts on its source changes. Ctrl+C stops both.                                              |
+| `npm run dev:web`    | The web app alone (client-only).                                                                                                                                                                                                                |
+| `npm run server`     | The server alone: the HTTP API, MCP over HTTP at `/mcp`, explain and chat. `-- --port <n>` and `-- --store <path>` override the defaults.                                                                                                       |
+| `npm run mcp`        | The MCP server over stdio, for MCP clients that start it themselves (Claude Desktop). `-- --store <path>` overrides the store.                                                                                                                  |
+| `npm run mcp:config` | Prints the Claude Desktop and Claude Code configuration for this checkout, with absolute paths; `-- --install` adds it to Claude Desktop (quit it first).                                                                                       |
+| `npm run inbox`      | Imports every new file in `imports/inbox/` (`-- --watch` keeps watching).                                                                                                                                                                       |
+| `npm run llm:check`  | Says which model `config/llm.json` selects and whether the provider has it.                                                                                                                                                                     |
+| `npm run spec:eval`  | Scores a model on the translator's golden set (30 requests, sample account): `-- --model <name>`, `-- --provider anthropic --model <id>`, `-- --via claude-code` (Claude on the subscription, no API key), `-- --out docs/spec-eval/<file>.md`. |
 
 Ollama listens on 11434. Everything listens on localhost only.
 

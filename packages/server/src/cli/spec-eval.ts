@@ -5,6 +5,9 @@
  *   npm run spec:eval                          the model in config/llm.json
  *   npm run spec:eval -- --model qwen3:14b     another model, same provider
  *   npm run spec:eval -- --provider anthropic --model <id>
+ *   npm run spec:eval -- --via claude-code [--model sonnet]
+ *                                              Claude through Claude Code, on
+ *                                              the Claude subscription
  *   npm run spec:eval -- --only furina-er-floor,raiden-4pc
  *   npm run spec:eval -- --out docs/spec-eval/<name>.md
  *
@@ -24,9 +27,15 @@ import {
   resolveLlmConfig,
 } from '../llm/config';
 import { createLlmClient } from '../llm/client';
-import { importGood, openStore, recordMerge } from '../store/store';
-import { Services } from '../api/services';
-import { evaluateGolden, evaluationReport, loadGolden } from '../llm/evaluate';
+import { claudeCodeTranslator } from '../llm/claudeCode';
+import {
+  appTranslator,
+  evaluateGolden,
+  evaluationReport,
+  loadGolden,
+  sampleAccountServices,
+  type Translator,
+} from '../llm/evaluate';
 
 const args = process.argv.slice(2);
 const option = (name: string) => {
@@ -34,60 +43,62 @@ const option = (name: string) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 
-loadServerEnv();
-let config;
-try {
-  const raw = JSON.parse(
-    readFileSync(fromRoot(DEFAULT_LLM_CONFIG), 'utf8'),
-  ) as Record<string, unknown>;
-  const provider = option('provider');
-  config = resolveLlmConfig(
-    {
-      ...raw,
-      ...(provider && { provider }),
-      // Another provider's base URL doesn't carry over.
-      ...(provider && provider !== raw.provider && { baseUrl: undefined }),
-      ...(option('model') && { model: option('model') }),
-      ...(option('base-url') && { baseUrl: option('base-url') }),
-    },
-    process.env,
-  );
-} catch (e) {
-  if (!(e instanceof LlmConfigError)) throw e;
-  console.error(e.message);
-  process.exit(1);
-}
-if (config.notReady) {
-  console.error(`${config.provider} ${config.model}: ${config.notReady}`);
-  process.exit(1);
-}
+const services = sampleAccountServices();
+let label: { provider: string; model: string };
+let translate: Translator;
+let model: () => string | undefined = () => undefined;
 
-// The committed sample account, in a store of its own.
-const db = openStore(':memory:');
-importGood(db, {
-  text: readFileSync(
-    fromRoot(
-      'packages/engine/src/import/__fixtures__/sample-account.good.json',
-    ),
-    'utf8',
-  ),
-  importedAt: '2026-01-02T03:04:05.000Z',
-});
-recordMerge(db, [1], '2026-01-02T03:04:05.000Z');
-const services = new Services(db);
+if (option('via') === 'claude-code') {
+  const cc = claudeCodeTranslator({ model: option('model') });
+  translate = cc.translate;
+  model = cc.model;
+  label = { provider: 'claude-code', model: option('model') ?? 'default' };
+} else {
+  loadServerEnv();
+  let config;
+  try {
+    const raw = JSON.parse(
+      readFileSync(fromRoot(DEFAULT_LLM_CONFIG), 'utf8'),
+    ) as Record<string, unknown>;
+    const provider = option('provider');
+    config = resolveLlmConfig(
+      {
+        ...raw,
+        ...(provider && { provider }),
+        // Another provider's base URL doesn't carry over.
+        ...(provider && provider !== raw.provider && { baseUrl: undefined }),
+        ...(option('model') && { model: option('model') }),
+        ...(option('base-url') && { baseUrl: option('base-url') }),
+      },
+      process.env,
+    );
+  } catch (e) {
+    if (!(e instanceof LlmConfigError)) throw e;
+    console.error(e.message);
+    process.exit(1);
+  }
+  if (config.notReady) {
+    console.error(`${config.provider} ${config.model}: ${config.notReady}`);
+    process.exit(1);
+  }
+  const client = createLlmClient(config);
+  translate = appTranslator(client, services);
+  label = { provider: client.provider, model: client.model };
+}
 
 const only = option('only')?.split(',');
 const cases = loadGolden().filter((c) => !only || only.includes(c.id));
-const client = createLlmClient(config);
 console.error(
-  `${config.provider} ${config.model}: ${cases.length} requests against the sample account`,
+  `${label.provider} ${label.model}: ${cases.length} requests against the sample account`,
 );
-const e = await evaluateGolden(client, services, cases, (r, i) =>
+const e = await evaluateGolden(label, translate, services, cases, (r, i) =>
   console.error(
     `${String(i + 1).padStart(2)}. ${r.equivalent ? 'ok  ' : r.translated ? 'diff' : 'FAIL'} ${r.id} (${(r.ms / 1000).toFixed(1)} s, ${r.attempts} attempt${r.attempts === 1 ? '' : 's'})${r.equivalent ? '' : `: ${r.error ?? r.diff.join('; ')}`}`,
   ),
 );
 await services.searches.close();
+// Claude Code names the model it used; the report should too.
+if (label.provider === 'claude-code' && model()) e.model = model()!;
 
 const report = evaluationReport(e, new Date().toISOString().slice(0, 10));
 const out = option('out');

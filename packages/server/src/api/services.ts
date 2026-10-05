@@ -58,7 +58,7 @@ import {
   unreachableMinStats,
 } from '@genshin-build-lab/engine/optimizer/diagnostics';
 import { statLabel } from '@genshin-build-lab/engine/labels-core';
-import { translateRequest } from '../llm/translate';
+import { translateRequest, translationCatalog } from '../llm/translate';
 import type { LlmClient } from '../llm/client';
 import type { OptimizeContext } from '@genshin-build-lab/engine/game/types';
 import type { ArtifactQuery, CompareBody, OptimizeBody } from './schemas';
@@ -323,21 +323,20 @@ export class Services {
    *  summary (TODO 4.3), without running it. The model sees the spec checks
    *  and the account mapping, so it can fix what either finds. */
   async translateSpec(client: LlmClient, text: string) {
-    const catalog = {
-      characters: genshinAdapter
-        .characters()
-        .map((c) => ({ key: c.key, name: c.name })),
-      sets: genshinAdapter.sets().map((s) => ({ key: s.key, name: s.name })),
-    };
-    const t = await translateRequest(client, text, catalog, (input) => {
-      try {
-        return { ok: true, value: this.checkSpec(input) };
-      } catch (e) {
-        if (e instanceof ServiceError && e.issues)
-          return { ok: false, issues: e.issues };
-        throw e;
-      }
-    });
+    const t = await translateRequest(
+      client,
+      text,
+      translationCatalog(),
+      (input) => {
+        try {
+          return { ok: true, value: this.checkSpec(input) };
+        } catch (e) {
+          if (e instanceof ServiceError && e.issues)
+            return { ok: false, issues: e.issues };
+          throw e;
+        }
+      },
+    );
     if (!t.ok)
       throw new ServiceError(
         422,

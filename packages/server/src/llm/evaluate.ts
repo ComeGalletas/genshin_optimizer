@@ -9,13 +9,15 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { fromRoot } from '../paths';
+import { importGood, openStore, recordMerge } from '../store/store';
+import { Services } from '../api/services';
 import {
   runKey,
   sameSpec,
   specDiff,
 } from '@genshin-build-lab/engine/constraints/compare';
 import type { ConstraintSpec } from '@genshin-build-lab/engine/constraints/spec';
-import type { Services } from '../api/services';
 import type { LlmClient } from './client';
 
 export interface GoldenCase {
@@ -54,6 +56,23 @@ export interface Evaluation {
   results: CaseResult[];
 }
 
+/** Services over the committed sample account, in a store of its own, with
+ *  fixed times: what every evaluation runs against. */
+export function sampleAccountServices(): Services {
+  const db = openStore(':memory:');
+  importGood(db, {
+    text: readFileSync(
+      fromRoot(
+        'packages/engine/src/import/__fixtures__/sample-account.good.json',
+      ),
+      'utf8',
+    ),
+    importedAt: '2026-01-02T03:04:05.000Z',
+  });
+  recordMerge(db, [1], '2026-01-02T03:04:05.000Z');
+  return new Services(db);
+}
+
 export function loadGolden(
   path: URL | string = new URL('./spec-golden.json', import.meta.url),
 ): GoldenCase[] {
@@ -61,8 +80,22 @@ export function loadGolden(
     .cases;
 }
 
+/** Turns one request into a spec that passed the checks, or throws (with
+ *  `issues` when it got that far). The app's own path is `appTranslator`;
+ *  `npm run spec:eval -- --via claude-code` supplies another. */
+export type Translator = (
+  request: string,
+) => Promise<{ spec: ConstraintSpec; attempts: number }>;
+
+/** The app's path: `translateSpec` with the configured model. */
+export const appTranslator =
+  (client: LlmClient, services: Services): Translator =>
+  (request) =>
+    services.translateSpec(client, request);
+
 export async function evaluateGolden(
-  client: LlmClient,
+  label: { provider: string; model: string },
+  translate: Translator,
   services: Services,
   cases: readonly GoldenCase[],
   onCase?: (r: CaseResult, index: number) => void,
@@ -73,7 +106,7 @@ export async function evaluateGolden(
     const t0 = performance.now();
     let r: CaseResult;
     try {
-      const t = await services.translateSpec(client, c.request);
+      const t = await translate(c.request);
       const actual = services.checkSpec(t.spec);
       r = {
         id: c.id,
@@ -104,8 +137,8 @@ export async function evaluateGolden(
   }
   const count = (f: (r: CaseResult) => boolean) => results.filter(f).length;
   return {
-    provider: client.provider,
-    model: client.model,
+    provider: label.provider,
+    model: label.model,
     total: results.length,
     exact: count((r) => r.exact),
     equivalent: count((r) => r.equivalent),
