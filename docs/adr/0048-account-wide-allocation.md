@@ -47,19 +47,24 @@ thousands, crit value to hundreds, a stat to tens.
   dependency and its WASM payload in the web bundle aren't needed. A node
   budget keeps a pathological case bounded; the result says when it was
   hit (`exact: false`).
-- **Weights** default to 1 (equal). They decide trades between members who
-  want the same pieces; choosing them is the owner's call (below).
+- **Weights** default to the member's role (the owner's choice,
+  2026-10-05): on-field DPS 2, off-field DPS 1.5, everyone else 1
+  (`ROLE_WEIGHT`). They decide trades between members who want the same
+  pieces, and the carry's build matters most to the team's damage. The plan
+  knows each slot's role; an allocation from specs takes the role the
+  character fills most in the curated archetypes (`defaultRole`), and 1 for
+  one in none. A member's weight can always be given.
 
 ## Consequences
 
 - On the owner's account (eight members, 1,650 artifacts) v1 lifts the
   plan from 0.975 to 0.981, and v2 proves that optimal within each member's
   top 20 (597 nodes); the time, 67 to 95 s, is the searches.
-- With equal weights the plan trades Mualani (the burn-vape carry) down to
+- With equal weights the plan traded Mualani (the burn-vape carry) down to
   87.1% for Mavuika at 100%, both wanting 4-piece Obsidian Codex: the sum of
   shares is higher, which is right by the score and wrong by damage. With
-  role weights (on-field 2, off-field 1.5, others 1) it is the reverse,
-  Mualani 100% and Mavuika 82.9%. The default is open for the owner.
+  role weights it is the reverse, Mualani 100% and Mavuika 82.9%, which is
+  why they are the default.
 - v2 is exact only within the candidates: a build outside every member's
   top-M is never seen. v1's build is always in the pool, so v2 ≥ v1.
 - Greedy stays the fast path (`composePlan`); v1 and v2 cost a search per

@@ -208,7 +208,7 @@ describe('memberFromSpec', () => {
     for (const a of neuvillettes) expect(m.allowed!.has(a.id)).toBe(false);
   });
 
-  it('says what is wrong with a spec, and weighs 1 unless told', () => {
+  it('says what is wrong with a spec, and weighs by role unless told (ADR-0048)', () => {
     const bad = memberFromSpec(
       spec({ character: 'furina', excludeArtifacts: ['nope'] }),
       account,
@@ -223,9 +223,14 @@ describe('memberFromSpec', () => {
         },
       ],
     });
-    const ok = memberFromSpec(spec({ character: 'furina' }), account, {
+    // Furina is a buffer in the curated archetypes; Neuvillette a carry.
+    const furina = memberFromSpec(spec({ character: 'furina' }), account, {
       priority: 1,
     });
-    expect(ok.ok && ok.member.weight).toBe(1);
+    expect(furina.ok && furina.member.weight).toBe(1);
+    const neuv = memberFromSpec(spec({ character: 'neuvillette' }), account, {
+      priority: 1,
+    });
+    expect(neuv.ok && neuv.member.weight).toBe(2);
   });
 });

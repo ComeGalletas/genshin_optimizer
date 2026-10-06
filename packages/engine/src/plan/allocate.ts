@@ -24,6 +24,41 @@ import { SLOTS } from '../game/types';
 import type { ContextExtras } from '../optimizer/context';
 import type { ConstraintSpec, SpecIssue } from '../constraints/spec';
 import { specToRun, type SpecAccount } from '../constraints/toRequest';
+import { COMP_ARCHETYPES } from '../teams/comps';
+import type { Role } from '../teams/types';
+
+/** A member's default weight by role (the owner's choice, 2026-10-05,
+ *  ADR-0048): the carry's build counts most when members want the same
+ *  pieces. */
+export const ROLE_WEIGHT: Record<Role, number> = {
+  'on-field-dps': 2,
+  'off-field-dps': 1.5,
+  buffer: 1,
+  applicator: 1,
+  battery: 1,
+  sustain: 1,
+};
+
+/** The role a character fills most in the curated archetypes (summing the
+ *  options' weights), or undefined for one in none. */
+export function defaultRole(characterKey: string): Role | undefined {
+  const by = new Map<Role, number>();
+  for (const a of COMP_ARCHETYPES)
+    for (const s of a.slots)
+      for (const o of s.options)
+        if (o.characterKey === characterKey)
+          by.set(s.role, (by.get(s.role) ?? 0) + o.weight);
+  let best: Role | undefined;
+  for (const [role, w] of by)
+    if (best === undefined || w > by.get(best)!) best = role;
+  return best;
+}
+
+/** A member's weight unless one is given: their role's, else 1. */
+export function defaultWeight(characterKey: string, role?: Role): number {
+  const r = role ?? defaultRole(characterKey);
+  return r ? ROLE_WEIGHT[r] : 1;
+}
 
 export interface AllocationMember {
   characterKey: string;
@@ -35,7 +70,8 @@ export interface AllocationMember {
   allowed?: ReadonlySet<string>;
   /** Lower picks first; equal priorities keep the members' order. */
   priority: number;
-  /** Their share of the plan's objective (7.2, 7.3); 1 when even. */
+  /** Their share of the plan's objective (7.2, 7.3): by default their
+   *  role's (`ROLE_WEIGHT`). */
   weight: number;
   /** Why they can't be planned (no weapon): an infeasible result, and the
    *  line says why. */
@@ -151,7 +187,7 @@ export function memberFromSpec(
       ...(Object.keys(extras).length && { extras }),
       allowed: new Set(pool.map((a) => a.id)),
       priority: opts.priority,
-      weight: opts.weight ?? 1,
+      weight: opts.weight ?? defaultWeight(spec.character),
     },
   };
 }

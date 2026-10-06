@@ -26,6 +26,7 @@ import { computeGapReport } from '../meta/gap';
 import { genshinAdapter } from '../game/genshin/adapter';
 import {
   allocateGreedy,
+  ROLE_WEIGHT,
   type AllocatedBuild,
   type AllocationMember,
   type RunOptimize,
@@ -89,7 +90,7 @@ export function planMembers(
         topK: 1,
       },
       priority: i,
-      weight: 1,
+      weight: ROLE_WEIGHT[m.role],
       ...(!entry.weaponKey && { problem: NO_WEAPON }),
     };
   });
