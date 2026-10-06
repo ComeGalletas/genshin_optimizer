@@ -20,6 +20,7 @@ import {
 } from './gcsim';
 import { SimRunner, SimTimeout } from './runner';
 import { loadGolden } from './golden';
+import { GCSIM_SUPPORT } from '@genshin-build-lab/engine/sim/support';
 
 describe('the pin (config/tools.json)', () => {
   it('names a version, its commit and a verified binary per platform', () => {
@@ -180,4 +181,17 @@ describe.skipIf(!installed)('the installed gcsim', () => {
       /^gcsim failed: /,
     );
   }, 60_000);
+});
+
+describe('the gcsim support table (TODO 5.9)', () => {
+  it('was probed with the pinned gcsim: a new pin needs npm run sim:support', () => {
+    const tool = loadGcsimTool();
+    expect({
+      gcsim: GCSIM_SUPPORT.gcsim,
+      commit: GCSIM_SUPPORT.commit,
+    }).toEqual({
+      gcsim: tool.version,
+      commit: tool.commit,
+    });
+  });
 });

@@ -38,6 +38,8 @@ import {
   sampleTable,
   summarizeSample,
 } from '@genshin-build-lab/engine/sim/sample';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { setsInPlay, unsimulated } from '@genshin-build-lab/engine/sim/support';
 import { GcsimError, gcsimPath, loadGcsimTool } from './gcsim';
 import type { SimResult } from './result';
 import { SimRunner, SimTimeout, type SimOptions } from './runner';
@@ -187,6 +189,24 @@ export async function draftRotation(
     else builds.push(c);
   }
   if (problems.length) return { saved: false, problems };
+  // What gcsim lacks can't be drafted for (TODO 5.9): say so before running.
+  const lacking = unsimulated(
+    {
+      characters: builds.map((c) => c.key),
+      weapons: builds.map((c) => c.weapon.key),
+      sets: builds.flatMap((c) => setsInPlay(c.artifacts)),
+    },
+    {
+      character: (k) => genshinAdapter.character(k)?.name ?? k,
+      weapon: (k) => genshinAdapter.weapon(k)?.name ?? k,
+      set: (k) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
+    },
+  );
+  if (lacking.length)
+    return {
+      saved: false,
+      problems: lacking.map((l) => `${l}, so this team can't be simulated`),
+    };
 
   const meta: RotationMeta = {
     id: input.id,

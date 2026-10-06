@@ -1,8 +1,8 @@
 /**
  * Data coverage: for every character and weapon, what the app actually has for
  * it — reference stats from the genshin-db snapshot, and each hand-curated
- * table (meta recipe, damage profile, team archetypes, weapon obtainability).
- * gcsim support is a placeholder until Phase 5 adds the simulator.
+ * table (meta recipe, damage profile, team archetypes, weapon obtainability),
+ * and what the pinned gcsim implements (TODO 5.9, from `sim/support.ts`).
  *
  * Rows are the union of the snapshot's keys and every key the curated tables
  * mention, so a curated entry whose character or weapon is missing from
@@ -18,9 +18,14 @@ import { DAMAGE_PROFILES } from '../damage/profiles';
 import { COMP_ARCHETYPES } from '../teams/comps';
 import type { CompArchetype } from '../teams/types';
 import { WEAPON_OBTAINABILITY } from '../invest/obtainability';
-
-/** gcsim support is unknown until Phase 5 wires the simulator in. */
-export type GcsimSupport = 'unknown';
+import {
+  characterSupport,
+  GCSIM_SUPPORT,
+  weaponSupport,
+  type CharacterSupport,
+  type GcsimSupportTable,
+  type WeaponSupport,
+} from '../sim/support';
 
 export interface CharacterCoverage {
   key: string;
@@ -33,7 +38,9 @@ export interface CharacterCoverage {
   damageProfile: boolean;
   /** Ids of the comp archetypes that list this character in any slot. */
   archetypes: string[];
-  gcsim: GcsimSupport;
+  /** What the pinned gcsim implements: `full`, `partial`, `unsupported`,
+   *  or `unknown` (newer than the probe). */
+  gcsim: CharacterSupport;
 }
 
 export interface WeaponCoverage {
@@ -46,7 +53,7 @@ export interface WeaponCoverage {
    *  5-star) or `weaponAccessible` (best non-limited pick). */
   metaPickFor: string[];
   obtainability: boolean;
-  gcsim: GcsimSupport;
+  gcsim: WeaponSupport;
 }
 
 export interface DataCoverage {
@@ -67,6 +74,12 @@ export interface DataCoverage {
     /** Meta picks without an obtainability entry. The obtainability table is
      *  meant to cover every weapon a recipe recommends. */
     metaPicksWithoutObtainability: string[];
+    /** The gcsim version the support column was probed with. */
+    gcsim: string;
+    /** Characters the pinned gcsim implements only partly or not at all:
+     *  their teams are ranked by the stat search, "not simulated". */
+    charactersNotSimulated: string[];
+    weaponsNotSimulated: string[];
   };
 }
 
@@ -88,6 +101,7 @@ export interface CoverageSources {
   damageProfiles: Record<string, unknown>;
   archetypes: readonly CompArchetype[];
   obtainability: Record<string, unknown>;
+  gcsim: GcsimSupportTable;
 }
 
 const DEFAULT_SOURCES: CoverageSources = {
@@ -97,6 +111,7 @@ const DEFAULT_SOURCES: CoverageSources = {
   damageProfiles: DAMAGE_PROFILES,
   archetypes: COMP_ARCHETYPES,
   obtainability: WEAPON_OBTAINABILITY,
+  gcsim: GCSIM_SUPPORT,
 };
 
 const byName = (a: { name: string }, b: { name: string }) =>
@@ -141,7 +156,7 @@ export function buildDataCoverage(
         metaTarget: key in sources.metaTargets,
         damageProfile: key in sources.damageProfiles,
         archetypes: archetypesOf.get(key) ?? [],
-        gcsim: 'unknown' as const,
+        gcsim: characterSupport(key, sources.gcsim),
       };
     })
     .sort(byName);
@@ -163,7 +178,7 @@ export function buildDataCoverage(
         inGenshinDb: w !== undefined,
         metaPickFor: metaPicks.get(key) ?? [],
         obtainability: key in sources.obtainability,
-        gcsim: 'unknown' as const,
+        gcsim: weaponSupport(key, sources.gcsim),
       };
     })
     .sort(byName);
@@ -198,6 +213,13 @@ export function buildDataCoverage(
       weaponsAsMetaPick: weapons.filter((w) => w.metaPickFor.length > 0).length,
       metaPicksWithoutObtainability: weapons
         .filter((w) => w.metaPickFor.length > 0 && !w.obtainability)
+        .map((w) => w.key),
+      gcsim: sources.gcsim.gcsim,
+      charactersNotSimulated: characters
+        .filter((c) => c.gcsim === 'partial' || c.gcsim === 'unsupported')
+        .map((c) => c.key),
+      weaponsNotSimulated: weapons
+        .filter((w) => w.gcsim === 'unsupported')
         .map((w) => w.key),
     },
   };

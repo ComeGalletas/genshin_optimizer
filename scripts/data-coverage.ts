@@ -37,7 +37,7 @@ function printMarkdown(): void {
   const s = report.summary;
   console.log(`# Data coverage
 
-genshin-db ${GENSHIN_DB_VERSION}, game version ${GAME_VERSION}; curated tables as of patch ${CURATION_PATCH}. gcsim support is unknown until Phase 5.
+genshin-db ${GENSHIN_DB_VERSION}, game version ${GAME_VERSION}; curated tables as of patch ${CURATION_PATCH}; gcsim support probed from gcsim ${s.gcsim} (\`npm run sim:support\`).
 
 ## Summary
 
@@ -47,6 +47,7 @@ genshin-db ${GENSHIN_DB_VERSION}, game version ${GAME_VERSION}; curated tables a
 - Weapons: ${s.weapons}. Obtainability entry ${s.weaponsWithObtainability}, a meta pick ${s.weaponsAsMetaPick}.
 - Curated but missing from genshin-db: ${list(s.weaponsMissingFromGenshinDb)}.
 - Meta picks with no obtainability entry (${s.metaPicksWithoutObtainability.length}): ${list(s.metaPicksWithoutObtainability)}.
+- Not simulated by gcsim ${s.gcsim}, so ranked by the stat search only: characters (${s.charactersNotSimulated.length}) ${list(s.charactersNotSimulated)}; weapons (${s.weaponsNotSimulated.length}) ${list(s.weaponsNotSimulated)}.
 
 ## Characters
 

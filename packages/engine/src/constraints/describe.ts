@@ -52,6 +52,8 @@ function objectiveText(o: Objective, weights?: StatVec): string {
 export interface SimDescription {
   rotation: string;
   teammates: string[];
+  /** Why it runs as the stat search alone (TODO 5.9). */
+  notSimulated?: string[];
 }
 
 export function describeRun(
@@ -81,11 +83,13 @@ export function describeRun(
     : objective.endsWith(')')
       ? `${objective.slice(0, -1)}; default)`
       : `${objective} (default)`;
-  const goal = isSim
-    ? `rank ${character}'s top ${spec.sim?.topK ?? SIM_TOP_K} builds (${weapon}, level ${request.buildLevel}) by ${statGoal} by simulated team DPS in ${sim?.rotation ?? spec.sim?.rotation ?? 'their rotation'}${
-        sim?.teammates.length ? ` with ${sim.teammates.join(', ')}` : ''
-      } (${spec.sim?.iterations ?? SIM_ITERATIONS} iterations each)`
-    : `build ${character} (${weapon}, level ${request.buildLevel}) for ${statGoal}`;
+  const goal = sim?.notSimulated?.length
+    ? `rank ${character}'s top ${spec.sim?.topK ?? SIM_TOP_K} builds (${weapon}, level ${request.buildLevel}) by ${statGoal}, not simulated (${sim.notSimulated.join('; ')})`
+    : isSim
+      ? `rank ${character}'s top ${spec.sim?.topK ?? SIM_TOP_K} builds (${weapon}, level ${request.buildLevel}) by ${statGoal} by simulated team DPS in ${sim?.rotation ?? spec.sim?.rotation ?? 'their rotation'}${
+          sim?.teammates.length ? ` with ${sim.teammates.join(', ')}` : ''
+        } (${spec.sim?.iterations ?? SIM_ITERATIONS} iterations each)`
+      : `build ${character} (${weapon}, level ${request.buildLevel}) for ${statGoal}`;
 
   const set = c.setRequirement;
   if (set)

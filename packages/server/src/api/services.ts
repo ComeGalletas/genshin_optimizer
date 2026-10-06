@@ -73,6 +73,8 @@ import {
 } from '@genshin-build-lab/engine/sim/account';
 import { gcsimName } from '@genshin-build-lab/engine/sim/configgen';
 import { rankBySim } from '@genshin-build-lab/engine/sim/rank';
+import { setsInPlay, unsimulated } from '@genshin-build-lab/engine/sim/support';
+import { GcsimError } from '../sim/gcsim';
 import { SimPool, StoreSimCache } from '../sim/pool';
 import {
   candidate,
@@ -135,6 +137,13 @@ function invalidSpec(issues: SpecIssue[]): ServiceError {
 }
 const notFound = (m: string) => new ServiceError(404, 'not_found', m);
 const badRequest = (m: string) => new ServiceError(400, 'bad_request', m);
+
+/** Display names for the "not simulated" reasons. */
+const SIM_NAMES = {
+  character: (k: string) => genshinAdapter.character(k)?.name ?? k,
+  weapon: (k: string) => genshinAdapter.weapon(k)?.name ?? k,
+  set: (k: string) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
+};
 
 const count = <K extends string>(keys: K[]) => {
   const out = {} as Record<K, number>;
@@ -353,45 +362,74 @@ export class Services {
     understood: ReturnType<typeof describeRun>;
     /** With `objective: "sim"`: the rotation and teammates (TODO 5.8). */
     simTeam?: SimTeam;
+    /** Why a "sim" spec runs as the stat search alone (TODO 5.9). */
+    notSimulated?: string[];
   } {
     const parsed = parseConstraintSpec(input);
     if (!parsed.ok) throw invalidSpec(parsed.issues);
     let spec = parsed.spec;
     let simTeam: SimTeam | undefined;
+    let notSimulated: string[] = [];
     if (spec.objective === 'sim') {
-      const resolved = resolveSimTeam(
-        spec.character,
-        spec.sim?.rotation,
-        this.simAccount(),
-        this.rotationsDir,
+      // A character gcsim lacks runs as the stat search, labelled (5.9):
+      // there is no rotation to find for them.
+      notSimulated = unsimulated(
+        { characters: [spec.character], weapons: [] },
+        SIM_NAMES,
       );
-      if (!resolved.ok) throw invalidSpec(resolved.issues);
-      simTeam = resolved.team;
-      // A candidate never takes a teammate's pieces, unless asked to.
-      if (spec.keepEquippedOn === undefined)
-        spec = {
-          ...spec,
-          keepEquippedOn: Object.values(simTeam.teammates).map((c) => c.key),
-        };
+      if (!notSimulated.length) {
+        const resolved = resolveSimTeam(
+          spec.character,
+          spec.sim?.rotation,
+          this.simAccount(),
+          this.rotationsDir,
+        );
+        if (!resolved.ok) throw invalidSpec(resolved.issues);
+        simTeam = resolved.team;
+        const mates = Object.values(simTeam.teammates);
+        notSimulated = unsimulated(
+          {
+            characters: mates.map((c) => c.key),
+            weapons: mates.map((c) => c.weapon.key),
+            sets: mates.flatMap((c) => setsInPlay(c.artifacts)),
+          },
+          SIM_NAMES,
+        );
+        // A candidate never takes a teammate's pieces, unless asked to.
+        if (spec.keepEquippedOn === undefined)
+          spec = { ...spec, keepEquippedOn: mates.map((c) => c.key) };
+      }
     }
+    const isSim = spec.objective === 'sim';
     const mapped = specToRun(spec, this.specAccount(), {
-      topK: simTeam ? (spec.sim?.topK ?? SIM_TOP_K) : (topK ?? 5),
+      topK: isSim ? (spec.sim?.topK ?? SIM_TOP_K) : (topK ?? 5),
     });
     if (!mapped.ok) throw invalidSpec(mapped.issues);
+    if (isSim && !notSimulated.length)
+      notSimulated = unsimulated(
+        { characters: [], weapons: [mapped.run.request.weaponKey] },
+        SIM_NAMES,
+      );
     return {
       spec,
       run: mapped.run,
       understood: describeRun(
         spec,
         mapped.run,
-        simTeam && {
-          rotation: `${simTeam.rotation.meta.name}${simTeam.rotation.meta.status === 'draft' ? ' (a draft rotation)' : ''}`,
-          teammates: Object.values(simTeam.teammates).map(
-            (c) => genshinAdapter.character(c.key)?.name ?? c.key,
-          ),
-        },
+        isSim
+          ? {
+              rotation: simTeam
+                ? `${simTeam.rotation.meta.name}${simTeam.rotation.meta.status === 'draft' ? ' (a draft rotation)' : ''}`
+                : '',
+              teammates: Object.values(simTeam?.teammates ?? {}).map(
+                (c) => genshinAdapter.character(c.key)?.name ?? c.key,
+              ),
+              ...(notSimulated.length && { notSimulated }),
+            }
+          : undefined,
       ),
-      ...(simTeam && { simTeam }),
+      ...(simTeam && !notSimulated.length && { simTeam }),
+      ...(notSimulated.length && { notSimulated }),
     };
   }
 
@@ -433,7 +471,10 @@ export class Services {
 
   /** Run a spec (TODO 4.3): checked, mapped, summarised, searched. */
   async runSpec(input: unknown, topK?: number) {
-    const { spec, run, understood, simTeam } = this.checkSpec(input, topK);
+    const { spec, run, understood, simTeam, notSimulated } = this.checkSpec(
+      input,
+      topK,
+    );
     if (simTeam) return this.runSim(spec, run, understood.text, simTeam);
     let ctx;
     try {
@@ -452,6 +493,8 @@ export class Services {
       ...(result.status === 'infeasible' && {
         why: whyInfeasible(run, ctx),
       }),
+      // "sim" asked, stat search given: say why (5.9).
+      ...(notSimulated && { notSimulated }),
     };
   }
 
@@ -739,15 +782,46 @@ export class Services {
     this.pool ??= new SimPool(deps.runner, deps.commit ?? deps.gcsim, {
       cache: new StoreSimCache(this.db),
     });
-    const t0 = performance.now();
-    const runs = await simulateCandidates(
-      team,
-      searched.builds.map((b) =>
-        candidate(base, run.request, Object.values(b.artifacts)),
-      ),
-      this.pool,
-      iterations,
+    // A build wearing 2+ pieces of a set gcsim lacks can't run: it is left
+    // out of the ranking and named, the others still run (5.9).
+    const candidates = searched.builds.map((b, i) => ({
+      build: b,
+      statRank: i + 1,
+      character: candidate(base, run.request, Object.values(b.artifacts)),
+    }));
+    const skipped = candidates
+      .map((c) => ({
+        statRank: c.statRank,
+        reasons: unsimulated(
+          {
+            characters: [],
+            weapons: [],
+            sets: setsInPlay(c.character.artifacts),
+          },
+          SIM_NAMES,
+        ),
+      }))
+      .filter((c) => c.reasons.length);
+    const runnable = candidates.filter(
+      (c) => !skipped.some((s) => s.statRank === c.statRank),
     );
+    const t0 = performance.now();
+    let runs;
+    try {
+      runs = await simulateCandidates(
+        team,
+        runnable.map((c) => c.character),
+        this.pool,
+        iterations,
+      );
+    } catch (e) {
+      if (!(e instanceof GcsimError)) throw e;
+      return {
+        ...head,
+        ...searched,
+        notSimulated: [`gcsim refused the team: ${e.message}`],
+      };
+    }
     const { meta } = team.rotation;
     const sim = {
       rotation: { id: meta.id, name: meta.name, status: meta.status },
@@ -766,15 +840,15 @@ export class Services {
       return {
         ...head,
         ...searched,
-        status: 'not_simulated' as const,
-        reason: `gcsim implements ${incomplete.join(', ')} only partly, so the builds are in the stat search's order, not simulated`,
-        sim,
+        notSimulated: [
+          `gcsim ${deps.gcsim} implements ${incomplete.join(', ')} only partly`,
+        ],
       };
     const name = gcsimName(spec.character);
     const ranked = rankBySim(
-      searched.builds.map((b, i) => ({
-        item: { build: b, result: runs[i].result },
-        statRank: i + 1,
+      runnable.map((c, i) => ({
+        item: { build: c.build, result: runs[i].result },
+        statRank: c.statRank,
         dps: { ...runs[i].result.dps, iterations: runs[i].result.iterations },
       })),
     );
@@ -785,6 +859,7 @@ export class Services {
       explored: searched.explored,
       pruned: searched.pruned,
       sim,
+      ...(skipped.length && { skipped }),
       builds: ranked.map((r) => {
         const own = r.item.result.characters.find((c) => c.name === name);
         return {

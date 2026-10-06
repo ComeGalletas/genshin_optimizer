@@ -31,11 +31,28 @@ describe('buildDataCoverage on the real snapshot and tables', () => {
       inGenshinDb: true,
       metaTarget: true,
       damageProfile: true,
-      gcsim: 'unknown',
+      gcsim: 'full',
     });
     expect(furina.archetypes.length).toBeGreaterThan(0);
     expect(report.summary.charactersUncurated).toContain('vesna');
     expect(report.summary.charactersUncurated).not.toContain('furina');
+  });
+
+  it('fills the gcsim column from the probed table (TODO 5.9)', () => {
+    const by = (k: string) => report.characters.find((c) => c.key === k)!;
+    // The owner's two most-built characters gcsim lacks (research, 5.1).
+    expect(by('sandrone').gcsim).toBe('unsupported');
+    expect(by('zibai').gcsim).toBe('unsupported');
+    expect(report.summary.charactersNotSimulated).toEqual(
+      expect.arrayContaining(['sandrone', 'zibai']),
+    );
+    // Every character of the rotation library is fully implemented.
+    for (const k of ['raiden_shogun', 'skirk', 'mualani', 'nahida'])
+      expect(by(k).gcsim, k).toBe('full');
+    expect(report.summary.gcsim).toMatch(/^v\d+\.\d+\.\d+$/);
+    expect(
+      report.weapons.find((w) => w.key === 'engulfing_lightning')!.gcsim,
+    ).toBe('supported');
   });
 });
 
@@ -68,8 +85,30 @@ describe('buildDataCoverage on synthetic sources', () => {
       } as unknown as CompArchetype,
     ],
     obtainability: { blade: {} },
+    gcsim: {
+      about: '',
+      gcsim: 'v1.0.0',
+      commit: '',
+      characters: { alpha: 'full', bravo: 'partial' },
+      weapons: { blade: 'unsupported' },
+      sets: {},
+    },
   };
   const report = buildDataCoverage(sources);
+
+  it('marks what gcsim lacks, and what the probe never saw as unknown', () => {
+    const c = (k: string) => report.characters.find((x) => x.key === k)!;
+    expect([c('alpha').gcsim, c('bravo').gcsim, c('ghost').gcsim]).toEqual([
+      'full',
+      'partial',
+      'unknown',
+    ]);
+    expect(report.summary).toMatchObject({
+      gcsim: 'v1.0.0',
+      charactersNotSimulated: ['bravo'],
+      weaponsNotSimulated: ['blade'],
+    });
+  });
 
   it('surfaces curated keys that genshin-db lacks, named by key', () => {
     const ghost = report.characters.find((c) => c.key === 'ghost')!;

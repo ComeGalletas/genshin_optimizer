@@ -182,6 +182,41 @@ describe('draftRotation (TODO 5.7)', () => {
     expect(existsSync(join(dir, 'raiden-xingqiu'))).toBe(false);
   });
 
+  it('refuses a team the pinned gcsim can’t simulate, before running it (5.9)', async () => {
+    const f = fakeRunner();
+    const withSandrone: SimAccount = {
+      ...ACCOUNT,
+      roster: {
+        ...ACCOUNT.roster,
+        sandrone: {
+          level: 90,
+          buildLevel: 90,
+          talents: { auto: 9, skill: 9, burst: 9 },
+          weaponKey: 'favonius_codex',
+        },
+      },
+    };
+    expect(
+      await draftRotation(
+        {
+          ...INPUT,
+          slots: [
+            ...INPUT.slots.slice(0, 3),
+            { id: 'bennett', character: 'sandrone', role: 'buffer' },
+          ],
+        },
+        withSandrone,
+        deps(f.runner),
+      ),
+    ).toEqual({
+      saved: false,
+      problems: [
+        "gcsim v2.48.8 doesn't implement Sandrone, so this team can't be simulated",
+      ],
+    });
+    expect(f.configs).toEqual([]);
+  });
+
   it('hands back gcsim’s own refusal, and a fight that never ends, to fix', async () => {
     const refused = await draftRotation(
       INPUT,

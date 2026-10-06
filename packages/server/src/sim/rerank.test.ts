@@ -6,7 +6,20 @@ import type { SimAccount } from '@genshin-build-lab/engine/sim/account';
 import type { SimCharacter } from '@genshin-build-lab/engine/sim/configgen';
 import { sampleAccountServices } from '../llm/evaluate';
 import { Services, ServiceError } from '../api/services';
-import { gcsimPath, loadGcsimTool } from './gcsim';
+import { GcsimError, gcsimPath, loadGcsimTool } from './gcsim';
+import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { weaponSupport } from '@genshin-build-lab/engine/sim/support';
+
+/** A weapon gcsim has, of the character's type. */
+const GCSIM_TABLE_SWORD_OR_ANY = (character: string) =>
+  genshinAdapter
+    .weapons()
+    .find(
+      (w) =>
+        w.type === genshinAdapter.character(character)!.weaponType &&
+        w.rarity === 5 &&
+        weaponSupport(w.key) === 'supported',
+    )!.key;
 import { installedRotationDeps, type RotationDeps } from './drafts';
 import { readResult, type SimResult } from './result';
 import { ROTATIONS_DIR } from './rotations';
@@ -200,16 +213,65 @@ describe('objective "sim" (TODO 5.8)', () => {
     await sample.searches.close();
   });
 
-  it('a character gcsim knows only partly: the stat order, labelled not simulated', async () => {
+  it('a character the run finds gcsim knows only partly: the stat order, labelled (5.9)', async () => {
     const sample = sampleAccountServices();
     const services = new Services(sample.db, undefined, {
       deps: fakeDeps(['raidenshogun']).deps,
     });
     const r = await services.runSpec(SPEC);
     expect(r).toMatchObject({
-      status: 'not_simulated',
-      reason:
-        "gcsim implements raidenshogun only partly, so the builds are in the stat search's order, not simulated",
+      status: 'ok',
+      notSimulated: ['gcsim v2.48.8 implements raidenshogun only partly'],
+    });
+    expect('sim' in r).toBe(false);
+    await services.searches.close();
+    await sample.searches.close();
+  });
+
+  it('gcsim refusing the team at run time: the stat order, with its message', async () => {
+    const sample = sampleAccountServices();
+    const { deps } = fakeDeps();
+    deps.runner.run = () =>
+      Promise.reject(new GcsimError('gcsim failed: invalid set foo'));
+    const services = new Services(sample.db, undefined, { deps });
+    const r = await services.runSpec(SPEC);
+    expect(r).toMatchObject({
+      status: 'ok',
+      notSimulated: ['gcsim refused the team: gcsim failed: invalid set foo'],
+    });
+    await services.searches.close();
+    await sample.searches.close();
+  });
+
+  it('what the pinned gcsim lacks runs as the stat search, labelled, without gcsim at all (5.9)', async () => {
+    const sample = sampleAccountServices();
+    const services = new Services(sample.db, undefined, {});
+    // Sandrone: not in gcsim v2.48.8 (nor in this account, so a weapon).
+    const sandrone = await services.runSpec({
+      character: 'sandrone',
+      weapon: GCSIM_TABLE_SWORD_OR_ANY('sandrone'),
+      defaults: 'replace',
+      objective: 'sim',
+    });
+    expect(sandrone).toMatchObject({
+      status: 'ok',
+      notSimulated: ["gcsim v2.48.8 doesn't implement Sandrone"],
+      understood: expect.stringMatching(
+        /^I understood: rank Sandrone's top 20 builds \(.*\) by .*, not simulated \(gcsim v2\.48\.8 doesn't implement Sandrone\)/,
+      ),
+    });
+    expect('builds' in sandrone && sandrone.builds.length).toBeGreaterThan(0);
+    // A weapon gcsim lacks: Bennett with Prized Isshin Blade.
+    const isshin = await services.runSpec({
+      character: 'bennett',
+      weapon: 'prized_isshin_blade',
+      defaults: 'replace',
+      objective: 'sim',
+      sim: { rotation: 'raiden-national-xingqiu' },
+    });
+    expect(isshin).toMatchObject({
+      status: 'ok',
+      notSimulated: ["gcsim v2.48.8 doesn't have Prized Isshin Blade"],
     });
     await services.searches.close();
     await sample.searches.close();
