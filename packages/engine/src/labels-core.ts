@@ -186,3 +186,12 @@ const countFormatter = new Intl.NumberFormat('en-US');
 export function formatCount(n: number): string {
   return countFormatter.format(n);
 }
+
+/** "artifact" / "artifacts": English's regular plural, or the one given. */
+export const pluralWord = (n: number, one: string, many = `${one}s`) =>
+  n === 1 ? one : many;
+
+/** "1 artifact" / "1,650 artifacts": a count with its word, grouped as every
+ *  other count. The one plural helper, for the engine, server and web. */
+export const countOf = (n: number, one: string, many?: string) =>
+  `${formatCount(n)} ${pluralWord(n, one, many)}`;

@@ -30,6 +30,7 @@ import { SimRunner } from '../sim/runner';
 import { loadGolden } from '../sim/golden';
 import { formatJson, loadRotations, ROTATIONS_DIR } from '../sim/rotations';
 import type { SimResult } from '../sim/result';
+import { countOf } from '@genshin-build-lab/engine/labels';
 
 /** How far a community rotation may land from its published DPS. */
 const PUBLISHED_TOLERANCE_PCT = 2;
@@ -150,6 +151,6 @@ function details(s: SimResult) {
     );
 }
 if (failed) {
-  console.log(`${failed} check${failed === 1 ? '' : 's'} failed`);
+  console.log(`${countOf(failed, 'check')} failed`);
   process.exitCode = 1;
 }

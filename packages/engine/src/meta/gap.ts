@@ -20,6 +20,7 @@ import {
   objectiveLabel,
   SLOT_LABELS,
   statLabel,
+  pluralWord,
 } from '../labels';
 
 export interface GapReport {
@@ -81,7 +82,7 @@ export function computeGapReport(
   const sg = setRequirementGap(meta.setRequirement, inventory);
   if (sg)
     feasibility.push(
-      `You own ${sg.have} ${formatSetName(sg.setKey)} piece${sg.have === 1 ? '' : 's'} across slots — need ${sg.need} for the meta set.`,
+      `You own ${sg.have} ${formatSetName(sg.setKey)} ${pluralWord(sg.have, 'piece')} across slots — need ${sg.need} for the meta set.`,
     );
   const mg = mainGaps(meta, inventory);
   for (const g of mg)

@@ -36,6 +36,7 @@ import {
   sampleAccountServices,
   type Translator,
 } from '../llm/evaluate';
+import { countOf } from '@genshin-build-lab/engine/labels';
 
 const args = process.argv.slice(2);
 const option = (name: string) => {
@@ -93,7 +94,7 @@ console.error(
 );
 const e = await evaluateGolden(label, translate, services, cases, (r, i) =>
   console.error(
-    `${String(i + 1).padStart(2)}. ${r.equivalent ? 'ok  ' : r.translated ? 'diff' : 'FAIL'} ${r.id} (${(r.ms / 1000).toFixed(1)} s, ${r.attempts} attempt${r.attempts === 1 ? '' : 's'})${r.equivalent ? '' : `: ${r.error ?? r.diff.join('; ')}`}`,
+    `${String(i + 1).padStart(2)}. ${r.equivalent ? 'ok  ' : r.translated ? 'diff' : 'FAIL'} ${r.id} (${(r.ms / 1000).toFixed(1)} s, ${countOf(r.attempts, 'attempt')})${r.equivalent ? '' : `: ${r.error ?? r.diff.join('; ')}`}`,
   ),
 );
 await services.searches.close();

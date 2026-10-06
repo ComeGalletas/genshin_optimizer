@@ -28,6 +28,7 @@ import { encodeComparison } from '@genshin-build-lab/engine/share/comparison';
 // The server's own limit on variants, so the form can't drift from it.
 import { MAX_VARIANTS } from '@genshin-build-lab/engine/sim/team';
 import { HelpButton, HelpPanel } from '../components/help/Help';
+import { countOf } from '../labels';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -77,7 +78,7 @@ function autoLabel(d: Draft, rotations: RotationSummary[]): string {
     case 'swap':
       return `${name(d.to)} for ${name(d.character)}`;
     case 'enemy':
-      return `${d.count} target${d.count === 1 ? '' : 's'}, ${d.res}% RES, level ${d.level}`;
+      return `${countOf(d.count, 'target')}, ${d.res}% RES, level ${d.level}`;
     case 'rotation':
       return rotations.find((r) => r.id === d.rotation)?.name ?? d.rotation;
   }
@@ -568,7 +569,7 @@ function enemyText(run: TeamRun, base: TeamRun): string | null {
     e.res !== undefined && e.res !== b.res && `${e.res}% resistance`,
     e.count !== undefined &&
       e.count !== (b.count ?? 1) &&
-      `${e.count} target${e.count === 1 ? '' : 's'}`,
+      countOf(e.count, 'target'),
   ].filter(Boolean);
   return parts.length ? `enemy: ${parts.join(', ')}` : null;
 }

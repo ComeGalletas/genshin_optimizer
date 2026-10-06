@@ -31,8 +31,6 @@ const MAX_ADVICE = 10;
 /** No banner-schedule data ships with the app — say so rather than guess. */
 const ROTATES = 'Availability rotates — check a banner tracker before pulling.';
 
-const weaponName = (key: string) => genshinAdapter.weaponName(key);
-
 /** The best craftable weapon in the curated table for a given weapon type. */
 function craftableFor(weaponType: string): string | undefined {
   for (const [key, entry] of Object.entries(WEAPON_OBTAINABILITY)) {
@@ -87,8 +85,8 @@ export function adviseInvestments(
     out.push({
       kind: 'weapon',
       subjectKey: craft,
-      headline: `${genshinAdapter.characterName(key)} is holding ${weaponName(equipped)} — ${weaponName(craft)} is a free upgrade path`,
-      detail: `${weaponName(craft)} is craftable — no wishes needed.`,
+      headline: `${genshinAdapter.characterName(key)} is holding ${genshinAdapter.weaponName(equipped)} — ${genshinAdapter.weaponName(craft)} is a free upgrade path`,
+      detail: `${genshinAdapter.weaponName(craft)} is craftable — no wishes needed.`,
       provenance: key,
       upside: scores[key] ?? 0,
       source: WEAPON_OBTAINABILITY[craft]?.source,
