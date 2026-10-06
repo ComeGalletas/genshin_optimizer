@@ -52,7 +52,10 @@ at 85, had no exact numbers.
   details load on first open, so the first load carries neither.
 - **The art** is the wish art from Enka (`UI_Gacha_AvatarImg_<name>`,
   linked, never stored, as ADR-0052), 85% transparent behind the content,
-  which sits on cards to stay readable. "Show game art" off removes it.
+  which sits on cards to stay readable. It is placed 75px right of its
+  60% point (the owner's placement), so the character sits nearer the
+  window's middle; the art is wider than the window, so no edge shows.
+  "Show game art" off removes it.
 
 ## Consequences
 

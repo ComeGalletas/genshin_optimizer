@@ -11,6 +11,10 @@ import { useSettings } from '../state/settings';
 import { setImageNamesForTests } from '../components/imageNames';
 import { TeamsView } from '../teams/TeamsView';
 
+/** The window and its details file load lazily: a cold first import can
+ *  outlast findBy's default second. */
+const LAZY = { timeout: 10_000 };
+
 const flower: Artifact = {
   id: 'f1',
   setKey: 'GoldenTroupe',
@@ -67,7 +71,7 @@ describe('character window', () => {
     );
     expect(screen.queryByRole('dialog')).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Furina: details' }));
-    const dialog = await screen.findByRole('dialog', { name: 'Furina' });
+    const dialog = await screen.findByRole('dialog', { name: 'Furina' }, LAZY);
     const splash = within(dialog).getByTestId('character-splash');
     expect(splash).toHaveAttribute(
       'src',
@@ -75,6 +79,8 @@ describe('character window', () => {
     );
     // 85% transparent.
     expect(splash).toHaveClass('opacity-15');
+    // Moved 75px right, so the character sits nearer the middle.
+    expect(splash.style.objectPosition).toBe('calc(60% + 75px) center');
   });
 
   it('shows no art when game art is off', async () => {
@@ -82,7 +88,7 @@ describe('character window', () => {
     furina();
     render(<CharacterWindow />);
     openCharacter('furina');
-    await screen.findByRole('dialog');
+    await screen.findByRole('dialog', undefined, LAZY);
     expect(screen.queryByTestId('character-splash')).toBeNull();
   });
 
@@ -91,7 +97,7 @@ describe('character window', () => {
     render(<CharacterWindow />);
     openCharacter('furina');
     // Furina's C3 raises her burst; C5 (not reached) her skill.
-    const burst = await screen.findByTestId('talent-burst');
+    const burst = await screen.findByTestId('talent-burst', undefined, LAZY);
     expect(burst).toHaveTextContent('Let the People Rejoice');
     expect(burst).toHaveTextContent(/10\s*\+ 3$/);
     expect(screen.getByTestId('talent-skill')).toHaveTextContent(/10$/);
@@ -103,11 +109,11 @@ describe('character window', () => {
     furina();
     render(<CharacterWindow />);
     openCharacter('furina');
-    await user.click(await screen.findByRole('tab', { name: 'Stats' }));
+    await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
     // 15,307 base HP at 90; the flower's 4,780 plus 10% of the base.
-    expect(await screen.findByTestId('stat-hp')).toHaveTextContent(
-      'HP15307 + 6311 = 21618',
-    );
+    expect(
+      await screen.findByTestId('stat-hp', undefined, LAZY),
+    ).toHaveTextContent('HP15307 + 6311 = 21618');
     // 5% base, 3.9% from the flower, 19.2% from her ascension.
     expect(screen.getByTestId('stat-crit_rate')).toHaveTextContent(
       'CRIT Rate5.0% + 3.9% + 19.2% = 28.1%',
@@ -123,11 +129,13 @@ describe('character window', () => {
     furina();
     render(<CharacterWindow />);
     openCharacter('furina');
-    await user.click(await screen.findByRole('tab', { name: 'Gear' }));
-    const weapon = await screen.findByRole('region', { name: 'Weapon' });
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    const weapon = await screen.findByRole('region', { name: 'Weapon' }, LAZY);
     expect(weapon).toHaveTextContent('Splendor of Tranquil Waters');
     expect(weapon).toHaveTextContent('Lv 90 · R1');
-    expect(await within(weapon).findByText('542')).toBeInTheDocument();
+    expect(
+      await within(weapon).findByText('542', undefined, LAZY),
+    ).toBeInTheDocument();
     expect(weapon).toHaveTextContent('Dawn and Dusk by the Lake (R1)');
     expect(weapon).toHaveTextContent(/8%.*14%/);
     expect(weapon).toHaveTextContent(/A scepter around which swirls/);
@@ -140,11 +148,13 @@ describe('character window', () => {
     const user = userEvent.setup();
     render(<CharacterWindow />);
     openCharacter('furina');
-    expect(await screen.findByText(/Not in your roster/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Not in your roster/, undefined, LAZY),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: 'Stats' }));
-    expect(await screen.findByTestId('stat-hp')).toHaveTextContent(
-      'HP15307 + 0 = 15307',
-    );
+    expect(
+      await screen.findByTestId('stat-hp', undefined, LAZY),
+    ).toHaveTextContent('HP15307 + 0 = 15307');
     await user.click(screen.getByRole('tab', { name: 'Gear' }));
     expect(screen.getByText('No weapon equipped.')).toBeInTheDocument();
   });
@@ -180,7 +190,7 @@ describe('character window', () => {
     );
     await user.click(screen.getByRole('button', { name: 'Furina: details' }));
     expect(
-      await screen.findByRole('dialog', { name: 'Furina' }),
+      await screen.findByRole('dialog', { name: 'Furina' }, LAZY),
     ).toBeInTheDocument();
   });
 });
