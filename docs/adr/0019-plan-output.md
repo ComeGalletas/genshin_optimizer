@@ -1,6 +1,6 @@
 # 0019. The Plan page
 
-- Status: Accepted
+- Status: Accepted (amended by [0048](0048-account-wide-allocation.md))
 - Date: 2026-08-20
 
 ## Context

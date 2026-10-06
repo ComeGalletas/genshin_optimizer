@@ -1,0 +1,66 @@
+# 0048. Account-wide allocation: a scored plan, a local search, an exact pass
+
+- Status: Accepted
+- Date: 2026-10-05
+- Amends: [0019](0019-plan-output.md)
+
+## Context
+
+ADR-0019 shares one inventory between the eight Abyss members greedily:
+the carry gets first pick, each member is optimised over what earlier ones
+left. It called a joint assignment "exponentially larger for a marginal
+gain". Phase 7 asks for the joint assignment anyway, for any N characters
+with their own specs, with a greedy-plus-local-search version (v1) and an
+exact one (v2), and tests that v2 is never worse than v1.
+
+Comparing two allocations needs one number for a plan, but the members'
+objectives don't share a scale: estimated damage runs to tens of
+thousands, crit value to hundreds, a stat to tens.
+
+## Decision
+
+- **Members** (`plan/allocate.ts`): any characters, each with an optimize
+  request built from their ConstraintSpec by the same mapping a single
+  search uses, the pieces their spec allows, a priority (the greedy pass's
+  picking order) and a weight. `composePlan` is the eight-member case, its
+  behaviour unchanged.
+- **The plan's score**: each member's build score (the optimizer's own:
+  the objective less the crit-ratio tiebreak) over their **solo best** (the
+  best build their spec allows from everything, as if alone), times their
+  weight, averaged over the weights. 1 means everyone has their own best. A
+  member no build fits even alone is left out; one left without a build by
+  the others counts 0.
+- **v1** (`plan/improve.ts`): the greedy pass, then a local search, best
+  move first until none helps: swap one slot between two members, take a
+  free piece, re-optimise one member over the free pieces and their own, and
+  for a member left without a build, a pair move (they re-optimise with
+  another's pieces in reach, the other over what is left). Every move is
+  checked as a search checks a build (constraints, off-element goblets), so
+  the plan is valid and never below greedy.
+- **v2** (`plan/exact.ts`): each member's top-M builds (M = 20 by default)
+  plus v1's, and "no build"; the best choice of one per member with no
+  artifact twice, by a **branch and bound** (members with most at stake
+  first, candidates best first, bounded by what each remaining member could
+  still add with what is free). PLAN said ILP with HiGHS; the problem is a
+  weighted set packing of eight members by a few dozen options, which a
+  hand-written exact search solves in hundreds of nodes, so the solver
+  dependency and its WASM payload in the web bundle aren't needed. A node
+  budget keeps a pathological case bounded; the result says when it was
+  hit (`exact: false`).
+- **Weights** default to 1 (equal). They decide trades between members who
+  want the same pieces; choosing them is the owner's call (below).
+
+## Consequences
+
+- On the owner's account (eight members, 1,650 artifacts) v1 lifts the
+  plan from 0.975 to 0.981, and v2 proves that optimal within each member's
+  top 20 (597 nodes); the time, 67 to 95 s, is the searches.
+- With equal weights the plan trades Mualani (the burn-vape carry) down to
+  87.1% for Mavuika at 100%, both wanting 4-piece Obsidian Codex: the sum of
+  shares is higher, which is right by the score and wrong by damage. With
+  role weights (on-field 2, off-field 1.5, others 1) it is the reverse,
+  Mualani 100% and Mavuika 82.9%. The default is open for the owner.
+- v2 is exact only within the candidates: a build outside every member's
+  top-M is never seen. v1's build is always in the pool, so v2 ≥ v1.
+- Greedy stays the fast path (`composePlan`); v1 and v2 cost a search per
+  member for the solo best, and v2 a top-M search per member.

@@ -74,6 +74,26 @@ export function buildValue(
   );
 }
 
+/** A member's build of these pieces as the result the app shows (the
+ *  search's counters kept from `prev`). */
+export function resultFor(
+  m: AllocationMember,
+  pieces: readonly Artifact[],
+  prev: OptimizeResult,
+): OptimizeResult {
+  const c = buildContext(m.request, m.extras);
+  const counted = zeroOffElementGoblets(pieces, m.characterKey);
+  const b: BuildResult = makeBuildResult(c, m.request, counted);
+  return {
+    status: 'ok',
+    builds: [
+      { ...b, diagnostics: buildDiagnostics(c, m.request, b, counted, 0, 0) },
+    ],
+    explored: prev.explored,
+    pruned: prev.pruned,
+  };
+}
+
 export interface AllocationV1 {
   /** In picking order, as `allocateGreedy` returns them. */
   builds: AllocatedBuild[];
@@ -320,22 +340,14 @@ export async function allocateV1(
             },
           }
         : g;
-    const chosen = SLOTS.map((s) => p.get(s)!);
-    const c = ctx.get(m)!;
-    const counted = zeroOffElementGoblets(chosen, m.characterKey);
-    const b: BuildResult = makeBuildResult(c, m.request, counted);
-    const result: OptimizeResult = {
-      status: 'ok',
-      builds: [
-        {
-          ...b,
-          diagnostics: buildDiagnostics(c, m.request, b, counted, 0, 0),
-        },
-      ],
-      explored: g.result.explored,
-      pruned: g.result.pruned,
+    return {
+      ...g,
+      result: resultFor(
+        m,
+        SLOTS.map((s) => p.get(s)!),
+        g.result,
+      ),
     };
-    return { ...g, result };
   });
   return {
     builds,
