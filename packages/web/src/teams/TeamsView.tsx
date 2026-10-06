@@ -24,6 +24,7 @@ import {
 } from '@genshin-build-lab/engine/teams/recommend';
 import { BAND_TONE, bandLabel, formatScore, ROLE_LABELS } from '../labels';
 import { Badge } from '../components/ui/Badge';
+import { CharacterPortrait } from '../components/GameArt';
 
 /** The endgame modes this view does not recommend for yet. Named, not offered:
  *  the `EndgameMode` union still carries them, so adding one here is the only
@@ -48,6 +49,7 @@ function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
               data-testid="team-member"
               className="flex items-center gap-3 text-sm"
             >
+              <CharacterPortrait characterKey={m.characterKey} size={28} />
               <span className="min-w-0 flex-1 truncate font-semibold text-paper">
                 {genshinAdapter.characterName(m.characterKey)}
               </span>

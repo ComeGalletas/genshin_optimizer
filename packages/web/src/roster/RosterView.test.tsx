@@ -80,7 +80,9 @@ describe('RosterView', () => {
     expect(screen.queryByRole('heading', { level: 3 })).toBeNull();
     const names = screen
       .getAllByRole('listitem')
-      .map((li) => li.querySelector('span')?.textContent);
+      .map(
+        (li) => li.querySelector('[data-testid="roster-name"]')?.textContent,
+      );
     expect(names[0]).toBe('Neuvillette');
 
     expect(screen.queryByText('Artifact quality')).not.toBeInTheDocument();

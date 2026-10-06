@@ -12,6 +12,7 @@ import {
   SLOT_LABELS,
   statLabel,
 } from '@genshin-build-lab/engine/labels';
+import { ArtifactIcon } from './GameArt';
 
 const name = (key: string) => genshinAdapter.characterName(key);
 
@@ -19,18 +20,21 @@ const name = (key: string) => genshinAdapter.characterName(key);
  *  and who wears it. */
 export function PieceLine({ a, note }: { a: Artifact; note?: ReactNode }) {
   return (
-    <li className="text-xs leading-relaxed">
-      <span className="font-medium text-paper">
-        {formatSetName(a.setKey)} {SLOT_LABELS[a.slot].toLowerCase()}
-      </span>{' '}
-      <span className="text-muted">
-        · {statLabel(a.mainStat)} · +{a.level} ·{' '}
-        {a.subStats
-          .map((s) => `${statLabel(s.key)} ${formatStat(s.key, s.value)}`)
-          .join(', ')}
-        {a.location ? ` · on ${name(a.location)}` : ''}
+    <li className="flex items-start gap-2 text-xs leading-relaxed">
+      <ArtifactIcon setKey={a.setKey} slot={a.slot} size={20} />
+      <span>
+        <span className="font-medium text-paper">
+          {formatSetName(a.setKey)} {SLOT_LABELS[a.slot].toLowerCase()}
+        </span>{' '}
+        <span className="text-muted">
+          · {statLabel(a.mainStat)} · +{a.level} ·{' '}
+          {a.subStats
+            .map((s) => `${statLabel(s.key)} ${formatStat(s.key, s.value)}`)
+            .join(', ')}
+          {a.location ? ` · on ${name(a.location)}` : ''}
+        </span>
+        {note && <span className="text-paper"> {note}</span>}
       </span>
-      {note && <span className="text-paper"> {note}</span>}
     </li>
   );
 }

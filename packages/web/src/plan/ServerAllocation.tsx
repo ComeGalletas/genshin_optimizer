@@ -18,6 +18,7 @@ import {
 import { BuildCard } from '../components/BuildCard';
 import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
+import { CharacterPortrait } from '../components/GameArt';
 
 const MODES: { mode: AllocateMode; label: string; hint: string }[] = [
   {
@@ -172,6 +173,10 @@ export function ServerAllocation({
               <li key={m.characterKey} data-testid="alloc-member">
                 <details className="group rounded-lg bg-white/[0.02] px-3 py-2">
                   <summary className="focus-ring flex cursor-pointer list-none items-center gap-3 rounded">
+                    <CharacterPortrait
+                      characterKey={m.characterKey}
+                      size={28}
+                    />
                     <span className="min-w-28 text-sm text-paper">
                       {name(m.characterKey)}
                     </span>

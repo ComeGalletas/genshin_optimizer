@@ -8,6 +8,7 @@ import { formatSetName } from '@genshin-build-lab/engine/labels';
 import type { TeamRun } from '../local-server/teamsim';
 import { Disclosure } from '../components/ui/Disclosure';
 import { kilo } from './kilo';
+import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
 
 type Member = NonNullable<TeamRun['team']>[number];
 
@@ -55,9 +56,17 @@ export function TeamAsRun({ runs }: { runs: TeamRun[] }) {
           {base.team.map((m) => (
             <tr key={m.slot} className="border-t border-white/5">
               <th scope="row" className="py-1 pr-3 text-left font-normal">
-                {name(m.character)}
+                <span className="flex items-center gap-2">
+                  <CharacterPortrait characterKey={m.character} size={24} />
+                  {name(m.character)}
+                </span>
               </th>
-              <td className="py-1 pr-3">{weapon(m)}</td>
+              <td className="py-1 pr-3">
+                <span className="flex items-center gap-2">
+                  <WeaponIcon weaponKey={m.weapon} size={24} />
+                  {weapon(m)}
+                </span>
+              </td>
               <td className="py-1">{sets(m)}</td>
             </tr>
           ))}

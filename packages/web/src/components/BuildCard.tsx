@@ -27,6 +27,7 @@ import { cn } from './ui/cn';
 import { Meter } from './ui/Meter';
 import { GradeMarker } from './ui/GradeMarker';
 import { Disclosure } from './ui/Disclosure';
+import { ArtifactIcon } from './GameArt';
 
 const SHOW: StatKey[] = [
   'atk',
@@ -319,7 +320,14 @@ export function BuildCard({
                 {/* Decorative: the slot name sits right beside it. The grey
                     box this used to sit in was scaffolding for an unreliable
                     text glyph — the mark carries itself now. */}
-                <SlotGlyph slot={s} className="h-[17px] w-[17px] text-accent" />
+                {a ? (
+                  <ArtifactIcon setKey={a.setKey} slot={s} size={28} />
+                ) : (
+                  <SlotGlyph
+                    slot={s}
+                    className="h-[17px] w-[17px] text-accent"
+                  />
+                )}
                 <span className="w-16 flex-none text-xs uppercase tracking-wide text-muted">
                   {SLOT_LABELS[s]}
                 </span>

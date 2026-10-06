@@ -20,6 +20,7 @@ import { BAND_TONE, bandLabel, formatScore } from '../labels';
 import { CharacterLine } from '../components/ui/CharacterLine';
 import { Badge } from '../components/ui/Badge';
 import { Meter } from '../components/ui/Meter';
+import { CharacterPortrait } from '../components/GameArt';
 
 /** Artifact count (10) + artifact quality (30) in `computeBuildScore` — the two
  *  components a character with nothing equipped can never earn. */
@@ -52,18 +53,24 @@ function Row({
       >
         {/* No <h3>: a heading inside a button is stripped of its heading role
             anyway, and 16 identical rows are not a useful heading outline. */}
-        <div className="min-w-0 flex-1">
-          <span className="block truncate font-display text-sm font-bold text-paper">
-            {name}
-          </span>
-          <span className="block truncate text-xs text-muted">
-            <CharacterLine element={element} weaponName={weaponName} />
-          </span>
-          {equippedCount === 0 && (
-            <span className="block text-xs text-amber">
-              No equipped gear found — {UNSCORED_WITHOUT_GEAR} pts unscored
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <CharacterPortrait characterKey={characterKey} size={40} />
+          <div className="min-w-0 flex-1">
+            <span
+              className="block truncate font-display text-sm font-bold text-paper"
+              data-testid="roster-name"
+            >
+              {name}
             </span>
-          )}
+            <span className="block truncate text-xs text-muted">
+              <CharacterLine element={element} weaponName={weaponName} />
+            </span>
+            {equippedCount === 0 && (
+              <span className="block text-xs text-amber">
+                No equipped gear found — {UNSCORED_WITHOUT_GEAR} pts unscored
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex flex-none items-center gap-3">
           <div className="flex-none">

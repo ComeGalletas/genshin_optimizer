@@ -31,6 +31,7 @@ import type {
   StatKey,
 } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
 
 const TABS = ['Overview', 'Gear', 'Recommended', 'Teams'] as const;
 type Tab = (typeof TABS)[number];
@@ -89,6 +90,12 @@ export function CharacterDetail({
       >
         {tab === 'Overview' && (
           <>
+            <div className="flex items-center gap-3">
+              <CharacterPortrait characterKey={characterKey} size={64} />
+              {entry.weaponKey && (
+                <WeaponIcon weaponKey={entry.weaponKey} size={44} />
+              )}
+            </div>
             <p className="text-muted">
               <CharacterLine element={char?.element} weaponName={weaponName} />
               {entry.level != null && ` · Lv ${entry.level}`}

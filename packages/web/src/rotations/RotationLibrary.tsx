@@ -19,6 +19,7 @@ import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
 import { useCompareRotation } from '../teams/compareRotation';
 import { scrollToId } from '../ui/scroll';
+import { CharacterPortrait } from '../components/GameArt';
 
 const nf = (n: number) => Math.round(n).toLocaleString('en-US');
 const name = (k: string) => genshinAdapter.characterName(k);
@@ -205,9 +206,20 @@ export function RotationLibrary() {
                   : 'Draft: needs your review'}
               </span>
             </div>
-            <p className="text-xs text-muted">
-              {(r.characters ?? []).map(slotNames).join(' · ')}
-            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="flex -space-x-1.5" aria-hidden="true">
+                {(r.characters ?? []).map((slot) => (
+                  <CharacterPortrait
+                    key={slot}
+                    characterKey={slot.split(' or ')[0]}
+                    size={28}
+                  />
+                ))}
+              </span>
+              <p className="text-xs text-muted">
+                {(r.characters ?? []).map(slotNames).join(' · ')}
+              </p>
+            </div>
             {r.summary && <p className="mt-1 text-xs">{r.summary}</p>}
             <p className="mt-1 text-xs text-muted">
               {SOURCE[r.source ?? ''] ?? r.source}

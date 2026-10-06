@@ -41,6 +41,7 @@ import {
   type DerivedTeammate,
 } from '@genshin-build-lab/engine/teams/comps';
 import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
+import { CharacterPortrait, WeaponIcon } from './GameArt';
 
 // Every objective a curated meta recipe can recommend has to be offerable,
 // or "(Recommended)" points at an option the dropdown doesn't carry — which is
@@ -365,13 +366,18 @@ export function OptimizePanel({
             <label className="field-label" htmlFor={`${uid}-character`}>
               Character
             </label>
-            <Combobox
-              id={`${uid}-character`}
-              options={charOptions}
-              value={characterKey}
-              onChange={setCharacterKey}
-              label="Character"
-            />
+            <div className="flex items-center gap-2">
+              <CharacterPortrait characterKey={characterKey} size={40} />
+              <div className="min-w-0 flex-1">
+                <Combobox
+                  id={`${uid}-character`}
+                  options={charOptions}
+                  value={characterKey}
+                  onChange={setCharacterKey}
+                  label="Character"
+                />
+              </div>
+            </div>
           </div>
           <div className="block">
             <label className="field-label" htmlFor={`${uid}-weapon`}>
@@ -384,13 +390,18 @@ export function OptimizePanel({
                 </span>
               )}
             </label>
-            <Combobox
-              id={`${uid}-weapon`}
-              options={weaponOptions}
-              value={weaponKey}
-              onChange={setWeaponKey}
-              label="Weapon"
-            />
+            <div className="flex items-center gap-2">
+              <WeaponIcon weaponKey={weaponKey} size={40} />
+              <div className="min-w-0 flex-1">
+                <Combobox
+                  id={`${uid}-weapon`}
+                  options={weaponOptions}
+                  value={weaponKey}
+                  onChange={setWeaponKey}
+                  label="Weapon"
+                />
+              </div>
+            </div>
           </div>
           <label className="block">
             <span className="field-label">Build level</span>
