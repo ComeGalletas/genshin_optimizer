@@ -157,12 +157,22 @@ export interface TeamSimResult {
   runs: TeamRun[];
 }
 
-export async function fetchRotations(): Promise<RotationSummary[]> {
-  const r = await serverJson<{ rotations: RotationSummary[] }>('/rotations', {
-    timeoutMs: 10_000,
-    expect: withArrays('rotations'),
-  });
-  return r.rotations;
+let rotationsInFlight: Promise<RotationSummary[]> | null = null;
+
+/** The rotation library. Callers that ask while a request is out share it:
+ *  Simulate's two sections (Compare Teams, the Rotation Library) open
+ *  together and used to fetch it twice. Nothing is kept once it settles,
+ *  so the next view fetches fresh. */
+export function fetchRotations(): Promise<RotationSummary[]> {
+  rotationsInFlight ??= serverJson<{ rotations: RotationSummary[] }>(
+    '/rotations',
+    { timeoutMs: 10_000, expect: withArrays('rotations') },
+  )
+    .then((r) => r.rotations)
+    .finally(() => {
+      rotationsInFlight = null;
+    });
+  return rotationsInFlight;
 }
 
 /** A comparison: seconds for a few variants, more with optimizer builds. */
