@@ -148,6 +148,34 @@ describe('character window', () => {
     expect(screen.queryByRole('region', { name: 'Constellations' })).toBeNull();
   });
 
+  // Skirk at C1 (the owner's account): one constellation, a row that
+  // opens to its words, the game's highlighted terms in bold.
+  it('opens each constellation like a talent, its terms in bold', async () => {
+    const user = userEvent.setup();
+    useRoster.getState().setRoster({
+      skirk: {
+        buildLevel: 90,
+        level: 90,
+        constellation: 1,
+        talents: { auto: 9, skill: 10, burst: 10 },
+      },
+    });
+    render(<CharacterWindow />);
+    openCharacter('skirk');
+    await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
+    const c1 = await screen.findByTestId('constellation-1', undefined, LAZY);
+    expect(c1).toHaveTextContent('C1Far to Fall');
+    expect(screen.queryByTestId('constellation-2')).toBeNull();
+    const row = within(c1).getByRole('button');
+    expect(row).toHaveAttribute('aria-expanded', 'false');
+    expect(c1).not.toHaveTextContent(/crystal blade/);
+    await user.click(row);
+    expect(row).toHaveAttribute('aria-expanded', 'true');
+    expect(c1).toHaveTextContent(/crystal blade/);
+    expect(c1).not.toHaveTextContent('**');
+    expect(within(c1).getByText('Reason Beyond Reason').tagName).toBe('STRONG');
+  });
+
   it('keeps Optimise at the bottom of Overview, and beside the name elsewhere', async () => {
     const user = userEvent.setup();
     furina();

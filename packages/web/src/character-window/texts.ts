@@ -1,6 +1,7 @@
 /**
  * A character's talent and constellation texts (TODO 9.10), one small file
  * each, loaded the first time their window asks and kept for the session.
+ * A load that finds nothing isn't kept: the next window tries again.
  * @packageDocumentation
  */
 import { useEffect, useState } from 'react';
@@ -26,7 +27,10 @@ export function useCharacterTexts(
       p = loadCharacterTexts(key);
       cache.set(key, p);
     }
-    void p.then((texts) => live && setState({ key, texts }));
+    void p.then((texts) => {
+      if (!texts) cache.delete(key);
+      if (live) setState({ key, texts });
+    });
     return () => {
       live = false;
     };

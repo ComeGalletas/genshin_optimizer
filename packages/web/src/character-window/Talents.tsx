@@ -14,6 +14,7 @@ import {
 } from '@genshin-build-lab/engine/game/genshin/details';
 import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 import { useCharacterTexts } from './texts';
+import { GameText } from './GameText';
 
 const KINDS: { kind: TalentKind; label: string }[] = [
   { kind: 'auto', label: 'Normal Attack' },
@@ -129,7 +130,7 @@ function TalentRow({
           {text ? (
             <>
               <p className="whitespace-pre-line leading-relaxed text-paper/80">
-                {text.description}
+                <GameText text={text.description} />
               </p>
               <p className="font-semibold text-muted">
                 {base !== undefined
