@@ -2,8 +2,8 @@
 
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
-**Current phase:** 3 (local server, MCP, LLM client), started while Phase 2 waits on its acceptance check (the owner's second Irminsul export). Phase 0 was accepted by the owner on 2026-09-24, Phase 1 on 2026-09-25.
-**Next item:** 3.4, "Explain this build" on the server's LLM client; Phase 2's acceptance check whenever the owner's second export is in
+**Current phase:** 9 (UI refresh). Phases 0, 1 and 3 to 8 are accepted (Phase 8 on 2026-10-06); Phase 2 still waits on its acceptance check (the owner's second Irminsul export).
+**Next item:** 9.1, game image references in the dataset and the image component; Phase 2's acceptance check whenever the owner's second export is in
 
 ## Housekeeping (done 2026-09-24)
 
@@ -402,6 +402,17 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] **Accept:** every Phase 8 view works against the owner's account (PLAN had no criterion of its own; the owner accepted on what was shown)
   - Accepted by the owner on 2026-10-06.
   - Evidence: each view checked in the browser on a copy of the owner's store, with the full gate green on every commit: the import center (two crafted imports: the diff and a misread piece side by side in the reconciliation); the rotation library and "Compare this team"; a real comparison of the Mualani team (two targets +37.9% ± 0.2%) with its teams as run and per-character table; the joint allocation of the plan's eight (98.2%, proven, 56 s); Rank by Team DPS (Mualani's top 20 in 9 s, the crit-value #1 tenth by team DPS); the chat answering from a tool with its steps shown; and both share links made and opened (a Raiden build with its simulation, 1,331 characters; a comparison, 1,516).
+
+## Phase 9: UI refresh
+
+- [ ] 9.1 Game images: each character's, weapon's and artifact piece's asset name from genshin-db, in a separate dataset file the page loads after it starts; an image component (HoYoverse's URL, then Enka's by asset name, then the glyph or initials; lazy, fixed size, alt text); a "Show game art" setting, on by default; ADR
+- [ ] 9.2 Images in place: the character picker, roster rows and detail, team cards, Plan and allocation members, the build card (each piece by set, the weapon), the comparison's teams as run, the rotation library, the simulated ranking
+- [ ] 9.3 Views: Roster, Teams, Plan, Optimise (Results, Rank by Team DPS), Simulate (Rotation Library, Compare Teams), Imports (Import Center), each at its own address and loaded when opened; server-only views only while the server runs; `?b=` opens Optimise and `#c=` Simulate; ADR
+- [ ] 9.4 Load once: the full load screen only while nothing is loaded, then the account bar with Change
+- [ ] 9.5 Nothing locked: every view reachable from the start, an empty state with one action where a roster is needed
+- [ ] 9.6 Long sections tightened: the rotation library as a card grid with details in a drawer; Compare Teams grouped
+- [ ] 9.7 Tests: app and end-to-end tests on the views, each empty state, the account bar, old share links, the image fallbacks and the dataset's image coverage
+- [ ] **Accept:** every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; the first load no larger than before Phase 9
 
 ## Backlog
 

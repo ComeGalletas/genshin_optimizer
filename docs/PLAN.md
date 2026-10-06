@@ -132,6 +132,16 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 - Import center (sources, snapshots, reconciliation report, diff), chat panel, sim results and comparison view, rotation library browser, allocation plan view.
 - The share links from the fork also carry sim results when present (ADR on size limits).
 
+## Phase 9: UI refresh
+
+- Game images for characters, weapons and artifacts, **referenced, never copied into the repo**: the dataset build records each one's asset name from genshin-db; the app links HoYoverse's own image URLs (from genshin-db) first, Enka's by asset name as the fallback, and its own glyph or initials last. A "Show game art" setting (on by default) turns them off, since each image load reaches that host. ADR.
+- Separate views instead of one long page: Roster, Teams, Plan, Optimise (with Results and Rank by Team DPS), Simulate (Rotation Library and Compare Teams) and Imports (Import Center), each at its own address and loaded when opened; Simulate and Imports only while the local server runs. Share links open their view (`?b=` Optimise, `#c=` Simulate). ADR.
+- Load once: the full load screen only while nothing is loaded; after that, an account bar ("1,650 artifacts · 94 characters · local server, imported … · Change").
+- Nothing locked: every view reachable from the start, a view that needs a roster saying so in place with one action.
+- Long sections tightened: the rotation library as a grid of compact cards with details in a drawer; Compare Teams' form and results grouped.
+
+**Accept:** every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; the first load is no larger than before Phase 9.
+
 ---
 
 ## Backlog
