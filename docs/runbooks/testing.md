@@ -17,7 +17,7 @@ Node ≥ 22 (`engines.node` in `package.json`), dependencies installed
 
 | Command                 | What it does                                                                                                        | When to use it                                                                                           |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                                | Before committing; what CI's `test` step runs.                                                           |
+| `npm test`              | Runs the full Vitest suite once (jsdom environment).                                                                | Before committing; CI runs it with coverage (`test:coverage`).                                           |
 | `npm run test:watch`    | Vitest in watch mode, reruns on file save.                                                                          | While writing or fixing a test.                                                                          |
 | `npm run test:coverage` | Full suite with a coverage report (`coverage/coverage-summary.json` + HTML in `coverage/`).                         | Before touching a module with low coverage, or when asked "is X tested."                                 |
 | `npm run typecheck`     | `tsc -b` (strict, project references) plus a separate check for `tsconfig.scripts.json`.                            | Catches type errors `npm test` won't — the tooling (`scripts/`) project isn't compiled by the app build. |
@@ -51,10 +51,10 @@ they never discard a branch the oracle would have kept.
 
 ## The benchmark and `bench:check`
 
-| Command               | What it does                                                                                                                                                                                                                                                                      |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run bench`       | Regenerates `docs/speed-report.md` by timing the optimiser (`scripts/benchmark.ts`) against realistic and worst-case inventories.                                                                                                                                                 |
-| `npm run bench:check` | `scripts/check-bench.ts` — fails if `packages/engine/src/optimizer/search.ts`, `score.ts`, `benchmark.ts`, `context.ts`, `packages/engine/src/damage/setBonuses.ts`, or `packages/engine/src/damage/profiles.ts` changed since the base commit but `docs/speed-report.md` didn't. |
+| Command               | What it does                                                                                                                                                                                                                                                                                                                                    |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run bench`       | Regenerates `docs/speed-report.md` by timing the optimiser (`scripts/benchmark.ts`) against realistic and worst-case inventories.                                                                                                                                                                                                               |
+| `npm run bench:check` | `scripts/check-bench.ts` — fails if `packages/engine/src/optimizer/search.ts`, `score.ts`, `benchmark.ts`, `context.ts`, `packages/engine/src/game/genshin/adapter.ts`, `passives.ts`, `packages/engine/src/damage/setBonuses.ts`, or `packages/engine/src/damage/profiles.ts` changed since the base commit but `docs/speed-report.md` didn't. |
 
 `bench:check` reads its base commit from `BENCH_BASE_SHA` (set by CI to the
 PR base SHA, or the previous commit on a push to `main`) and is a **no-op
@@ -102,7 +102,7 @@ automation, not something to run locally.
 
 Follow the existing pattern for the module you're extending — Vitest +
 Testing Library, colocated `*.test.ts`/`*.test.tsx` next to the source file.
-`packages/web/src/ai/explainShared.test.ts` (the untrusted explain payload)
+`packages/engine/src/explain/explain.test.ts` (the untrusted explain payload)
 and `packages/engine/src/share/url.test.ts` (the untrusted `?b=` share link)
 are good reference examples for testing boundary conditions systematically:
 each rejection path gets its own case. Model new boundary-condition tests on

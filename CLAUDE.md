@@ -20,14 +20,14 @@ Base: a fork of `natcat38/rpg-build-optimizer` (MIT). Keep its LICENSE, DATA_LIC
 - LLM access is configured in `config/llm.json` (`provider`: `ollama` | `anthropic` | `openai_compatible`, `baseUrl`, `model`). Local default is Ollama on `http://localhost:11434`. API keys live only in `.env` on the server side, never in the client bundle (see the fork's ADR-0010 for why).
 - The external `genshin-agent` project (Python) may produce GOOD files from its own OCR. It connects only by dropping files into `imports/inbox/`.
 
-## Layout (target)
+## Layout
 
 ```
 packages/
-  engine/      # pure TS: GOOD types, normalize, merge, optimizer (from fork), constraint spec, gcsim config gen/parse
-  server/      # Fastify API + MCP server + import watcher + gcsim runner + LLM client
-  web/         # the fork's React app, now talking to server when available (still works client-only)
-data/          # genshin-db snapshot, curated guides (from fork), rotation library
+  engine/      # pure TS: GOOD types, normalize, merge, optimizer (from fork), constraint spec, gcsim config gen/parse,
+               #   the genshin-db snapshot (game/genshin/*.generated.json) and the curated guides (from fork)
+  server/      # Fastify API + MCP server + inbox import + gcsim runner + LLM client
+  web/         # the fork's React app, talking to the server when available (still works client-only)
 rotations/     # gcsim rotation templates per team archetype (*.gcsl.tmpl + meta.json)
 imports/inbox/ # drop GOOD files here (Irminsul, OCR scanners, genshin-agent)
 config/
@@ -51,9 +51,10 @@ docs/{PLAN.md, adr/}
 - Line endings: `.gitattributes` forces LF and this checkout sets `core.autocrlf=false`. Don't reformat the tree to fix CRLF noise.
 - Shared agent memory: `memory/` (index `memory/MEMORY.md`) is the repo's tool-agnostic memory, inherited from the fork. Entries marked _(upstream, unconfirmed)_ need the owner's confirmation before you follow them. Plain-text notes worth keeping go in `.claude/notes/`.
 
-## Commands (target)
+## Commands
 
 - `npm run dev`: web + server
-- `npm run server`: API + MCP (stdio and HTTP)
+- `npm run server`: API + MCP over HTTP (`/mcp`); `npm run mcp`: MCP over stdio
+- `npm run inbox`: import the GOOD files in `imports/inbox/` (`-- --watch` keeps watching)
 - `npm run sim:check`: verify the gcsim binary, version, and golden configs
 - `npm test`, `npm run typecheck`, `npm run lint`, `npm run bench`, `npm run build:data` (regenerate the genshin-db snapshot)

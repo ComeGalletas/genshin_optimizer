@@ -256,8 +256,11 @@ describe('ImportCenter (TODO 8.1)', () => {
       'later.json: imported as snapshot #4: 1,650 pieces, 2 lines it couldn’t read.',
     );
     expect(status).toHaveTextContent(
-      'New account (merge #3): 1,660 artifacts. Load Account in step 01 to use it here.',
+      'New account (merge #3): 1,660 artifacts. Press Load Account under Load Data to use it here.',
     );
+    expect(
+      within(status).getByRole('link', { name: 'Load Data' }),
+    ).toHaveAttribute('href', '#/start');
     const post = f.mock.calls.find(([, init]) => init?.method === 'POST')!;
     expect(JSON.parse(post[1]!.body as string)).toEqual({
       text: '{"format":"GOOD"}',

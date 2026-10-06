@@ -7,8 +7,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode — run through tsx for now; revisited when the server
-       gets a real entry point (TODO 2.6 / Phase 3). */
+    /* Bundler mode: the server runs under tsx (npm run server, npm run mcp,
+       the CLIs in src/cli), so nothing here is emitted. */
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,

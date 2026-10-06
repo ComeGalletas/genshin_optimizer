@@ -3,7 +3,7 @@ name: Coverage badge
 # Publishes a shields.io endpoint JSON to the `badges` branch on pushes to main.
 # Kept for now (TODO 0.8). Badge URL for this repo:
 # https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ComeGalletas/genshin_optimizer/badges/coverage.json
-# (README still shows upstream's badge until TODO 0.10.)
+# (the badge README shows).
 
 on:
   push:
