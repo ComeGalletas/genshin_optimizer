@@ -1,17 +1,12 @@
 /**
- * The import center's building blocks (TODO 8.1): a piece as the game
- * shows it, what one snapshot changed, and how a merge reconciled its
- * snapshots. Each detail view fetches its own data when opened.
+ * The import center's building blocks (TODO 8.1): what one snapshot
+ * changed, and how a merge reconciled its snapshots. Each detail view fetches its own data when opened.
  */
 import { useEffect, useState, type ReactNode } from 'react';
-import { isStatKey, type Artifact } from '@genshin-build-lab/engine/game/types';
+import { isStatKey } from '@genshin-build-lab/engine/game/types';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
-import {
-  formatSetName,
-  formatStat,
-  SLOT_LABELS,
-  statLabel,
-} from '@genshin-build-lab/engine/labels';
+import { statLabel } from '@genshin-build-lab/engine/labels';
+import { PieceLine } from '../components/PieceLine';
 import {
   fetchChanges,
   fetchMergeReport,
@@ -24,26 +19,6 @@ import { Callout } from '../components/ui/Callout';
 import { Disclosure } from '../components/ui/Disclosure';
 
 const name = (key: string) => genshinAdapter.characterName(key);
-
-/** A piece as the game shows it: set, slot, main stat, level, substats,
- *  and who wears it. */
-export function PieceLine({ a, note }: { a: Artifact; note?: ReactNode }) {
-  return (
-    <li className="text-xs leading-relaxed">
-      <span className="font-medium text-paper">
-        {formatSetName(a.setKey)} {SLOT_LABELS[a.slot].toLowerCase()}
-      </span>{' '}
-      <span className="text-muted">
-        · {statLabel(a.mainStat)} · +{a.level} ·{' '}
-        {a.subStats
-          .map((s) => `${statLabel(s.key)} ${formatStat(s.key, s.value)}`)
-          .join(', ')}
-        {a.location ? ` · on ${name(a.location)}` : ''}
-      </span>
-      {note && <span className="text-paper"> {note}</span>}
-    </li>
-  );
-}
 
 /** A count and, open on demand, the pieces behind it. */
 function Group({

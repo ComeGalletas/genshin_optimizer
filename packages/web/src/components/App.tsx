@@ -79,6 +79,9 @@ const RotationLibrary = lazy(() =>
     default: m.RotationLibrary,
   })),
 );
+const SimRank = lazy(() =>
+  import('../sim-rank/SimRank').then((m) => ({ default: m.SimRank })),
+);
 const TeamComparison = lazy(() =>
   import('../teams/TeamComparison').then((m) => ({
     default: m.TeamComparison,
@@ -568,6 +571,21 @@ export function App() {
                   </div>
                 </Section>
               </div>
+            )}
+
+            {/* Unnumbered, server-only: the Optimise panel's request, its
+              top builds simulated by gcsim on the server's account. */}
+            {serverOnline && (
+              <Section
+                id="sim-rank"
+                title="Rank by Team DPS"
+                hint="Simulate the top builds for the Optimise panel's conditions in a team rotation, and rank them by team DPS."
+                delay="0s"
+              >
+                <Suspense fallback={<PanelFallback />}>
+                  <SimRank />
+                </Suspense>
+              </Section>
             )}
           </div>
         </div>
