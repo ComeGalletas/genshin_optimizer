@@ -28,6 +28,10 @@ describe('game image references (TODO 9.1, ADR-0052)', () => {
         `${HOYO}character_side_icon/UI_AvatarIcon_Side_Furina.png`,
       ],
     );
+    // The wish art is only on Enka.
+    expect(
+      imageUrls(NAMES, { kind: 'character-splash', key: 'furina' }),
+    ).toEqual([`${ENKA}UI_Gacha_AvatarImg_Furina.png`]);
     expect(
       imageUrls(NAMES, { kind: 'weapon', key: 'splendor_of_tranquil_waters' }),
     ).toEqual([

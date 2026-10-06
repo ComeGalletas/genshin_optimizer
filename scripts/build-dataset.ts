@@ -25,6 +25,14 @@ import {
   ELEMENTS,
   WEAPON_TYPES,
 } from '@genshin-build-lab/engine/game/types';
+import {
+  characterStatsAt,
+  weaponStatsAt,
+  type CharacterDetails,
+  type Details,
+  type TalentKind,
+  type WeaponDetails,
+} from '@genshin-build-lab/engine/game/genshin/details';
 
 const require = createRequire(import.meta.url);
 // genshin-db uses CommonJS; we use createRequire to load it in an ESM script.
@@ -548,6 +556,209 @@ function buildSets() {
 }
 
 // ---------------------------------------------------------------------------
+// Details at the exact level (TODO 9.9, ADR-0055)
+// ---------------------------------------------------------------------------
+
+/** genshin-db's raw tables: base stats, growth curves and ascension bonuses
+ *  by its own file names, which `index.English` maps from display names. */
+const RAW = require('genshin-db/src/min/data.min.json');
+const FILE = {
+  characters: RAW.index.English.characters.names as Record<string, string>,
+  weapons: RAW.index.English.weapons.names as Record<string, string>,
+};
+const FLAT = new Set(['hp', 'atk', 'def', 'em']);
+/** A stat value as the engine keeps it: percent, except flat stats. */
+const unit = (key: string | null, v: number) =>
+  key && !FLAT.has(key) ? v * 100 : v;
+const strip = (t: string) =>
+  String(t ?? '')
+    .replace(/<\/?color[^>]*>/g, '')
+    .replace(/\\n/g, '\n');
+
+const KINDS: TalentKind[] = ['auto', 'skill', 'burst'];
+const KIND_WORDS: [string, TalentKind][] = [
+  ['Normal Attack', 'auto'],
+  ['Elemental Skill', 'skill'],
+  ['Elemental Burst', 'burst'],
+];
+
+/** Which talent a constellation raises by 3 levels, or null when it raises
+ *  none. The wording varies ("Increases the Level of X by 3", "Increases
+ *  Elemental Skill **X** Level by 3", "X increases by 3 Levels"), so the
+ *  talent is found by its name in the text (the longest that appears),
+ *  else by the kind's words. */
+function boosted(text: string | undefined, talents: string[] | null) {
+  const t = strip(text ?? '').replace(/\*\*/g, '');
+  if (!/\bby 3\b/.test(t) || !/\bLevels?\b/.test(t)) return null;
+  const named = (talents ?? [])
+    .map((name, i) => ({ name, i }))
+    .filter(({ name }) => name && t.includes(name))
+    .sort((a, b) => b.name.length - a.name.length)[0];
+  if (named) return KINDS[named.i];
+  return KIND_WORDS.find(([w]) => t.includes(w))?.[1] ?? null;
+}
+
+function buildDetails(
+  genshinDbVersion: string,
+  characters: { key: string; name: string }[],
+  weapons: { key: string; name: string }[],
+): Details {
+  const usedCurves = {
+    characters: new Set<string>(),
+    weapons: new Set<string>(),
+  };
+  const chars: Record<string, CharacterDetails> = {};
+  for (const { key, name } of characters) {
+    const raw = RAW.stats.characters[FILE.characters[name]];
+    const c = genshindb.characters(name);
+    if (!raw || !c) continue;
+    const ascStat = SUBSTAT_TO_KEY[c.substatText] ?? null;
+    const t = genshindb.talents(name);
+    const talents: [string, string, string] | null =
+      t?.combat1 && t?.combat2 && t?.combat3
+        ? [t.combat1.name, t.combat2.name, t.combat3.name]
+        : null;
+    const cons = genshindb.constellations(name);
+    const curve: [string, string, string] = [
+      raw.curve.hp,
+      raw.curve.attack,
+      raw.curve.defense,
+    ];
+    curve.forEach((x) => usedCurves.characters.add(x));
+    chars[key] = {
+      rarity: Number(c.rarity) || 0,
+      curve,
+      base: [raw.base.hp, raw.base.attack, raw.base.defense],
+      ascStat: ascStat as CharacterDetails['ascStat'],
+      promotion: raw.promotion.map(
+        (p: {
+          maxlevel: number;
+          hp: number;
+          attack: number;
+          defense: number;
+          specialized: number;
+        }) => [
+          p.maxlevel,
+          p.hp,
+          p.attack,
+          p.defense,
+          unit(ascStat, p.specialized),
+        ],
+      ),
+      talents,
+      c3: boosted(cons?.c3?.description, talents),
+      c5: boosted(cons?.c5?.description, talents),
+    };
+  }
+  const weaps: Record<string, WeaponDetails> = {};
+  for (const { key, name } of weapons) {
+    const raw = RAW.stats.weapons[FILE.weapons[name]];
+    const w = genshindb.weapons(name);
+    if (!raw || !w) continue;
+    const subStat = SUBSTAT_TO_KEY[w.mainStatText] ?? null;
+    const curve: [string, string | null] = [
+      raw.curve.attack,
+      subStat ? raw.curve.specialized : null,
+    ];
+    usedCurves.weapons.add(curve[0]);
+    if (curve[1]) usedCurves.weapons.add(curve[1]);
+    const values = [w.r1, w.r2, w.r3, w.r4, w.r5].map(
+      (r: { values?: string[] } | undefined) => r?.values ?? [],
+    );
+    weaps[key] = {
+      rarity: Number(w.rarity) || 0,
+      curve,
+      base: [raw.base.attack, unit(subStat, raw.base.specialized ?? 0)],
+      subStat: subStat as WeaponDetails['subStat'],
+      promotion: raw.promotion.map(
+        (p: { maxlevel: number; attack: number }) => [p.maxlevel, p.attack],
+      ),
+      passive:
+        w.effectName && w.effectTemplateRaw
+          ? { name: w.effectName, text: strip(w.effectTemplateRaw), values }
+          : null,
+      description: strip(w.description),
+    };
+  }
+  const pick = (
+    all: Record<number, Record<string, number>>,
+    used: Set<string>,
+  ) =>
+    Object.fromEntries(
+      [...used].sort().map((name) => [
+        name,
+        // Levels 1 to 100 (weapons stop at 90: null past it).
+        Array.from({ length: 100 }, (_, i) => all[i + 1]?.[name] ?? null),
+      ]),
+    );
+  return {
+    genshinDbVersion,
+    curves: {
+      characters: pick(RAW.curve.characters, usedCurves.characters),
+      weapons: pick(RAW.curve.weapons, usedCurves.weapons),
+    },
+    characters: chars,
+    weapons: weaps,
+  };
+}
+
+/** Every character's and weapon's stats, at every level before and after
+ *  each ascension, from the stored details by the engine's own formulas,
+ *  against genshin-db's: a difference stops the build. */
+function checkDetails(
+  d: Details,
+  characters: { key: string; name: string }[],
+  weapons: { key: string; name: string }[],
+) {
+  const close = (a: number, b: number) =>
+    Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(b));
+  let checked = 0;
+  for (const { key, name } of characters) {
+    const c = d.characters[key];
+    if (!c) continue;
+    const g = genshindb.characters(name);
+    const critBase =
+      c.ascStat === 'crit_rate' ? 5 : c.ascStat === 'crit_dmg' ? 50 : 0;
+    for (let level = 1; level <= 90; level++)
+      for (const asc of [0, 6]) {
+        const want = g.stats(level, asc === 6 ? '+' : '-');
+        const got = characterStatsAt(d, c, level, asc === 6 ? 6 : 0);
+        const wantAsc = unit(c.ascStat, want.specialized) - critBase;
+        if (
+          !close(got.hp, want.hp) ||
+          !close(got.atk, want.attack) ||
+          !close(got.def, want.defense) ||
+          !close(got.asc, wantAsc)
+        )
+          throw new Error(
+            `details: ${key} at level ${level} (${asc ? '+' : '-'}): ${JSON.stringify(got)} vs ${JSON.stringify(want)}`,
+          );
+        checked++;
+      }
+  }
+  for (const { key, name } of weapons) {
+    const w = d.weapons[key];
+    if (!w) continue;
+    const g = genshindb.weapons(name);
+    const cap = w.promotion[w.promotion.length - 1][0];
+    for (let level = 1; level <= cap; level++)
+      for (const asc of [0, 6]) {
+        const want = g.stats(level, asc === 6 ? '+' : '-');
+        const got = weaponStatsAt(d, w, level, asc === 6 ? 6 : 0);
+        if (
+          !close(got.atk, want.attack) ||
+          !close(got.sub, unit(w.subStat, want.specialized ?? 0))
+        )
+          throw new Error(
+            `details: ${key} at level ${level} (${asc ? '+' : '-'}): ${JSON.stringify(got)} vs ${JSON.stringify(want)}`,
+          );
+        checked++;
+      }
+  }
+  return checked;
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -611,6 +822,17 @@ function main() {
     imagesPath,
     JSON.stringify({ genshinDbVersion, ...images }),
     'utf-8',
+  );
+
+  const details = buildDetails(genshinDbVersion, characters, weapons);
+  const checked = checkDetails(details, characters, weapons);
+  const detailsPath = path.join(
+    path.dirname(outPath),
+    'details.generated.json',
+  );
+  fs.writeFileSync(detailsPath, JSON.stringify(details), 'utf-8');
+  console.log(
+    `✓ Wrote ${detailsPath} (${Object.keys(details.characters).length} characters, ${Object.keys(details.weapons).length} weapons; ${checked} level checks against genshin-db)`,
   );
 
   console.log(`✓ Wrote ${outPath}`);

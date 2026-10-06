@@ -27,11 +27,15 @@ export function AppDrawer({
   onClose,
   title,
   children,
+  background,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
+  /** Drawn behind the content, filling the drawer and not scrolling with
+   *  it (the character window's art). */
+  background?: ReactNode;
 }) {
   const desktop = useIsDesktop();
   // Vaul/Radix only restore focus to the triggering element on the escape
@@ -71,13 +75,23 @@ export function AppDrawer({
                 'fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-2xl border-t-2 border-t-accent/50 bg-surface-700/60 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] backdrop-blur-md'
           }
         >
+          {/* backdrop-blur makes the drawer the containing block of its
+              fixed children, so this fills the drawer, not the page. */}
+          {background && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none fixed inset-0 overflow-hidden"
+            >
+              {background}
+            </div>
+          )}
           {!desktop && (
             <div
               aria-hidden="true"
-              className="mx-auto mb-3 h-1 w-9 rounded-full bg-white/15"
+              className="relative mx-auto mb-3 h-1 w-9 rounded-full bg-white/15"
             />
           )}
-          <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="relative mb-4 flex items-center justify-between gap-3">
             <Vaul.Title className="font-display text-lg font-bold text-paper">
               {title}
             </Vaul.Title>
@@ -93,7 +107,7 @@ export function AppDrawer({
               <span aria-hidden="true">✕</span>
             </button>
           </div>
-          {children}
+          <div className="relative">{children}</div>
         </Vaul.Content>
       </Vaul.Portal>
     </Vaul.Root>

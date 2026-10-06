@@ -1,11 +1,10 @@
 /**
  * Roster assessment: every owned character with a build score, banded and
- * sorted. A row opens the character's detail drawer.
+ * sorted. A row opens the character's window (TODO 9.9).
  */
 import { useMemo, useState } from 'react';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
-import { useOptimizeRequest } from '../state/optimizeRequest';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { PlayGlyph, ChevronGlyph } from '../components/ui/Glyphs';
 import {
@@ -13,15 +12,12 @@ import {
   band,
   groupByLocation,
 } from '@genshin-build-lab/engine/roster/buildScore';
-import { AppDrawer } from '../components/ui/Drawer';
-import { CharacterDetail } from './CharacterDetail';
-import { scrollToId } from '../ui/scroll';
+import { openCharacter } from '../character-window/store';
 import { BAND_TONE, bandLabel, formatScore } from '../labels';
 import { CharacterLine } from '../components/ui/CharacterLine';
 import { Badge } from '../components/ui/Badge';
 import { Meter } from '../components/ui/Meter';
 import { CharacterPortrait } from '../components/GameArt';
-import { goTo } from '../components/views';
 
 /** Artifact count (10) + artifact quality (30) in `computeBuildScore` — the two
  *  components a character with nothing equipped can never earn. */
@@ -97,14 +93,10 @@ function Row({
  *  slice shows until the user asks for the rest. */
 const COLLAPSED_COUNT = 12;
 
-/** Long enough to outlast vaul's close animation and its scroll-lock release. */
-const DRAWER_EXIT_MS = 400;
-
 export function RosterView() {
   const entries = useRoster((s) => s.entries);
   const artifacts = useInventory((s) => s.artifacts);
   const [showAll, setShowAll] = useState(false);
-  const [openKey, setOpenKey] = useState<string | null>(null);
 
   const byLocation = useMemo(() => groupByLocation(artifacts), [artifacts]);
 
@@ -136,7 +128,6 @@ export function RosterView() {
   }
 
   const visible = showAll ? rows : rows.slice(0, COLLAPSED_COUNT);
-  const openEntry = openKey ? entries[openKey] : undefined;
 
   return (
     <div className="panel panel-md space-y-3">
@@ -149,7 +140,7 @@ export function RosterView() {
       </p>
       <ul className="space-y-2">
         {visible.map((r) => (
-          <Row key={r.characterKey} {...r} onOpen={setOpenKey} />
+          <Row key={r.characterKey} {...r} onOpen={openCharacter} />
         ))}
       </ul>
       {rows.length > COLLAPSED_COUNT && !showAll && (
@@ -160,41 +151,6 @@ export function RosterView() {
         >
           <PlayGlyph /> Show All {rows.length} Characters, Sorted by Score
         </button>
-      )}
-
-      {openKey && openEntry && (
-        <AppDrawer
-          open
-          onClose={() => setOpenKey(null)}
-          title={rows.find((r) => r.characterKey === openKey)?.name ?? openKey}
-        >
-          <CharacterDetail
-            characterKey={openKey}
-            entry={openEntry}
-            artifacts={byLocation[openKey] ?? []}
-          />
-          <button
-            type="button"
-            className="btn-primary mt-4 w-full"
-            onClick={() => {
-              const s = useOptimizeRequest.getState();
-              s.setCharacterKey(openKey);
-              const w = openEntry.weaponKey;
-              if (w) s.setWeaponKey(w);
-              setOpenKey(null);
-              // The drawer holds a body scroll lock (overflow:hidden) until it
-              // has finished animating out, so scrolling synchronously here is
-              // a no-op. ponytail: fixed delay rather than watching for the
-              // lock to lift — revisit if vaul's exit timing changes.
-              setTimeout(() => {
-                goTo('optimise');
-                scrollToId('step-optimise');
-              }, DRAWER_EXIT_MS);
-            }}
-          >
-            Optimise This Character
-          </button>
-        </AppDrawer>
       )}
     </div>
   );

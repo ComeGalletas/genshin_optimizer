@@ -74,11 +74,12 @@ export const HELP = {
       'How built each of your characters is, scored 0–100 from their level, talents, weapon and the artifacts they wear, best first.',
     steps: [
       'Read each row: the character, their element and weapon, their score and its band (Built, Partly built or Unbuilt).',
-      'Press a row to open the character: the score’s breakdown, their curated build, and the teams they fit.',
+      'Press a row to open the character’s window: their score and talents, their stats now (base + artifacts = total), their weapon and artifacts, their curated build, and the teams they fit.',
       'Press Optimise This Character to search for their best build in the Optimise view.',
     ],
     tips: [
       'A character with no equipped artifacts scores low on gear: equip something in the game and re-import.',
+      'Any character the app shows (a team member, a Plan row, a rotation’s portraits) opens the same window.',
     ],
   },
   teams: {

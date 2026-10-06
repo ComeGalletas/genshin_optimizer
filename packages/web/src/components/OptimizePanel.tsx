@@ -42,6 +42,7 @@ import {
 } from '@genshin-build-lab/engine/teams/comps';
 import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 import { CharacterPortrait, WeaponIcon } from './GameArt';
+import { CharacterButton } from '../character-window/CharacterButton';
 import { HelpButton, HelpPanel } from './help/Help';
 
 // Every objective a curated meta recipe can recommend has to be offerable,
@@ -133,9 +134,12 @@ function TeammatesSummary({
       <ul className="space-y-1">
         {entry.recs.map((r) => (
           <li key={r.characterKey}>
-            <span className="font-medium text-paper">
+            <CharacterButton
+              characterKey={r.characterKey}
+              className="font-medium text-paper underline decoration-white/20 underline-offset-2"
+            >
               {genshinAdapter.characterName(r.characterKey)}
-            </span>{' '}
+            </CharacterButton>{' '}
             <span className="text-muted">({r.role})</span> — {r.why}
           </li>
         ))}
@@ -368,7 +372,9 @@ export function OptimizePanel({
               Character
             </label>
             <div className="flex items-center gap-2">
-              <CharacterPortrait characterKey={characterKey} size={40} />
+              <CharacterButton characterKey={characterKey}>
+                <CharacterPortrait characterKey={characterKey} size={40} />
+              </CharacterButton>
               <div className="min-w-0 flex-1">
                 <Combobox
                   id={`${uid}-character`}

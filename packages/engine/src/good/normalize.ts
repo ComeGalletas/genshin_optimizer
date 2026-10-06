@@ -99,6 +99,9 @@ export interface RosterEntry {
   talents?: { auto: number; skill: number; burst: number };
   weaponKey?: string;
   weaponLevel?: number;
+  /** The held weapon's ascension (0..6): which side of a cap its level is
+   *  on, for its stats at that exact level (TODO 9.9). */
+  weaponAscension?: number;
   /** The held weapon's refinement (1..5), for its passive (ADR-0042). */
   weaponRefinement?: number;
 }
@@ -453,6 +456,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
       const entry = (roster[location] ??= {});
       entry.weaponKey = key;
       if (level !== undefined) entry.weaponLevel = level;
+      if (asc !== undefined) entry.weaponAscension = asc;
       if (ref !== undefined) entry.weaponRefinement = ref;
     }
   });

@@ -164,9 +164,9 @@ describe('CharacterDetail', () => {
     );
     screen.getByRole('tab', { name: /overview/i }).focus();
     await user.keyboard('{ArrowRight}');
-    const gear = screen.getByRole('tab', { name: /gear/i });
-    expect(gear).toHaveAttribute('aria-selected', 'true');
-    expect(gear).toHaveFocus();
+    const stats = screen.getByRole('tab', { name: /stats/i });
+    expect(stats).toHaveAttribute('aria-selected', 'true');
+    expect(stats).toHaveFocus();
   });
 
   it('names the panel after the selected tab and points the tabs at it', () => {

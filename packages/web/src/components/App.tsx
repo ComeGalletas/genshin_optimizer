@@ -41,6 +41,7 @@ import type {
 import { Section } from './landing';
 import { AccountBar, NeedsData } from './AccountBar';
 import { useAccount } from '../state/account';
+import { CharacterWindow } from '../character-window/CharacterWindow';
 import { goTo, hrefOf, NAV, useAddressedView, type ViewId } from './views';
 
 // Each view past Start is its own chunk, loaded when first opened.
@@ -544,6 +545,7 @@ export function App() {
         <ArtSetting />
       </footer>
       <ChatPanel />
+      <CharacterWindow />
     </div>
   );
 }

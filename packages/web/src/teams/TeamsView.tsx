@@ -25,6 +25,7 @@ import {
 import { BAND_TONE, bandLabel, formatScore, ROLE_LABELS } from '../labels';
 import { Badge } from '../components/ui/Badge';
 import { CharacterPortrait } from '../components/GameArt';
+import { CharacterButton } from '../character-window/CharacterButton';
 
 /** The endgame modes this view does not recommend for yet. Named, not offered:
  *  the `EndgameMode` union still carries them, so adding one here is the only
@@ -49,10 +50,15 @@ function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
               data-testid="team-member"
               className="flex items-center gap-3 text-sm"
             >
-              <CharacterPortrait characterKey={m.characterKey} size={28} />
-              <span className="min-w-0 flex-1 truncate font-semibold text-paper">
-                {genshinAdapter.characterName(m.characterKey)}
-              </span>
+              <CharacterButton
+                characterKey={m.characterKey}
+                className="min-w-0 flex-1 gap-3"
+              >
+                <CharacterPortrait characterKey={m.characterKey} size={28} />
+                <span className="min-w-0 flex-1 truncate font-semibold text-paper">
+                  {genshinAdapter.characterName(m.characterKey)}
+                </span>
+              </CharacterButton>
               <span className="text-xs text-muted">{ROLE_LABELS[m.role]}</span>
               <span className="font-mono text-xs text-muted">
                 {formatScore(m.buildScore, 0)}

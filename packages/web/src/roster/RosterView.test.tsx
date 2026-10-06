@@ -1,7 +1,19 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RosterView } from './RosterView';
+import { RosterView as View } from './RosterView';
+import { CharacterWindow } from '../character-window/CharacterWindow';
+import { useCharacterWindow } from '../character-window/store';
+
+/** The roster with the app's one character window, as the app mounts it. */
+function RosterView() {
+  return (
+    <>
+      <View />
+      <CharacterWindow />
+    </>
+  );
+}
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
@@ -28,6 +40,7 @@ describe('RosterView', () => {
   beforeEach(() => {
     useRoster.getState().clear();
     useInventory.getState().clear();
+    useCharacterWindow.getState().close();
   });
 
   it('prompts for an import when the roster is empty', () => {
@@ -87,8 +100,9 @@ describe('RosterView', () => {
 
     expect(screen.queryByText('Artifact quality')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Neuvillette/ }));
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByText('Talents')).toBeInTheDocument();
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    // The score's talents line, and the talent levels below it.
+    expect(screen.getAllByText('Talents').length).toBeGreaterThan(0);
     expect(screen.getByText('Artifact quality')).toBeInTheDocument();
   });
 
@@ -98,7 +112,7 @@ describe('RosterView', () => {
 
     render(<RosterView />);
     await user.click(screen.getByRole('button', { name: /Neuvillette/ }));
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /overview/i })).toBeInTheDocument();
   });
 
@@ -112,7 +126,7 @@ describe('RosterView', () => {
     render(<RosterView />);
     await user.click(screen.getByRole('button', { name: /Neuvillette/ }));
     await user.click(
-      screen.getByRole('button', { name: /optimise this character/i }),
+      await screen.findByRole('button', { name: /optimise this character/i }),
     );
     expect(useOptimizeRequest.getState().characterKey).toBe('neuvillette');
     expect(useOptimizeRequest.getState().weaponKey).toBe(

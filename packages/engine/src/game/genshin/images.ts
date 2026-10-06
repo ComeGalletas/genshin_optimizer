@@ -30,6 +30,9 @@ export type ImageRef =
   | { kind: 'character'; key: string }
   /** The small side portrait (team lines, pickers). */
   | { kind: 'character-side'; key: string }
+  /** The full wish art (the character window's background, TODO 9.9):
+   *  Enka only, HoYoverse's host has none. */
+  | { kind: 'character-splash'; key: string }
   | { kind: 'weapon'; key: string }
   | { kind: 'artifact'; set: string; slot: Slot };
 
@@ -50,7 +53,7 @@ export const HOYO = 'https://upload-os-bbs.mihoyo.com/game_record/genshin/';
 function asset(
   names: ImageNames,
   ref: ImageRef,
-): { name: string; hoyoDir: string } | null {
+): { name: string; hoyoDir: string | null } | null {
   switch (ref.kind) {
     case 'character': {
       const n = names.characters[ref.key];
@@ -63,6 +66,10 @@ function asset(
       return n
         ? { name: `UI_AvatarIcon_Side_${n}`, hoyoDir: 'character_side_icon' }
         : null;
+    }
+    case 'character-splash': {
+      const n = names.characters[ref.key];
+      return n ? { name: `UI_Gacha_AvatarImg_${n}`, hoyoDir: null } : null;
     }
     case 'weapon': {
       const n = names.weapons[ref.key];
@@ -82,7 +89,8 @@ function asset(
 export function imageUrls(names: ImageNames, ref: ImageRef): string[] {
   const a = asset(names, ref);
   if (!a) return [];
-  return [`${ENKA}${a.name}.png`, `${HOYO}${a.hoyoDir}/${a.name}.png`];
+  const enka = `${ENKA}${a.name}.png`;
+  return a.hoyoDir ? [enka, `${HOYO}${a.hoyoDir}/${a.name}.png`] : [enka];
 }
 
 /** The names file, loaded when first asked for: it is not needed to start

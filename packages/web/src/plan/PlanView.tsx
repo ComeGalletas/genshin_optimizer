@@ -49,6 +49,7 @@ import type {
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import { useServer } from '../local-server/status';
 import { CharacterPortrait } from '../components/GameArt';
+import { CharacterButton } from '../character-window/CharacterButton';
 
 // Server-only (TODO 8.2): never loaded client-only.
 const ServerAllocation = lazy(() =>
@@ -104,7 +105,9 @@ function SummaryRow({
           >
             ▶
           </span>
-          <CharacterPortrait characterKey={build.characterKey} size={28} />
+          <CharacterButton characterKey={build.characterKey}>
+            <CharacterPortrait characterKey={build.characterKey} size={28} />
+          </CharacterButton>
           <span className="min-w-0 flex-1 truncate text-sm text-paper">
             {name}
           </span>

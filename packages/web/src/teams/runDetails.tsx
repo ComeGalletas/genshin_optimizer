@@ -9,6 +9,7 @@ import type { TeamRun } from '../local-server/teamsim';
 import { Disclosure } from '../components/ui/Disclosure';
 import { kilo } from './kilo';
 import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
+import { CharacterButton } from '../character-window/CharacterButton';
 
 type Member = NonNullable<TeamRun['team']>[number];
 
@@ -56,10 +57,10 @@ export function TeamAsRun({ runs }: { runs: TeamRun[] }) {
           {base.team.map((m) => (
             <tr key={m.slot} className="border-t border-white/5">
               <th scope="row" className="py-1 pr-3 text-left font-normal">
-                <span className="flex items-center gap-2">
+                <CharacterButton characterKey={m.character}>
                   <CharacterPortrait characterKey={m.character} size={24} />
                   {name(m.character)}
-                </span>
+                </CharacterButton>
               </th>
               <td className="py-1 pr-3">
                 <span className="flex items-center gap-2">

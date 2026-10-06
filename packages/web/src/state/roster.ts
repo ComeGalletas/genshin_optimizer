@@ -33,6 +33,7 @@ function isRosterEntry(key: string, v: unknown): v is RosterEntry {
     isOptionalInt(e.level) &&
     isOptionalInt(e.constellation) &&
     isOptionalInt(e.weaponLevel) &&
+    isOptionalInt(e.weaponAscension) &&
     (e.weaponRefinement === undefined || isRefinement(e.weaponRefinement)) &&
     (e.weaponKey === undefined || typeof e.weaponKey === 'string')
   );

@@ -1,6 +1,7 @@
 /**
- * Drawer body for one character: what they have, what the meta wants, and
- * which curated teams they slot into.
+ * The character window's body: who they are and how they stand now (their
+ * score, talents, stats at their exact level, weapon and artifacts, TODO
+ * 9.9), what the meta wants, and which curated teams they slot into.
  * @packageDocumentation
  */
 import { useId, useMemo, useState } from 'react';
@@ -30,10 +31,14 @@ import type {
   Slot,
   StatKey,
 } from '@genshin-build-lab/engine/game/types';
-import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
+import { useDetails } from '../character-window/details';
+import { CharacterStats } from '../character-window/CharacterStats';
+import { Talents } from '../character-window/Talents';
+import { WeaponCard } from '../character-window/WeaponCard';
+import { ArtifactList } from '../character-window/ArtifactList';
 
-const TABS = ['Overview', 'Gear', 'Recommended', 'Teams'] as const;
+const TABS = ['Overview', 'Stats', 'Gear', 'Recommended', 'Teams'] as const;
 type Tab = (typeof TABS)[number];
 
 export function CharacterDetail({
@@ -42,7 +47,8 @@ export function CharacterDetail({
   artifacts,
 }: {
   characterKey: string;
-  entry: RosterEntry;
+  /** Their roster entry; none for a character the account doesn't have. */
+  entry: RosterEntry | undefined;
   /** The pieces this character currently has equipped. */
   artifacts: Artifact[];
 }) {
@@ -51,11 +57,13 @@ export function CharacterDetail({
   const tabId = (t: Tab) => `${uid}-tab-${t}`;
   const panelId = `${uid}-panel`;
   const char = genshinAdapter.character(characterKey);
-  const weaponName = entry.weaponKey
-    ? genshinAdapter.weapon(entry.weaponKey)?.name
+  const details = useDetails();
+  const weaponKey = entry?.weaponKey;
+  const weaponName = weaponKey
+    ? genshinAdapter.weapon(weaponKey)?.name
     : undefined;
   const score = useMemo(
-    () => computeBuildScore(entry, artifacts),
+    () => (entry ? computeBuildScore(entry, artifacts) : null),
     [entry, artifacts],
   );
   const meta = META_TARGETS[characterKey];
@@ -92,61 +100,65 @@ export function CharacterDetail({
           <>
             <div className="flex items-center gap-3">
               <CharacterPortrait characterKey={characterKey} size={64} />
-              {entry.weaponKey && (
-                <WeaponIcon weaponKey={entry.weaponKey} size={44} />
-              )}
+              {weaponKey && <WeaponIcon weaponKey={weaponKey} size={44} />}
             </div>
             <p className="text-muted">
               <CharacterLine element={char?.element} weaponName={weaponName} />
-              {entry.level != null && ` · Lv ${entry.level}`}
-              {entry.constellation != null && ` · C${entry.constellation}`}
+              {details && details !== 'failed' && (
+                <Stars n={details.characters[characterKey]?.rarity} />
+              )}
+              {entry?.level != null && ` · Lv ${entry.level}`}
+              {entry?.constellation != null && ` · C${entry.constellation}`}
             </p>
-            <p className="font-mono text-3xl font-bold text-accent-bright">
-              {formatScore(score.total, 0)}
-              <span className="text-base text-muted"> / 100</span>
-            </p>
-            <dl className="grid gap-1 text-xs">
-              {score.components.map((c) => (
-                <div key={c.label} className="flex justify-between gap-4">
-                  <dt className="text-muted">{c.label}</dt>
-                  <dd className="font-mono text-paper">
-                    {formatScore(c.points, 1)} / {c.max}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className="text-xs text-muted">
-              {objectiveHint(meta?.objective ?? 'crit_value')}
-            </p>
+            {/* On wells: the window's art shows through everything else. */}
+            {score ? (
+              <div className="well space-y-2 px-3 py-2">
+                <p className="font-mono text-3xl font-bold text-accent-bright">
+                  {formatScore(score.total, 0)}
+                  <span className="text-base text-muted"> / 100</span>
+                </p>
+                <dl className="grid gap-1 text-xs">
+                  {score.components.map((c) => (
+                    <div key={c.label} className="flex justify-between gap-4">
+                      <dt className="text-muted">{c.label}</dt>
+                      <dd className="font-mono text-paper">
+                        {formatScore(c.points, 1)} / {c.max}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="text-xs text-muted">
+                  {objectiveHint(meta?.objective ?? 'crit_value')}
+                </p>
+              </div>
+            ) : (
+              <p className="well px-3 py-2 text-muted">
+                Not in your roster: their stats show at level 90, with no weapon
+                or artifacts.
+              </p>
+            )}
+            <Talents
+              details={details}
+              characterKey={characterKey}
+              entry={entry}
+            />
           </>
         )}
 
+        {tab === 'Stats' && (
+          <CharacterStats
+            details={details}
+            characterKey={characterKey}
+            entry={entry}
+            artifacts={artifacts}
+          />
+        )}
+
         {tab === 'Gear' && (
-          <ul className="space-y-1.5">
-            {SLOTS.map((s) => {
-              const a = artifacts.find((x) => x.slot === s);
-              return (
-                <li key={s} className="well px-3 py-2">
-                  <span className="mr-2 text-xs uppercase text-muted">
-                    {SLOT_LABELS[s]}
-                  </span>
-                  {a ? (
-                    <span>
-                      {formatSetName(a.setKey)} · {statLabel(a.mainStat)}{' '}
-                      {/* The value, then the level as its own chip — printing
-                          "+20" here read as a 20-point main stat. */}
-                      <span className="font-mono text-xs text-paper/80">
-                        {formatStat(a.mainStat, a.mainStatValue)}
-                      </span>{' '}
-                      <span className="chip px-2 py-0.5">Lv {a.level}</span>
-                    </span>
-                  ) : (
-                    <span className="text-muted">empty</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            <WeaponCard details={details} entry={entry} />
+            <ArtifactList artifacts={artifacts} />
+          </>
         )}
 
         {tab === 'Recommended' &&
@@ -209,8 +221,8 @@ export function CharacterDetail({
                   [fourPcKey],
                   {
                     hasDamage: meta.objective === 'avg_damage',
-                    weaponType: entry.weaponKey
-                      ? genshinAdapter.weapon(entry.weaponKey)?.type
+                    weaponType: weaponKey
+                      ? genshinAdapter.weapon(weaponKey)?.type
                       : undefined,
                   },
                   formatSetName,
@@ -257,4 +269,9 @@ export function CharacterDetail({
       </div>
     </div>
   );
+}
+
+/** " · 5★", once the details know the rarity. */
+function Stars({ n }: { n: number | undefined }) {
+  return n ? <> · {n}★</> : null;
 }
