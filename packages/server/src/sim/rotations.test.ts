@@ -13,7 +13,9 @@ import type { SimCharacter } from '@genshin-build-lab/engine/sim/configgen';
 import { rotationConfig } from '@genshin-build-lab/engine/sim/rotation';
 import { gcsimPath, loadGcsimTool } from './gcsim';
 import { SimRunner } from './runner';
+import * as prettier from 'prettier';
 import {
+  formatJson,
   loadRotation,
   loadRotations,
   RotationError,
@@ -34,13 +36,13 @@ describe('the rotation library (TODO 5.6)', () => {
     ]);
   });
 
-  it('validated rotations reproduce a published config with the pinned gcsim; adapted ones stay drafts', () => {
+  it('validated rotations reproduce a published config with the pinned gcsim, or the owner reviewed them', () => {
     for (const { meta } of library) {
-      if (meta.status === 'validated') {
-        expect(meta.source.kind).toBe('community');
-        expect(meta.validation?.gcsim).toBe(tool.version);
+      if (meta.status !== 'validated') continue;
+      expect(meta.validation?.gcsim, meta.id).toBe(tool.version);
+      if (meta.source.kind === 'community')
         expect(Math.abs(meta.validation!.offPct!)).toBeLessThanOrEqual(2);
-      } else expect(meta.source.kind).toBe('adapted');
+      else expect(meta.review?.gcsim, meta.id).toBe(tool.version);
     }
     expect(
       library
@@ -49,6 +51,8 @@ describe('the rotation library (TODO 5.6)', () => {
     ).toEqual([
       'ayaka-freeze',
       'mualani-burn-vape',
+      // Adapted, reviewed and promoted by the owner (TODO 5.7).
+      'nahida-aggravate',
       'raiden-national',
       'skirk-mono-cryo',
     ]);
@@ -68,6 +72,35 @@ describe('the rotation library (TODO 5.6)', () => {
           new RegExp(`^${s.characters[0].replace(/_/g, '')} char `, 'm'),
         );
     }
+  });
+});
+
+describe('formatJson', () => {
+  // `promote` and `sim:check --record` write meta.json; CI checks it with
+  // Prettier, which an owner's promotion must not break.
+  // A line `  "k": ["…", "x"],` of exactly `width` characters.
+  const atWidth = (width: number) => ({
+    k: ['a'.repeat(width - '  "k": ["", "x"],'.length), 'x'],
+    after: 1,
+  });
+
+  it('writes JSON that Prettier leaves as it is (what CI checks)', async () => {
+    const cases: unknown[] = [
+      ...loadRotations().map((r) => r.meta),
+      { short: [1, 2, 3], none: [], nested: { tags: ['a', 'b'] } },
+      { long: Array.from({ length: 30 }, (_, i) => `item-number-${i}`) },
+      { quoted: ['a "quote", [bracket]', 'x'], mixed: [{ a: 1 }, 2] },
+      atWidth(80),
+      atWidth(81),
+    ];
+    for (const c of cases) {
+      const text = formatJson(c);
+      expect(JSON.parse(text)).toEqual(c);
+      expect(await prettier.format(text, { parser: 'json' })).toBe(text);
+    }
+    // At the print width an array stays on its line; one past, it breaks.
+    expect(formatJson(atWidth(80)).split('\n')[1]).toHaveLength(80);
+    expect(formatJson(atWidth(81)).split('\n')[1]).toBe('  "k": [');
   });
 });
 

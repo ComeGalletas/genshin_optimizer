@@ -28,7 +28,7 @@ import {
 } from '../sim/gcsim';
 import { SimRunner } from '../sim/runner';
 import { loadGolden } from '../sim/golden';
-import { loadRotations, ROTATIONS_DIR } from '../sim/rotations';
+import { formatJson, loadRotations, ROTATIONS_DIR } from '../sim/rotations';
 import type { SimResult } from '../sim/result';
 
 /** How far a community rotation may land from its published DPS. */
@@ -129,7 +129,7 @@ for (const r of loadRotations().filter(
         warnings: s.warnings,
         ...(off !== undefined && { offPct: Math.round(off * 100) / 100 }),
       };
-      writeFileSync(path, `${JSON.stringify(file, null, 2)}\n`);
+      writeFileSync(path, formatJson(file));
       console.log(`      recorded in rotations/${meta.id}/meta.json`);
     }
   } catch (e) {

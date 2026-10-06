@@ -30,7 +30,7 @@ describe('npm run rotations (TODO 5.7)', () => {
     const { code, stdout } = await rotations();
     expect(code).toBe(0);
     expect(stdout).toMatch(/^raiden-national +validated +community /m);
-    expect(stdout).toMatch(/^nahida-aggravate +draft +adapted /m);
+    expect(stdout).toMatch(/^nahida-aggravate +validated +adapted /m);
   }, 60_000);
 
   it('won’t promote without the owner at a terminal (or an explicit --yes)', async () => {

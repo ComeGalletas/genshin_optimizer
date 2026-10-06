@@ -110,10 +110,33 @@ export function writeRotation(r: Rotation, dir = ROTATIONS_DIR): void {
 
 /** Write a rotation's meta.json alone. */
 export function writeMeta(meta: RotationMeta, dir = ROTATIONS_DIR): void {
-  writeFileSync(
-    join(dir, meta.id, 'meta.json'),
-    `${JSON.stringify(meta, null, 2)}\n`,
+  writeFileSync(join(dir, meta.id, 'meta.json'), formatJson(meta));
+}
+
+const PRINT_WIDTH = 80;
+const PRIMITIVE = String.raw`(?:"(?:[^"\\]|\\.)*"|-?\d[\d.eE+-]*|true|false|null)`;
+/** A multi-line array of primitives in `JSON.stringify`'s output. */
+const PRIMITIVE_ARRAY = new RegExp(
+  String.raw`^( *)(.*)\[\n((?: *${PRIMITIVE},?\n)+) *\](,?)$`,
+  'gm',
+);
+
+/** JSON as Prettier writes it (CI checks): `JSON.stringify`'s two-space
+ *  layout, with arrays of plain values on one line when they fit in the
+ *  print width, as Prettier puts them. */
+export function formatJson(value: unknown): string {
+  const text = JSON.stringify(value, null, 2).replace(
+    PRIMITIVE_ARRAY,
+    (whole, indent: string, head: string, items: string, comma: string) => {
+      const inline = `${indent}${head}[${items
+        .trim()
+        .split('\n')
+        .map((l) => l.trim().replace(/,$/, ''))
+        .join(', ')}]${comma}`;
+      return inline.length <= PRINT_WIDTH ? inline : whole;
+    },
   );
+  return `${text}\n`;
 }
 
 /** Every rotation in the library, in folder order. */

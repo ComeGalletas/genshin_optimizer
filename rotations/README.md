@@ -28,13 +28,13 @@ and to each config's submitter. We keep their assumptions as published: the acti
 the reference builds, the target and the energy drops. Only character names become
 placeholders.
 
-| Rotation            | Status    | KQM Sim Database entry                                                                                                                | Published DPS |
-| ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------: |
-| `ayaka-freeze`      | validated | [w7BJn6WncNQK](https://db.kqm.gg/db/w7BJn6WncNQK)                                                                                     |        67,106 |
-| `mualani-burn-vape` | validated | [jH7Jc6tMWrNn](https://db.kqm.gg/db/jH7Jc6tMWrNn)                                                                                     |        79,441 |
-| `nahida-aggravate`  | draft     | adapted from [kntc7TFbnPKp](https://db.kqm.gg/db/kntc7TFbnPKp), Fischl's build from [nnM6PpwP76n6](https://db.kqm.gg/db/nnM6PpwP76n6) |             — |
-| `raiden-national`   | validated | [nRMmHwqrFrMn](https://db.kqm.gg/db/nRMmHwqrFrMn)                                                                                     |        66,102 |
-| `skirk-mono-cryo`   | validated | [M8dHqNTHtRmm](https://db.kqm.gg/db/M8dHqNTHtRmm)                                                                                     |       118,821 |
+| Rotation            | Status                           | KQM Sim Database entry                                                                                                                | Published DPS |
+| ------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------: |
+| `ayaka-freeze`      | validated                        | [w7BJn6WncNQK](https://db.kqm.gg/db/w7BJn6WncNQK)                                                                                     |        67,106 |
+| `mualani-burn-vape` | validated                        | [jH7Jc6tMWrNn](https://db.kqm.gg/db/jH7Jc6tMWrNn)                                                                                     |        79,441 |
+| `nahida-aggravate`  | validated, reviewed by the owner | adapted from [kntc7TFbnPKp](https://db.kqm.gg/db/kntc7TFbnPKp), Fischl's build from [nnM6PpwP76n6](https://db.kqm.gg/db/nnM6PpwP76n6) |             — |
+| `raiden-national`   | validated                        | [nRMmHwqrFrMn](https://db.kqm.gg/db/nRMmHwqrFrMn)                                                                                     |        66,102 |
+| `skirk-mono-cryo`   | validated                        | [M8dHqNTHtRmm](https://db.kqm.gg/db/M8dHqNTHtRmm)                                                                                     |       118,821 |
 
 The simulator is [gcsim](https://github.com/genshinsim/gcsim), run as an unmodified
 external program at the version `config/tools.json` pins. See also

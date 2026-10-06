@@ -2,7 +2,7 @@
   "id": "nahida-aggravate",
   "archetype": "nahida-aggravate",
   "name": "Nahida Aggravate (Raiden)",
-  "status": "draft",
+  "status": "validated",
   "summary": "Raiden on field under Nahida's Quicken, with Fischl's Oz and Kuki's ring adding Electro off field. Four rotations of about 20 s against one target. A draft: no published config has this exact team.",
   "slots": [
     {
@@ -55,5 +55,11 @@
     "sd": 1007,
     "durationSec": 72.6,
     "warnings": []
+  },
+  "review": {
+    "by": "owner",
+    "date": "2026-10-05",
+    "gcsim": "v2.48.8",
+    "fingerprint": "9399b618a0309c241c1e52167982bd0b499e96e749089819b2bb3e130c8f1a8a"
   }
 }
