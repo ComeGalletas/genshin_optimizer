@@ -348,7 +348,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 7: Account-wide allocation
 
-- [ ] 7.1 Generalize `composePlan` from the fixed 8 Abyss members to N characters with per-character specs and priority
+- [x] 7.1 Generalize `composePlan` from the fixed 8 Abyss members to N characters with per-character specs and priority
+  - `packages/engine/src/plan/allocate.ts`: an **allocation member** is a character with an optimize request, optional extras (team buffs, weights, enemy), the pieces their spec allows, a priority and a weight; `memberFromSpec` builds one from a checked ConstraintSpec through the same mapping a single search uses (so `keepEquippedOn`, `excludeArtifacts`, weights and buffs carry over). `allocateGreedy` is the plan's greedy pass for any N: members in priority order (ties keep their order), each optimised over what is left and allowed to them, their best build's pieces leaving the pool; a member that can't be planned (no weapon) is recorded without a search; conflicts note the wanted set's pieces an earlier member took. The optimizer is injected (now with the extras) and an `afterMember` hook sees each member's pool.
+  - `composePlan` is now `planMembers` (the eight members, their curated defaults, the plan's role order as priority) plus `allocateGreedy`, its farming list from the hook: behaviour unchanged, its tests and the web plan's untouched and passing. The weight is carried for 7.2 and 7.3; the server's `/allocate` and an `allocate_team` tool come with the output (7.4).
+  - Tests: 7 (priority decides who gets the contested pieces, and no piece is used twice; allowed pieces respected; a member without a weapon recorded without a search, progress reported; conflicts and extras; picking order; a spec's request, extras and allowed pieces; a spec's problems, weight 1 by default). Ignoring the priority turns 2 red, ignoring the allowed pieces 1.
 - [ ] 7.2 v1: the existing greedy pass plus a local-search swap improvement
 - [ ] 7.3 v2: ILP over each character's top-M builds (HiGHS WASM, e.g. `highs` on npm), exact within the pool
 - [ ] 7.4 Output: the plan, the move list ("move sands X from A to B"), and the farming list for gaps (extends the existing one)

@@ -10,19 +10,13 @@
  * list.
  *
  * Artifacts are allocated greedily — each member is optimised over what earlier
- * members left, and the winning build's five pieces leave the pool.
+ * members left, and the winning build's five pieces leave the pool
+ * (`allocateGreedy`, which generalises this to any members since TODO 7.1).
  * // ponytail: greedy allocation in priority order — a joint 8-way assignment
  * // would be exponentially larger for a marginal gain over "the carry gets
  * // first pick", which is what a player would do anyway.
  */
-import type {
-  Artifact,
-  Objective,
-  OptimizeRequest,
-  OptimizeResult,
-  Slot,
-} from '../game/types';
-import { SLOTS } from '../game/types';
+import type { Artifact } from '../game/types';
 import type { RosterEntry } from '../import/good';
 import type { Role } from '../teams/types';
 import type { TeamInstance } from '../teams/recommend';
@@ -30,27 +24,22 @@ import { META_TARGETS } from '../meta/metaTargets';
 import { defaultConstraints, defaultObjective } from '../optimizer/defaults';
 import { computeGapReport } from '../meta/gap';
 import { genshinAdapter } from '../game/genshin/adapter';
+import {
+  allocateGreedy,
+  type AllocatedBuild,
+  type AllocationMember,
+  type RunOptimize,
+} from './allocate';
 
-export interface PlanMemberBuild {
-  characterKey: string;
-  objective: Objective;
-  result: OptimizeResult;
-  /** Human-readable notes: pieces from this member's meta set that a
-   *  higher-priority member already claimed. */
-  conflicts: string[];
-}
+export type { RunOptimize };
+
+export type PlanMemberBuild = AllocatedBuild;
 
 export interface Plan {
   teams: [TeamInstance, TeamInstance];
   builds: PlanMemberBuild[]; // 8 entries, team order then priority order
   farming: string[]; // deduped, name-prefixed feasibility + shortfall lines
 }
-
-/** Injected so tests run the solver directly and the app runs it in a worker. */
-export type RunOptimize = (
-  req: OptimizeRequest,
-  inventory: Artifact[],
-) => Promise<OptimizeResult>;
 
 /** Carries do the most damage and want first pick of the gear. */
 const ROLE_PRIORITY: Record<Role, number> = {
@@ -72,11 +61,38 @@ function orderedMembers(team: TeamInstance): TeamInstance['members'] {
     .map((x) => x.m);
 }
 
-/** The set keys a character's meta recipe asks for, for conflict reporting. */
-function metaSetKeys(characterKey: string): string[] {
-  const req = META_TARGETS[characterKey]?.setRequirement;
-  if (!req) return [];
-  return req.kind === '2+2' ? [...req.setKeys] : [req.setKey];
+const NO_WEAPON =
+  'No weapon equipped in your export — equip one to plan a build.';
+
+/** The eight members as allocation members (TODO 7.1): the curated
+ *  defaults of each, in the order the plan gives them first pick. */
+export function planMembers(
+  teams: [TeamInstance, TeamInstance],
+  roster: Record<string, RosterEntry>,
+): AllocationMember[] {
+  // Better team first: its members get first pick of the shared inventory.
+  const ordered = [...teams].sort((a, b) => b.score - a.score);
+  return ordered.flatMap(orderedMembers).map((m, i) => {
+    const key = m.characterKey;
+    const entry = roster[key] ?? {};
+    return {
+      characterKey: key,
+      request: {
+        characterKey: key,
+        weaponKey: entry.weaponKey ?? '',
+        buildLevel: entry.buildLevel ?? 90,
+        ...(entry.weaponRefinement !== undefined && {
+          refinement: entry.weaponRefinement,
+        }),
+        constraints: defaultConstraints(key),
+        objective: defaultObjective(key),
+        topK: 1,
+      },
+      priority: i,
+      weight: 1,
+      ...(!entry.weaponKey && { problem: NO_WEAPON }),
+    };
+  });
 }
 
 export async function composePlan(
@@ -86,17 +102,8 @@ export async function composePlan(
   runOptimize: RunOptimize,
   onProgress?: (done: number, total: number) => void,
 ): Promise<Plan> {
-  // Better team first: its members get first pick of the shared inventory.
-  const ordered = [...teams].sort((a, b) => b.score - a.score);
-  const queue = ordered.flatMap(orderedMembers);
-  const total = queue.length;
-
-  let pool = inventory;
-  const taken: Artifact[] = [];
-  const builds: PlanMemberBuild[] = [];
   const farming: string[] = [];
   const seenFarming = new Set<string>();
-
   const addFarming = (characterKey: string, line: string) => {
     const prefixed = `${genshinAdapter.characterName(characterKey)}: ${line}`;
     if (seenFarming.has(prefixed)) return;
@@ -104,68 +111,22 @@ export async function composePlan(
     farming.push(prefixed);
   };
 
-  for (const m of queue) {
-    const key = m.characterKey;
-    const entry = roster[key] ?? {};
-    const meta = META_TARGETS[key];
-    const objective = defaultObjective(key);
-    const constraints = defaultConstraints(key);
-
-    // Pieces this member's meta set wants that someone ahead of them took.
-    const wanted = new Set(metaSetKeys(key));
-    const conflicts = wanted.size
-      ? taken
-          .filter((a) => wanted.has(a.setKey))
-          .map(
-            (a) =>
-              `A ${a.setKey} ${a.slot} went to an earlier member of the plan.`,
-          )
-      : [];
-
-    if (!entry.weaponKey) {
-      builds.push({
-        characterKey: key,
-        objective,
-        result: { status: 'infeasible', explored: 0, pruned: 0 },
-        conflicts,
-      });
-      addFarming(
-        key,
-        'No weapon equipped in your export — equip one to plan a build.',
-      );
-      onProgress?.(builds.length, total);
-      continue;
-    }
-
-    const req: OptimizeRequest = {
-      characterKey: key,
-      weaponKey: entry.weaponKey,
-      buildLevel: entry.buildLevel ?? 90,
-      ...(entry.weaponRefinement !== undefined && {
-        refinement: entry.weaponRefinement,
-      }),
-      constraints,
-      objective,
-      topK: 1,
-    };
-    const result = await runOptimize(req, pool);
-
-    const best = result.status === 'ok' ? result.builds[0] : null;
-    const gap = meta ? computeGapReport(meta, pool, best) : null;
-    if (gap) {
-      for (const line of [...gap.feasibility, ...gap.shortfalls])
-        addFarming(key, line);
-    }
-
-    if (best) {
-      const ids = new Set<string>(SLOTS.map((s: Slot) => best.artifactIds[s]));
-      for (const a of pool) if (ids.has(a.id)) taken.push(a);
-      pool = pool.filter((a) => !ids.has(a.id));
-    }
-
-    builds.push({ characterKey: key, objective, result, conflicts });
-    onProgress?.(builds.length, total);
-  }
-
+  const { builds } = await allocateGreedy(
+    planMembers(teams, roster),
+    inventory,
+    runOptimize,
+    {
+      onProgress,
+      afterMember: (m, result, pool) => {
+        if (m.problem) return addFarming(m.characterKey, m.problem);
+        const meta = META_TARGETS[m.characterKey];
+        const best = result.status === 'ok' ? result.builds[0] : null;
+        const gap = meta ? computeGapReport(meta, [...pool], best) : null;
+        if (gap)
+          for (const line of [...gap.feasibility, ...gap.shortfalls])
+            addFarming(m.characterKey, line);
+      },
+    },
+  );
   return { teams, builds, farming };
 }
