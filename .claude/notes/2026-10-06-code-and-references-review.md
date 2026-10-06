@@ -1,7 +1,7 @@
 # Code structure and references review
 
 - Date: 2026-10-06
-- Tested at: branch `fix/phase9-qa-majors` (`e220f90`, on top of `main` `9a6c04f`)
+- Tested at: branch `fix/phase9-qa-majors` (`e220f90`, on top of `main` `9a6c04f`); statuses updated for `main` `3286bad`
 - Scope: (1) unused and redundant code across `packages/`, `scripts/` and
   config; (2) every reference between docs and code: paths, commands and
   flags, ADR and TODO citations, facts, element ids, help text and the
@@ -25,8 +25,8 @@
 `npm run` script and flag named anywhere exists, and no source module is
 unreachable. The findings:
 
-- 2 user-visible texts are wrong: the server help, and "step 01" in the
-  Import Center.
+- 2 user-visible texts were wrong: the server help (fixed on `main` since)
+  and "step 01" in the Import Center.
 - 18 docs are stale, mostly README, CONTRIBUTING and FILE-MAP from before
   Phases 3 to 9.
 - 11 functions or store actions never run in production.
@@ -50,13 +50,9 @@ unreachable. The findings:
 
 ### 1.1 User-visible text that is wrong (fix first)
 
-1. **The `start-server` help topic says `npm run server` imports the inbox and
-   watches it.** It does neither (QA report m3).
-   - Where: `packages/web/src/components/help/topics.ts:50`, also `:46` and the
-     tip at `:55`.
-   - `packages/server/src/cli/serve.ts` only opens the store and listens. The
-     inbox is read by `npm run inbox [-- --watch]` (`cli/inbox.ts`) and by
-     the Import Center's Scan the Inbox (`POST /imports/scan`).
+1. ~~The `start-server` help topic says `npm run server` imports the inbox
+   and watches it.~~ Fixed on `main` in 3286bad (QA m3): it now names
+   `npm run inbox`.
 2. **The Import Center says "Load Account in step 01".** Step numbers went
    with the step nav in TODO 9.4.
    - Where: `packages/web/src/import-center/ImportCenter.tsx:149`, the comment
@@ -197,9 +193,9 @@ ADR-0056; `rollSplit.ts`, `texts.ts` and `GameText.tsx` cite only TODO 9.10.
 | `engine/src/sim/rotation.ts:247` | `assignSlots` | tests only; `rotationConfig` and `server/src/sim/teamsim.ts:149` each assign slots their own way, with different rules |
 | `engine/src/good/sidecar.ts:77` | `indexSidecar` | tests only |
 | `server/src/chat/grounding.ts:112` | `sourceValues` | tests only (a one-line wrapper) |
-| `web/src/components/help/Help.tsx:83` | `HelpHeading` | tests only; four production subsections build the same heading by hand (`ImportCenter.tsx` ×3, `ServerAllocation.tsx`) |
+| `web/src/components/help/Help.tsx:90` | `HelpHeading` | tests only; four production subsections build the same heading by hand (`ImportCenter.tsx` ×3, `ServerAllocation.tsx`) |
 | `engine/src/game/genshin/passives.ts:42` | `REFINEMENTS` | tests only |
-| `web/src/state/inventory.ts:10, 24` | the `addMany` action | tests only (10 call sites) |
+| `web/src/state/inventory.ts:13, 27` | the `addMany` action | tests only (10 call sites) |
 | `web/src/state/optimizeRequest.ts:37, 191` | the `reset` action | tests only (`beforeEach`) |
 
 `bruteForce` (the documented oracle), `loadSampleGOOD` and
@@ -329,7 +325,7 @@ Checked clean:
 
 ## Suggested order
 
-1. The two wrong UI texts (1.1). Small and user-visible.
+1. The Import Center's "step 01" (1.1). Small and user-visible.
 2. The docs that mislead a contributor: `patch-refresh.md`, which makes CI
    fail; CONTRIBUTING's CI order and its two vanished files; README's status.
 3. Dead code with zero callers: `setName`, `addMany`, `reset`,

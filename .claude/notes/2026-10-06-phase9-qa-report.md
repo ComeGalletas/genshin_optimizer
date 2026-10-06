@@ -11,10 +11,10 @@
 Summary: no blockers, 3 major, 8 minor and 4 cosmetic findings, every one
 reproduced.
 
-**Status (2026-10-06, later):** M1, M2 and M3 are fixed on branch
-`fix/phase9-qa-majors`, each with tests and checked again in the running
-app. m5 (the stale "Press Confirm replace" prompt) was fixed on `main` in
-720079a. The rest are open. The engine side held up: stats, talents, roll splits and the
+**Status (2026-10-06, later):** every finding is fixed. M1, M2 and M3 are
+fixed on branch `fix/phase9-qa-majors`, each with tests and checked again
+in the running app. m5 was fixed on `main` in 720079a, and the other minor
+and cosmetic findings in 3286bad (TODO 10.0). The engine side held up: stats, talents, roll splits and the
 `/account/good` round trip all matched genshin-db and the owner's exports
 exactly.
 
