@@ -19,14 +19,11 @@ import { NeedsData } from './AccountBar';
 import { Callout } from './ui/Callout';
 import { cn } from './ui/cn';
 import { useOptimizeRequest } from '../state/optimizeRequest';
+import { PanelFallback } from './ui/PanelFallback';
 
 const SimRank = lazy(() =>
   import('../sim-rank/SimRank').then((m) => ({ default: m.SimRank })),
 );
-
-function PanelFallback() {
-  return <p className="text-sm text-muted">Loading…</p>;
-}
 
 export function OptimiseView({
   artifacts,

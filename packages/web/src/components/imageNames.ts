@@ -3,39 +3,20 @@
  * the page, the first time one mounts.
  * @packageDocumentation
  */
-import { useSyncExternalStore } from 'react';
 import {
   loadImageNames,
   type ImageNames,
 } from '@genshin-build-lab/engine/game/genshin/images';
+import { lazyResource } from '../hooks/lazyResource';
 
-let names: ImageNames | null = null;
-let loading: Promise<void> | null = null;
-const listeners = new Set<() => void>();
+const names = lazyResource(loadImageNames);
 
-function subscribe(fn: () => void) {
-  listeners.add(fn);
-  loading ??= loadImageNames().then(
-    (n) => {
-      names = n;
-      listeners.forEach((l) => l());
-    },
-    () => {
-      // No names: every image keeps its fallback.
-    },
-  );
-  return () => listeners.delete(fn);
-}
-const current = () => names;
-
-/** The names, or null until they arrive. */
+/** The names, or null until they arrive (or if they can't: every image
+ *  keeps its fallback). */
 export function useImageNames(): ImageNames | null {
-  return useSyncExternalStore(subscribe, current, current);
+  const v = names.useValue();
+  return v === 'failed' ? null : v;
 }
 
 /** Test hook: these names (or none), as if loaded. */
-export function setImageNamesForTests(n: ImageNames | null) {
-  names = n;
-  loading = Promise.resolve();
-  listeners.forEach((l) => l());
-}
+export const setImageNamesForTests = names.setForTests;

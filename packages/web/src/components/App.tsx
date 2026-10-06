@@ -32,6 +32,7 @@ import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
 import { scrollToIdWhenShown } from '../ui/scroll';
 import { Callout } from './ui/Callout';
+import { PanelFallback } from './ui/PanelFallback';
 import { ViewErrorBoundary } from './ErrorBoundary';
 import { cn } from './ui/cn';
 import type {
@@ -80,11 +81,6 @@ const TeamComparison = lazy(() =>
     default: m.TeamComparison,
   })),
 );
-
-/** Minimal fallback for a lazy view: a line of text, not a skeleton. */
-function PanelFallback() {
-  return <p className="text-sm text-muted">Loading…</p>;
-}
 
 // Display-only vocabulary for the one game this app supports (ADR-0012).
 const GAME_TAGLINE =

@@ -9,7 +9,7 @@
 
 /** Keys are the dataset's lowercase element names; anything unknown falls back
  *  to the muted body colour. */
-export const ELEMENT_TONE: Record<string, string> = {
+const ELEMENT_TONE: Record<string, string> = {
   pyro: 'text-element-pyro',
   hydro: 'text-element-hydro',
   electro: 'text-element-electro',
