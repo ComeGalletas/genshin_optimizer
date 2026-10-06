@@ -138,7 +138,7 @@ export function accountTools(services: Services): ToolDef[] {
       name: 'optimize_build',
       title: 'Optimize a build',
       description:
-        'Exact best builds for one character from the account\'s artifacts, from a ConstraintSpec (ADR-0036). Only `character` is required. The spec EXTENDS the character\'s curated defaults (their usual set, main stats, ER floor and objective), so give only what the owner asked for: "best Furina with at least 180% ER" is {"character":"furina","minStats":{"er_pct":180}}. Fields: set ({"kind":"4pc"|"2pc","setKey"}, {"kind":"2+2","setKeys":[a,b]}, or {"kind":"any"} to drop the default set), mainStats ({"sands"|"goblet"|"circlet": a stat, or "any"}), minStats and maxStats (percent where the game shows percent), objective ("avg_damage", "crit_value", a stat, or {"weights":{stat:weight}}), keepEquippedOn (character keys whose pieces stay put, or "all" for unequipped pieces only), excludeArtifacts (artifact ids), teamBuffs (stats teammates add), enemy ({"level", "res" in percent}), weapon and buildLevel (else the equipped ones), defaults ("replace" to ignore the curated ones), topK. Returns `understood`, the plain-words reading of the spec (tell it to the owner), then `passives` (what the weapon and character passives add to every build, at the refinement the owner has and, for ER-based ones, at the ER floor), then the top builds with totals, objective value and binding constraints. Problems come back all at once, each with where it is.',
+        'Exact best builds for one character from the account\'s artifacts, from a ConstraintSpec (ADR-0036). Only `character` is required. The spec EXTENDS the character\'s curated defaults (their usual set, main stats, ER floor and objective), so give only what the owner asked for: "best Furina with at least 180% ER" is {"character":"furina","minStats":{"er_pct":180}}. Fields: set ({"kind":"4pc"|"2pc","setKey"}, {"kind":"2+2","setKeys":[a,b]}, or {"kind":"any"} to drop the default set), mainStats ({"sands"|"goblet"|"circlet": a stat, or "any"}), minStats and maxStats (percent where the game shows percent), objective ("avg_damage", "crit_value", a stat, or {"weights":{stat:weight}}; or "sim" to rank the top builds by simulated team DPS in a gcsim rotation from the library, with the owner\'s teammates: sim {"rotation" (an id; the character\'s one when left out), "by" (the stat objective that picks the candidates, the usual one when left out), "topK" (default 20), "iterations" (default 500)}; it takes tens of seconds and reports each build\'s team DPS with a 95% interval and which builds the noise can\'t separate from the best, so say "tied" for those), keepEquippedOn (character keys whose pieces stay put, or "all" for unequipped pieces only), excludeArtifacts (artifact ids), teamBuffs (stats teammates add), enemy ({"level", "res" in percent}), weapon and buildLevel (else the equipped ones), defaults ("replace" to ignore the curated ones), topK. Returns `understood`, the plain-words reading of the spec (tell it to the owner), then `passives` (what the weapon and character passives add to every build, at the refinement the owner has and, for ER-based ones, at the ER floor), then the top builds with totals, objective value and binding constraints. Problems come back all at once, each with where it is.',
       input: {
         ...ConstraintSpecSchema.shape,
         topK: z.number().int().min(1).max(20).optional(),
@@ -146,6 +146,28 @@ export function accountTools(services: Services): ToolDef[] {
       run: async ({ topK, ...spec }) => {
         const r = await services.runSpec(spec, topK);
         if (r.status !== 'ok') return r;
+        if ('sim' in r)
+          return {
+            ...r,
+            builds: r.builds.map((b) => ({
+              rank: b.rank,
+              statRank: b.statRank,
+              teamDps: Math.round(b.teamDps.mean),
+              teamDpsCi95: b.teamDps.ci95.map(Math.round),
+              behindPct: r1(b.behindPct),
+              tiedWithBest: b.tiedWithBest,
+              ...(b.characterDps && {
+                characterDps: Math.round(b.characterDps.mean),
+                characterShare: r1(100 * b.characterDps.share),
+              }),
+              fightSec: r1(b.fightSec),
+              objectiveValue: r1(b.objectiveValue),
+              totals: round(b.totals),
+              artifacts: Object.fromEntries(
+                Object.entries(b.artifacts).map(([s, a]) => [s, compact(a)]),
+              ),
+            })),
+          };
         return {
           ...r,
           builds: r.builds.map((b) => ({

@@ -31,6 +31,19 @@ import { runChat } from './chat/loop';
 import { SUBMIT_SPEC } from './llm/translate';
 import { loadGolden } from './llm/evaluate';
 import type { ChatResponse, LlmClient } from './llm/client';
+import { resolveSimTeam } from './sim/rerank';
+import { ROTATIONS_DIR } from './sim/rotations';
+import type { RotationDeps } from './sim/drafts';
+
+/** gcsim for `objective: "sim"` specs: never reached here (the search is
+ *  mocked infeasible), but present, so a valid sim spec gets to the search. */
+const NO_SIMS: RotationDeps = {
+  gcsim: 'v2.48.8',
+  runner: {
+    run: () => Promise.reject(new Error('no simulations in this test')),
+    runWithSample: () => Promise.reject(new Error('no simulations')),
+  },
+};
 
 const SAMPLE = readFileSync(
   new URL(
@@ -47,7 +60,7 @@ beforeEach(() => {
   db = openStore(':memory:');
   importGood(db, { text: SAMPLE, importedAt: '2026-01-02T03:04:05.000Z' });
   recordMerge(db, [1], '2026-01-02T03:04:05.000Z');
-  services = new Services(db);
+  services = new Services(db, undefined, { deps: NO_SIMS });
   // The optimizer's only door. No search really runs: these tests are about
   // what is let through, not about builds.
   runs = vi
@@ -267,6 +280,7 @@ describe('the invariant, fuzzed (TODO 4.5)', () => {
       'excludeArtifacts',
       'teamBuffs',
       'enemy',
+      'sim',
       'version',
       'bogus',
     ];
@@ -275,6 +289,7 @@ describe('the invariant, fuzzed (TODO 4.5)', () => {
     );
     const account = {
       roster: currentRoster(db).roster,
+      weapons: currentRoster(db).weapons,
       artifacts: (await import('./store/store'))
         .currentAccount(db)
         .map((m) => m.artifact),
@@ -289,9 +304,19 @@ describe('the invariant, fuzzed (TODO 4.5)', () => {
         if (v === undefined) delete spec[f];
         else spec[f] = structuredClone(v);
       }
-      // The oracle: the engine's own checks, applied directly.
+      // The oracle: the engine's own checks, applied directly, and for
+      // "sim" the rotation and teammates too (TODO 5.8).
       const parsed = parseConstraintSpec(spec);
-      const ok = parsed.ok && specToRun(parsed.spec, account).ok;
+      const ok =
+        parsed.ok &&
+        specToRun(parsed.spec, account).ok &&
+        (parsed.spec.objective !== 'sim' ||
+          resolveSimTeam(
+            parsed.spec.character,
+            parsed.spec.sim?.rotation,
+            account,
+            ROTATIONS_DIR,
+          ).ok);
       runs.mockClear();
       const result = await services.runSpec(spec).catch((e: unknown) => e);
       if (ok) {

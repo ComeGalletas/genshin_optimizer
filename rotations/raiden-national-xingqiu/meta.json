@@ -1,0 +1,60 @@
+{
+  "id": "raiden-national-xingqiu",
+  "archetype": "raiden-national",
+  "name": "Raiden National (Xingqiu)",
+  "status": "validated",
+  "summary": "The classic National: Raiden on field after Xingqiu's rain swords, Xiangling's Pyronado and Bennett's buff. Five rotations of about 21 s against one target, with no particle-delay tricks.",
+  "slots": [
+    {
+      "id": "raiden",
+      "characters": ["raiden_shogun"],
+      "role": "on-field-dps"
+    },
+    {
+      "id": "xiangling",
+      "characters": ["xiangling"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "xingqiu",
+      "characters": ["xingqiu"],
+      "role": "off-field-dps"
+    },
+    {
+      "id": "bennett",
+      "characters": ["bennett"],
+      "role": "buffer"
+    }
+  ],
+  "active": "raiden",
+  "fight": {
+    "mode": "actions",
+    "enemy": {
+      "level": 100,
+      "res": 10,
+      "hp": 999999999,
+      "radius": 2,
+      "pos": [0, 2.4]
+    },
+    "energy": "energy every interval=480,720 amount=1;"
+  },
+  "rotationSec": 21,
+  "source": {
+    "kind": "community",
+    "title": "KQM Sim Database: Raiden Bennett Xingqiu Xiangling",
+    "url": "https://db.kqm.gg/db/q7LfkHwGrB9H",
+    "retrieved": "2026-10-05",
+    "publishedDps": 67971,
+    "changes": "Names as slot placeholders."
+  },
+  "validation": {
+    "gcsim": "v2.48.8",
+    "date": "2026-10-06",
+    "iterations": 1000,
+    "dps": 68078,
+    "sd": 2281,
+    "durationSec": 106.27,
+    "warnings": ["insufficient_energy", "skill_cd"],
+    "offPct": 0.16
+  }
+}

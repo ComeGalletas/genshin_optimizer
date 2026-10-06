@@ -93,6 +93,9 @@ export interface RotationDeps {
   };
   /** The pinned gcsim version, e.g. `v2.48.8`. */
   gcsim: string;
+  /** The pinned gcsim commit, for the result cache (5.4); the version
+   *  when left out. */
+  commit?: string;
   /** Today, `YYYY-MM-DD`. */
   today?: () => string;
 }
@@ -103,7 +106,11 @@ export function installedRotationDeps(): RotationDeps | undefined {
     const tool = loadGcsimTool();
     const path = gcsimPath(tool);
     return existsSync(path)
-      ? { runner: new SimRunner(path), gcsim: tool.version }
+      ? {
+          runner: new SimRunner(path),
+          gcsim: tool.version,
+          commit: tool.commit,
+        }
       : undefined;
   } catch {
     return undefined;

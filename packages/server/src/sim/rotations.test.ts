@@ -26,12 +26,13 @@ describe('the rotation library (TODO 5.6)', () => {
   const library = loadRotations();
   const tool = loadGcsimTool();
 
-  it('covers the five seed teams (TODO 5.0, Mualani as the owner plays her)', () => {
+  it('covers the five seed teams (TODO 5.0, Mualani as the owner plays her), and the National the sample account can field (5.8)', () => {
     expect(library.map((r) => r.meta.id)).toEqual([
       'ayaka-freeze',
       'mualani-burn-vape',
       'nahida-aggravate',
       'raiden-national',
+      'raiden-national-xingqiu',
       'skirk-mono-cryo',
     ]);
   });
@@ -54,6 +55,7 @@ describe('the rotation library (TODO 5.6)', () => {
       // Adapted, reviewed and promoted by the owner (TODO 5.7).
       'nahida-aggravate',
       'raiden-national',
+      'raiden-national-xingqiu',
       'skirk-mono-cryo',
     ]);
     // Published rotations keep their authors' idle burst waits.

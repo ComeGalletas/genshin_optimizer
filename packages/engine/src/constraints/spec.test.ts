@@ -108,7 +108,7 @@ describe('ConstraintSpec: shape', () => {
       message: 'expected string',
     });
     expect(one({ character: 'furina', objective: 'dps' }).message).toMatch(
-      /^must be "crit_value", "avg_damage", a stat key/,
+      /^must be "sim", "crit_value", "avg_damage", a stat key/,
     );
     expect(
       one({ character: 'furina', set: { kind: '3pc', setKey: 'X' } }),

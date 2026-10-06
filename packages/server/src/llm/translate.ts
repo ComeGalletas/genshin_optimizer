@@ -10,6 +10,8 @@
  */
 
 import * as z from 'zod';
+import { rotationLibrary } from '../sim/rerank';
+import { ROTATIONS_DIR } from '../sim/rotations';
 import {
   ConstraintSpecSchema,
   type SpecIssue,
@@ -25,6 +27,8 @@ export const SUBMIT_SPEC = 'submit_spec';
 export interface Catalog {
   characters: { key: string; name: string }[];
   sets: { key: string; name: string }[];
+  /** The rotation library (TODO 5.8): id and name with the team. */
+  rotations?: { key: string; name: string }[];
 }
 
 /** Checks a submitted spec: the caller's spec checks plus the account
@@ -46,12 +50,18 @@ const TRANSLATE_MAX_OUTPUT_TOKENS = 1200;
 
 /** Every character and set in the dataset: a character the account lacks
  *  can still be built, with a weapon named. */
-export function translationCatalog(): Catalog {
+export function translationCatalog(rotationsDir = ROTATIONS_DIR): Catalog {
   return {
     characters: genshinAdapter
       .characters()
       .map((c) => ({ key: c.key, name: c.name })),
     sets: genshinAdapter.sets().map((s) => ({ key: s.key, name: s.name })),
+    rotations: rotationLibrary(rotationsDir).map((r) => ({
+      key: r.meta.id,
+      name: `${r.meta.name}: ${r.meta.slots
+        .flatMap((sl) => sl.characters)
+        .join(', ')}`,
+    })),
   };
 }
 
@@ -67,7 +77,7 @@ How to fill it in:
 - set: "4-piece X" is {"kind": "4pc", "setKey": X}; "2-piece A and 2-piece B" is {"kind": "2+2", "setKeys": [A, B]}; "any set" or "no set requirement" is {"kind": "any"}.
 - mainStats only for sands, goblet and circlet: {"sands": "er_pct"}; "any" removes that slot's default.
 - maxStats for upper limits ("no more than 70% crit rate").
-- objective only when the owner asks what to maximise: "most damage" is "avg_damage"; "crit value" is "crit_value"; "maximise EM" is "em"; a mix is {"weights": {"hp_pct": 1, "crit_rate": 2}}.
+- objective only when the owner asks what to maximise: "most damage" is "avg_damage"; "crit value" is "crit_value"; "maximise EM" is "em"; a mix is {"weights": {"hp_pct": 1, "crit_rate": 2}}. "Rank by team DPS", "simulate it" or "in the team's rotation" is "sim", with sim {"rotation": an id from the rotations below} when the owner names the team or rotation; sim "topK" and "iterations" only when they give numbers.
 - keepEquippedOn: characters whose pieces must stay where they are ("don't take Neuvillette's artifacts"); "only unequipped pieces" or "don't touch anyone's gear" is "all".
 - excludeArtifacts: artifact ids the owner names.
 - teamBuffs: stats teammates add ("with Bennett's 1000 ATK buff" is {"atk": 1000}).
@@ -75,7 +85,11 @@ How to fill it in:
 - weapon and buildLevel only when the request names them.
 
 Characters (key and name; one the account lacks needs a weapon named): ${list(catalog.characters)}.
-Artifact sets: ${list(catalog.sets)}.`;
+Artifact sets: ${list(catalog.sets)}.${
+    catalog.rotations?.length
+      ? `\nRotations (id and the team): ${list(catalog.rotations)}.`
+      : ''
+  }`;
 }
 
 /** The spec's JSON Schema as a tool, `version` left out (it defaults). */

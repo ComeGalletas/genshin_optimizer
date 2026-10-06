@@ -10,7 +10,7 @@
 import type { Objective, StatKey, StatVec } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { objectiveLabel, statLabel } from '../labels-core';
-import type { ConstraintSpec } from './spec';
+import { SIM_ITERATIONS, SIM_TOP_K, type ConstraintSpec } from './spec';
 import type { SpecRun } from './toRequest';
 
 export interface UnderstoodLine {
@@ -47,7 +47,18 @@ function objectiveText(o: Objective, weights?: StatVec): string {
     : objectiveLabel(o).toLowerCase();
 }
 
-export function describeRun(spec: ConstraintSpec, run: SpecRun): Understood {
+/** With `objective: "sim"` (TODO 5.8): the rotation the candidates run in
+ *  and the teammates who fill its other slots, as the server resolved them. */
+export interface SimDescription {
+  rotation: string;
+  teammates: string[];
+}
+
+export function describeRun(
+  spec: ConstraintSpec,
+  run: SpecRun,
+  sim?: SimDescription,
+): Understood {
   const { request, extras } = run;
   const c = request.constraints;
   const character =
@@ -60,15 +71,21 @@ export function describeRun(spec: ConstraintSpec, run: SpecRun): Understood {
   const line = (text: string, asked: boolean) =>
     lines.push({ text, source: asked ? 'asked' : 'default' });
 
-  const objectiveAsked = spec.objective !== undefined;
+  const isSim = spec.objective === 'sim';
+  const objectiveAsked = isSim
+    ? spec.sim?.by !== undefined
+    : spec.objective !== undefined;
   const objective = objectiveText(request.objective, extras.weights);
-  const goal = `build ${character} (${weapon}, level ${request.buildLevel}) for ${
-    objectiveAsked
-      ? objective
-      : objective.endsWith(')')
-        ? `${objective.slice(0, -1)}; default)`
-        : `${objective} (default)`
-  }`;
+  const statGoal = objectiveAsked
+    ? objective
+    : objective.endsWith(')')
+      ? `${objective.slice(0, -1)}; default)`
+      : `${objective} (default)`;
+  const goal = isSim
+    ? `rank ${character}'s top ${spec.sim?.topK ?? SIM_TOP_K} builds (${weapon}, level ${request.buildLevel}) by ${statGoal} by simulated team DPS in ${sim?.rotation ?? spec.sim?.rotation ?? 'their rotation'}${
+        sim?.teammates.length ? ` with ${sim.teammates.join(', ')}` : ''
+      } (${spec.sim?.iterations ?? SIM_ITERATIONS} iterations each)`
+    : `build ${character} (${weapon}, level ${request.buildLevel}) for ${statGoal}`;
 
   const set = c.setRequirement;
   if (set)

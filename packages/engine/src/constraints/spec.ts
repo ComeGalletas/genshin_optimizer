@@ -72,7 +72,8 @@ export const SetRule = z.discriminatedUnion('kind', [
 ]);
 export type SetRule = z.infer<typeof SetRule>;
 
-export const SpecObjective = z.union([
+/** What the exact search maximises. */
+export const StatObjective = z.union([
   z.enum(['crit_value', 'avg_damage', ...STAT_KEYS]),
   /** Maximise a weighted sum of stats, e.g.
    *  `{ "weights": { "hp_pct": 1, "crit_rate": 2, "crit_dmg": 1 } }`. */
@@ -83,7 +84,16 @@ export const SpecObjective = z.union([
     ),
   }),
 ]);
+export type StatObjective = z.infer<typeof StatObjective>;
+
+/** A stat objective, or `"sim"` (TODO 5.8): the search's top builds
+ *  ranked by simulated team DPS in a rotation. */
+export const SpecObjective = z.union([z.literal('sim'), StatObjective]);
 export type SpecObjective = z.infer<typeof SpecObjective>;
+
+/** Defaults of `objective: "sim"`. */
+export const SIM_TOP_K = 20;
+export const SIM_ITERATIONS = 500;
 
 /** `"any"` clears a default main-stat lock for that slot. */
 const MainStat = z.union([Stat, z.literal('any')]);
@@ -109,6 +119,20 @@ export const ConstraintSpecSchema = z.strictObject({
   minStats: z.optional(StatAmounts),
   maxStats: z.optional(StatAmounts),
   objective: z.optional(SpecObjective),
+  /** With `objective: "sim"`: the rotation (a library id; the one for the
+   *  character when left out), the stat objective that picks the
+   *  candidates (the character's usual one when left out), how many
+   *  (default 20) and the iterations each (default 500). */
+  sim: z.optional(
+    z.strictObject({
+      rotation: z.optional(Key),
+      by: z.optional(StatObjective),
+      topK: z.optional(z.number().check(z.int(), z.minimum(2), z.maximum(50))),
+      iterations: z.optional(
+        z.number().check(z.int(), z.minimum(100), z.maximum(5000)),
+      ),
+    }),
+  ),
   /** Characters whose equipped pieces are off-limits, or `"all"` for
    *  unequipped pieces only (the character's own always count). */
   keepEquippedOn: z.optional(
@@ -205,6 +229,12 @@ function checkMeaning(s: z.infer<typeof ConstraintSpecSchema>): SpecIssue[] {
   const character = genshinAdapter.character(s.character);
   if (!character)
     add('character', unknown('character', s.character, k.characters));
+
+  if (s.sim && s.objective !== 'sim')
+    add(
+      'sim',
+      'sim options apply only with objective "sim"; add it, or leave sim out',
+    );
 
   if (s.weapon !== undefined) {
     const weapon = genshinAdapter.weapon(s.weapon);
@@ -342,7 +372,7 @@ function describeIssue(issue: ZodIssue): SpecIssue[] {
     case 'invalid_union': {
       const message =
         path[0] === 'objective'
-          ? `must be "crit_value", "avg_damage", a stat key (${STAT_LIST}) or { "weights": { stat: weight } }`
+          ? `must be "sim", "crit_value", "avg_damage", a stat key (${STAT_LIST}) or { "weights": { stat: weight } }`
           : path[0] === 'keepEquippedOn'
             ? 'must be "all" or a list of character keys'
             : path[0] === 'mainStats'

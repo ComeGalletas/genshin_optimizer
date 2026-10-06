@@ -124,14 +124,17 @@ export function specToRun(
   // ---- objective and extras ----------------------------------------------
   const extras: ContextExtras = {};
   let objective: Objective;
-  if (typeof spec.objective === 'object') {
+  // With "sim", the search picks the candidates by `sim.by` (TODO 5.8).
+  const statObjective =
+    spec.objective === 'sim' ? spec.sim?.by : spec.objective;
+  if (typeof statObjective === 'object') {
     objective = 'weighted';
     extras.weights = Object.fromEntries(
-      Object.entries(spec.objective.weights).filter(([, w]) => (w ?? 0) > 0),
+      Object.entries(statObjective.weights).filter(([, w]) => (w ?? 0) > 0),
     ) as StatVec;
   } else
     objective =
-      spec.objective ??
+      statObjective ??
       (extend ? defaultObjective(spec.character) : 'crit_value');
   if (spec.teamBuffs && Object.keys(spec.teamBuffs).length)
     extras.buffs = { ...spec.teamBuffs };

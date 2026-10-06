@@ -42,10 +42,10 @@ afterEach(() => services.searches.close());
 const cases = loadGolden();
 
 describe('the golden set', () => {
-  it('has 30 cases with unique ids and requests', () => {
-    expect(cases).toHaveLength(30);
-    expect(new Set(cases.map((c) => c.id)).size).toBe(30);
-    expect(new Set(cases.map((c) => c.request)).size).toBe(30);
+  it('has 31 cases with unique ids and requests', () => {
+    expect(cases).toHaveLength(31);
+    expect(new Set(cases.map((c) => c.id)).size).toBe(31);
+    expect(new Set(cases.map((c) => c.request)).size).toBe(31);
   });
 
   it('expects only valid, minimal specs that fit the sample account', () => {
@@ -111,17 +111,17 @@ function modelAnswering(
 }
 
 describe('evaluateGolden', () => {
-  it('a model that answers every case right scores 30/30, exact', async () => {
+  it('a model that answers every case right scores 31/31, exact', async () => {
     const e = await evaluateGolden(
       modelAnswering((x) => x),
       services,
       cases,
     );
     expect(e).toMatchObject({
-      total: 30,
-      exact: 30,
-      equivalent: 30,
-      translated: 30,
+      total: 31,
+      exact: 31,
+      equivalent: 31,
+      translated: 31,
     });
   });
 
@@ -157,11 +157,11 @@ describe('evaluateGolden', () => {
       translated: false,
       attempts: 3,
     });
-    expect(e).toMatchObject({ equivalent: 28, exact: 27, translated: 29 });
+    expect(e).toMatchObject({ equivalent: 29, exact: 28, translated: 30 });
     const report = evaluationReport(e, '2026-10-05');
     expect(report).toMatch(/^# Spec translator evaluation: ollama fake/);
     expect(report).toMatch(
-      /\*\*28\/30 equivalent \(93%\)\*\*, 27\/30 exact \(90%\), 1 not translated/,
+      /\*\*29\/31 equivalent \(94%\)\*\*, 28\/31 exact \(90%\), 1 not translated/,
     );
     expect(report).toMatch(/\| neuvillette-crit-floor \| different \| 1 \|/);
   });

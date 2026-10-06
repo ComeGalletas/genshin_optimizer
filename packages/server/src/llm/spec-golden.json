@@ -320,6 +320,17 @@
         },
         "keepEquippedOn": ["charlotte"]
       }
+    },
+    {
+      "id": "raiden-sim-national-xingqiu",
+      "request": "Rank my Raiden builds by team DPS in the Raiden National rotation with Xingqiu",
+      "expected": {
+        "character": "raiden_shogun",
+        "objective": "sim",
+        "sim": {
+          "rotation": "raiden-national-xingqiu"
+        }
+      }
     }
   ]
 }

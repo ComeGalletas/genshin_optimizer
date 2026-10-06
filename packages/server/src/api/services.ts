@@ -64,6 +64,23 @@ import {
 } from '@genshin-build-lab/engine/constraints/toRequest';
 import { describeRun } from '@genshin-build-lab/engine/constraints/describe';
 import {
+  SIM_ITERATIONS,
+  SIM_TOP_K,
+} from '@genshin-build-lab/engine/constraints/spec';
+import {
+  simCharacterFromAccount,
+  type SimAccount,
+} from '@genshin-build-lab/engine/sim/account';
+import { gcsimName } from '@genshin-build-lab/engine/sim/configgen';
+import { rankBySim } from '@genshin-build-lab/engine/sim/rank';
+import { SimPool, StoreSimCache } from '../sim/pool';
+import {
+  candidate,
+  resolveSimTeam,
+  simulateCandidates,
+  type SimTeam,
+} from '../sim/rerank';
+import {
   emptySlotCause,
   unreachableMinStats,
 } from '@genshin-build-lab/engine/optimizer/diagnostics';
@@ -334,17 +351,47 @@ export class Services {
     spec: ConstraintSpec;
     run: SpecRun;
     understood: ReturnType<typeof describeRun>;
+    /** With `objective: "sim"`: the rotation and teammates (TODO 5.8). */
+    simTeam?: SimTeam;
   } {
     const parsed = parseConstraintSpec(input);
     if (!parsed.ok) throw invalidSpec(parsed.issues);
-    const mapped = specToRun(parsed.spec, this.specAccount(), {
-      topK: topK ?? 5,
+    let spec = parsed.spec;
+    let simTeam: SimTeam | undefined;
+    if (spec.objective === 'sim') {
+      const resolved = resolveSimTeam(
+        spec.character,
+        spec.sim?.rotation,
+        this.simAccount(),
+        this.rotationsDir,
+      );
+      if (!resolved.ok) throw invalidSpec(resolved.issues);
+      simTeam = resolved.team;
+      // A candidate never takes a teammate's pieces, unless asked to.
+      if (spec.keepEquippedOn === undefined)
+        spec = {
+          ...spec,
+          keepEquippedOn: Object.values(simTeam.teammates).map((c) => c.key),
+        };
+    }
+    const mapped = specToRun(spec, this.specAccount(), {
+      topK: simTeam ? (spec.sim?.topK ?? SIM_TOP_K) : (topK ?? 5),
     });
     if (!mapped.ok) throw invalidSpec(mapped.issues);
     return {
-      spec: parsed.spec,
+      spec,
       run: mapped.run,
-      understood: describeRun(parsed.spec, mapped.run),
+      understood: describeRun(
+        spec,
+        mapped.run,
+        simTeam && {
+          rotation: `${simTeam.rotation.meta.name}${simTeam.rotation.meta.status === 'draft' ? ' (a draft rotation)' : ''}`,
+          teammates: Object.values(simTeam.teammates).map(
+            (c) => genshinAdapter.character(c.key)?.name ?? c.key,
+          ),
+        },
+      ),
+      ...(simTeam && { simTeam }),
     };
   }
 
@@ -355,7 +402,7 @@ export class Services {
     const t = await translateRequest(
       client,
       text,
-      translationCatalog(),
+      translationCatalog(this.rotationsDir),
       (input) => {
         try {
           return { ok: true, value: this.checkSpec(input) };
@@ -386,7 +433,8 @@ export class Services {
 
   /** Run a spec (TODO 4.3): checked, mapped, summarised, searched. */
   async runSpec(input: unknown, topK?: number) {
-    const { spec, run, understood } = this.checkSpec(input, topK);
+    const { spec, run, understood, simTeam } = this.checkSpec(input, topK);
+    if (simTeam) return this.runSim(spec, run, understood.text, simTeam);
     let ctx;
     try {
       ctx = buildContext(run.request, run.extras);
@@ -640,6 +688,122 @@ export class Services {
     }
   }
 
+  /** The account as gcsim needs it: roster, weapons, artifacts. */
+  private simAccount(): SimAccount {
+    const { roster, weapons } = currentRoster(this.db);
+    return { roster, weapons, artifacts: this.artifacts() };
+  }
+
+  private pool?: SimPool;
+
+  /** `objective: "sim"` (TODO 5.8): the search's top builds, each
+   *  simulated in the team rotation, ranked by mean team DPS. */
+  private async runSim(
+    spec: ConstraintSpec,
+    run: SpecRun,
+    understood: string,
+    team: SimTeam,
+  ) {
+    const deps = this.rotations.deps;
+    if (!deps)
+      throw new ServiceError(
+        503,
+        'gcsim_unavailable',
+        'gcsim is not installed here: run npm run sim:check (or choose a stat objective)',
+      );
+    let ctx;
+    try {
+      ctx = buildContext(run.request, run.extras);
+    } catch (e) {
+      throw badRequest((e as Error).message);
+    }
+    const head = {
+      understood,
+      spec,
+      request: run.request,
+      pool: { artifacts: run.pool.length },
+      passives: passiveNotes(run.request),
+    };
+    const searched = await this.search(run.request, run.pool, ctx);
+    if (searched.status !== 'ok')
+      return {
+        ...head,
+        ...searched,
+        ...(searched.status === 'infeasible' && {
+          why: whyInfeasible(run, ctx),
+        }),
+      };
+    const base = simCharacterFromAccount(this.simAccount(), spec.character);
+    if ('problem' in base) throw badRequest(base.problem);
+    const iterations = spec.sim?.iterations ?? SIM_ITERATIONS;
+    this.pool ??= new SimPool(deps.runner, deps.commit ?? deps.gcsim, {
+      cache: new StoreSimCache(this.db),
+    });
+    const t0 = performance.now();
+    const runs = await simulateCandidates(
+      team,
+      searched.builds.map((b) =>
+        candidate(base, run.request, Object.values(b.artifacts)),
+      ),
+      this.pool,
+      iterations,
+    );
+    const { meta } = team.rotation;
+    const sim = {
+      rotation: { id: meta.id, name: meta.name, status: meta.status },
+      teammates: Object.values(team.teammates).map((c) => ({
+        key: c.key,
+        weapon: c.weapon.key,
+        artifacts: c.artifacts.length,
+      })),
+      iterations,
+      burstWaits: 'filled with attacks' as const,
+      cachedRuns: runs.filter((r) => r.cached).length,
+      ms: Math.round(performance.now() - t0),
+    };
+    const incomplete = [...new Set(runs.flatMap((r) => r.result.incomplete))];
+    if (incomplete.length)
+      return {
+        ...head,
+        ...searched,
+        status: 'not_simulated' as const,
+        reason: `gcsim implements ${incomplete.join(', ')} only partly, so the builds are in the stat search's order, not simulated`,
+        sim,
+      };
+    const name = gcsimName(spec.character);
+    const ranked = rankBySim(
+      searched.builds.map((b, i) => ({
+        item: { build: b, result: runs[i].result },
+        statRank: i + 1,
+        dps: { ...runs[i].result.dps, iterations: runs[i].result.iterations },
+      })),
+    );
+    return {
+      ...head,
+      status: 'ok' as const,
+      ms: searched.ms,
+      explored: searched.explored,
+      pruned: searched.pruned,
+      sim,
+      builds: ranked.map((r) => {
+        const own = r.item.result.characters.find((c) => c.name === name);
+        return {
+          ...r.item.build,
+          rank: r.rank,
+          statRank: r.statRank,
+          teamDps: { mean: r.mean, sd: r.sd, ci95: r.ci95 },
+          behindPct: r.behindPct,
+          tiedWithBest: r.tiedWithBest,
+          ...(own && {
+            characterDps: { mean: own.dps.mean, share: own.share },
+          }),
+          fightSec: r.item.result.durationSec,
+          warnings: r.item.result.warnings,
+        };
+      }),
+    };
+  }
+
   /** Draft a rotation for characters the owner has (TODO 5.7): saved only
    *  as a draft, and only once gcsim runs it cleanly on their builds. */
   async draftRotation(input: DraftInput) {
@@ -650,11 +814,9 @@ export class Services {
         'gcsim_unavailable',
         'gcsim is not installed here: run npm run sim:check',
       );
-    const { roster, weapons } = currentRoster(this.db);
-    return draftRotation(
-      input,
-      { roster, weapons, artifacts: this.artifacts() },
-      { ...deps, dir: this.rotationsDir },
-    );
+    return draftRotation(input, this.simAccount(), {
+      ...deps,
+      dir: this.rotationsDir,
+    });
   }
 }
