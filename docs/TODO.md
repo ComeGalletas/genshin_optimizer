@@ -399,6 +399,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Sizes: build link 602 characters, 838 with a simulation (fixture); real ones 1,331 (a Raiden build from the owner's account, with its result) and 1,516 (a real comparison, base and one variant); the largest comparison the app makes is about 2,000–3,000. The encoder refuses a comparison over 16,000 characters and the decoder refuses longer input before inflating it.
   - Checked in the browser on the owner's data: both links made, opened and shown; the pane's clipboard refused, so the copy-by-hand field showed the link, as designed.
   - Tests: 5 engine (round trips, a link without `sim`, malformed sims and comparisons, the size cap, trimming), 5 web (shared build banner, shared comparison opened and closed, an unreadable one, sharing from Rank by Team DPS and from Compare Teams, each decoded back).
+- [x] **Accept:** every Phase 8 view works against the owner's account (PLAN had no criterion of its own; the owner accepted on what was shown)
+  - Accepted by the owner on 2026-10-06.
+  - Evidence: each view checked in the browser on a copy of the owner's store, with the full gate green on every commit: the import center (two crafted imports: the diff and a misread piece side by side in the reconciliation); the rotation library and "Compare this team"; a real comparison of the Mualani team (two targets +37.9% ± 0.2%) with its teams as run and per-character table; the joint allocation of the plan's eight (98.2%, proven, 56 s); Rank by Team DPS (Mualani's top 20 in 9 s, the crit-value #1 tenth by team DPS); the chat answering from a tool with its steps shown; and both share links made and opened (a Raiden build with its simulation, 1,331 characters; a comparison, 1,516).
 
 ## Backlog
 
