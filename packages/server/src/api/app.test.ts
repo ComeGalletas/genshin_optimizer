@@ -384,6 +384,10 @@ describe('allocation (TODO 7.4)', () => {
     // Both carries: weight 2 by role, unless told.
     expect(body.members[0]).toMatchObject({ weight: 2, status: 'ok' });
     expect(body.members[0].understood).toMatch(/Neuvillette/);
+    expect(body.members[0].request).toMatchObject({
+      characterKey: 'neuvillette',
+      weaponKey: 'tome_of_the_eternal_flow',
+    });
     const ids = body.members.flatMap(
       (m: { build?: { artifactIds: object } }) =>
         m.build ? Object.values(m.build.artifactIds) : [],

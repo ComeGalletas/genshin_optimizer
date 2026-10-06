@@ -6,6 +6,8 @@
  * never on mount.
  */
 import {
+  lazy,
+  Suspense,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -45,6 +47,12 @@ import type {
   OptimizeRequest,
 } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import { useServer } from '../local-server/status';
+
+// Server-only (TODO 8.2): never loaded client-only.
+const ServerAllocation = lazy(() =>
+  import('./ServerAllocation').then((m) => ({ default: m.ServerAllocation })),
+);
 
 /** The grade a member's winning build would earn, or null when the character
  *  has no curated stat targets (or failed to gear). */
@@ -194,6 +202,7 @@ export function PlanView({
 }) {
   const entries = useRoster((s) => s.entries);
   const artifacts = useInventory((s) => s.artifacts);
+  const serverOnline = useServer((s) => s.status === 'online');
   const [plan, setPlan] = useState<Plan | null>(null);
   const [progress, setProgress] = useState<[number, number] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -433,6 +442,12 @@ export function PlanView({
             </div>
           )}
         </div>
+      )}
+
+      {serverOnline && teams && (
+        <Suspense fallback={<p className="text-sm text-muted">Loading…</p>}>
+          <ServerAllocation teams={teams} />
+        </Suspense>
       )}
     </div>
   );

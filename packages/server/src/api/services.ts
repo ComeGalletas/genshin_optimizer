@@ -641,6 +641,9 @@ export class Services {
       return {
         characterKey: b.characterKey,
         understood: understood[b.characterKey],
+        // What the build was searched with (weapon, level, conditions), for
+        // a client that shows it as a single search's (8.2).
+        request: m.request,
         priority: m.priority,
         weight: m.weight,
         objective: b.objective,
