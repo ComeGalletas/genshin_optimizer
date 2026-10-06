@@ -151,6 +151,7 @@ Moving elements and functions around, and adding new ones, to the owner's scope 
 
 - More guide sources for the build and team previews, beside KQM's. genshin-builds.com is extracted at data-build time into a checked schema: facts only, each with its URL and date, reviewed by the owner before use. Game8 is linked, never extracted, because its terms forbid reproduction and unauthorized software. The previews compare the sources and name them. ADR.
 - On the side: a hover window for weapons only (its passive at its refinement, its stats at its level).
+- Roll evaluation: each piece's roll value, roll luck, distance to the best piece of its kind and exact percentile among all possible +20 pieces, from the game's roll rules; exact rolls from Enka for showcased characters; a link to Akasha's leaderboards. ADR.
 - To consider for later: Stygian Onslaught teams beside the Spiral Abyss ones.
 
 **Accept:** settled with the owner once the scope is.

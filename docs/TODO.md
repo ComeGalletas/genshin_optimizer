@@ -460,6 +460,14 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - The previews show the sources side by side, where they agree and where they don't, with the source named on every line. The optimizer's defaults stay on one chosen source.
 - [ ] 10.3 (Side) Hover window for weapons only: a weapon's name shows its passive at its refinement and its base ATK and substat at its level. It opens on hover and on keyboard focus, and the window's Gear tab stays the full view.
 - [ ] 10.4 (Future, to consider) Stygian Onslaught teams among the Teams view's options, beside the Spiral Abyss: its rules, enemies and team restrictions, and whether curated teams exist for it.
+- [ ] 10.5 Evaluate each piece's rolls, in the character window's Gear tab beside the rolls, and per character. Pure engine on the 5★ roll rules (ADR-0024), with an ADR:
+  - **Roll value (RV)**: each useful substat's value over that stat's largest single roll, summed (a perfect +20 piece is 900%). "Useful" comes from the character's targets.
+  - **Roll luck**: the rolls' average size against the expected 85%, and the upgrades that landed on useful stats against the expected 1 in 4. Shown only where the rolls are known (the roll split, TODO 9.10).
+  - **Distance to the best**: the piece's score for the character against the best a piece with the same set, slot and main stat can reach.
+  - **Percentile**: where the piece sits among every +20 piece the game can roll with that slot and main stat, computed exactly from the roll rules, not sampled from other players.
+  - **Per character**: total RV, and the rolls spent on stats they don't use.
+  - **Enka's exact rolls** for showcased characters: its API lists each substat's rolls (`appendPropIdList`). It makes those pieces exact and checks the roll split against real data.
+  - **Akasha**: a link per character to your profile and the character's leaderboard, using your UID if you give it. Links only: Akasha has no public API.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog
