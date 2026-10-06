@@ -369,6 +369,7 @@ export function App() {
           {view === 'start' && (
             <Section
               id="step-load"
+              help="start"
               title="Load Data"
               hint="Start from the demo data, your account on the local server, or a new source."
               delay="0s"
@@ -381,8 +382,9 @@ export function App() {
             (hasRoster ? (
               <Section
                 id="step-roster"
+                help="roster"
                 title="Your Roster"
-                hint="How built each owned character is, best first."
+                hint="How built each of your characters is, scored 0–100 from level, talents, weapon and artifacts, best first. Open one for its details."
                 delay="0s"
               >
                 <Suspense fallback={<PanelFallback />}>
@@ -397,6 +399,7 @@ export function App() {
             (hasRoster ? (
               <Section
                 id="step-teams"
+                help="teams"
                 title="Endgame Teams"
                 hint="Two Abyss halves that share no character, matched from your roster."
                 delay="0s"
@@ -413,8 +416,9 @@ export function App() {
             (hasRoster ? (
               <Section
                 id="step-plan"
+                help="plan"
                 title="Your Plan"
-                hint="An optimised build for all eight members, plus one farming list."
+                hint="An optimised build for all eight members of your two teams from one shared inventory, plus one list of what to farm."
                 delay="0s"
               >
                 <Suspense fallback={<PanelFallback />}>
@@ -474,6 +478,7 @@ export function App() {
                 <>
                   <Section
                     id="compare-teams"
+                    help="compare-teams"
                     title="Compare Teams"
                     hint="Simulate a team from the rotation library against up to five variants: a weapon, a set, a teammate, the enemy or the rotation."
                     delay="0s"
@@ -484,6 +489,7 @@ export function App() {
                   </Section>
                   <Section
                     id="rotation-library"
+                    help="rotation-library"
                     title="Rotation Library"
                     hint="The gcsim rotations the server can simulate: each team, where it came from, how its run compares with the published number, and its action list."
                     delay="0s"
@@ -505,6 +511,7 @@ export function App() {
             (serverOnline ? (
               <Section
                 id="import-center"
+                help="imports"
                 title="Import Center"
                 hint="The local server's sources, snapshots and merges: what each import changed and how they were reconciled."
                 delay="0s"

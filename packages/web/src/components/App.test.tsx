@@ -354,6 +354,20 @@ describe('App — views (TODO 9.3–9.5)', () => {
     expect(within(nav).queryAllByRole('button')).toEqual([]);
   });
 
+  it('offers help beside the Start view and each of its three choices (TODO 9.6)', () => {
+    render(<App />);
+    expect(
+      screen
+        .getAllByRole('button', { name: /^Help: / })
+        .map((b) => b.getAttribute('aria-label')),
+    ).toEqual([
+      'Help: Loading data',
+      'Help: Demo data',
+      'Help: Your account from the local server',
+      'Help: A new source',
+    ]);
+  });
+
   it('says what a view needs, with one way to load it', () => {
     window.history.pushState({}, '', '/#/teams');
     render(<App />);

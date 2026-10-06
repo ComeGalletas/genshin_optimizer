@@ -42,6 +42,7 @@ import {
 } from '@genshin-build-lab/engine/teams/comps';
 import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 import { CharacterPortrait, WeaponIcon } from './GameArt';
+import { HelpButton, HelpPanel } from './help/Help';
 
 // Every objective a curated meta recipe can recommend has to be offerable,
 // or "(Recommended)" points at an option the dropdown doesn't carry — which is
@@ -425,7 +426,11 @@ export function OptimizePanel({
             </select>
           </label>
         </div>
-        <p className="field-label text-muted">Constraints</p>
+        <div className="flex items-center gap-2">
+          <p className="field-label mb-0 text-muted">Constraints</p>
+          <HelpButton id="optimise-constraints" />
+        </div>
+        <HelpPanel id="optimise-constraints" />
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="field-label">Maximise</span>

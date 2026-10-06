@@ -16,6 +16,7 @@ import { goTo } from './views';
 import { useAccount } from '../state/account';
 import { demoAccount } from '@genshin-build-lab/engine/sample/demoAccount';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import { HelpButton, HelpPanel } from './help/Help';
 
 // WCAG 3.3.1: describe what actually went wrong. fetchUidArtifacts already
 // distinguishes the three cases; collapsing them into one message left the
@@ -317,12 +318,15 @@ export function ImportPanel() {
           aria-labelledby={`${fileInputId}-demo`}
           className="panel panel-sm flex flex-col gap-3"
         >
-          <h3
-            id={`${fileInputId}-demo`}
-            className="font-display text-base font-bold text-paper"
-          >
-            Demo Data
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3
+              id={`${fileInputId}-demo`}
+              className="font-display text-base font-bold text-paper"
+            >
+              Demo Data
+            </h3>
+            <HelpButton id="start-demo" />
+          </div>
           <p className="flex-1 text-xs text-muted">
             A made-up account to see what the app does: eight characters in two
             teams, each wearing a build, and the rest of a small artifact bag.
@@ -354,12 +358,15 @@ export function ImportPanel() {
           aria-labelledby={`${fileInputId}-server`}
           className="panel panel-sm flex flex-col gap-3"
         >
-          <h3
-            id={`${fileInputId}-server`}
-            className="font-display text-base font-bold text-paper"
-          >
-            Your Account
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3
+              id={`${fileInputId}-server`}
+              className="font-display text-base font-bold text-paper"
+            >
+              Your Account
+            </h3>
+            <HelpButton id="start-server" />
+          </div>
           {serverOnline ? (
             <>
               <p className="flex-1 text-xs text-muted">
@@ -407,12 +414,15 @@ export function ImportPanel() {
           aria-labelledby={`${fileInputId}-new`}
           className="panel panel-sm flex flex-col gap-3"
         >
-          <h3
-            id={`${fileInputId}-new`}
-            className="font-display text-base font-bold text-paper"
-          >
-            A New Source
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3
+              id={`${fileInputId}-new`}
+              className="font-display text-base font-bold text-paper"
+            >
+              A New Source
+            </h3>
+            <HelpButton id="start-new" />
+          </div>
           <div>
             <label className="field-label" htmlFor={fileInputId}>
               Upload GOOD Export
@@ -491,6 +501,12 @@ export function ImportPanel() {
           </Disclosure>
         </section>
       </div>
+
+      {/* The cards' help, full width below them: a card is too narrow for
+          the steps. */}
+      <HelpPanel id="start-demo" />
+      <HelpPanel id="start-server" />
+      <HelpPanel id="start-new" />
 
       {count > 0 && (
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">

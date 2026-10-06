@@ -80,8 +80,9 @@ export function OptimiseView({
       )}
       <Section
         id="step-optimise"
+        help="optimise"
         title="Optimise"
-        hint="Choose a character, weapon, and what to maximise."
+        hint="An exact search over your artifacts for one character’s best builds: choose who, the weapon, what to maximise and any conditions."
         delay="0s"
       >
         <OptimizePanel
@@ -93,7 +94,12 @@ export function OptimiseView({
 
       {result && request && (
         <div id="results-section" className="scroll-mt-20">
-          <Section title="Results" delay="0s">
+          <Section
+            title="Results"
+            hint="The best builds for your search, best first, with their pieces, totals and where the score comes from."
+            help="results"
+            delay="0s"
+          >
             {sharedArtifacts && (
               <SharedBuildBanner
                 request={request}
@@ -136,6 +142,7 @@ export function OptimiseView({
       {serverOnline && (
         <Section
           id="sim-rank"
+          help="sim-rank"
           title="Rank by Team DPS"
           hint="Simulate the top builds for the Optimise panel's conditions in a team rotation, and rank them by team DPS."
           delay="0s"

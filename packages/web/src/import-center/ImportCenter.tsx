@@ -20,6 +20,7 @@ import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
 import { ChangesView, MergeReportView } from './pieces';
 import { plural, snapshotName, SOURCE_LABEL, when } from './format';
+import { HelpButton, HelpPanel } from '../components/help/Help';
 
 /** The merge's precedence: a better source's values win (ADR-0027). */
 const SOURCES: SourceKind[] = ['irminsul', 'ocr', 'good', 'enka'];
@@ -154,9 +155,13 @@ export function ImportCenter() {
       {data && (
         <>
           <section aria-labelledby="ic-sources">
-            <h3 id="ic-sources" className="field-label">
-              Sources, best first
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 id="ic-sources" className="field-label mb-0">
+                Sources, best first
+              </h3>
+              <HelpButton id="import-sources" />
+            </div>
+            <HelpPanel id="import-sources" />
             <ul className="grid gap-2 sm:grid-cols-2">
               {SOURCES.map((kind) => {
                 const all = data.snapshots.filter((s) => s.kind === kind);
@@ -183,9 +188,13 @@ export function ImportCenter() {
           </section>
 
           <section aria-labelledby="ic-snapshots">
-            <h3 id="ic-snapshots" className="field-label">
-              Snapshots, newest first
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 id="ic-snapshots" className="field-label mb-0">
+                Snapshots, newest first
+              </h3>
+              <HelpButton id="import-snapshots" />
+            </div>
+            <HelpPanel id="import-snapshots" />
             {data.snapshots.length === 0 ? (
               <p className="text-sm text-muted">
                 Nothing imported yet: upload a GOOD file or drop one in the
@@ -249,6 +258,7 @@ export function ImportCenter() {
                 <h3 id="ic-merge" className="field-label mb-0">
                   Reconciliation
                 </h3>
+                <HelpButton id="import-reconciliation" />
                 <label className="text-xs text-muted">
                   <span className="sr-only">Merge</span>
                   <select
@@ -267,6 +277,7 @@ export function ImportCenter() {
                   </select>
                 </label>
               </div>
+              <HelpPanel id="import-reconciliation" />
               <MergeReportView
                 key={shownMerge}
                 mergeId={shownMerge}

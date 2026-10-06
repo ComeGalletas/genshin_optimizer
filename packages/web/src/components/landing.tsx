@@ -9,6 +9,8 @@ import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { scrollToId } from '../ui/scroll';
 import { objectiveLabel } from '../labels';
 import { Callout } from './ui/Callout';
+import { HelpButton, HelpPanel } from './help/Help';
+import type { HelpId } from './help/topics';
 import { kilo } from '../teams/kilo';
 import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
 import type { SharedSim } from '@genshin-build-lab/engine/share/url';
@@ -18,6 +20,7 @@ export function Section({
   id,
   title,
   hint,
+  help,
   delay,
   children,
 }: {
@@ -26,6 +29,8 @@ export function Section({
   id?: string;
   title: string;
   hint?: string;
+  /** Its help (TODO 9.6): a "?" beside the title, the panel below. */
+  help?: HelpId;
   delay: string;
   children: ReactNode;
 }) {
@@ -40,18 +45,22 @@ export function Section({
       style={{ animationDelay: delay }}
     >
       <div className="mb-3">
-        <h2
-          id={headingId}
-          className="text-pretty font-display text-2xl font-bold tracking-tight text-paper"
-        >
-          {n != null && (
-            <span className="section-badge mr-3 align-middle">
-              {String(n).padStart(2, '0')}
-            </span>
-          )}
-          {title}
-        </h2>
+        <div className="flex items-center gap-3">
+          <h2
+            id={headingId}
+            className="text-pretty font-display text-2xl font-bold tracking-tight text-paper"
+          >
+            {n != null && (
+              <span className="section-badge mr-3 align-middle">
+                {String(n).padStart(2, '0')}
+              </span>
+            )}
+            {title}
+          </h2>
+          {help && <HelpButton id={help} />}
+        </div>
         {hint && <p className="text-xs text-muted">{hint}</p>}
+        {help && <HelpPanel id={help} />}
       </div>
       {children}
     </section>

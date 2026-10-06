@@ -25,6 +25,7 @@ import { useCompareRotation } from './compareRotation';
 import { PerCharacter, TeamAsRun } from './runDetails';
 import { ShareButton } from '../components/ShareButton';
 import { encodeComparison } from '@genshin-build-lab/engine/share/comparison';
+import { HelpButton, HelpPanel } from '../components/help/Help';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -289,6 +290,7 @@ export function TeamComparison() {
       {drafts.length < MAX_VARIANTS && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-muted">Add a variant:</span>
+          <HelpButton id="compare-variants" />
           {KINDS.map((k) => (
             <button
               key={k.kind}
@@ -301,6 +303,7 @@ export function TeamComparison() {
           ))}
         </div>
       )}
+      <HelpPanel id="compare-variants" />
 
       <div className="flex flex-wrap items-center gap-3">
         <button
