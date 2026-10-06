@@ -10,6 +10,7 @@
 import type {
   Artifact,
   BuildResult,
+  OptimizeRequest,
   Slot,
 } from '@genshin-build-lab/engine/game/types';
 import type { ConstraintSpec } from '@genshin-build-lab/engine/constraints/spec';
@@ -33,6 +34,8 @@ export interface SimBuild extends BuildResult, Pieces {
 
 export type SimRun = {
   understood: string;
+  /** What the server searched (the spec mapped onto its account). */
+  request?: OptimizeRequest;
   /** Why a run that was asked to simulate gives the stat search's order. */
   notSimulated?: string[];
   why?: string[];

@@ -22,6 +22,28 @@ export interface BuildSnapshot {
   /** The five full artifacts of the build, so the link is self-contained and a
    *  recipient (who lacks the sender's inventory) can render the exact pieces (ADR-0005). */
   artifacts: Artifact[];
+  /** How the build did in a team simulation on the sharer's server, when it
+   *  was shared from one (TODO 8.3, ADR-0051). */
+  sim?: SharedSim;
+}
+
+/** A build's simulation, as a link carries it: what the sharer's gcsim
+ *  measured, to be shown, never re-run (ADR-0051). */
+export interface SharedSim {
+  rotation: { id: string; name: string; status: 'validated' | 'draft' };
+  /** The teammates' character keys, as the sharer had them equipped. */
+  teammates: string[];
+  iterations: number;
+  teamDps: { mean: number; ci95: [number, number] };
+  /** Its place by team DPS among `of` simulated builds, and in the stat
+   *  search's order. */
+  rank: number;
+  of: number;
+  statRank: number;
+  tiedWithBest: boolean;
+  behindPct: number;
+  characterDps?: { mean: number; share: number };
+  fightSec: number;
 }
 
 function toBase64Url(bytes: Uint8Array): string {
@@ -102,9 +124,18 @@ async function inflate(bytes: Uint8Array<ArrayBuffer>): Promise<string> {
   );
 }
 
+/** JSON, deflated, as base64url: the body of every share link. */
+export async function packJson(value: unknown): Promise<string> {
+  return toBase64Url(await deflate(JSON.stringify(value)));
+}
+
+/** The inverse of `packJson`; throws on anything malformed (callers guard). */
+export async function unpackJson(param: string): Promise<unknown> {
+  return JSON.parse(await inflate(fromBase64Url(param)));
+}
+
 export async function encodeBuild(snapshot: BuildSnapshot): Promise<string> {
-  const json = JSON.stringify(snapshot);
-  return toBase64Url(await deflate(json));
+  return packJson(snapshot);
 }
 
 // Bound untrusted strings before they reach regex (formatSetName) / the DOM —
@@ -115,6 +146,59 @@ export async function encodeBuild(snapshot: BuildSnapshot): Promise<string> {
 const MAX_ARTIFACTS = 20;
 function isShortString(x: unknown): x is string {
   return typeof x === 'string' && x.length > 0 && x.length <= MAX_KEY_LEN;
+}
+
+const isNum = (x: unknown): x is number =>
+  typeof x === 'number' && Number.isFinite(x);
+const isCount = (x: unknown, max: number): x is number =>
+  Number.isInteger(x) && (x as number) >= 1 && (x as number) <= max;
+
+/** A shared build's simulation (ADR-0051): every field bounded, since it
+ *  reaches the DOM. */
+export function isSharedSim(x: unknown): x is SharedSim {
+  if (typeof x !== 'object' || x === null) return false;
+  const s = x as Record<string, unknown>;
+  const r = s.rotation as Record<string, unknown> | null;
+  if (
+    typeof r !== 'object' ||
+    r === null ||
+    !isShortString(r.id) ||
+    !isShortString(r.name) ||
+    (r.status !== 'validated' && r.status !== 'draft')
+  )
+    return false;
+  if (
+    !Array.isArray(s.teammates) ||
+    s.teammates.length > 7 ||
+    !s.teammates.every(isShortString)
+  )
+    return false;
+  const dps = s.teamDps as Record<string, unknown> | null;
+  if (
+    typeof dps !== 'object' ||
+    dps === null ||
+    !isNum(dps.mean) ||
+    !Array.isArray(dps.ci95) ||
+    dps.ci95.length !== 2 ||
+    !dps.ci95.every(isNum)
+  )
+    return false;
+  if (!isCount(s.iterations, 100_000) || !isCount(s.of, 100)) return false;
+  if (!isCount(s.rank, s.of as number) || !isCount(s.statRank, 100))
+    return false;
+  if (typeof s.tiedWithBest !== 'boolean' || !isNum(s.behindPct)) return false;
+  if (!isNum(s.fightSec)) return false;
+  if (s.characterDps !== undefined) {
+    const c = s.characterDps as Record<string, unknown> | null;
+    if (
+      typeof c !== 'object' ||
+      c === null ||
+      !isNum(c.mean) ||
+      !isNum(c.share)
+    )
+      return false;
+  }
+  return true;
 }
 
 function isStatVec(x: unknown): x is StatVec {
@@ -257,7 +341,8 @@ function isBuildDiagnostics(x: unknown): boolean {
 export function parseBuildSnapshot(input: unknown): BuildSnapshot | null {
   if (typeof input !== 'object' || input === null) return null;
   const o = input as Record<string, unknown>;
-  const { request, build, artifacts } = o;
+  const { request, build, artifacts, sim } = o;
+  if (sim !== undefined && !isSharedSim(sim)) return null;
   if (!isOptimizeRequest(request)) return null;
   if (!isBuildResult(build)) return null;
   if (!Array.isArray(artifacts) || artifacts.length > MAX_ARTIFACTS)
@@ -273,7 +358,12 @@ export function parseBuildSnapshot(input: unknown): BuildSnapshot | null {
   );
   if (!SLOTS.every((s) => bySlot.get(s)?.id === build.artifactIds[s]))
     return null;
-  return { request, build, artifacts: artifacts as Artifact[] };
+  return {
+    request,
+    build,
+    artifacts: artifacts as Artifact[],
+    ...(sim !== undefined && { sim: sim as SharedSim }),
+  };
 }
 
 export async function decodeBuild(
@@ -281,8 +371,7 @@ export async function decodeBuild(
 ): Promise<BuildSnapshot | { error: 'UNREADABLE' }> {
   try {
     if (!param) return { error: 'UNREADABLE' };
-    const json = await inflate(fromBase64Url(param));
-    const snapshot = parseBuildSnapshot(JSON.parse(json));
+    const snapshot = parseBuildSnapshot(await unpackJson(param));
     if (!snapshot) return { error: 'UNREADABLE' };
     return snapshot;
   } catch {

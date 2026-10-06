@@ -631,3 +631,56 @@ describe('decodeBuild tampered/malformed link decode path', () => {
     expect(await decodeBuild(param)).toEqual({ error: 'UNREADABLE' });
   });
 });
+
+describe('a build link carries its simulation (TODO 8.3, ADR-0051)', () => {
+  const sim = {
+    rotation: {
+      id: 'raiden-national',
+      name: 'Raiden National',
+      status: 'validated' as const,
+    },
+    teammates: ['xiangling', 'yelan', 'bennett'],
+    iterations: 500,
+    teamDps: { mean: 85_128, ci95: [84_900, 85_350] as [number, number] },
+    rank: 1,
+    of: 20,
+    statRank: 6,
+    tiedWithBest: false,
+    behindPct: 0,
+    characterDps: { mean: 25_500, share: 0.3 },
+    fightSec: 108.2,
+  };
+
+  it('round-trips the simulation, and a link without one still opens', async () => {
+    const withSim = await encodeBuild({ request, build, artifacts, sim });
+    expect(await decodeBuild(withSim)).toEqual({
+      request,
+      build,
+      artifacts,
+      sim,
+    });
+    const plain = await encodeBuild({ request, build, artifacts });
+    expect(await decodeBuild(plain)).not.toHaveProperty('sim');
+    // A few hundred characters more than the plain link (ADR-0051).
+    expect(withSim.length - plain.length).toBeLessThan(400);
+  });
+
+  it('refuses a link whose simulation is malformed', async () => {
+    for (const bad of [
+      { ...sim, rank: 21 },
+      { ...sim, of: 0 },
+      { ...sim, teamDps: { mean: 1, ci95: [1] } },
+      { ...sim, rotation: { ...sim.rotation, status: 'promoted' } },
+      { ...sim, teammates: ['x'.repeat(5000)] },
+      { ...sim, characterDps: { mean: 'lots', share: 1 } },
+      'a simulation',
+    ])
+      expect(
+        await decodeBuild(
+          toBase64UrlParam(
+            JSON.stringify({ request, build, artifacts, sim: bad }),
+          ),
+        ),
+      ).toEqual({ error: 'UNREADABLE' });
+  });
+});

@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComparisonResult, TeamComparison } from './TeamComparison';
 import { useCompareRotation } from './compareRotation';
+import { decodeComparison } from '@genshin-build-lab/engine/share/comparison';
 import type { TeamSimResult } from '../local-server/teamsim';
 
 const ROTATIONS = {
@@ -323,5 +324,28 @@ describe('the comparison’s details (TODO 8.2)', () => {
     expect(within(perBase).getAllByRole('row')[1]).toHaveTextContent(
       'Raiden Shogun25.5k30.0%47.0 s—',
     );
+  });
+});
+
+describe('sharing a comparison (TODO 8.3)', () => {
+  it('copies a #c= link that opens the same comparison', async () => {
+    serve();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { ...navigator, clipboard: { writeText } });
+    render(<TeamComparison />);
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Simulate the team/ }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Share This Comparison' }),
+    );
+    const url = new URL(writeText.mock.calls[0][0] as string);
+    expect(url.hash).toMatch(/^#c=/);
+    const back = await decodeComparison(url.hash.slice(3));
+    if ('error' in back) throw new Error('expected a readable link');
+    expect(back.runs.map((r) => r.label)).toEqual(
+      RESULT.runs.map((r) => r.label),
+    );
+    expect(back.runs[1].vsBase?.text).toBe('+96.7% ± 0.3%');
   });
 });

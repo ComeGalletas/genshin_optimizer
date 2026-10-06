@@ -23,6 +23,8 @@ import { DamageShare, DpsDistribution } from './comparisonCharts';
 import { kilo } from './kilo';
 import { useCompareRotation } from './compareRotation';
 import { PerCharacter, TeamAsRun } from './runDetails';
+import { ShareButton } from '../components/ShareButton';
+import { encodeComparison } from '@genshin-build-lab/engine/share/comparison';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -330,7 +332,19 @@ export function TeamComparison() {
         </Callout>
       )}
       {result && (
-        <div aria-busy={pending} className={cn(pending && 'opacity-40')}>
+        <div
+          aria-busy={pending}
+          className={cn('space-y-3', pending && 'opacity-40')}
+        >
+          <ShareButton
+            label="Share This Comparison"
+            makeUrl={async () => {
+              const param = await encodeComparison(result);
+              return param
+                ? `${location.origin}${location.pathname}#c=${param}`
+                : { why: 'this comparison is too large for a link' };
+            }}
+          />
           <ComparisonResult result={result} />
         </div>
       )}

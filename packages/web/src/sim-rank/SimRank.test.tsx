@@ -5,6 +5,7 @@ import { SimRank } from './SimRank';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import type { Artifact, Slot } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import { decodeBuild } from '@genshin-build-lab/engine/share/url';
 
 const ROTATIONS = {
   rotations: [
@@ -204,5 +205,59 @@ describe('SimRank (TODO 8.2)', () => {
         'No build meets these conditions on the server’s account. Relax the set.',
       ),
     ).toBeInTheDocument();
+  });
+});
+
+describe('sharing a simulated build (TODO 8.3)', () => {
+  it('copies a link carrying the build and its result', async () => {
+    serve({
+      ...RUN,
+      request: {
+        characterKey: 'mualani',
+        // The dataset's own key, apostrophe and all: a link must name a
+        // weapon the app knows.
+        weaponKey: "surf's_up",
+        buildLevel: 90,
+        constraints: {},
+        objective: 'crit_value',
+      },
+      builds: [
+        {
+          ...build(1, 6, 120_200),
+          artifactIds: Object.fromEntries(SLOTS.map((s) => [s, `m1-${s}`])),
+          totals: { crit_rate: 70 },
+          diagnostics: { bindingConstraints: [], marginalBySlot: {} },
+        },
+      ],
+    });
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { ...navigator, clipboard: { writeText } });
+    render(<SimRank />);
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Simulate the Top Builds' }),
+    );
+    const row = (await screen.findAllByTestId('sim-build'))[0];
+    await userEvent.click(within(row).getByText(/Obsidian Codex 4/));
+    await userEvent.click(
+      within(row).getByRole('button', {
+        name: 'Share This Build and Its Result',
+      }),
+    );
+    expect(
+      within(row).getByRole('button', { name: 'Link Copied' }),
+    ).toBeInTheDocument();
+    const url = new URL(writeText.mock.calls[0][0] as string);
+    const out = await decodeBuild(url.searchParams.get('b')!);
+    if ('error' in out) throw new Error('expected a readable link');
+    expect(out.request.characterKey).toBe('mualani');
+    expect(out.sim).toMatchObject({
+      rotation: { id: 'mualani-burn-vape', status: 'validated' },
+      teammates: ['mavuika', 'emilie'],
+      iterations: 500,
+      teamDps: { mean: 120_200 },
+      rank: 1,
+      of: 1,
+      statRank: 6,
+    });
   });
 });

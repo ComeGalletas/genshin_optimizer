@@ -71,7 +71,7 @@ A local Genshin Impact account advisor, forked from `natcat38/rpg-build-optimize
 - **Optimiser** — the exact branch-and-bound search returning the **top-K** valid builds by objective score. Always exact, never approximate. See [ADR-0004](docs/adr/0004-exact-branch-and-bound-optimisation.md).
 - **Diagnostics** — per-build data the optimiser emits: binding constraints, per-slot marginal contribution, explored/pruned counts.
 - **Anti-clone cap** — the v1.0 results rule preventing near-identical builds from filling the top-K.
-- **Build snapshot** — the self-contained state encoded in a **share link** (character, weapon, build level, five full artifacts, constraints, objective, meta target). See [ADR-0005](docs/adr/0005-self-contained-share-links.md).
+- **Build snapshot** — the self-contained state encoded in a **share link** (character, weapon, build level, five full artifacts, constraints, objective, meta target), and its team simulation when it was shared from one. A **shared comparison** (`#c=`) carries a whole team comparison, view only. See [ADR-0005](docs/adr/0005-self-contained-share-links.md) and [ADR-0051](docs/adr/0051-share-links-carry-simulations.md).
 - **genshinAdapter** — the concrete object owning all game-specific data (characters, weapons, sets, base stats, main-stat values) and the universal game baselines. The optimiser, import, and share layers import it directly. (Originally a `GameAdapter` interface for multi-game extensibility, [ADR-0008](docs/adr/0008-gameadapter-seam-for-multi-game.md); collapsed to a concrete adapter — YAGNI, single game — in [ADR-0012](docs/adr/0012-collapse-gameadapter-seam-to-concrete-adapter.md).)
 
 ### v1.1 domain

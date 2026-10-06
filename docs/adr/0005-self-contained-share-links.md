@@ -1,6 +1,6 @@
 # 0005. Self-contained, view-first share links
 
-- Status: Accepted
+- Status: Accepted (extended by [0051](0051-share-links-carry-simulations.md))
 - Date: 2026-06-06
 
 ## Context

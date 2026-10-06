@@ -17,6 +17,8 @@ import { runSimSpec, type SimRun } from '../local-server/simrank';
 import { Callout } from '../components/ui/Callout';
 import { Disclosure } from '../components/ui/Disclosure';
 import { PieceLine } from '../components/PieceLine';
+import { ShareButton } from '../components/ShareButton';
+import { encodeBuild } from '@genshin-build-lab/engine/share/url';
 import { cn } from '../components/ui/cn';
 import { kilo } from '../teams/kilo';
 
@@ -323,6 +325,52 @@ function Ranking({ run }: { run: SimRun }) {
                         <PieceLine key={s} a={b.artifacts[s]} />
                       ))}
                     </ul>
+                    {run.request && (
+                      <ShareButton
+                        className="mt-2"
+                        label="Share This Build and Its Result"
+                        makeUrl={async () => {
+                          const { artifacts, ...build } = b;
+                          const param = await encodeBuild({
+                            request: run.request!,
+                            build: {
+                              artifactIds: build.artifactIds,
+                              totals: build.totals,
+                              objectiveValue: build.objectiveValue,
+                              score: build.score,
+                              diagnostics: build.diagnostics,
+                            },
+                            artifacts: SLOTS.map((s) => artifacts[s]),
+                            sim: {
+                              rotation: {
+                                id: sim.rotation.id,
+                                name: sim.rotation.name,
+                                status:
+                                  sim.rotation.status === 'draft'
+                                    ? 'draft'
+                                    : 'validated',
+                              },
+                              teammates: sim.teammates.map((t) => t.key),
+                              iterations: sim.iterations,
+                              teamDps: {
+                                mean: b.teamDps.mean,
+                                ci95: b.teamDps.ci95,
+                              },
+                              rank: b.rank,
+                              of: run.builds.length,
+                              statRank: b.statRank,
+                              tiedWithBest: b.tiedWithBest,
+                              behindPct: b.behindPct,
+                              ...(b.characterDps && {
+                                characterDps: b.characterDps,
+                              }),
+                              fightSec: b.fightSec,
+                            },
+                          });
+                          return `${location.origin}${location.pathname}?b=${param}`;
+                        }}
+                      />
+                    )}
                   </Disclosure>
                 </td>
               </tr>

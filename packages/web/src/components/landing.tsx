@@ -11,10 +11,17 @@ import { useId, type ReactNode } from 'react';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import type { HeroExample } from '@genshin-build-lab/engine/sample/heroExample';
 import { scrollToId } from '../ui/scroll';
-import { formatCount, formatScore, objectiveHint } from '../labels';
+import {
+  formatCount,
+  formatScore,
+  objectiveHint,
+  objectiveLabel,
+} from '../labels';
 import { Callout } from './ui/Callout';
+import { kilo } from '../teams/kilo';
 import { SearchCounts } from './ui/SearchCounts';
 import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
+import type { SharedSim } from '@genshin-build-lab/engine/share/url';
 
 export function Section({
   n,
@@ -128,7 +135,14 @@ export function SolvedHero({ hero }: { hero: HeroExample }) {
 /** A shared ?b= link opens on someone else's build. Say whose, and offer the
  *  one action the page can't infer — re-running it over the reader's own bag
  *  (the request is already hydrated into the Optimise panel). */
-export function SharedBuildBanner({ request }: { request: OptimizeRequest }) {
+export function SharedBuildBanner({
+  request,
+  sim,
+}: {
+  request: OptimizeRequest;
+  /** The build's team simulation, when the link carries one (ADR-0051). */
+  sim?: SharedSim;
+}) {
   const character = genshinAdapter.characterName(request.characterKey);
   const weapon =
     genshinAdapter.weapon(request.weaponKey)?.name ?? request.weaponKey;
@@ -142,6 +156,29 @@ export function SharedBuildBanner({ request }: { request: OptimizeRequest }) {
         <span className="font-semibold text-paper">{character}</span> · {weapon}{' '}
         · Lv {request.buildLevel}. It carries its own five pieces — no search
         ran in your browser.
+        {sim && (
+          <span className="mt-1 block" data-testid="shared-sim">
+            Simulated by the sharer:{' '}
+            <span className="font-semibold text-paper">
+              {kilo(sim.teamDps.mean)} team DPS
+            </span>{' '}
+            ({kilo(sim.teamDps.ci95[0])}–{kilo(sim.teamDps.ci95[1])}) in{' '}
+            {sim.rotation.name}
+            {sim.rotation.status === 'draft'
+              ? ' (a draft rotation)'
+              : ''} with{' '}
+            {sim.teammates
+              .map((k) => genshinAdapter.characterName(k))
+              .join(', ')}{' '}
+            as they had them; #{sim.rank} of {sim.of} by team DPS
+            {sim.tiedWithBest && sim.rank > 1 ? ' (tied with the best)' : ''}, #
+            {sim.statRank} by {objectiveLabel(request.objective)}
+            {sim.characterDps
+              ? `; ${character} ${kilo(sim.characterDps.mean)} DPS, ${Math.round(100 * sim.characterDps.share)}% of the team`
+              : ''}
+            ; {sim.iterations.toLocaleString('en-US')} iterations.
+          </span>
+        )}
       </span>
       <button
         type="button"

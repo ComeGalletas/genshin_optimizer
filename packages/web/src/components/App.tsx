@@ -24,7 +24,10 @@ import { Results } from './Results';
 import { SampleGear } from './SampleGear';
 import { GapSection } from './GapSection';
 import { LockGlyph } from './ui/Glyphs';
-import { decodeBuild } from '@genshin-build-lab/engine/share/url';
+import {
+  decodeBuild,
+  type SharedSim,
+} from '@genshin-build-lab/engine/share/url';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import {
@@ -82,6 +85,12 @@ const RotationLibrary = lazy(() =>
 const SimRank = lazy(() =>
   import('../sim-rank/SimRank').then((m) => ({ default: m.SimRank })),
 );
+// Opens client-only: a shared comparison is data, nothing re-runs (8.3).
+const SharedComparison = lazy(() =>
+  import('../teams/SharedComparison').then((m) => ({
+    default: m.SharedComparison,
+  })),
+);
 const TeamComparison = lazy(() =>
   import('../teams/TeamComparison').then((m) => ({
     default: m.TeamComparison,
@@ -112,6 +121,13 @@ export function App() {
     null,
   );
   const [sharedError, setSharedError] = useState(false);
+  // A shared build's team simulation, when the link carries one (8.3).
+  const [sharedSim, setSharedSim] = useState<SharedSim | null>(null);
+  // A shared team comparison (`#c=`, TODO 8.3): read once, closed by the
+  // reader.
+  const [comparisonParam, setComparisonParam] = useState(() =>
+    window.location.hash.startsWith('#c=') ? window.location.hash.slice(3) : '',
+  );
   const serverOnline = useServer((s) => s.status === 'online');
 
   // Is the local server running (TODO 3.5)? Checked on start and on every
@@ -168,6 +184,7 @@ export function App() {
       setRequest(out.request);
       setResult({ status: 'ok', builds: [out.build], explored: 0, pruned: 0 });
       setSharedArtifacts(out.artifacts);
+      if (out.sim) setSharedSim(out.sim);
       // Hydrate the Optimise panel's own store too, not just the read-only
       // Results view — otherwise it keeps showing its default character/weapon
       // (decoupled from the shared build) even though Results correctly shows
@@ -414,6 +431,27 @@ export function App() {
                 <SampleGear onRun={runCurrent} running={running} />
               </div>
             )}
+            {comparisonParam && (
+              <Section
+                id="shared-comparison"
+                title="Shared Team Comparison"
+                delay="0s"
+              >
+                <Suspense fallback={<PanelFallback />}>
+                  <SharedComparison
+                    param={comparisonParam}
+                    onClose={() => {
+                      history.replaceState(
+                        null,
+                        '',
+                        location.pathname + location.search,
+                      );
+                      setComparisonParam('');
+                    }}
+                  />
+                </Suspense>
+              </Section>
+            )}
             <Section
               n={1}
               id="step-load"
@@ -538,7 +576,12 @@ export function App() {
               <div id="results-section" className="scroll-mt-20">
                 {/* Unnumbered on purpose: Results is what step 05 produces. */}
                 <Section title="Results" delay="0s">
-                  {sharedArtifacts && <SharedBuildBanner request={request} />}
+                  {sharedArtifacts && (
+                    <SharedBuildBanner
+                      request={request}
+                      {...(sharedSim && { sim: sharedSim })}
+                    />
+                  )}
                   {/* A run in flight leaves the previous numbers on screen;
                     dim them and mark the region busy so they aren't read as
                     the new ones. */}
