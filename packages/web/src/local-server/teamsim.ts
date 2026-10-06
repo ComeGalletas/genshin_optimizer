@@ -11,11 +11,83 @@ export interface RotationSummary {
   id: string;
   name?: string;
   status?: 'validated' | 'draft';
+  archetype?: string;
+  /** Per slot, "a or b" when it takes more than one. */
   characters?: string[];
+  /** Where it came from: community, adapted, owner or llm. */
   source?: string;
+  /** Its own gcsim run on the reference builds. */
   dps?: number;
+  gcsim?: string;
+  reviewed?: boolean;
+  summary?: string;
+  sourceTitle?: string;
+  sourceUrl?: string;
+  publishedDps?: number;
+  /** How far `dps` is from `publishedDps`, in percent. */
+  offPct?: number;
+  /** Slots the server's account can't fill. */
+  missing?: string[];
   /** Set when the rotation failed its checks: listed, not usable. */
   problems?: string[];
+}
+
+/** A rotation's whole record (`GET /rotations/:id`), as far as the
+ *  library browser reads it. */
+export interface RotationDetail {
+  meta: {
+    id: string;
+    name: string;
+    status: 'validated' | 'draft';
+    summary: string;
+    slots: {
+      id: string;
+      characters: string[];
+      role: string;
+      filler?: string | false;
+    }[];
+    active: string;
+    fight:
+      | {
+          mode: 'actions';
+          enemy: { level: number; res: number; hp: number };
+          energy?: string;
+        }
+      | {
+          mode: 'duration';
+          seconds: number;
+          enemy: { level: number; res: number };
+          energy?: string;
+        };
+    energyWait?: 'idle' | 'attack';
+    rotationSec?: number;
+    source: {
+      kind: string;
+      title: string;
+      url?: string;
+      retrieved: string;
+      publishedDps?: number;
+      changes?: string;
+    };
+    validation?: {
+      gcsim: string;
+      date: string;
+      iterations: number;
+      dps: number;
+      sd: number;
+      durationSec: number;
+      warnings: string[];
+      offPct?: number;
+    };
+    review?: { by: string; date: string; gcsim: string; note?: string };
+  };
+  template: string;
+}
+
+export function fetchRotation(id: string): Promise<RotationDetail> {
+  return serverJson(`/rotations/${encodeURIComponent(id)}`, {
+    timeoutMs: 10_000,
+  });
 }
 
 /** One change set, as the server takes it. */

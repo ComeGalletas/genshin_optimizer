@@ -448,6 +448,18 @@ describe('rotations and team comparisons (TODO 6.2)', () => {
     expect(list.rotations.map((r: { id: string }) => r.id)).toContain(
       'raiden-national',
     );
+    // What the browser shows (8.2): the summary, the source, and which
+    // slots the account can't fill (the sample has no Yelan).
+    const byId = Object.fromEntries(
+      list.rotations.map((r: { id: string }) => [r.id, r]),
+    );
+    expect(byId['raiden-national']).toMatchObject({
+      summary: expect.any(String),
+      sourceTitle: expect.stringMatching(/KQM/),
+      sourceUrl: expect.stringMatching(/^https:\/\/db\.kqm\.gg\/db\//),
+      missing: ['yelan'],
+    });
+    expect(byId['raiden-national-xingqiu'].missing).toEqual([]);
     const one = (await get('/rotations/raiden-national')).json();
     expect(one.template).toMatch(/\{\{raiden\}\} skill;/);
     expect((await get('/rotations/nothing-here')).statusCode).toBe(404);

@@ -21,6 +21,7 @@ import { Segmented } from '../components/ui/Segmented';
 import { cn } from '../components/ui/cn';
 import { DamageShare, DpsDistribution } from './comparisonCharts';
 import { kilo } from './kilo';
+import { useCompareRotation } from './compareRotation';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -128,14 +129,21 @@ function complete(d: Draft): boolean {
 export function TeamComparison() {
   const [rotations, setRotations] = useState<RotationSummary[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [rotation, setRotation] = useState('');
+  // Shared with the rotation library, which can open a team here.
+  const rotation = useCompareRotation((s) => s.id);
+  const setRotation = useCompareRotation((s) => s.set);
   const [iterations, setIterations] =
     useState<(typeof ITERATIONS)[number]>('1000');
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [nextId, setNextId] = useState(1);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<TeamSimResult | null>(null);
+  const [ran, setRan] = useState<{
+    rotation: string;
+    result: TeamSimResult;
+  } | null>(null);
+  // A result is shown with the rotation it ran, not after another is picked.
+  const result = ran?.rotation === rotation ? ran.result : null;
   const rotationId = useId();
 
   useEffect(() => {
@@ -145,7 +153,8 @@ export function TeamComparison() {
         if (!live) return;
         const usable = rs.filter((r) => !r.problems);
         setRotations(usable);
-        setRotation((cur) => cur || usable[0]?.id || '');
+        const picked = useCompareRotation.getState();
+        if (!picked.id) picked.set(usable[0]?.id ?? '');
       })
       .catch((e: Error) => live && setLoadError(e.message));
     return () => {
@@ -207,13 +216,14 @@ export function TeamComparison() {
     setPending(true);
     setError(null);
     try {
-      setResult(
-        await postTeamSim({
+      setRan({
+        rotation,
+        result: await postTeamSim({
           rotation,
           iterations: Number(iterations),
           variants: drafts.map((d) => toRequest(d, rotations!)),
         }),
-      );
+      });
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -234,7 +244,6 @@ export function TeamComparison() {
             value={rotation}
             onChange={(e) => {
               setRotation(e.target.value);
-              setResult(null);
             }}
           >
             {rotations.map((r) => (

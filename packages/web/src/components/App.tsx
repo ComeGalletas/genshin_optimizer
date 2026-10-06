@@ -74,6 +74,11 @@ const ImportCenter = lazy(() =>
     default: m.ImportCenter,
   })),
 );
+const RotationLibrary = lazy(() =>
+  import('../rotations/RotationLibrary').then((m) => ({
+    default: m.RotationLibrary,
+  })),
+);
 const TeamComparison = lazy(() =>
   import('../teams/TeamComparison').then((m) => ({
     default: m.TeamComparison,
@@ -486,6 +491,19 @@ export function App() {
             {/* Unnumbered and outside the steps: it needs the local server
               (gcsim runs there) and reads the server's account, not this
               page's. */}
+            {serverOnline && (
+              <Section
+                id="rotation-library"
+                title="Rotation Library"
+                hint="The gcsim rotations the server can simulate: each team, where it came from, how its run compares with the published number, and its action list."
+                delay="0.1s"
+              >
+                <Suspense fallback={<PanelFallback />}>
+                  <RotationLibrary />
+                </Suspense>
+              </Section>
+            )}
+
             {serverOnline && (
               <Section
                 id="compare-teams"

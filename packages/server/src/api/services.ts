@@ -953,10 +953,15 @@ export class Services {
           .map((d) => d.name)
           .sort()
       : [];
+    // Whether the owner can field each slot (the rotation browser, 8.2).
+    const owned = new Set(Object.keys(currentRoster(this.db).roster));
     return {
       rotations: ids.map((id) => {
         try {
           const { meta } = loadRotation(id, dir);
+          const missing = meta.slots
+            .filter((s) => !s.characters.some((c) => owned.has(c)))
+            .map((s) => s.characters.join(' or '));
           return {
             id,
             name: meta.name,
@@ -969,6 +974,16 @@ export class Services {
               gcsim: meta.validation.gcsim,
             }),
             reviewed: !!meta.review,
+            summary: meta.summary,
+            sourceTitle: meta.source.title,
+            ...(meta.source.url && { sourceUrl: meta.source.url }),
+            ...(meta.source.publishedDps !== undefined && {
+              publishedDps: meta.source.publishedDps,
+            }),
+            ...(meta.validation?.offPct !== undefined && {
+              offPct: meta.validation.offPct,
+            }),
+            ...(owned.size > 0 && { missing }),
           };
         } catch (e) {
           if (e instanceof RotationError) return { id, problems: e.issues };

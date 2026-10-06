@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TeamComparison } from './TeamComparison';
+import { useCompareRotation } from './compareRotation';
 import type { TeamSimResult } from '../local-server/teamsim';
 
 const ROTATIONS = {
@@ -142,7 +143,10 @@ function serve(sim: unknown = RESULT, rotationsStatus = 200) {
   return f;
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  useCompareRotation.setState({ id: '' });
+});
 
 describe('TeamComparison (TODO 6.2)', () => {
   it('offers the usable rotations, with the team they field', async () => {
