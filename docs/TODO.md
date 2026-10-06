@@ -319,7 +319,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Tests: 5 engine (the table covers exactly the dataset's characters, weapons and sets; it agrees with gcsim's repository on the known cases; reasons per kind; sets in play), 2 coverage (the real column; synthetic levels and unknown), the table stamped with the pin, 3 server fallbacks (Sandrone and Prized Isshin Blade, without gcsim; gcsim refusing at run time; incomplete at run time) and drafting refusing Sandrone before running. Dropping the character check, or a table stamped with another gcsim, turns them red.
 - [x] ADR: gcsim integration, and its relationship to the ADR-0016 `avg_damage` objective
   - Written as three: [ADR-0041](adr/0041-rotation-library.md) (the rotation library and its fight), [ADR-0043](adr/0043-drafted-rotations-and-owner-review.md) (drafts and the owner's review) and [ADR-0044](adr/0044-simulated-reranking.md) (`objective: "sim"`, with a section on how it relates to `avg_damage`: the cheap exact filter and the slow faithful judge of its shortlist).
-- [ ] **Accept:** 3 community configs within ±2% of published DPS, and a 4-char team, K=20 at 500 iterations in < 2 min
+- [x] **Accept:** 3 community configs within ±2% of published DPS, and a 4-char team, K=20 at 500 iterations in < 2 min
+  - Accepted by the owner on 2026-10-05.
+  - Evidence: six community configs (Skirk Mono-Cryo, Raiden National, Raiden National with Xingqiu, Ayaka Freeze, the owner's Mualani Burn-Vape; all from the KQM Sim Database) reproduce their published DPS within 0.2% through our own template and config generation (`npm run sim:check`, 1,000 iterations each). On the owner's account, `objective: "sim"` for a 4-character team at K = 20 and 500 iterations took 15.4 s (Raiden in Raiden National) and 9.1 s (Furina in Skirk Mono-Cryo), against 2 minutes (5.8).
 
 ## Phase 6: Team comparisons
 
