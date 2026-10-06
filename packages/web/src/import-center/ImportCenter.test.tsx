@@ -310,3 +310,92 @@ describe('ImportCenter (TODO 8.1)', () => {
     );
   });
 });
+
+describe('ImportCenter: the rarer cases', () => {
+  it('shows gone, lock and unexplained changes, and says when a comparison fails', async () => {
+    serve({
+      'GET /imports/1/changes': {
+        changes: {
+          ...CHANGES_1.changes,
+          diff: {
+            ...CHANGES_1.changes.diff,
+            added: [],
+            removed: [5],
+            upgraded: [],
+            moved: [{ before: 3, after: 3, to: 'furina' }],
+            lockChanged: [{ before: 2, after: 2, lock: true }],
+            unexplained: [
+              { before: 6, why: 'two candidates' },
+              { why: 'no piece on either side' },
+            ],
+          },
+          pieces: {
+            before: {
+              3: piece({ slot: 'goblet' }),
+              5: piece({ setKey: 'NoblesseOblige' }),
+              6: piece({ slot: 'circlet' }),
+            },
+            after: { 2: piece(), 3: piece({ slot: 'goblet' }) },
+          },
+        },
+      },
+      'GET /imports/2/changes': undefined,
+    });
+    render(<ImportCenter />);
+    const snaps = await screen.findByRole('region', {
+      name: 'Snapshots, newest first',
+    });
+    const [, second, first] = within(snaps).getAllByRole('listitem');
+    await userEvent.click(
+      within(first).getByRole('button', { name: 'What changed' }),
+    );
+    await within(first).findByText(/unchanged/);
+    expect(first).toHaveTextContent('Gone: 1');
+    expect(first).toHaveTextContent('Noblesse Oblige sands');
+    expect(first).toHaveTextContent('(was unequipped)');
+    expect(first).toHaveTextContent('(locked)');
+    expect(first).toHaveTextContent('(two candidates)');
+    expect(first).toHaveTextContent('no piece on either side');
+    await userEvent.click(
+      within(first).getByRole('button', { name: 'Hide changes' }),
+    );
+    await userEvent.click(
+      within(second).getByRole('button', { name: 'What changed' }),
+    );
+    expect(await within(second).findByRole('alert')).toHaveTextContent(
+      'Couldn’t compare: no route GET /imports/2/changes.',
+    );
+  });
+
+  it('lists moved pieces in a reconciliation, and says when the report fails', async () => {
+    serve({
+      'GET /imports/merges/2': {
+        ...MERGE_2,
+        reports: [
+          {
+            ...MERGE_2.reports[0],
+            counts: { ...MERGE_2.reports[0].counts, moved: 1 },
+            moved: [
+              {
+                account: piece({ location: 'eula' }),
+                snapshot: piece({ location: 'diona' }),
+              },
+            ],
+          },
+        ],
+      },
+      'GET /imports/merges/1': undefined,
+    });
+    render(<ImportCenter />);
+    const merge = await screen.findByRole('region', { name: 'Reconciliation' });
+    expect(await within(merge).findByText(/Moved: 1/)).toBeInTheDocument();
+    expect(merge).toHaveTextContent('(in the account: on Eula)');
+    await userEvent.selectOptions(
+      within(merge).getByRole('combobox', { name: 'Merge' }),
+      '1',
+    );
+    expect(await within(merge).findByRole('alert')).toHaveTextContent(
+      'Couldn’t load the report: no route GET /imports/merges/1.',
+    );
+  });
+});

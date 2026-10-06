@@ -181,7 +181,11 @@ describe('ChatPanel polish (TODO 8.2)', () => {
     expect(
       await screen.findByText(/Stopped at the most tool calls/),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Copy answer' })).toBeVisible();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { ...navigator, clipboard: { writeText } });
+    await userEvent.click(screen.getByRole('button', { name: 'Copy answer' }));
+    expect(writeText).toHaveBeenCalledWith(REPLY.answer);
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeVisible();
   });
 });
 
