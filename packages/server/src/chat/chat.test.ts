@@ -19,6 +19,8 @@ import {
   ungroundedNumbers,
 } from './grounding';
 import { chatTools, runChat, CHAT_SYSTEM } from './loop';
+import { createHash } from 'node:crypto';
+import { readResult } from '../sim/result';
 
 const SAMPLE = readFileSync(
   new URL(
@@ -115,6 +117,53 @@ describe('grounding', () => {
     expect(maskUngrounded('HP 39,812 and DMG 99,999.', sources)).toEqual({
       text: `HP 39,812 and DMG ${MASK}.`,
       masked: ['99,999'],
+    });
+  });
+
+  it('holds a signed number to its sign: a loss is not a gain (TODO 6.3)', () => {
+    const diff = ['{"diff":{"crit_rate":-3.2,"hp":1200.5}}'];
+    expect(ungroundedNumbers('Crit rate −3.2, HP +1,200.5.', diff)).toEqual([]);
+    expect(ungroundedNumbers('Crit rate -3.2 (3.2 lower).', diff)).toEqual([]);
+    expect(ungroundedNumbers('Crit rate +3.2, HP −1200.5.', diff)).toEqual([
+      '+3.2',
+      '−1200.5',
+    ]);
+    // Hyphens inside words, dates and ranges aren't signs.
+    expect(
+      ungroundedNumbers('Piece m1-17, 3.2-1200.5, 2026-01-02.', [
+        ...diff,
+        'm1-17 2026-01-02',
+      ]),
+    ).toEqual([]);
+  });
+
+  it('accepts a comparison only exactly as simulate_team wrote it (TODO 6.3)', () => {
+    const sim = [
+      JSON.stringify({
+        runs: [
+          { label: 'base' },
+          { label: 'Kazuha', vsBase: { text: '+7.4% ± 1.2%', pct: 7.4 } },
+          { label: 'Catch', vsBase: { text: '−8.6% ± 0.3%', pct: -8.6 } },
+        ],
+      }),
+    ];
+    expect(
+      ungroundedNumbers(
+        'Kazuha: +7.4% ± 1.2% team DPS. Catch: −8.6% ± 0.3% team DPS (or -8.6% ± 0.3%).',
+        sim,
+      ),
+    ).toEqual([]);
+    expect(
+      ungroundedNumbers(
+        'Kazuha: +7% ± 1% (rounded), Catch: +8.6% ± 0.3% (wrong way), Kazuha: +7.4% ± 0.3% (wrong interval), 7.4% ± 1.2% (no sign).',
+        sim,
+      ),
+    ).toEqual(['+7% ± 1%', '+8.6% ± 0.3%', '+7.4% ± 0.3%', '7.4% ± 1.2%']);
+    expect(
+      maskUngrounded('Kazuha: +7.4% ± 1.2%; Catch: +8.6% ± 0.3%.', sim),
+    ).toEqual({
+      text: `Kazuha: +7.4% ± 1.2%; Catch: ${MASK}.`,
+      masked: ['+8.6% ± 0.3%'],
     });
   });
 
@@ -287,6 +336,158 @@ describe('runChat', () => {
 });
 
 // ---- POST /chat -------------------------------------------------------------------
+
+describe('a team comparison from one chat request (TODO 6.3)', () => {
+  /** Services whose gcsim is a fake: DPS depends only on the config. */
+  function simServices() {
+    const fixture = readResult(
+      JSON.parse(
+        readFileSync(
+          new URL(
+            '../sim/__fixtures__/raiden-national-30.json',
+            import.meta.url,
+          ),
+          'utf8',
+        ),
+      ),
+    );
+    const result = (config: string) => {
+      const h = createHash('sha256').update(config).digest();
+      return {
+        ...fixture,
+        iterations: 1000,
+        dps: {
+          ...fixture.dps,
+          mean: 60_000 + h.readUInt16BE(0) / 4,
+          sd: 3_000,
+        },
+      };
+    };
+    return new Services(db, undefined, {
+      deps: {
+        gcsim: 'v2.48.8',
+        commit: 'c'.repeat(40),
+        runner: {
+          run: async (config) => result(config),
+          runWithSample: async (config) => ({
+            result: result(config),
+            sample: {},
+          }),
+        },
+      },
+    });
+  }
+
+  const REQUEST = {
+    rotation: 'raiden-national-xingqiu',
+    variants: [
+      {
+        label: 'The Catch R5',
+        weapons: { raiden_shogun: { weapon: 'the_catch', refinement: 5 } },
+      },
+      { label: 'Two targets', enemy: { count: 2 } },
+      { label: 'Low resistance', enemy: { res: -20 } },
+    ],
+  };
+
+  /** How a well-behaved model explains a simulate_team result: each
+   *  variant's label and its vsBase.text, as the tool wrote it. */
+  const explain = (req: ChatRequest) =>
+    (
+      lastResult(req).runs as {
+        label: string;
+        vsBase?: { text: string; withinNoise: boolean };
+      }[]
+    )
+      .filter((r) => r.vsBase)
+      .map(
+        (r) =>
+          `- ${r.label}: ${r.vsBase!.text} team DPS${r.vsBase!.withinNoise ? ' (no different from the base)' : ''}`,
+      )
+      .join('\n');
+
+  it('runs three variants from one request, and the explanation’s numbers are the tool’s, exactly', async () => {
+    const sim = simServices();
+    const { client, requests } = fakeModel((req, turn) =>
+      turn === 0
+        ? { toolCalls: [call('simulate_team', REQUEST)] }
+        : { text: `Against your current team:\n${explain(req)}` },
+    );
+    const r = await runChat(
+      client,
+      accountTools(sim),
+      ask(
+        'Compare my classic National with The Catch R5 on Raiden, two targets, and -20% resistance.',
+      ),
+    );
+    expect(r.stop).toBe('answer');
+    expect(r.masked).toEqual([]);
+    expect(r.steps).toEqual([
+      expect.objectContaining({ tool: 'simulate_team', ok: true }),
+    ]);
+    // One request, three variants run, each cited.
+    const result = JSON.parse(
+      requests[1].messages.findLast((m) => m.role === 'tool')!.content,
+    );
+    expect(result.runs.map((x: { label: string }) => x.label)).toEqual([
+      'base',
+      'The Catch R5',
+      'Two targets',
+      'Low resistance',
+    ]);
+    const texts = result.runs
+      .slice(1)
+      .map((x: { vsBase: { text: string } }) => x.vsBase.text);
+    const cited = [...r.answer.matchAll(/[+−±]\d+\.\d% ± \d+\.\d%/g)].map(
+      (m) => m[0],
+    );
+    expect(cited).toEqual(texts);
+    for (const [i, label] of [
+      'The Catch R5',
+      'Two targets',
+      'Low resistance',
+    ].entries())
+      expect(r.answer).toContain(`${label}: ${texts[i]} team DPS`);
+    await sim.searches.close();
+  });
+
+  it('sends back a rounded or sign-flipped comparison, and masks it if it stays', async () => {
+    const sim = simServices();
+    let tool:
+      { runs: { label: string; vsBase?: { text: string } }[] } | undefined;
+    const wrong: string[] = [];
+    const { client, requests } = fakeModel((req, turn) => {
+      if (turn === 0) return { toolCalls: [call('simulate_team', REQUEST)] };
+      tool ??= lastResult(req);
+      const [, a, b, c] = tool!.runs;
+      // Rounded to whole percents; and with its sign flipped.
+      const rounded = a.vsBase!.text.replace(
+        /(\d+)\.\d% ± (\d+)\.\d%/,
+        '$1% ± $2%',
+      );
+      const flipped = b.vsBase!.text.replace(/^[+−]/, (x) =>
+        x === '+' ? '−' : '+',
+      );
+      wrong.splice(0, 2, rounded, flipped);
+      return {
+        text: `- ${a.label}: ${rounded}\n- ${b.label}: ${flipped}\n- ${c.label}: ${c.vsBase!.text}`,
+      };
+    });
+    const r = await runChat(client, accountTools(sim), ask('Compare.'));
+    // Asked to revise once, told how to cite, then masked.
+    expect(requests).toHaveLength(3);
+    expect(requests[2].messages.at(-1)!.content).toMatch(
+      /Comparisons must be copied exactly from simulate_team's vsBase\.text/,
+    );
+    expect(r.masked).toEqual(wrong);
+    expect(r.answer.split('\n')).toEqual([
+      `- ${tool!.runs[1].label}: ${MASK}`,
+      `- ${tool!.runs[2].label}: ${MASK}`,
+      `- ${tool!.runs[3].label}: ${tool!.runs[3].vsBase!.text}`,
+    ]);
+    await sim.searches.close();
+  });
+});
 
 describe('POST /chat', () => {
   const H = { host: 'localhost' };

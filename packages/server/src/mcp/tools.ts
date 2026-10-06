@@ -26,6 +26,7 @@ export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact acco
 - Character, weapon and set keys are dataset keys (furina, splendor_of_tranquil_waters, GoldenTroupe); list_characters and get_character show them.
 - optimize_build takes a ConstraintSpec that extends the character's curated defaults: pass only what the owner asked for. It is exact and can take tens of seconds on a large account; when it times out, narrow the spec (a set, main stats, or keepEquippedOn "all").
 - When you report builds, start with optimize_build's "understood" sentence, so the owner can check the request was read right.
+- simulate_team compares team variants with a base. Cite each variant as "<label>: <vsBase.text> team DPS", copying vsBase.text exactly (sign, digits and the ± interval: "Kazuha swap: +7.4% ± 1.2% team DPS"); never round it or move an interval to another variant. A variant whose withinNoise is true is no different from the base: say so, whatever its sign. A run with problems or notSimulated has no numbers: say why.
 - Rotations (gcsim action lists for a team) are in list_rotations and get_rotation. draft_rotation saves a new one only as a draft; tell the owner it needs their review (npm run rotations -- review <id>) before it counts, and never call a draft validated.`;
 
 const r1 = (x: number) => Math.round(x * 10) / 10;

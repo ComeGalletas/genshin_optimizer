@@ -1,6 +1,6 @@
 # 0035. The chat: a server-side tool loop over the MCP tools, with numbers checked against tool results
 
-- Status: Accepted
+- Status: Accepted (amended by [0047](0047-grounded-comparisons.md))
 - Date: 2026-09-30
 
 ## Context

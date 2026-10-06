@@ -125,7 +125,15 @@ async function runTool(
 }
 
 const reviseRequest = (numbers: string[]) =>
-  `Your answer uses numbers that no tool result gave: ${numbers.join(', ')}. Answer again using only numbers from the tool results above (call a tool if you need another number), or leave those numbers out.`;
+  `Your answer uses numbers that no tool result gave: ${numbers.join(', ')}. Answer again using only numbers from the tool results above (call a tool if you need another number), or leave those numbers out.${
+    numbers.some((n) => n.includes('±'))
+      ? " Comparisons must be copied exactly from simulate_team's vsBase.text, sign and interval included."
+      : ''
+  }${
+    numbers.some((n) => /^[+\-−]/.test(n))
+      ? ' A number with a sign must have that sign in the tool results: a loss is written with a minus.'
+      : ''
+  }`;
 
 /** Answer the last user message, calling tools as the model asks. */
 export async function runChat(
