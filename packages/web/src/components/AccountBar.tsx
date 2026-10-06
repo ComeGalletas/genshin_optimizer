@@ -7,9 +7,7 @@ import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { sourceLabel, useAccount } from '../state/account';
 import { hrefOf } from './views';
-
-const count = (n: number, one: string) =>
-  `${n.toLocaleString('en-US')} ${n === 1 ? one : `${one}s`}`;
+import { countOf } from '../labels';
 
 export function AccountBar({ onStart }: { onStart: boolean }) {
   const artifacts = useInventory((s) => s.artifacts.length);
@@ -37,13 +35,13 @@ export function AccountBar({ onStart }: { onStart: boolean }) {
     >
       <span>
         <span className="font-semibold text-paper">
-          {count(artifacts, 'artifact')}
+          {countOf(artifacts, 'artifact')}
         </span>
         {characters > 0 && (
           <>
             {' · '}
             <span className="font-semibold text-paper">
-              {count(characters, 'character')}
+              {countOf(characters, 'character')}
             </span>
           </>
         )}

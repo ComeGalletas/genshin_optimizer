@@ -18,6 +18,7 @@ import {
   type Roll,
 } from '@genshin-build-lab/engine/game/genshin/rollSplit';
 import {
+  countOf,
   elementLabel,
   formatScore,
   formatSetName,
@@ -110,7 +111,7 @@ function RollList({ line, split }: { line: SubStat; split: LineRolls }) {
         </>
       )}
       {split.first
-        ? `${others} ${others === 1 ? 'roll' : 'rolls'}: ${shown(stat, displaySteps(line) - firstSteps)}`
+        ? `${countOf(others, 'roll')}: ${shown(stat, displaySteps(line) - firstSteps)}`
         : `${split.count} rolls`}
       )
     </span>

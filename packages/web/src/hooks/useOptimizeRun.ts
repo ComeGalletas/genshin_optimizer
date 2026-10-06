@@ -21,6 +21,7 @@ import type {
   OptimizeRequest,
   OptimizeResult,
 } from '@genshin-build-lab/engine/game/types';
+import { countOf } from '../labels';
 
 export interface UseOptimizeRunOptions {
   /** Called right before a new run's search actually starts (after the
@@ -119,7 +120,7 @@ export function useOptimizeRun(
       onSuccess(r, req);
       announce(
         r.status === 'ok'
-          ? `Optimisation complete — ${r.builds.length} ${r.builds.length === 1 ? 'build' : 'builds'}.`
+          ? `Optimisation complete — ${countOf(r.builds.length, 'build')}.`
           : 'Optimisation complete — no build satisfies all constraints.',
       );
     } catch (err) {

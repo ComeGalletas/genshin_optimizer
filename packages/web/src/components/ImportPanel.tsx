@@ -183,7 +183,7 @@ export function ImportPanel() {
     if (fresh.length === 0) {
       setNotice({
         tone: 'info',
-        text: `Already up to date — all ${incoming.length} ${incoming.length === 1 ? 'piece was' : 'pieces were'} already in your inventory.${suffix}`,
+        text: `Already up to date — all ${countOf(incoming.length, 'piece was', 'pieces were')} already in your inventory.${suffix}`,
       });
       return;
     }

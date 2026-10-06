@@ -21,6 +21,7 @@ import { cn } from '../components/ui/cn';
 import { CharacterPortrait } from '../components/GameArt';
 import { CharacterButton } from '../character-window/CharacterButton';
 import { HelpHeading } from '../components/help/Help';
+import { countOf } from '../labels';
 
 const MODES: { mode: AllocateMode; label: string; hint: string }[] = [
   {
@@ -239,7 +240,7 @@ export function ServerAllocation({
             </h4>
             <p className="text-xs text-muted">
               {result.moves.moves.length
-                ? `In this order: equipping a piece someone wears swaps it with yours. ${result.moves.inPlace} planned ${result.moves.inPlace === 1 ? 'piece is' : 'pieces are'} already in place.`
+                ? `In this order: equipping a piece someone wears swaps it with yours. ${countOf(result.moves.inPlace, 'planned piece is', 'planned pieces are')} already in place.`
                 : 'Nothing to move: every planned piece is already in place.'}
             </p>
             <ol className="space-y-1 text-sm">
