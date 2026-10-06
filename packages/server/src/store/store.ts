@@ -6,7 +6,6 @@
  * @packageDocumentation
  */
 
-import { createHash } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import Database from 'better-sqlite3';
@@ -43,6 +42,7 @@ import {
   type ImportDiff,
 } from '@genshin-build-lab/engine/diff/diff';
 import { migrate } from './migrations';
+import { sha256 } from '../hash';
 
 /** Where the store lives unless told otherwise. Git-ignored. */
 export const DEFAULT_STORE_PATH = fromRoot('var/store.sqlite');
@@ -92,9 +92,6 @@ export interface ImportInput {
   takenAt?: string;
   importedAt?: string;
 }
-
-const sha256 = (text: string) =>
-  createHash('sha256').update(text, 'utf8').digest('hex');
 
 /** Persisted without its id: an artifact's id in the store is its place. */
 const withoutId = (a: Artifact): Omit<Artifact, 'id'> => {

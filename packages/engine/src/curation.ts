@@ -14,3 +14,6 @@
  */
 
 export const CURATION_PATCH = '6.7';
+
+/** The Genshin wiki, which the curated tables cite page by page. */
+export const WIKI = 'https://genshin-impact.fandom.com/wiki/';

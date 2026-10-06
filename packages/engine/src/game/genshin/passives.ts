@@ -36,6 +36,7 @@
 
 import type { BuildLevel, StatKey, StatVec } from '../types';
 import { isPctStat, statLabel } from '../../labels-core';
+import { WIKI } from '../../curation';
 
 /** A weapon's refinement, R1 to R5. */
 export type Refinement = 1 | 2 | 3 | 4 | 5;
@@ -79,7 +80,6 @@ export interface WeaponPassive {
 }
 
 const DB = 'genshin-db 5.2.14';
-const WIKI = 'https://genshin-impact.fandom.com/wiki/';
 const src = (page: string) => `${WIKI}${page} (values: ${DB})`;
 
 const r = (a: number, b: number, c: number, d: number, e: number) =>

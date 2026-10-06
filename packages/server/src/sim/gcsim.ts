@@ -12,7 +12,6 @@
  */
 
 import { execFile } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import {
   chmodSync,
   existsSync,
@@ -28,6 +27,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 import * as z from 'zod';
 import { fromRoot } from '../paths';
+import { sha256 } from '../hash';
 
 const run = promisify(execFile);
 
@@ -92,9 +92,6 @@ export function gcsimPath(
   const ext = binaryFor(tool, key).file.endsWith('.exe') ? '.exe' : '';
   return join(binDir, `gcsim-${tool.version}${ext}`);
 }
-
-const sha256 = (data: Uint8Array) =>
-  createHash('sha256').update(data).digest('hex');
 
 export interface EnsureResult {
   path: string;
