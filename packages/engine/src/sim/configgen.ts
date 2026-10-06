@@ -93,8 +93,10 @@ export interface SimEnemy {
   /** Hitbox radius and position, in gcsim's units. */
   radius?: number;
   pos?: readonly [number, number];
-  /** How many targets (default 1). The others are copies of the first, 2
-   *  apart on a line through it: (x+2, y), (x-2, y), (x+4, y), … (TODO 6.1). */
+  /** How many targets (default 1). The others are copies of the first on
+   *  a line through it, just far enough apart that their hitboxes don't
+   *  overlap (2 × radius + 0.5; gcsim warns of overlap below that): for
+   *  radius 2, (x+4.5, y), (x−4.5, y), (x+9, y), … (TODO 6.1, 6.2). */
   count?: number;
 }
 
@@ -143,8 +145,9 @@ function targetLines(enemy: SimEnemy = {}): string[] {
       `resist=${num((enemy.res ?? 10) / 100)}`,
     ];
     if (enemy.radius !== undefined) parts.push(`radius=${num(enemy.radius)}`);
-    // 0, +2, -2, +4, -4, … along x.
-    const dx = i === 0 ? 0 : (i % 2 ? 1 : -1) * 2 * Math.ceil(i / 2);
+    // 0, +d, −d, +2d, −2d, … along x; gcsim's default radius is 1.
+    const d = 2 * (enemy.radius ?? 1) + 0.5;
+    const dx = i === 0 ? 0 : (i % 2 ? 1 : -1) * d * Math.ceil(i / 2);
     if (enemy.pos || count > 1) parts.push(`pos=${num(x + dx)},${num(y)}`);
     if (enemy.hp !== undefined) parts.push(`hp=${num(enemy.hp)}`);
     return `target ${parts.join(' ')};`;

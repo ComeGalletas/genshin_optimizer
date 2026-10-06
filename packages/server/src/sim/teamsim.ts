@@ -100,7 +100,17 @@ export interface TeamRun {
   problems?: string[];
   /** Why gcsim couldn't simulate it (ADR-0045). */
   notSimulated?: string[];
-  dps?: { mean: number; sd: number; ci95: [number, number] };
+  dps?: {
+    mean: number;
+    sd: number;
+    ci95: [number, number];
+    /** The iterations' spread: min, quartiles, max (TODO 6.2). */
+    min?: number;
+    q1?: number;
+    median?: number;
+    q3?: number;
+    max?: number;
+  };
   fightSec?: number;
   characters?: {
     character: string;
@@ -299,7 +309,7 @@ export async function simulateTeam(
         return {
           ...head,
           result: r,
-          dps: { mean: r.dps.mean, sd: r.dps.sd, ci95: ci95(r) },
+          dps: { ...r.dps, ci95: ci95(r) },
           fightSec: r.durationSec,
           // gcsim lists characters in the config's order: the slots'.
           characters: r.characters.map((c, j) => ({

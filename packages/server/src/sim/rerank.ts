@@ -17,7 +17,8 @@
  * @packageDocumentation
  */
 
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
 import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
 import {
@@ -43,19 +44,43 @@ export interface SimTeam {
   teammates: Record<string, SimCharacter>;
 }
 
-/** Every rotation in `dir` that loads, by id. */
+/** The files a rotation is read from. */
+const FILES = ['meta.json', 'rotation.gcsl.tmpl', 'reference.gcsl'];
+
+/** The library as last read, per directory, with what it was read from:
+ *  every request that names a rotation (the translator's catalog, each
+ *  "sim" spec) would otherwise re-read and re-check every file. */
+const cache = new Map<string, { stamp: string; rotations: Rotation[] }>();
+
+/** Every rotation in `dir` that loads, by id. Re-read when any of its
+ *  files changes (a draft saved, a promotion), by name, size and time. */
 export function rotationLibrary(dir: string): Rotation[] {
   if (!existsSync(dir)) return [];
+  const ids = readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort();
+  const stamp = ids
+    .flatMap((id) =>
+      FILES.map((f) => {
+        const st = statSync(join(dir, id, f), { throwIfNoEntry: false });
+        return `${id}/${f}:${st ? `${st.size}@${st.mtimeMs}` : '-'}`;
+      }),
+    )
+    .join('|');
+  const hit = cache.get(dir);
+  if (hit?.stamp === stamp) return hit.rotations;
   const out: Rotation[] = [];
-  for (const d of readdirSync(dir, { withFileTypes: true })) {
-    if (!d.isDirectory()) continue;
+  for (const id of ids) {
     try {
-      out.push(loadRotation(d.name, dir));
+      out.push(loadRotation(id, dir));
     } catch (e) {
       if (!(e instanceof RotationError)) throw e;
     }
   }
-  return out.sort((a, b) => a.meta.id.localeCompare(b.meta.id));
+  out.sort((a, b) => a.meta.id.localeCompare(b.meta.id));
+  cache.set(dir, { stamp, rotations: out });
+  return out;
 }
 
 const name = (key: string) => genshinAdapter.character(key)?.name ?? key;

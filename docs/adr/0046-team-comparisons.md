@@ -30,8 +30,11 @@ optimizer for "the best build with this set", the bounded pool and cache
   slot doesn't take is refused, naming the library's rotations that have
   them, or suggesting a draft. A "teammate swap" across kits is a
   `rotation` variant.
-- **Several targets**: copies of the rotation's target, 2 apart on a line
-  through it. Team DPS is the total over all targets.
+- **Several targets**: copies of the rotation's target on a line through
+  it, 2 × radius + 0.5 apart (4.5 for KQM's radius-2 target): the closest
+  that gcsim doesn't flag as overlapping hitboxes (at 2 and at 4 it does;
+  found in 6.2's first look at the view). Team DPS is the total over all
+  targets.
 - **Comparison** (`compareToBase`): the difference in percent of the base,
   the half-width of its 95% interval (1.96 × the standard error of the
   difference of two means, over the base's mean), whether that interval

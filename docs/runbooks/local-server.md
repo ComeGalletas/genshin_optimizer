@@ -36,6 +36,8 @@ tools), [ADR-0032](../adr/0032-llm-provider-config.md) (model config),
 | `npm run sim:support` | Probes the pinned gcsim for every character, weapon and set and writes `packages/engine/src/sim/gcsim-support.json` (about 6 s); run it after a new gcsim pin (a test says when).                                                               |
 | `npm run rotations`   | The rotation library: lists each rotation's status; `-- review <id>` runs one and writes `rotations/<id>/review.md` (the fight step by step); `-- promote <id>` validates a reviewed draft (yours to run: a model can only draft, ADR-0043).    |
 
+While the server runs, the web app shows **Compare Teams** (TODO 6.2): a rotation from the library against up to five variants, simulated by gcsim on the server (install it once with `npm run sim:check`). It uses the server's account, not the one loaded in the page.
+
 Ollama listens on 11434. Everything listens on localhost only.
 
 The server finds `var/store.sqlite`, `imports/inbox/`, `config/llm.json`

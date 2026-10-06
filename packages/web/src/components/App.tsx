@@ -68,6 +68,12 @@ const TeamsView = lazy(() =>
 const PlanView = lazy(() =>
   import('../plan/PlanView').then((m) => ({ default: m.PlanView })),
 );
+// Server-only (TODO 6.2): never loaded client-only.
+const TeamComparison = lazy(() =>
+  import('../teams/TeamComparison').then((m) => ({
+    default: m.TeamComparison,
+  })),
+);
 
 /** Minimal fallback for a lazy feature panel — a line of text, not a skeleton,
  *  since these panels only mount well after first paint (behind `hasRoster`). */
@@ -93,6 +99,7 @@ export function App() {
     null,
   );
   const [sharedError, setSharedError] = useState(false);
+  const serverOnline = useServer((s) => s.status === 'online');
 
   // Is the local server running (TODO 3.5)? Checked on start and on every
   // return to the tab, so starting it later needs no reload; without it the
@@ -452,6 +459,22 @@ export function App() {
               >
                 <Suspense fallback={<PanelFallback />}>
                   <PlanView />
+                </Suspense>
+              </Section>
+            )}
+
+            {/* Unnumbered and outside the steps: it needs the local server
+              (gcsim runs there) and reads the server's account, not this
+              page's. */}
+            {serverOnline && (
+              <Section
+                id="compare-teams"
+                title="Compare Teams"
+                hint="Simulate a team from the rotation library against up to five variants: a weapon, a set, a teammate, the enemy or the rotation."
+                delay="0.1s"
+              >
+                <Suspense fallback={<PanelFallback />}>
+                  <TeamComparison />
                 </Suspense>
               </Section>
             )}

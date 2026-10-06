@@ -259,10 +259,42 @@ describe('imports and later phases', () => {
     expect((await get('/imports/9/changes')).statusCode).toBe(404);
   });
 
-  it('answers 501 for allocation and simulation until their phases', async () => {
+  it('answers 501 for allocation until its phase', async () => {
     expect((await post('/allocate', {})).statusCode).toBe(501);
-    expect((await post('/sim', {})).statusCode).toBe(501);
     expect((await get('/nope')).statusCode).toBe(404);
+  });
+});
+
+describe('rotations and team comparisons (TODO 6.2)', () => {
+  // No gcsim here, wherever the tests run: the routes, not the simulator.
+  beforeEach(async () => {
+    await app.close();
+    app = buildApp({ db, rotations: {} });
+  });
+
+  it('lists the library and serves one rotation', async () => {
+    const list = (await get('/rotations')).json();
+    expect(list.rotations.map((r: { id: string }) => r.id)).toContain(
+      'raiden-national',
+    );
+    const one = (await get('/rotations/raiden-national')).json();
+    expect(one.template).toMatch(/\{\{raiden\}\} skill;/);
+    expect((await get('/rotations/nothing-here')).statusCode).toBe(404);
+  });
+
+  it('checks a team comparison, and says when gcsim is missing', async () => {
+    const bad = await post('/sim/team', {
+      rotation: 'raiden-national',
+      variants: [{ label: 'x', bogus: 1 }],
+    });
+    expect(bad.statusCode).toBe(400);
+    expect(bad.json()).toMatchObject({
+      error: 'invalid_request',
+      issues: [{ path: 'variants.0.bogus', message: 'unknown field' }],
+    });
+    const none = await post('/sim/team', { rotation: 'raiden-national' });
+    expect(none.statusCode).toBe(503);
+    expect(none.json().message).toMatch(/npm run sim:check/);
   });
 });
 

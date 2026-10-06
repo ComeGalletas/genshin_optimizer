@@ -1,0 +1,248 @@
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { TeamComparison } from './TeamComparison';
+import type { TeamSimResult } from '../local-server/teamsim';
+
+const ROTATIONS = {
+  rotations: [
+    {
+      id: 'raiden-national',
+      name: 'Raiden National',
+      status: 'validated',
+      characters: ['raiden_shogun', 'xiangling', 'yelan', 'bennett'],
+    },
+    {
+      id: 'raiden-national-xingqiu',
+      name: 'Raiden National (Xingqiu)',
+      status: 'validated',
+      characters: ['raiden_shogun', 'xiangling', 'xingqiu', 'bennett'],
+    },
+    { id: 'broken', problems: ['bad meta'] },
+  ],
+};
+
+const run = (
+  label: string,
+  mean: number,
+  extra: Partial<TeamSimResult['runs'][number]> = {},
+) => ({
+  label,
+  rotation: {
+    id: 'raiden-national',
+    name: 'Raiden National',
+    status: 'validated',
+  },
+  dps: {
+    mean,
+    sd: 4000,
+    ci95: [mean - 250, mean + 250] as [number, number],
+    min: mean - 15_000,
+    q1: mean - 3000,
+    median: mean + 500,
+    q3: mean + 3000,
+    max: mean + 9000,
+  },
+  fightSec: 108.2,
+  characters: [
+    {
+      character: 'raiden_shogun',
+      dps: mean * 0.3,
+      share: 0.3,
+      fieldSec: 47,
+      energyWaitSec: 0,
+    },
+    {
+      character: 'xiangling',
+      dps: mean * 0.3,
+      share: 0.3,
+      fieldSec: 16,
+      energyWaitSec: 0,
+    },
+    {
+      character: 'yelan',
+      dps: mean * 0.35,
+      share: 0.35,
+      fieldSec: 24,
+      energyWaitSec: 0,
+    },
+    {
+      character: 'bennett',
+      dps: mean * 0.05,
+      share: 0.05,
+      fieldSec: 18,
+      energyWaitSec: 0,
+    },
+  ],
+  reactions: { vaporize: 93, overload: 58 },
+  warnings: [],
+  ...extra,
+});
+
+const RESULT: TeamSimResult = {
+  iterations: 1000,
+  burstWaits: 'filled with attacks',
+  ms: 4200,
+  runs: [
+    run('base', 85_128),
+    run('Two targets', 167_447, {
+      vsBase: {
+        pct: 96.7,
+        ci95Pct: 0.3,
+        withinNoise: false,
+        text: '+96.7% ± 0.3%',
+      },
+    }),
+    run('The Catch', 85_200, {
+      fightSec: 114,
+      warnings: ['insufficient_energy'],
+      characters: [
+        {
+          character: 'raiden_shogun',
+          dps: 20_000,
+          share: 0.25,
+          fieldSec: 47,
+          energyWaitSec: 3.4,
+        },
+      ],
+      vsBase: {
+        pct: 0.1,
+        ci95Pct: 0.3,
+        withinNoise: true,
+        text: '+0.1% ± 0.3%',
+      },
+    }),
+    {
+      label: 'Xingqiu for Yelan',
+      problems: [
+        'Raiden National\'s "yelan" slot takes only Yelan: for Xingqiu, choose a rotation that has them (raiden-national-xingqiu)',
+      ],
+    },
+  ],
+};
+
+/** A fake local server: GET /rotations, POST /sim/team. */
+function serve(sim: unknown = RESULT, rotationsStatus = 200) {
+  const f = vi.fn(async (url: string, init?: RequestInit) => {
+    const isSim = url.endsWith('/sim/team');
+    const status = isSim ? 200 : rotationsStatus;
+    return {
+      ok: status === 200,
+      status,
+      json: async () =>
+        isSim
+          ? sim
+          : status === 200
+            ? ROTATIONS
+            : { message: 'the server hit an error; see its log' },
+      init,
+    };
+  });
+  vi.stubGlobal('fetch', f);
+  return f;
+}
+
+afterEach(() => vi.unstubAllGlobals());
+
+describe('TeamComparison (TODO 6.2)', () => {
+  it('offers the usable rotations, with the team they field', async () => {
+    serve();
+    render(<TeamComparison />);
+    const select = await screen.findByLabelText('Base team’s rotation');
+    expect(
+      within(select)
+        .getAllByRole('option')
+        .map((o) => o.textContent),
+    ).toEqual(['Raiden National', 'Raiden National (Xingqiu)']);
+    expect(
+      screen.getByText(/Raiden Shogun, Xiangling, Yelan, Bennett, as equipped/),
+    ).toBeInTheDocument();
+  });
+
+  it('sends the variants built in the form, labelled, and shows the comparison', async () => {
+    const f = serve();
+    render(<TeamComparison />);
+    await screen.findByLabelText('Base team’s rotation');
+    await userEvent.click(screen.getByRole('button', { name: 'Enemy' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Rotation' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Compare 3 runs' }),
+    );
+
+    const body = JSON.parse(
+      (f.mock.calls.find(([u]) => u.endsWith('/sim/team'))![1] as RequestInit)
+        .body as string,
+    );
+    expect(body).toEqual({
+      rotation: 'raiden-national',
+      iterations: 1000,
+      variants: [
+        {
+          label: '2 targets, 10% RES, level 100',
+          enemy: { count: 2, res: 10, level: 100 },
+        },
+        {
+          label: 'Raiden National (Xingqiu)',
+          rotation: 'raiden-national-xingqiu',
+        },
+      ],
+    });
+
+    // The table: each run against the base, the noise said in words.
+    const rows = await screen.findAllByTestId('run-row');
+    expect(rows.map((r) => r.querySelector('th')!.textContent)).toEqual([
+      'base',
+      'Two targets',
+      'The Catch',
+      expect.stringMatching(/^Xingqiu for Yelan.*slot takes only Yelan/),
+    ]);
+    expect(within(rows[0]).getAllByText('base')).toHaveLength(2);
+    expect(within(rows[1]).getByText('+96.7% ± 0.3%')).toBeInTheDocument();
+    expect(within(rows[2]).getByText('within noise')).toBeInTheDocument();
+    expect(within(rows[2]).getByText('+5.8 s')).toBeInTheDocument();
+    // A variant that couldn't be built has no numbers.
+    expect(within(rows[3]).getAllByText('—')).toHaveLength(3);
+
+    // A box plot and a share bar per simulated run, numbers in text too.
+    expect(screen.getAllByTestId('box-plot')).toHaveLength(3);
+    expect(screen.getAllByTestId('dps-row')[0]).toHaveTextContent(
+      'median 85.6k · middle half 82.1k–88.1k · range 70.1k–94.1k',
+    );
+    expect(screen.getAllByTestId('share-row')[0]).toHaveTextContent(
+      'Yelan 35% (29.8k) · Raiden Shogun 30% (25.5k)',
+    );
+    // Reactions and energy.
+    expect(
+      screen.getByRole('rowheader', { name: 'vaporize' }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('energy')).toHaveTextContent(
+      'The Catch: a burst waited for energy; Raiden Shogun waited 3.4 s for energy.',
+    );
+    expect(screen.getByTestId('energy')).toHaveTextContent(
+      'base: no warnings.',
+    );
+  });
+
+  it('holds the run until every variant is filled in', async () => {
+    serve();
+    render(<TeamComparison />);
+    await screen.findByLabelText('Base team’s rotation');
+    await userEvent.click(screen.getByRole('button', { name: 'Weapon' }));
+    expect(
+      screen.getByRole('button', { name: 'Compare 2 runs' }),
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText(/Finish each variant/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    expect(
+      screen.getByRole('button', { name: 'Simulate the team' }),
+    ).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  it('says so when the library can’t be loaded', async () => {
+    serve(RESULT, 500);
+    render(<TeamComparison />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Couldn’t load the rotation library: the server hit an error; see its log.',
+    );
+  });
+});

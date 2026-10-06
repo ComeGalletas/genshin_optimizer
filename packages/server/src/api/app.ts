@@ -231,6 +231,15 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     if (body) return services.compareBuilds(body);
   });
 
+  // ---- simulation (Phase 5, 6) ------------------------------------------------
+  app.get('/rotations', async () => services.listRotations());
+  app.get('/rotations/:id', async (req) =>
+    services.getRotation((req.params as { id: string }).id),
+  );
+  // A team and its variants, compared (TODO 6.1, 6.2; ADR-0046): the body is
+  // a TeamSimSpec, checked by the service.
+  app.post('/sim/team', async (req) => services.simulateTeam(req.body));
+
   // ---- language model (TODO 3.4, ADR-0033) ---------------------------------
   app.post(
     '/explain',
@@ -274,9 +283,6 @@ export function buildApp(opts: AppOptions): FastifyInstance {
       'not_implemented',
       'account-wide allocation comes in Phase 7',
     ),
-  );
-  app.post('/sim', async (_req, reply) =>
-    fail(reply, 501, 'not_implemented', 'gcsim simulation comes in Phase 5'),
   );
 
   // ---- imports ---------------------------------------------------------------

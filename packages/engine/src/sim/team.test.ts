@@ -89,7 +89,7 @@ describe('compareToBase', () => {
 });
 
 describe('several targets (configgen)', () => {
-  it('copies the first target, 2 apart on a line through it', () => {
+  it('copies the first target on a line through it, hitboxes apart (2 × radius + 0.5)', () => {
     const c = gcsimConfig({
       characters: [],
       active: 'furina',
@@ -98,9 +98,9 @@ describe('several targets (configgen)', () => {
     });
     expect(c.split('\n').filter((l) => l.startsWith('target'))).toEqual([
       'target lvl=100 resist=0.1 radius=2 pos=0,2.4 hp=999;',
-      'target lvl=100 resist=0.1 radius=2 pos=2,2.4 hp=999;',
-      'target lvl=100 resist=0.1 radius=2 pos=-2,2.4 hp=999;',
-      'target lvl=100 resist=0.1 radius=2 pos=4,2.4 hp=999;',
+      'target lvl=100 resist=0.1 radius=2 pos=4.5,2.4 hp=999;',
+      'target lvl=100 resist=0.1 radius=2 pos=-4.5,2.4 hp=999;',
+      'target lvl=100 resist=0.1 radius=2 pos=9,2.4 hp=999;',
     ]);
   });
 });

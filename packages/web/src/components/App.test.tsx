@@ -4,6 +4,7 @@ import { App } from './App';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { useRoster } from '../state/roster';
+import { useServer } from '../local-server/status';
 import type {
   Artifact,
   BuildResult,
@@ -52,6 +53,34 @@ describe('App shell', () => {
       'datetime',
       SNAPSHOT_DATE,
     );
+  });
+
+  // Server-only (TODO 6.2): gcsim runs on the local server.
+  it('offers Compare Teams only while the local server runs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => ({
+        ok: !url.endsWith('/llm'),
+        status: url.endsWith('/llm') ? 404 : 200,
+        json: async () =>
+          url.endsWith('/health')
+            ? { ok: true, gameVersion: GAME_VERSION }
+            : url.endsWith('/rotations')
+              ? { rotations: [] }
+              : {},
+      })),
+    );
+    render(<App />);
+    expect(
+      await screen.findByRole('heading', { name: 'Compare Teams' }),
+    ).toBeInTheDocument();
+    // The server stops: the section goes with it.
+    act(() => useServer.setState({ status: 'offline', llm: null }));
+    expect(
+      screen.queryByRole('heading', { name: 'Compare Teams' }),
+    ).not.toBeInTheDocument();
+    vi.unstubAllGlobals();
+    useServer.setState({ status: 'checking', llm: null });
   });
 
   it('shows the empty-state import choices on first load', () => {

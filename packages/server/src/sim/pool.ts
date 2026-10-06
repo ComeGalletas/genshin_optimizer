@@ -24,7 +24,8 @@ import { withOptions, type SimOptions } from './runner';
 
 /** Bump when `readResult` changes what it returns, so cached results made
  *  by an older reader are not served. */
-export const READER_VERSION = 1;
+// 2: the DPS quartiles (TODO 6.2).
+export const READER_VERSION = 2;
 
 export interface CachedRun {
   result: SimResult;

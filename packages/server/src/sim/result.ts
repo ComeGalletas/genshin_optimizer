@@ -81,7 +81,10 @@ export interface SimResult {
     sd: number;
     min?: number;
     max?: number;
+    /** Quartiles of the iterations' DPS (TODO 6.2's distribution). */
+    q1?: number;
     median?: number;
+    q3?: number;
   };
   characters: CharacterResult[];
   /** Mean reactions in a run, whole team. */
@@ -131,7 +134,9 @@ export function readResult(json: unknown): SimResult {
       sd: s.dps.sd ?? 0,
       ...(s.dps.min !== undefined && { min: s.dps.min }),
       ...(s.dps.max !== undefined && { max: s.dps.max }),
+      ...(s.dps.q1 !== undefined && { q1: s.dps.q1 }),
       ...(s.dps.q2 !== undefined && { median: s.dps.q2 }),
+      ...(s.dps.q3 !== undefined && { q3: s.dps.q3 }),
     },
     characters,
     reactions,

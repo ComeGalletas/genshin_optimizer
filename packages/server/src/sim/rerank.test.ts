@@ -1,5 +1,14 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { normalizeGOOD } from '@genshin-build-lab/engine/good/normalize';
 import { loadSampleGOOD } from '@genshin-build-lab/engine/test-fixtures/sampleAccount';
 import type { SimAccount } from '@genshin-build-lab/engine/sim/account';
@@ -23,7 +32,7 @@ const GCSIM_TABLE_SWORD_OR_ANY = (character: string) =>
 import { installedRotationDeps, type RotationDeps } from './drafts';
 import { readResult, type SimResult } from './result';
 import { ROTATIONS_DIR } from './rotations';
-import { candidate, resolveSimTeam } from './rerank';
+import { candidate, resolveSimTeam, rotationLibrary } from './rerank';
 
 const REAL: SimResult = readResult(
   JSON.parse(
@@ -95,6 +104,37 @@ describe('resolveSimTeam', () => {
     expect(issue('neuvillette')?.[0].message).toBe(
       'no rotation in the library has Neuvillette: draft one (draft_rotation), or choose another objective',
     );
+  });
+});
+
+describe('rotationLibrary', () => {
+  it('reads the library once, and again when a file changes', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'library-'));
+    try {
+      cpSync(
+        join(ROTATIONS_DIR, 'raiden-national'),
+        join(dir, 'raiden-national'),
+        {
+          recursive: true,
+        },
+      );
+      const first = rotationLibrary(dir);
+      expect(first.map((r) => r.meta.name)).toEqual(['Raiden National']);
+      expect(rotationLibrary(dir)).toBe(first);
+      const meta = join(dir, 'raiden-national', 'meta.json');
+      writeFileSync(
+        meta,
+        readFileSync(meta, 'utf8').replace(
+          '"name": "Raiden National"',
+          '"name": "Raiden National, renamed"',
+        ),
+      );
+      expect(rotationLibrary(dir).map((r) => r.meta.name)).toEqual([
+        'Raiden National, renamed',
+      ]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 
