@@ -408,11 +408,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [ ] 9.1 Game images: each character's, weapon's and artifact piece's asset name from genshin-db, in a separate dataset file the page loads after it starts; an image component (HoYoverse's URL, then Enka's by asset name, then the glyph or initials; lazy, fixed size, alt text); a "Show game art" setting, on by default; ADR
 - [ ] 9.2 Images in place: the character picker, roster rows and detail, team cards, Plan and allocation members, the build card (each piece by set, the weapon), the comparison's teams as run, the rotation library, the simulated ranking
 - [ ] 9.3 Views: Roster, Teams, Plan, Optimise (Results, Rank by Team DPS), Simulate (Rotation Library, Compare Teams), Imports (Import Center), each at its own address and loaded when opened; server-only views only while the server runs; `?b=` opens Optimise and `#c=` Simulate; ADR
-- [ ] 9.4 Load once: the full load screen only while nothing is loaded, then the account bar with Change
+- [ ] 9.4 Start empty, load once: no demo or tutorial content on first load (hero demo numbers, the sample-build walkthrough); three choices instead: demo data, the local server's account (when it runs), or a new source (GOOD file, UID, by hand); once loaded, the account bar, whose Change brings the choices back
 - [ ] 9.5 Nothing locked: every view reachable from the start, an empty state with one action where a roster is needed
 - [ ] 9.6 Long sections tightened: the rotation library as a card grid with details in a drawer; Compare Teams grouped
 - [ ] 9.7 Tests: app and end-to-end tests on the views, each empty state, the account bar, old share links, the image fallbacks and the dataset's image coverage
-- [ ] **Accept:** every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; the first load no larger than before Phase 9
+- [ ] **Accept:** the app opens empty, with no demo or tutorial content, offering demo data, the local server's account or a new source; every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; the first load no larger than before Phase 9
 
 ## Backlog
 

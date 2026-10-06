@@ -136,11 +136,11 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 
 - Game images for characters, weapons and artifacts, **referenced, never copied into the repo**: the dataset build records each one's asset name from genshin-db; the app links HoYoverse's own image URLs (from genshin-db) first, Enka's by asset name as the fallback, and its own glyph or initials last. A "Show game art" setting (on by default) turns them off, since each image load reaches that host. ADR.
 - Separate views instead of one long page: Roster, Teams, Plan, Optimise (with Results and Rank by Team DPS), Simulate (Rotation Library and Compare Teams) and Imports (Import Center), each at its own address and loaded when opened; Simulate and Imports only while the local server runs. Share links open their view (`?b=` Optimise, `#c=` Simulate). ADR.
-- Load once: the full load screen only while nothing is loaded; after that, an account bar ("1,650 artifacts · 94 characters · local server, imported … · Change").
+- Load once, and start empty: no demo or tutorial content on first load (no hero demo numbers, no "try a sample build" walkthrough). The app opens empty with three choices: the demo data, the account on the local server (when it runs), or a new source (a GOOD file, a UID, or pieces by hand). Once something is loaded, loading collapses to an account bar ("1,650 artifacts · 94 characters · local server, imported … · Change") that brings the three choices back.
 - Nothing locked: every view reachable from the start, a view that needs a roster saying so in place with one action.
 - Long sections tightened: the rotation library as a grid of compact cards with details in a drawer; Compare Teams' form and results grouped.
 
-**Accept:** every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; the first load is no larger than before Phase 9.
+**Accept:** the app opens empty, with no demo or tutorial content, and offers demo data, the local server's account or a new source; every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; the first load is no larger than before Phase 9.
 
 ---
 
