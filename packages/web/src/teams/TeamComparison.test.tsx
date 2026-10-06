@@ -208,18 +208,22 @@ describe('TeamComparison (TODO 6.2)', () => {
     // A variant that couldn't be built has no numbers.
     expect(within(rows[3]).getAllByText('—')).toHaveLength(3);
 
-    // A box plot and a share bar per simulated run, numbers in text too.
+    // The details sit behind tabs (TODO 9.7), damage share first.
+    expect(screen.getAllByTestId('share-row')[0]).toHaveTextContent(
+      'Yelan 35% (29.8k) · Raiden Shogun 30% (25.5k)',
+    );
+    await userEvent.click(screen.getByRole('tab', { name: 'DPS spread' }));
+    // A box plot per simulated run, numbers in text too.
     expect(screen.getAllByTestId('box-plot')).toHaveLength(3);
     expect(screen.getAllByTestId('dps-row')[0]).toHaveTextContent(
       'median 85.6k · middle half 82.1k–88.1k · range 70.1k–94.1k',
     );
-    expect(screen.getAllByTestId('share-row')[0]).toHaveTextContent(
-      'Yelan 35% (29.8k) · Raiden Shogun 30% (25.5k)',
-    );
     // Reactions and energy.
+    await userEvent.click(screen.getByRole('tab', { name: 'Reactions' }));
     expect(
       screen.getByRole('rowheader', { name: 'vaporize' }),
     ).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('tab', { name: 'Energy' }));
     expect(screen.getByTestId('energy')).toHaveTextContent(
       'The Catch: a burst waited for energy; Raiden Shogun waited 3.4 s for energy.',
     );
@@ -301,6 +305,7 @@ describe('the comparison’s details (TODO 8.2)', () => {
       ],
     };
     render(<ComparisonResult result={result} />);
+    await userEvent.click(screen.getByRole('tab', { name: 'Teams' }));
     const teams = screen.getByRole('table', { name: 'The base team' });
     expect(within(teams).getAllByRole('row')[1]).toHaveTextContent(
       'Raiden ShogunEngulfing Lightning R1Emblem of Severed Fate',
@@ -318,6 +323,7 @@ describe('the comparison’s details (TODO 8.2)', () => {
     expect(screen.getByText(/A draft rotation ran/)).toBeInTheDocument();
     expect(screen.getByText(/some runs from the cache/)).toBeInTheDocument();
 
+    await userEvent.click(screen.getByRole('tab', { name: 'Per character' }));
     const perBase = screen.getByRole('table', {
       name: 'Per character in base',
     });

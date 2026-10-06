@@ -16,6 +16,7 @@ import {
   type RotationSummary,
 } from '../local-server/teamsim';
 import { Callout } from '../components/ui/Callout';
+import { AppDrawer } from '../components/ui/Drawer';
 import { cn } from '../components/ui/cn';
 import { useCompareRotation } from '../teams/compareRotation';
 import { scrollToId } from '../ui/scroll';
@@ -175,100 +176,128 @@ export function RotationLibrary() {
       </Callout>
     );
   if (!rotations) return <p className="text-sm text-muted">Loading…</p>;
+  const opened = rotations.find((r) => r.id === open && !r.problems);
+  /** Open a team in Compare Teams, which sits above the library. */
+  const compare = (r: RotationSummary) => {
+    if (r.missing?.length) return;
+    setOpen(null);
+    pick(r.id);
+    scrollToId('compare-teams');
+  };
   return (
-    <ul className="space-y-3">
-      {rotations.map((r) => {
-        if (r.problems)
+    <>
+      {/* A grid of compact cards (TODO 9.7); a rotation's details open in a
+        drawer rather than lengthening the page. */}
+      <ul className="grid gap-3 sm:grid-cols-2">
+        {rotations.map((r) => {
+          if (r.problems)
+            return (
+              <li key={r.id} className="well rounded-xl p-3 text-sm">
+                <p className="text-paper">{r.id}</p>
+                <p className="text-xs text-rose">
+                  Fails the library’s checks: {r.problems.join('; ')}.
+                </p>
+              </li>
+            );
+          const missing = r.missing ?? [];
           return (
-            <li key={r.id} className="well rounded-xl p-3 text-sm">
-              <p className="text-paper">{r.id}</p>
-              <p className="text-xs text-rose">
-                Fails the library’s checks: {r.problems.join('; ')}.
+            <li key={r.id} className="well flex flex-col rounded-xl p-3">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 className="text-sm font-medium text-paper">{r.name}</h3>
+                <span
+                  className={cn(
+                    'text-xs',
+                    r.status === 'validated' ? 'text-jade' : 'text-amber',
+                  )}
+                >
+                  {r.status === 'validated'
+                    ? r.reviewed
+                      ? 'Validated, reviewed by you'
+                      : 'Validated'
+                    : 'Draft: needs your review'}
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <span className="flex -space-x-1.5" aria-hidden="true">
+                  {(r.characters ?? []).map((slot) => (
+                    <CharacterPortrait
+                      key={slot}
+                      characterKey={slot.split(' or ')[0]}
+                      size={28}
+                    />
+                  ))}
+                </span>
+                <p className="text-xs text-muted">
+                  {(r.characters ?? []).map(slotNames).join(' · ')}
+                </p>
+              </div>
+              {r.summary && (
+                <p className="mt-1 line-clamp-3 text-xs" title={r.summary}>
+                  {r.summary}
+                </p>
+              )}
+              <p className="mt-1 text-xs text-muted">
+                {SOURCE[r.source ?? ''] ?? r.source}
+                {r.sourceTitle ? `: ${r.sourceTitle}` : ''}
+                {r.dps !== undefined && (
+                  <>
+                    {' '}
+                    · {nf(r.dps)} team DPS on its reference builds
+                    {r.publishedDps !== undefined &&
+                      ` (published ${nf(r.publishedDps)}${r.offPct !== undefined ? `, ${pct(r.offPct)}` : ''})`}
+                  </>
+                )}
               </p>
+              {missing.length > 0 && (
+                <p className="mt-1 text-xs text-amber">
+                  Your account can’t field: {missing.map(slotNames).join(', ')}.
+                </p>
+              )}
+              <div className="mt-auto flex flex-wrap gap-2 pt-2">
+                <button
+                  type="button"
+                  className="btn-ghost text-xs"
+                  aria-haspopup="dialog"
+                  onClick={() => setOpen(r.id)}
+                >
+                  Details
+                </button>
+                <button
+                  type="button"
+                  className="btn-ghost text-xs"
+                  aria-disabled={missing.length > 0}
+                  title={
+                    missing.length
+                      ? 'Compare Teams uses your account as equipped'
+                      : undefined
+                  }
+                  onClick={() => compare(r)}
+                >
+                  Compare this team
+                </button>
+              </div>
             </li>
           );
-        const isOpen = open === r.id;
-        const missing = r.missing ?? [];
-        return (
-          <li key={r.id} className="well rounded-xl p-3">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-sm font-medium text-paper">{r.name}</h3>
-              <span
-                className={cn(
-                  'text-xs',
-                  r.status === 'validated' ? 'text-jade' : 'text-amber',
-                )}
-              >
-                {r.status === 'validated'
-                  ? r.reviewed
-                    ? 'Validated, reviewed by you'
-                    : 'Validated'
-                  : 'Draft: needs your review'}
-              </span>
-            </div>
-            <div className="mt-1 flex flex-wrap items-center gap-2">
-              <span className="flex -space-x-1.5" aria-hidden="true">
-                {(r.characters ?? []).map((slot) => (
-                  <CharacterPortrait
-                    key={slot}
-                    characterKey={slot.split(' or ')[0]}
-                    size={28}
-                  />
-                ))}
-              </span>
-              <p className="text-xs text-muted">
-                {(r.characters ?? []).map(slotNames).join(' · ')}
-              </p>
-            </div>
-            {r.summary && <p className="mt-1 text-xs">{r.summary}</p>}
-            <p className="mt-1 text-xs text-muted">
-              {SOURCE[r.source ?? ''] ?? r.source}
-              {r.sourceTitle ? `: ${r.sourceTitle}` : ''}
-              {r.dps !== undefined && (
-                <>
-                  {' '}
-                  · {nf(r.dps)} team DPS on its reference builds
-                  {r.publishedDps !== undefined &&
-                    ` (published ${nf(r.publishedDps)}${r.offPct !== undefined ? `, ${pct(r.offPct)}` : ''})`}
-                </>
-              )}
-            </p>
-            {missing.length > 0 && (
-              <p className="mt-1 text-xs text-amber">
-                Your account can’t field: {missing.map(slotNames).join(', ')}.
-              </p>
-            )}
-            <div className="mt-2 flex flex-wrap gap-2">
-              <button
-                type="button"
-                className="btn-ghost text-xs"
-                aria-expanded={isOpen}
-                onClick={() => setOpen(isOpen ? null : r.id)}
-              >
-                {isOpen ? 'Hide details' : 'Details'}
-              </button>
-              <button
-                type="button"
-                className="btn-ghost text-xs"
-                aria-disabled={missing.length > 0}
-                title={
-                  missing.length
-                    ? 'Compare Teams uses your account as equipped'
-                    : undefined
-                }
-                onClick={() => {
-                  if (missing.length) return;
-                  pick(r.id);
-                  scrollToId('compare-teams');
-                }}
-              >
-                Compare this team
-              </button>
-            </div>
-            {isOpen && <Detail id={r.id} />}
-          </li>
-        );
-      })}
-    </ul>
+        })}
+      </ul>
+      {opened && (
+        <AppDrawer
+          open
+          onClose={() => setOpen(null)}
+          title={opened.name ?? opened.id}
+        >
+          <Detail id={opened.id} />
+          {!opened.missing?.length && (
+            <button
+              type="button"
+              className="btn-primary mt-4"
+              onClick={() => compare(opened)}
+            >
+              Compare this team
+            </button>
+          )}
+        </AppDrawer>
+      )}
+    </>
   );
 }

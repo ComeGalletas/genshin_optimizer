@@ -237,75 +237,92 @@ export function TeamComparison() {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div>
-          <label className="field-label" htmlFor={rotationId}>
-            Base team’s rotation
-          </label>
-          <select
-            id={rotationId}
-            className="field"
-            value={rotation}
-            onChange={(e) => {
-              setRotation(e.target.value);
-            }}
-          >
-            {rotations.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-                {r.status === 'draft' ? ' (draft)' : ''}
-              </option>
-            ))}
-          </select>
-          <p className="mt-1 text-2xs text-muted">
-            {team.map(name).join(', ')}, as equipped on the server’s account.
-          </p>
-        </div>
-        <div>
-          <p className="field-label">Iterations per run</p>
-          <Segmented
-            label="Iterations per run"
-            options={ITERATIONS}
-            value={iterations}
-            onChange={setIterations}
-          />
-        </div>
-      </div>
-
-      <ol className="space-y-3" aria-label="Variants">
-        {drafts.map((d, i) => (
-          <VariantEditor
-            key={d.id}
-            n={i + 1}
-            draft={d}
-            team={team}
-            rotations={rotations.filter((r) => r.id !== rotation)}
-            placeholder={autoLabel(d, rotations)}
-            onChange={(patch) => update(d.id, patch)}
-            onRemove={() => setDrafts((ds) => ds.filter((x) => x.id !== d.id))}
-          />
-        ))}
-      </ol>
-
-      {drafts.length < MAX_VARIANTS && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted">Add a variant:</span>
-          <HelpButton id="compare-variants" />
-          {KINDS.map((k) => (
-            <button
-              key={k.kind}
-              type="button"
-              className="btn-ghost text-xs"
-              onClick={() => add(k.kind)}
+      <fieldset className="panel panel-sm space-y-3">
+        <legend className="micro-label px-1">1 · The base team</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label className="field-label" htmlFor={rotationId}>
+              Base team’s rotation
+            </label>
+            <select
+              id={rotationId}
+              className="field"
+              value={rotation}
+              onChange={(e) => {
+                setRotation(e.target.value);
+              }}
             >
-              {k.label}
-            </button>
-          ))}
+              {rotations.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                  {r.status === 'draft' ? ' (draft)' : ''}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-2xs text-muted">
+              {team.map(name).join(', ')}, as equipped on the server’s account.
+            </p>
+          </div>
+          <div>
+            <p className="field-label">Iterations per run</p>
+            <Segmented
+              label="Iterations per run"
+              options={ITERATIONS}
+              value={iterations}
+              onChange={setIterations}
+            />
+          </div>
         </div>
-      )}
-      <HelpPanel id="compare-variants" />
+      </fieldset>
+
+      <fieldset className="panel panel-sm space-y-3">
+        <legend className="micro-label px-1">
+          2 · Variants, up to {MAX_VARIANTS}
+        </legend>
+        {drafts.length === 0 && (
+          <p className="text-xs text-muted">
+            None yet: the base team runs alone. Add one to see what a change is
+            worth.
+          </p>
+        )}
+        <ol className="space-y-3" aria-label="Variants">
+          {drafts.map((d, i) => (
+            <VariantEditor
+              key={d.id}
+              n={i + 1}
+              draft={d}
+              team={team}
+              rotations={rotations.filter((r) => r.id !== rotation)}
+              placeholder={autoLabel(d, rotations)}
+              onChange={(patch) => update(d.id, patch)}
+              onRemove={() =>
+                setDrafts((ds) => ds.filter((x) => x.id !== d.id))
+              }
+            />
+          ))}
+        </ol>
+
+        {drafts.length < MAX_VARIANTS && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted">Add a variant:</span>
+            <HelpButton id="compare-variants" />
+            {KINDS.map((k) => (
+              <button
+                key={k.kind}
+                type="button"
+                className="btn-ghost text-xs"
+                onClick={() => add(k.kind)}
+              >
+                {k.label}
+              </button>
+            ))}
+          </div>
+        )}
+        <HelpPanel id="compare-variants" />
+      </fieldset>
 
       <div className="flex flex-wrap items-center gap-3">
+        <span className="micro-label">3 · Run</span>
         <button
           type="button"
           className="btn-primary"
@@ -567,11 +584,26 @@ function longer(run: TeamRun, base: TeamRun): string | null {
     : null;
 }
 
+/** The comparison's details, one at a time below the summary table. */
+const DETAIL_TABS = [
+  'Damage share',
+  'DPS spread',
+  'Per character',
+  'Teams',
+  'Reactions',
+  'Energy',
+] as const;
+type DetailTab = (typeof DETAIL_TABS)[number];
+
 export function ComparisonResult({ result }: { result: TeamSimResult }) {
   const [base] = result.runs;
   const reactions = [
     ...new Set(result.runs.flatMap((r) => Object.keys(r.reactions ?? {}))),
   ].sort();
+  const uid = useId();
+  // Reactions only when a run had some (TODO 9.7: the details behind tabs).
+  const tabs = DETAIL_TABS.filter((t) => t !== 'Reactions' || reactions.length);
+  const [tab, setTab] = useState<DetailTab>('Damage share');
   return (
     <div className="space-y-6">
       <p className="text-xs text-muted">
@@ -680,121 +712,150 @@ export function ComparisonResult({ result }: { result: TeamSimResult }) {
         </table>
       </div>
 
-      <section aria-labelledby="team-h" className="space-y-2">
-        <h3 id="team-h" className="text-sm text-paper">
-          The teams as run
-        </h3>
-        <TeamAsRun runs={result.runs} />
-      </section>
+      <Segmented
+        label="Comparison details"
+        options={tabs}
+        value={tab}
+        onChange={setTab}
+        itemId={(t) => `${uid}-tab-${t.replace(/\s+/g, '-')}`}
+        controls={`${uid}-panel`}
+      />
+      <div
+        role="tabpanel"
+        id={`${uid}-panel`}
+        aria-labelledby={`${uid}-tab-${tab.replace(/\s+/g, '-')}`}
+        tabIndex={0}
+        className="focus-ring space-y-6 rounded-lg"
+      >
+        {tab === 'Teams' && (
+          <section aria-labelledby="team-h" className="space-y-2">
+            <h3 id="team-h" className="text-sm text-paper">
+              The teams as run
+            </h3>
+            <TeamAsRun runs={result.runs} />
+          </section>
+        )}
 
-      <section aria-labelledby="dist-h" className="space-y-2">
-        <h3 id="dist-h" className="text-sm text-paper">
-          DPS across fights
-        </h3>
-        <DpsDistribution runs={result.runs} />
-      </section>
+        {tab === 'DPS spread' && (
+          <section aria-labelledby="dist-h" className="space-y-2">
+            <h3 id="dist-h" className="text-sm text-paper">
+              DPS across fights
+            </h3>
+            <DpsDistribution runs={result.runs} />
+          </section>
+        )}
 
-      <section aria-labelledby="share-h" className="space-y-2">
-        <h3 id="share-h" className="text-sm text-paper">
-          Damage share
-        </h3>
-        <DamageShare runs={result.runs} />
-      </section>
+        {tab === 'Damage share' && (
+          <section aria-labelledby="share-h" className="space-y-2">
+            <h3 id="share-h" className="text-sm text-paper">
+              Damage share
+            </h3>
+            <DamageShare runs={result.runs} />
+          </section>
+        )}
 
-      <section aria-labelledby="chars-h" className="space-y-2">
-        <h3 id="chars-h" className="text-sm text-paper">
-          Per character
-        </h3>
-        <PerCharacter runs={result.runs} />
-      </section>
+        {tab === 'Per character' && (
+          <section aria-labelledby="chars-h" className="space-y-2">
+            <h3 id="chars-h" className="text-sm text-paper">
+              Per character
+            </h3>
+            <PerCharacter runs={result.runs} />
+          </section>
+        )}
 
-      {reactions.length > 0 && (
-        <section aria-labelledby="react-h" className="space-y-2">
-          <h3 id="react-h" className="text-sm text-paper">
-            Reactions per fight
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead className="text-left text-muted">
-                <tr>
-                  <th scope="col" className="py-1 pr-3 font-normal">
-                    Reaction
-                  </th>
-                  {result.runs
-                    .filter((r) => r.reactions)
-                    .map((r) => (
-                      <th
-                        key={r.label}
-                        scope="col"
-                        className="py-1 pr-3 text-right font-normal"
-                      >
-                        {r.label}
-                      </th>
-                    ))}
-                </tr>
-              </thead>
-              <tbody>
-                {reactions.map((k) => (
-                  <tr key={k} className="border-t border-white/5">
-                    <th scope="row" className="py-1 pr-3 text-left font-normal">
-                      {k}
+        {tab === 'Reactions' && reactions.length > 0 && (
+          <section aria-labelledby="react-h" className="space-y-2">
+            <h3 id="react-h" className="text-sm text-paper">
+              Reactions per fight
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="text-left text-muted">
+                  <tr>
+                    <th scope="col" className="py-1 pr-3 font-normal">
+                      Reaction
                     </th>
                     {result.runs
                       .filter((r) => r.reactions)
                       .map((r) => (
-                        <td
+                        <th
                           key={r.label}
-                          className="py-1 pr-3 text-right font-mono tabular-nums"
+                          scope="col"
+                          className="py-1 pr-3 text-right font-normal"
                         >
-                          {Math.round(r.reactions![k] ?? 0)}
-                        </td>
+                          {r.label}
+                        </th>
                       ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
+                </thead>
+                <tbody>
+                  {reactions.map((k) => (
+                    <tr key={k} className="border-t border-white/5">
+                      <th
+                        scope="row"
+                        className="py-1 pr-3 text-left font-normal"
+                      >
+                        {k}
+                      </th>
+                      {result.runs
+                        .filter((r) => r.reactions)
+                        .map((r) => (
+                          <td
+                            key={r.label}
+                            className="py-1 pr-3 text-right font-mono tabular-nums"
+                          >
+                            {Math.round(r.reactions![k] ?? 0)}
+                          </td>
+                        ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
-      <section aria-labelledby="energy-h" className="space-y-2">
-        <h3 id="energy-h" className="text-sm text-paper">
-          Energy and warnings
-        </h3>
-        <ul className="space-y-1 text-xs" data-testid="energy">
-          {result.runs
-            .filter((r) => r.dps)
-            .map((r) => {
-              const waiting = (r.characters ?? []).filter(
-                (c) => c.energyWaitSec >= 0.5,
-              );
-              const ok = !r.warnings?.length && !waiting.length;
-              return (
-                <li key={r.label}>
-                  <span className="text-paper">{r.label}:</span>{' '}
-                  {ok ? (
-                    <span className="text-muted">no warnings.</span>
-                  ) : (
-                    <span className="text-amber">
-                      {[
-                        ...(r.warnings ?? []).map(warning),
-                        ...waiting.map(
-                          (c) =>
-                            `${name(c.character)} waited ${c.energyWaitSec.toFixed(1)} s for energy`,
-                        ),
-                      ].join('; ')}
-                      .
-                    </span>
-                  )}
-                </li>
-              );
-            })}
-        </ul>
-        <p className="text-2xs text-muted">
-          With burst waits filled, a team short of energy attacks while it waits
-          and shows up as a longer fight instead.
-        </p>
-      </section>
+        {tab === 'Energy' && (
+          <section aria-labelledby="energy-h" className="space-y-2">
+            <h3 id="energy-h" className="text-sm text-paper">
+              Energy and warnings
+            </h3>
+            <ul className="space-y-1 text-xs" data-testid="energy">
+              {result.runs
+                .filter((r) => r.dps)
+                .map((r) => {
+                  const waiting = (r.characters ?? []).filter(
+                    (c) => c.energyWaitSec >= 0.5,
+                  );
+                  const ok = !r.warnings?.length && !waiting.length;
+                  return (
+                    <li key={r.label}>
+                      <span className="text-paper">{r.label}:</span>{' '}
+                      {ok ? (
+                        <span className="text-muted">no warnings.</span>
+                      ) : (
+                        <span className="text-amber">
+                          {[
+                            ...(r.warnings ?? []).map(warning),
+                            ...waiting.map(
+                              (c) =>
+                                `${name(c.character)} waited ${c.energyWaitSec.toFixed(1)} s for energy`,
+                            ),
+                          ].join('; ')}
+                          .
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
+            </ul>
+            <p className="text-2xs text-muted">
+              With burst waits filled, a team short of energy attacks while it
+              waits and shows up as a longer fight instead.
+            </p>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

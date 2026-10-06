@@ -143,22 +143,32 @@ describe('RotationLibrary (TODO 8.2)', () => {
     await userEvent.click(
       within(nahida).getByRole('button', { name: 'Details' }),
     );
-    const rows = await within(nahida).findAllByRole('row');
+    // The details open in a drawer (TODO 9.7), named for the rotation.
+    const drawer = await screen.findByRole('dialog', {
+      name: 'Nahida Aggravate (Raiden)',
+    });
+    const rows = await within(drawer).findAllByRole('row');
     expect(rows[1]).toHaveTextContent(
       'raiden (starts)Raiden ShogunOn-field DPS',
     );
-    expect(nahida).toHaveTextContent(
+    expect(drawer).toHaveTextContent(
       'enemy level 100, 10% resistance; about 18 s a rotation; burst waits filled with attacks.',
     );
-    expect(nahida).toHaveTextContent(
+    expect(drawer).toHaveTextContent(
       'Validated with gcsim v2.48.8 on 2026-10-05: 47,049 ± 1,007 team DPS over 72.6 s (1,000 iterations).',
     );
-    expect(nahida).toHaveTextContent('Reviewed by the owner on 2026-10-05.');
-    expect(within(nahida).getByRole('link', { name: 'link' })).toHaveAttribute(
+    expect(drawer).toHaveTextContent('Reviewed by the owner on 2026-10-05.');
+    expect(within(drawer).getByRole('link', { name: 'link' })).toHaveAttribute(
       'href',
       'https://db.kqm.gg/db/kntc7TFbnPKp',
     );
-    expect(nahida).toHaveTextContent('{{nahida}} skill, burst;');
+    expect(drawer).toHaveTextContent('{{nahida}} skill, burst;');
+    // From the drawer, straight to Compare Teams.
+    await userEvent.click(
+      within(drawer).getByRole('button', { name: 'Compare this team' }),
+    );
+    expect(useCompareRotation.getState().id).toBe('nahida-aggravate');
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('sends a team it can field to Compare Teams, and not one it can’t', async () => {

@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 9 (UI refresh). Phases 0, 1 and 3 to 8 are accepted (Phase 8 on 2026-10-06); Phase 2 still waits on its acceptance check (the owner's second Irminsul export).
-**Next item:** 9.7, tightening long sections; Phase 2's acceptance check whenever the owner's second export is in
+**Next item:** 9.8, the tests, then Phase 9's acceptance; Phase 2's acceptance check whenever the owner's second export is in
 
 ## Housekeeping (done 2026-09-24)
 
@@ -423,7 +423,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 9.6 In-app help: a short description below each section's title; a "?" button beside it (and beside subsections where useful) opening a larger panel with the steps to follow (loading from each source, reading a result, what each control does)
   - [ADR-0054](adr/0054-in-app-help-on-demand.md). `components/help/`: 19 topics in `topics.ts` (title, what it is for, numbered steps, tips; worded against the UI's own labels), `HelpButton` (a "?" naming its topic, saying whether it is open and which panel it controls) and `HelpPanel` (a named region with a Close), their open state shared (`helpState.ts`) so a panel can sit where there is room. `Section` takes a `help` topic: the "?" beside the title, the panel under the description. On every view's sections (Load Data, Roster, Teams, Plan, Optimise, Results, Rank by Team DPS, Compare Teams, Rotation Library, Import Center) and on subsections: the Start view's three cards (their steps full width below the cards: how to load from the server, a GOOD file, a UID or by hand), Optimise's conditions, Compare Teams' variants, the joint allocation, and the import center's sources, snapshots and reconciliation. Section descriptions rewritten to say what each does; Results has one now. The words ship in the first load: 163.8 KB gzipped (+4.7 KB), still under the 169.7 KB before Phase 9.
   - Tests: 4 web (open and close, every topic's content, a section's "?" and panel placement, a subsection heading), and the Start view's four "?"s in the App test.
-- [ ] 9.7 Long sections tightened: the rotation library as a card grid with details in a drawer; Compare Teams grouped
+- [x] 9.7 Long sections tightened: the rotation library as a card grid with details in a drawer; Compare Teams grouped
+  - **Rotation Library**: a two-column grid of compact cards (team portraits, status, the summary to three lines, source and DPS, the slots the account can't field), Details opening a drawer (slots and roles, fight, validation, review, source, the action list, and Compare this team), so the library no longer lengthens the page. **Compare Teams**: the form in three groups (1 · the base team, 2 · variants with a note while there are none, 3 · run); the result's summary table first, the rest behind tabs (Damage share, DPS spread, Per character, Teams, Reactions when there are any, Energy). Checked in the browser on the owner's library.
+  - Tests: the library's details read from the drawer and its Compare this team; the comparison tests open the tab they read.
 - [ ] 9.8 Tests: app and end-to-end tests on the views, each empty state, the account bar, old share links, the image fallbacks and the dataset's image coverage
 - [ ] **Accept:** the app opens empty, with no demo or tutorial content, offering demo data, the local server's account or a new source; every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load no larger than before Phase 9
 
