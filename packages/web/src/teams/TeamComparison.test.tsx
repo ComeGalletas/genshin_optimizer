@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TeamComparison } from './TeamComparison';
+import { ComparisonResult, TeamComparison } from './TeamComparison';
 import { useCompareRotation } from './compareRotation';
 import type { TeamSimResult } from '../local-server/teamsim';
 
@@ -247,6 +247,81 @@ describe('TeamComparison (TODO 6.2)', () => {
     render(<TeamComparison />);
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Couldn’t load the rotation library: the server hit an error; see its log.',
+    );
+  });
+});
+
+describe('the comparison’s details (TODO 8.2)', () => {
+  const member = (
+    slot: string,
+    character: string,
+    weapon: string,
+    refinement: number,
+    sets: string[],
+  ) => ({ slot, character, weapon, refinement, sets });
+  const TEAM = [
+    member('raiden', 'raiden_shogun', 'engulfing_lightning', 1, [
+      'EmblemOfSeveredFate',
+    ]),
+    member('bennett', 'bennett', 'aquila_favonia', 1, ['NoblesseOblige']),
+  ];
+
+  it('shows each team as run, a variant by what it changed, and each character per run', async () => {
+    const result: TeamSimResult = {
+      ...RESULT,
+      runs: [
+        run('base', 85_128, { team: TEAM, enemy: { level: 100, res: 10 } }),
+        run('The Catch', 84_000, {
+          team: [
+            member('raiden', 'raiden_shogun', 'the_catch', 5, [
+              'EmblemOfSeveredFate',
+            ]),
+            TEAM[1],
+          ],
+          cached: true,
+          vsBase: {
+            pct: -1.3,
+            ci95Pct: 0.3,
+            withinNoise: false,
+            text: '−1.3% ± 0.3%',
+          },
+        }),
+        run('Two targets', 160_000, {
+          team: TEAM,
+          enemy: { level: 100, res: 10, count: 2 },
+          rotation: { id: 'mine', name: 'Mine', status: 'draft' },
+          vsBase: {
+            pct: 88,
+            ci95Pct: 0.3,
+            withinNoise: false,
+            text: '+88.0% ± 0.3%',
+          },
+        }),
+      ],
+    };
+    render(<ComparisonResult result={result} />);
+    const teams = screen.getByRole('table', { name: 'The base team' });
+    expect(within(teams).getAllByRole('row')[1]).toHaveTextContent(
+      'Raiden ShogunEngulfing Lightning R1Emblem of Severed Fate',
+    );
+    const changes = screen.getByTestId('variant-teams');
+    expect(changes).toHaveTextContent(
+      'The Catch: Raiden Shogun: "The Catch" R5 (base Engulfing Lightning R1).',
+    );
+    expect(changes).toHaveTextContent(
+      'Two targets: the same team (another rotation or enemy).',
+    );
+    const rows = screen.getAllByTestId('run-row');
+    expect(rows[2]).toHaveTextContent('enemy: 2 targets');
+    expect(rows[2]).toHaveTextContent('draft rotation');
+    expect(screen.getByText(/A draft rotation ran/)).toBeInTheDocument();
+    expect(screen.getByText(/some runs from the cache/)).toBeInTheDocument();
+
+    const perBase = screen.getByRole('table', {
+      name: 'Per character in base',
+    });
+    expect(within(perBase).getAllByRole('row')[1]).toHaveTextContent(
+      'Raiden Shogun25.5k30.0%47.0 s—',
     );
   });
 });

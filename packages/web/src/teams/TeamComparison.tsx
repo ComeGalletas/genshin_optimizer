@@ -22,6 +22,7 @@ import { cn } from '../components/ui/cn';
 import { DamageShare, DpsDistribution } from './comparisonCharts';
 import { kilo } from './kilo';
 import { useCompareRotation } from './compareRotation';
+import { PerCharacter, TeamAsRun } from './runDetails';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -526,6 +527,21 @@ function VariantEditor({
 
 /** Fight length against the base's, when it differs by a second or more:
  *  a longer fight is a team waiting on energy (ADR-0041). */
+/** A variant's enemy, when it differs from the base's. */
+function enemyText(run: TeamRun, base: TeamRun): string | null {
+  const e = run.enemy;
+  const b = base.enemy ?? {};
+  if (!e) return null;
+  const parts = [
+    e.level !== undefined && e.level !== b.level && `level ${e.level}`,
+    e.res !== undefined && e.res !== b.res && `${e.res}% resistance`,
+    e.count !== undefined &&
+      e.count !== (b.count ?? 1) &&
+      `${e.count} target${e.count === 1 ? '' : 's'}`,
+  ].filter(Boolean);
+  return parts.length ? `enemy: ${parts.join(', ')}` : null;
+}
+
 function longer(run: TeamRun, base: TeamRun): string | null {
   if (run.fightSec === undefined || base.fightSec === undefined) return null;
   const d = run.fightSec - base.fightSec;
@@ -543,9 +559,17 @@ export function ComparisonResult({ result }: { result: TeamSimResult }) {
     <div className="space-y-6">
       <p className="text-xs text-muted">
         {result.iterations} iterations per run · burst waits {result.burstWaits}{' '}
-        · {(result.ms / 1000).toFixed(1)} s. Differences come with their 95%
-        interval; one inside it is no difference.
+        · {(result.ms / 1000).toFixed(1)} s
+        {result.runs.some((r) => r.cached) ? ' (some runs from the cache)' : ''}
+        . Differences come with their 95% interval; one inside it is no
+        difference.
       </p>
+      {result.runs.some((r) => r.rotation?.status === 'draft') && (
+        <Callout tone="warning">
+          A draft rotation ran: its numbers count once you review it (npm run
+          rotations -- review).
+        </Callout>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -580,6 +604,16 @@ export function ComparisonResult({ result }: { result: TeamSimResult }) {
                   {r.rotation && r.rotation.id !== base.rotation?.id && (
                     <span className="block text-2xs text-muted">
                       {r.rotation.name}
+                    </span>
+                  )}
+                  {r.rotation?.status === 'draft' && (
+                    <span className="block text-2xs text-amber">
+                      draft rotation
+                    </span>
+                  )}
+                  {r !== base && enemyText(r, base) && (
+                    <span className="block text-2xs text-muted">
+                      {enemyText(r, base)}
                     </span>
                   )}
                   {(r.problems ?? r.notSimulated)?.map((p) => (
@@ -629,6 +663,13 @@ export function ComparisonResult({ result }: { result: TeamSimResult }) {
         </table>
       </div>
 
+      <section aria-labelledby="team-h" className="space-y-2">
+        <h3 id="team-h" className="text-sm text-paper">
+          The teams as run
+        </h3>
+        <TeamAsRun runs={result.runs} />
+      </section>
+
       <section aria-labelledby="dist-h" className="space-y-2">
         <h3 id="dist-h" className="text-sm text-paper">
           DPS across fights
@@ -641,6 +682,13 @@ export function ComparisonResult({ result }: { result: TeamSimResult }) {
           Damage share
         </h3>
         <DamageShare runs={result.runs} />
+      </section>
+
+      <section aria-labelledby="chars-h" className="space-y-2">
+        <h3 id="chars-h" className="text-sm text-paper">
+          Per character
+        </h3>
+        <PerCharacter runs={result.runs} />
       </section>
 
       {reactions.length > 0 && (
