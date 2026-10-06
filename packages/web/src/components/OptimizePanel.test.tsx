@@ -10,11 +10,12 @@ import { useRoster } from '../state/roster';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { currentRequest } from '../state/optimizeRequest';
+import { resetOptimizeRequest } from '../test-utils/stores';
 
 describe('OptimizePanel', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
   });
 
   it('renders no progress line while idle', () => {
@@ -159,7 +160,7 @@ function addFlower() {
 describe('OptimizePanel meta prefill', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
   });
 
   it('shows "Use meta build" for a character with a meta recipe', () => {
@@ -260,7 +261,7 @@ describe('OptimizePanel meta prefill', () => {
 describe('OptimizePanel teammates', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
   });
 
   it('shows "Works well with" recs for a covered character', () => {
@@ -284,7 +285,7 @@ describe('OptimizePanel teammates', () => {
 describe('OptimizePanel roster prefill (ADR-0015)', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     useRoster.getState().clear();
   });
 
@@ -408,7 +409,7 @@ describe('OptimizePanel roster prefill (ADR-0015)', () => {
 describe('avg_damage objective', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     addFlower();
   });
 
@@ -444,7 +445,7 @@ describe('avg_damage objective', () => {
 describe('OptimizePanel weapon typing', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     useRoster.getState().clear();
   });
 
@@ -529,7 +530,7 @@ describe('OptimizePanel weapon typing', () => {
 describe('OptimizePanel objective coverage', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
   });
 
   // "(Recommended)" is drawn on the option whose value matches the recipe's

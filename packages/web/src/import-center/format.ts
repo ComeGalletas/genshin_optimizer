@@ -12,9 +12,6 @@ export const SOURCE_LABEL: Record<SourceKind, string> = {
 export const when = (iso: string) =>
   `${iso.slice(0, 16).replace('T', ' ')} UTC`;
 
-export const plural = (n: number, one: string, many = `${one}s`) =>
-  `${n.toLocaleString('en-US')} ${n === 1 ? one : many}`;
-
 export const snapshotName = (s: SnapshotInfo | undefined, id: number) =>
   s
     ? `#${id} ${SOURCE_LABEL[s.kind]}${s.fileName ? ` (${s.fileName})` : ''}`

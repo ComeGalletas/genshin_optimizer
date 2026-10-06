@@ -86,23 +86,36 @@ export function HelpPanel({ id }: { id: HelpId }) {
   );
 }
 
-/** A subsection's title with its "?", and the panel below it. */
+/** A subsection's title with its "?", and the panel below it: the one way
+ *  a subsection offers help (the Import Center's three, the Plan's joint
+ *  allocation). */
 export function HelpHeading({
   id,
   children,
   as: Tag = 'h3',
   className,
+  headingId,
+  aside,
+  rowClassName,
 }: {
   id: HelpId;
   children: React.ReactNode;
   as?: 'h3' | 'h4' | 'p';
   className?: string;
+  /** For a section's `aria-labelledby`. */
+  headingId?: string;
+  /** A control beside the title (the Import Center's merge picker). */
+  aside?: React.ReactNode;
+  rowClassName?: string;
 }) {
   return (
     <div>
-      <div className="flex items-center gap-2">
-        <Tag className={className}>{children}</Tag>
+      <div className={cn('flex items-center gap-2', rowClassName)}>
+        <Tag id={headingId} className={className}>
+          {children}
+        </Tag>
         <HelpButton id={id} />
+        {aside}
       </div>
       <HelpPanel id={id} />
     </div>

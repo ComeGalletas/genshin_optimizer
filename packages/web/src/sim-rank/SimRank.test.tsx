@@ -6,6 +6,7 @@ import { useOptimizeRequest } from '../state/optimizeRequest';
 import type { Artifact, Slot } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import { decodeBuild } from '@genshin-build-lab/engine/share/url';
+import { resetOptimizeRequest } from '../test-utils/stores';
 
 const ROTATIONS = {
   rotations: [
@@ -100,7 +101,7 @@ function serve(run: unknown = RUN) {
 }
 
 beforeEach(() => {
-  useOptimizeRequest.getState().reset();
+  resetOptimizeRequest();
   useOptimizeRequest.setState({
     characterKey: 'mualani',
     weaponKey: 'surfs_up',

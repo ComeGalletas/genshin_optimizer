@@ -25,14 +25,13 @@ export default {
         sans: ['"Spline Sans"', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
-      // One step below text-xs, for the uppercase micro-labels; `label` and
-      // `eyebrow` are the only two tracking values the display idiom uses.
+      // One step below text-xs, for the uppercase micro-labels; `label` is
+      // the only tracking value the display idiom uses.
       fontSize: {
         '2xs': ['0.7rem', { lineHeight: '1rem' }],
       },
       letterSpacing: {
         label: '0.18em',
-        eyebrow: '0.4em',
       },
       colors: {
         // Instrument chassis — graphite surfaces, constant across games.
@@ -41,7 +40,6 @@ export default {
           900: '#0f1116',
           800: '#14161d',
           700: '#1b1e27',
-          600: '#242833',
           500: '#2a2f3d',
           400: '#3a4152',
         },
@@ -87,10 +85,6 @@ export default {
         // Shallower than `panel`: a listbox floats a few px above the page,
         // not the whole instrument chassis.
         popover: '0 16px 40px -16px rgba(0,0,0,0.85)',
-      },
-      backgroundImage: {
-        'hairline-accent':
-          'linear-gradient(135deg, rgb(var(--accent) / 0.5), rgb(var(--accent) / 0.04) 40%, transparent 70%)',
       },
       keyframes: {
         'fade-up': {

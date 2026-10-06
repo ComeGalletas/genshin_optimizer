@@ -34,7 +34,6 @@ export interface OptimizeRequestState {
   /** Lower (or set) any minStats floor — used by the "Relax X to Y" recovery action. */
   relaxMinStat: (key: StatKey, value: number) => void;
   applyPreset: (p: PresetInput) => void;
-  reset: () => void;
 }
 
 /**
@@ -188,7 +187,6 @@ export const useOptimizeRequest = create<OptimizeRequestState>((set, get) => ({
       constraints: p.constraints,
     });
   },
-  reset: () => set(defaults()),
 }));
 
 /** Project the store state into an OptimizeRequest. The refinement is the

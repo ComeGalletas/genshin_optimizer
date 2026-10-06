@@ -20,8 +20,9 @@ import {
 import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
 import { ChangesView, MergeReportView } from './pieces';
-import { plural, snapshotName, SOURCE_LABEL, when } from './format';
-import { HelpButton, HelpPanel } from '../components/help/Help';
+import { snapshotName, SOURCE_LABEL, when } from './format';
+import { countOf } from '../labels';
+import { HelpHeading } from '../components/help/Help';
 
 /** The merge's precedence: a better source's values win (ADR-0027). */
 const SOURCES: SourceKind[] = ['irminsul', 'ocr', 'good', 'enka'];
@@ -29,15 +30,20 @@ const SOURCES: SourceKind[] = ['irminsul', 'ocr', 'good', 'enka'];
 const eventText = (e: InboxEvent) => {
   switch (e.status) {
     case 'imported':
-      return `imported as snapshot #${e.snapshot.id}: ${plural(e.snapshot.artifacts, 'piece')}${e.issues ? `, ${plural(e.issues, 'line')} it couldn’t read` : ''}`;
+      return `imported as snapshot #${e.snapshot.id}: ${countOf(e.snapshot.artifacts, 'piece')}${e.issues ? `, ${countOf(e.issues, 'line')} it couldn’t read` : ''}`;
     case 'already-imported':
       return `already imported (snapshot #${e.snapshot.id})`;
     case 'faulty-scan':
-      return `a faulty scan (snapshot #${e.snapshot.id}, kept out of the account): ${plural(e.snapshot.fault?.repeatedPieces ?? 0, 'piece')} repeated`;
+      return `a faulty scan (snapshot #${e.snapshot.id}, kept out of the account): ${countOf(e.snapshot.fault?.repeatedPieces ?? 0, 'piece')} repeated`;
     case 'refused':
       return `refused: ${e.reason}`;
   }
 };
+
+// Every error says what failed, as the other views' do: the server's own
+// message is lowercase and names no action.
+const loadFailed = (e: unknown) =>
+  `Couldn’t load the imports: ${(e as Error).message}`;
 
 export function ImportCenter() {
   const [data, setData] = useState<Imports | null>(null);
@@ -53,14 +59,14 @@ export function ImportCenter() {
       setData(await fetchImports());
       setError(null);
     } catch (e) {
-      setError((e as Error).message);
+      setError(loadFailed(e));
     }
   }, []);
   useEffect(() => {
     let live = true;
     fetchImports()
       .then((d) => live && setData(d))
-      .catch((e: Error) => live && setError(e.message));
+      .catch((e: Error) => live && setError(loadFailed(e)));
     return () => {
       live = false;
     };
@@ -83,7 +89,9 @@ export function ImportCenter() {
       await refresh();
     } catch (e) {
       setRun(null);
-      setError((e as Error).message);
+      setError(
+        `Couldn’t import ${f ? f.name : 'the inbox'}: ${(e as Error).message}`,
+      );
     } finally {
       setBusy(null);
       if (file.current) file.current.value = '';
@@ -146,7 +154,7 @@ export function ImportCenter() {
           {run.run.merge && (
             <p className="mt-1">
               New account (merge #{run.run.merge.id}):{' '}
-              {plural(run.run.merge.artifacts, 'artifact')}. Press Load Account
+              {countOf(run.run.merge.artifacts, 'artifact')}. Press Load Account
               under{' '}
               <a href={hrefOf('start')} className="underline">
                 Load Data
@@ -160,13 +168,13 @@ export function ImportCenter() {
       {data && (
         <>
           <section aria-labelledby="ic-sources">
-            <div className="flex items-center gap-2">
-              <h3 id="ic-sources" className="field-label mb-0">
-                Sources, best first
-              </h3>
-              <HelpButton id="import-sources" />
-            </div>
-            <HelpPanel id="import-sources" />
+            <HelpHeading
+              id="import-sources"
+              headingId="ic-sources"
+              className="field-label mb-0"
+            >
+              Sources, best first
+            </HelpHeading>
             <ul className="grid gap-2 sm:grid-cols-2">
               {SOURCES.map((kind) => {
                 const all = data.snapshots.filter((s) => s.kind === kind);
@@ -180,9 +188,9 @@ export function ImportCenter() {
                     <p className="text-xs text-muted">
                       {all.length === 0
                         ? 'No snapshots yet.'
-                        : `${plural(all.length, 'snapshot')}${faulty ? `, ${faulty} faulty` : ''}. ${
+                        : `${countOf(all.length, 'snapshot')}${faulty ? `, ${faulty} faulty` : ''}. ${
                             used
-                              ? `In the account: #${used.id}, ${plural(used.artifacts, 'piece')}, taken ${when(used.takenAt)}.`
+                              ? `In the account: #${used.id}, ${countOf(used.artifacts, 'piece')}, taken ${when(used.takenAt)}.`
                               : 'None in the current account.'
                           }`}
                     </p>
@@ -193,13 +201,13 @@ export function ImportCenter() {
           </section>
 
           <section aria-labelledby="ic-snapshots">
-            <div className="flex items-center gap-2">
-              <h3 id="ic-snapshots" className="field-label mb-0">
-                Snapshots, newest first
-              </h3>
-              <HelpButton id="import-snapshots" />
-            </div>
-            <HelpPanel id="import-snapshots" />
+            <HelpHeading
+              id="import-snapshots"
+              headingId="ic-snapshots"
+              className="field-label mb-0"
+            >
+              Snapshots, newest first
+            </HelpHeading>
             {data.snapshots.length === 0 ? (
               <p className="text-sm text-muted">
                 Nothing imported yet: upload a GOOD file or drop one in the
@@ -217,16 +225,16 @@ export function ImportCenter() {
                           {snapshotName(s, s.id)}
                         </span>
                         <span className="text-xs text-muted">
-                          {plural(s.artifacts, 'piece')} · taken{' '}
+                          {countOf(s.artifacts, 'piece')} · taken{' '}
                           {when(s.takenAt)}
                           {s.issues
-                            ? ` · ${plural(s.issues, 'line')} unread`
+                            ? ` · ${countOf(s.issues, 'line')} unread`
                             : ''}
                         </span>
                         {s.fault ? (
                           <span className="text-xs text-rose">
                             Faulty scan:{' '}
-                            {plural(s.fault.repeatedPieces, 'piece')} repeated,
+                            {countOf(s.fault.repeatedPieces, 'piece')} repeated,
                             kept out
                           </span>
                         ) : inAccount ? (
@@ -259,30 +267,35 @@ export function ImportCenter() {
 
           {shownMerge !== undefined && (
             <section aria-labelledby="ic-merge">
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <h3 id="ic-merge" className="field-label mb-0">
-                  Reconciliation
-                </h3>
-                <HelpButton id="import-reconciliation" />
-                <label className="text-xs text-muted">
-                  <span className="sr-only">Merge</span>
-                  <select
-                    className="field py-1 text-xs"
-                    value={shownMerge}
-                    onChange={(e) => setMergeId(Number(e.target.value))}
-                  >
-                    {[...data.merges].reverse().map((m) => (
-                      <option key={m.id} value={m.id}>
-                        Merge #{m.id}
-                        {m.id === current?.id ? ' (current account)' : ''}:{' '}
-                        {m.snapshotIds.map((id) => `#${id}`).join(', ')},{' '}
-                        {plural(m.artifacts, 'artifact')}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <HelpPanel id="import-reconciliation" />
+              <HelpHeading
+                id="import-reconciliation"
+                headingId="ic-merge"
+                className="field-label mb-0"
+                rowClassName="mb-2 flex-wrap"
+                aside={
+                  <label className="text-xs text-muted">
+                    <span className="sr-only">Merge</span>
+                    <select
+                      className="field py-1 text-xs"
+                      value={shownMerge}
+                      onChange={(e) => setMergeId(Number(e.target.value))}
+                    >
+                      {[...data.merges].reverse().map((m) => (
+                        <option key={m.id} value={m.id}>
+                          Merge #{m.id}
+                          {m.id === current?.id
+                            ? ' (current account)'
+                            : ''}:{' '}
+                          {m.snapshotIds.map((id) => `#${id}`).join(', ')},{' '}
+                          {countOf(m.artifacts, 'artifact')}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                }
+              >
+                Reconciliation
+              </HelpHeading>
               <MergeReportView
                 key={shownMerge}
                 mergeId={shownMerge}

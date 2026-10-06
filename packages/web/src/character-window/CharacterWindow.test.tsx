@@ -10,6 +10,7 @@ import { useInventory } from '../state/inventory';
 import { useSettings } from '../state/settings';
 import { setImageNamesForTests } from '../components/imageNames';
 import { TeamsView } from '../teams/TeamsView';
+import { addArtifacts } from '../test-utils/stores';
 
 /** The window and its details file load lazily: a cold first import can
  *  outlast findBy's default second. */
@@ -43,7 +44,7 @@ function furina(constellation = 3) {
       weaponRefinement: 1,
     },
   });
-  useInventory.getState().addMany([flower]);
+  addArtifacts([flower]);
 }
 
 describe('character window', () => {
@@ -213,7 +214,7 @@ describe('character window', () => {
   it('shows each piece’s main stat with its element, its rolls, and the set effects', async () => {
     const user = userEvent.setup();
     furina();
-    useInventory.getState().addMany([
+    addArtifacts([
       {
         id: 'g1',
         setKey: 'GoldenTroupe',
@@ -336,11 +337,9 @@ describe('character window', () => {
   it('shows every piece in a slot, and flags two', async () => {
     const user = userEvent.setup();
     furina();
-    useInventory
-      .getState()
-      .addMany([
-        { ...flower, id: 'f2', subStats: [{ key: 'atk', value: 19 }] },
-      ]);
+    addArtifacts([
+      { ...flower, id: 'f2', subStats: [{ key: 'atk', value: 19 }] },
+    ]);
     render(<CharacterWindow />);
     openCharacter('furina');
     await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
@@ -360,7 +359,7 @@ describe('character window', () => {
   it('rounds the rolls so they add up to the value shown', async () => {
     const user = userEvent.setup();
     furina();
-    useInventory.getState().addMany([
+    addArtifacts([
       {
         id: 'p1',
         setKey: 'GoldenTroupe',

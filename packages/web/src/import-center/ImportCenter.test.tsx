@@ -308,8 +308,9 @@ describe('ImportCenter (TODO 8.1)', () => {
 
     serve({ 'GET /imports': undefined });
     render(<ImportCenter />);
+    // Said with what failed, like the other views' errors.
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'no route GET /imports.',
+      'Couldn’t load the imports: no route GET /imports.',
     );
   });
 });

@@ -21,6 +21,7 @@ import {
   SNAPSHOT_DATE,
 } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
+import { addArtifacts, resetOptimizeRequest } from '../test-utils/stores';
 
 const { optimizeRun } = vi.hoisted(() => ({ optimizeRun: vi.fn() }));
 // Only the dispatch is faked: OptimizeCancelledError / isOptimizeCancelled stay
@@ -43,7 +44,7 @@ function handleFor(result: Promise<OptimizeResult>) {
 describe('App shell', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     window.history.pushState({}, '', '/');
   });
 
@@ -175,8 +176,8 @@ describe('App — overlapping optimise runs', () => {
   beforeEach(() => {
     optimizeRun.mockReset();
     useInventory.getState().clear();
-    useInventory.getState().addMany(SAMPLE_ARTIFACTS);
-    useOptimizeRequest.getState().reset();
+    addArtifacts(SAMPLE_ARTIFACTS);
+    resetOptimizeRequest();
     window.history.pushState({}, '', '/');
   });
 
@@ -241,8 +242,8 @@ describe('App — optimise progress and cancel', () => {
   beforeEach(() => {
     optimizeRun.mockReset();
     useInventory.getState().clear();
-    useInventory.getState().addMany(SAMPLE_ARTIFACTS);
-    useOptimizeRequest.getState().reset();
+    addArtifacts(SAMPLE_ARTIFACTS);
+    resetOptimizeRequest();
     window.history.pushState({}, '', '/');
   });
 
@@ -426,7 +427,7 @@ describe('App — views (TODO 9.3–9.5)', () => {
 
   it('opens on the roster once one is loaded, shows the account bar, and follows the address', async () => {
     useRoster.getState().setRoster({ amber: { level: 90 } });
-    useInventory.getState().addMany(
+    addArtifacts(
       SLOTS.map((slot) => ({
         id: `v-${slot}`,
         setKey: 'EmblemOfSeveredFate',
@@ -517,7 +518,7 @@ describe('App — the shell’s smaller parts (TODO 9.3–9.5)', () => {
 describe('App — roster-aware default selection', () => {
   beforeEach(() => {
     useInventory.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     useRoster.getState().clear();
     window.history.pushState({}, '', '/');
   });
@@ -579,8 +580,8 @@ describe('App — relaxing an infeasible constraint', () => {
   beforeEach(() => {
     optimizeRun.mockReset();
     useInventory.getState().clear();
-    useInventory.getState().addMany(ARTIFACTS);
-    useOptimizeRequest.getState().reset();
+    addArtifacts(ARTIFACTS);
+    resetOptimizeRequest();
     useRoster.getState().clear();
     window.history.pushState({}, '', '/');
   });

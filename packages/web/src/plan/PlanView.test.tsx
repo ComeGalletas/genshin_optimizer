@@ -13,6 +13,7 @@ import type {
   StatKey,
 } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import { addArtifacts } from '../test-utils/stores';
 
 const run: RunOptimize = (req, inv) =>
   Promise.resolve(searchBuilds(req, inv, buildContext(req)));
@@ -72,7 +73,7 @@ function seed() {
       inv.push(
         art(s, i % 2 ? 'EmblemOfSeveredFate' : 'MarechausseeHunter', MAINS[s]),
       );
-  useInventory.getState().addMany(inv);
+  addArtifacts(inv);
 }
 
 describe('PlanView', () => {

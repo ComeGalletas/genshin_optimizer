@@ -2,21 +2,21 @@
  * The local server's imports (TODO 8.1, ADR-0049): its snapshots and
  * merges, what each snapshot changed, how a merge reconciled its
  * snapshots, and the two ways in (an upload, or a scan of the inbox).
- * Types mirror the server's answers; only what the import center reads is
- * named.
+ * The engine's own types where the server sends them as they are (the
+ * diff, the source kinds, a scan fault); the server-only records mirror its
+ * answers, naming only what the import center reads.
  * @packageDocumentation
  */
 
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import type {
+  ScanFault,
+  SourceKind,
+} from '@genshin-build-lab/engine/merge/merge';
+import type { ImportDiff } from '@genshin-build-lab/engine/diff/diff';
 import { isRecord, serverJson, withArrays } from './client';
 
-export type SourceKind = 'irminsul' | 'ocr' | 'good' | 'enka';
-
-/** Pieces seen three or more times in one scan (ADR-0026). */
-export interface ScanFault {
-  repeatedPieces: number;
-  extraEntries: number;
-}
+export type { ImportDiff, ScanFault, SourceKind };
 
 export interface SnapshotInfo {
   id: number;
@@ -43,16 +43,6 @@ export interface Imports {
   snapshots: SnapshotInfo[];
   /** Oldest first; the last is the current account. */
   merges: MergeRecord[];
-}
-
-export interface ImportDiff {
-  added: number[];
-  removed: number[];
-  upgraded: { before: number; after: number; by: 'first-rolls' | 'rolls' }[];
-  moved: { before: number; after: number; from?: string; to?: string }[];
-  lockChanged: { before: number; after: number; lock?: boolean }[];
-  unchanged: number;
-  unexplained: { before?: number; after?: number; why: string }[];
 }
 
 export interface SnapshotChanges {

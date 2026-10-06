@@ -8,8 +8,8 @@ exists so a new component reaches for a name instead of inventing a value.
 
 **Primitives** live in [`tailwind.config.js`](../packages/web/tailwind.config.js) — the
 surface/paper/muted greys, the `flux` constraint blue, `rose`/`jade`, the type
-scale (`text-2xs` = 0.7rem), the two tracking values (`tracking-label` 0.18em,
-`tracking-eyebrow` 0.4em), and the shadows (`panel`, `popover`, `glow*`). The
+scale (`text-2xs` = 0.7rem), the tracking value (`tracking-label` 0.18em),
+and the shadows (`panel`, `popover`, `glow*`). The
 weight scale is **replaced**, not extended: only `normal`/`medium`/`semibold`/
 `bold` compile, because those are the only weights `index.html` fetches. Ask
 for `font-black` and you get nothing — deliberately.
@@ -55,7 +55,6 @@ Defined in `@layer components` in [`packages/web/src/index.css`](../packages/web
 | `.field` / `.field-label`          | Form control shell and its label.                                                |
 | `.btn-primary` / `.btn-ghost`      | The accent action and the ghosted constraint action.                             |
 | `.chip`                            | Small mono pill — counts, nav steps, status.                                     |
-| `.eyebrow`                         | Wide-tracked accent kicker above a heading.                                      |
 | `.section-badge` (+ `-sm`)         | Numbered tick marking a real sequence, never a menu.                             |
 | `.micro-label`                     | The uppercase micro-label idiom: `text-2xs uppercase tracking-label text-muted`. |
 

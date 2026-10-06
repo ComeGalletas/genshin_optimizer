@@ -18,6 +18,7 @@ import {
   formatSetName,
   formatStat,
   objectiveHint,
+  pluralWord,
   statLabel,
   SLOT_LABELS,
 } from '../labels';
@@ -163,9 +164,7 @@ function infeasibleCause(
   const gap = req ? setRequirementGap(req, inventory) : null;
   if (gap)
     return {
-      text: `You own ${gap.have} ${formatSetName(gap.setKey)} piece${
-        gap.have === 1 ? '' : 's'
-      } across slots — need ${gap.need}.`,
+      text: `You own ${gap.have} ${formatSetName(gap.setKey)} ${pluralWord(gap.have, 'piece')} across slots — need ${gap.need}.`,
     };
   const empty = emptySlotCause(request, inventory);
   if (empty) return { text: empty };

@@ -10,6 +10,16 @@ import type { Grade } from '@genshin-build-lab/engine/meta/grade';
 import type { Band } from '@genshin-build-lab/engine/roster/buildScore';
 
 export * from '@genshin-build-lab/engine/labels';
+import { formatCount } from '@genshin-build-lab/engine/labels';
+
+/** "artifact" / "artifacts": English's regular plural, or the one given. */
+export const pluralWord = (n: number, one: string, many = `${one}s`) =>
+  n === 1 ? one : many;
+
+/** "1 artifact" / "1,650 artifacts": a count with its word, grouped the
+ *  same way as every other count in the app. The one plural helper. */
+export const countOf = (n: number, one: string, many?: string) =>
+  `${formatCount(n)} ${pluralWord(n, one, many)}`;
 
 /** Band → the shared UI tone — one definition, used by every view that shows
  *  a band. The classes themselves live in `components/ui/tone.ts`. */

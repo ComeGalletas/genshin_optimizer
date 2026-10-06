@@ -20,7 +20,7 @@ import { Callout } from '../components/ui/Callout';
 import { cn } from '../components/ui/cn';
 import { CharacterPortrait } from '../components/GameArt';
 import { CharacterButton } from '../character-window/CharacterButton';
-import { HelpButton, HelpPanel } from '../components/help/Help';
+import { HelpHeading } from '../components/help/Help';
 
 const MODES: { mode: AllocateMode; label: string; hint: string }[] = [
   {
@@ -79,13 +79,12 @@ export function ServerAllocation({
   return (
     <div className="panel panel-md space-y-4" data-testid="server-allocation">
       <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <h3 className="font-display text-base font-bold text-paper">
-            Share the Pieces Jointly
-          </h3>
-          <HelpButton id="plan-joint" />
-        </div>
-        <HelpPanel id="plan-joint" />
+        <HelpHeading
+          id="plan-joint"
+          className="font-display text-base font-bold text-paper"
+        >
+          Share the Pieces Jointly
+        </HelpHeading>
         <p className="text-xs text-muted">
           The local server plans the same eight members together, so a carry
           isn’t handed a piece a teammate needs more. It uses the server’s

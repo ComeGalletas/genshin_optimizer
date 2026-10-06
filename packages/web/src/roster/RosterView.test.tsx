@@ -18,6 +18,7 @@ import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import { addArtifacts, resetOptimizeRequest } from '../test-utils/stores';
 
 function equipped(id: string, location: string): Artifact {
   return {
@@ -70,11 +71,9 @@ describe('RosterView', () => {
       },
       amber: {},
     });
-    useInventory
-      .getState()
-      .addMany(
-        Array.from({ length: 5 }, (_, i) => equipped(`n${i}`, 'neuvillette')),
-      );
+    addArtifacts(
+      Array.from({ length: 5 }, (_, i) => equipped(`n${i}`, 'neuvillette')),
+    );
 
     render(<RosterView />);
     expect(screen.getByText('Neuvillette')).toBeInTheDocument();
@@ -118,7 +117,7 @@ describe('RosterView', () => {
 
   it('prefills the optimise request from the drawer', async () => {
     const user = userEvent.setup();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     useRoster.getState().setRoster({
       neuvillette: { level: 90, weaponKey: 'the_first_great_magic' },
     });

@@ -10,11 +10,9 @@ import type { Artifact } from '@genshin-build-lab/engine/game/types';
 interface InventoryState {
   artifacts: Artifact[];
   add: (a: Artifact) => void;
-  addMany: (a: Artifact[]) => void;
   /** Replace the whole bag. The importer needs this: it drops the demo
-   *  artifacts and appends the real ones in one commit, which `addMany` (an
-   *  append) and `clear` (which would blank the panel mid-import) can't
-   *  express between them. */
+   *  artifacts and appends the real ones in one commit, which `clear` (it
+   *  would blank the panel mid-import) can't. */
   replaceAll: (a: Artifact[]) => void;
   clear: () => void;
 }
@@ -24,8 +22,6 @@ export const useInventory = create<InventoryState>()(
     (set) => ({
       artifacts: [],
       add: (a) => set((s) => ({ artifacts: [...s.artifacts, a] })),
-      addMany: (items) =>
-        set((s) => ({ artifacts: [...s.artifacts, ...items] })),
       replaceAll: (artifacts) => set({ artifacts }),
       clear: () => set({ artifacts: [] }),
     }),

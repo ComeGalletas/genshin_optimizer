@@ -8,9 +8,10 @@ import {
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { useRoster } from './roster';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
+import { resetOptimizeRequest } from '../test-utils/stores';
 
 describe('optimizeRequest defaults', () => {
-  beforeEach(() => useOptimizeRequest.getState().reset());
+  beforeEach(() => resetOptimizeRequest());
 
   // Sort order used to choose these, which opened the app on "Aino +
   // Absolution" — a claymore user holding a sword.
@@ -36,7 +37,7 @@ describe('optimizeRequest defaults', () => {
 });
 
 describe('optimizeRequest store', () => {
-  beforeEach(() => useOptimizeRequest.getState().reset());
+  beforeEach(() => resetOptimizeRequest());
 
   it('setMinER stores er_pct in constraints and currentRequest reflects it', () => {
     useOptimizeRequest.getState().setMinER('160');
@@ -111,7 +112,7 @@ describe('optimizeRequest store', () => {
 });
 
 describe('setMinER rejects a floor no build can meet', () => {
-  beforeEach(() => useOptimizeRequest.getState().reset());
+  beforeEach(() => resetOptimizeRequest());
 
   // `Number('1e400')` is Infinity and `Number('Infinity')` parses: both are
   // numbers, not NaN, so the old `Number.isNaN` guard stored them as a
@@ -134,7 +135,7 @@ describe('setMinER rejects a floor no build can meet', () => {
 
 describe('weapon legality lives in the request, not the panel', () => {
   beforeEach(() => {
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     useRoster.getState().clear();
   });
 

@@ -14,7 +14,8 @@ import {
   type SnapshotChanges,
   type SnapshotInfo,
 } from '../local-server/imports';
-import { plural, snapshotName } from './format';
+import { snapshotName } from './format';
+import { countOf } from '../labels';
 import { Callout } from '../components/ui/Callout';
 import { Disclosure } from '../components/ui/Disclosure';
 
@@ -91,7 +92,7 @@ export function ChangesView({ snapshotId }: { snapshotId: number }) {
   return (
     <div className="space-y-1">
       <p className="text-xs text-muted">
-        Against snapshot #{c.from}: {plural(d.unchanged, 'piece')} unchanged.
+        Against snapshot #{c.from}: {countOf(d.unchanged, 'piece')} unchanged.
       </p>
       <Group label="New" count={d.added.length}>
         {d.added.map((i) => (
@@ -179,7 +180,7 @@ export function MergeReportView({
           {r.merge.rejected
             .map(
               (x) =>
-                `${label(Number(x.snapshot))} (${plural(x.fault.repeatedPieces, 'piece')} repeated)`,
+                `${label(Number(x.snapshot))} (${countOf(x.fault.repeatedPieces, 'piece')} repeated)`,
             )
             .join('; ')}
           .
@@ -198,8 +199,8 @@ export function MergeReportView({
               {label(rep.snapshot)} against {rep.against.map(label).join(', ')}
             </p>
             <p className="mb-1 text-xs text-muted">
-              {plural(c.paired, 'piece')} paired ({c.exact} exact, {c.fuzzy} one
-              step apart, {c.levelled} levelled since).
+              {countOf(c.paired, 'piece')} paired ({c.exact} exact, {c.fuzzy}{' '}
+              one step apart, {c.levelled} levelled since).
             </p>
             <Group
               label="Misread or different pieces"

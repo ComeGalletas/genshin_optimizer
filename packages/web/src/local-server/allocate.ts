@@ -1,8 +1,8 @@
 /**
  * The local server's account-wide allocation (TODO 7.4, 8.2): `POST
  * /allocate` shares the server's artifacts out between several characters,
- * no piece twice. Types mirror the server's answer; only what the plan's
- * allocation view reads is named.
+ * no piece twice. The moves are the engine's own type; the rest mirrors
+ * the server's answer, naming only what the plan's allocation view reads.
  * @packageDocumentation
  */
 
@@ -13,7 +13,10 @@ import type {
   OptimizeRequest,
   Slot,
 } from '@genshin-build-lab/engine/game/types';
+import type { MoveList, PlanMove } from '@genshin-build-lab/engine/plan/output';
 import { serverJson, withArrays } from './client';
+
+export type { PlanMove };
 
 export type AllocateMode = 'exact' | 'v1' | 'greedy';
 
@@ -41,15 +44,6 @@ export interface AllocatedMember {
   conflicts?: string[];
 }
 
-export interface PlanMove {
-  characterKey: string;
-  slot: Slot;
-  artifactId: string;
-  from: string | null;
-  displaced: string | null;
-  text: string;
-}
-
 export interface AllocateResult {
   mode: AllocateMode;
   ms: number;
@@ -60,7 +54,7 @@ export interface AllocateResult {
     candidates: Record<string, number>;
   };
   members: AllocatedMember[];
-  moves: { moves: PlanMove[]; inPlace: number };
+  moves: MoveList;
   farming: string[];
 }
 

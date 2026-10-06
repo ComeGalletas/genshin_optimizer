@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useOptimizeRun } from './useOptimizeRun';
 import { useInventory } from '../state/inventory';
-import { useOptimizeRequest } from '../state/optimizeRequest';
 import { OptimizeCancelledError } from '../workers/optimizeClient';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import type {
   Artifact,
   OptimizeResult,
 } from '@genshin-build-lab/engine/game/types';
+import { addArtifacts, resetOptimizeRequest } from '../test-utils/stores';
 
 const { optimizeRun } = vi.hoisted(() => ({ optimizeRun: vi.fn() }));
 // Only the dispatch is faked, exactly as App.test.tsx does: cancellation is
@@ -37,8 +37,8 @@ describe('useOptimizeRun', () => {
   beforeEach(() => {
     optimizeRun.mockReset();
     useInventory.getState().clear();
-    useInventory.getState().addMany(SAMPLE_ARTIFACTS);
-    useOptimizeRequest.getState().reset();
+    addArtifacts(SAMPLE_ARTIFACTS);
+    resetOptimizeRequest();
   });
 
   it('does nothing when the inventory is empty', async () => {

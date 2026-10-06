@@ -13,12 +13,9 @@ import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { goTo } from '../components/views';
-import { scrollToId } from '../ui/scroll';
+import { scrollToIdWhenShown } from '../ui/scroll';
 import { CharacterSplash } from './CharacterSplash';
 import { useCharacterWindow } from './store';
-
-/** Long enough to outlast vaul's close animation and its scroll-lock release. */
-const DRAWER_EXIT_MS = 400;
 
 export function CharacterWindowDrawer({
   characterKey,
@@ -43,15 +40,12 @@ export function CharacterWindowDrawer({
     const s = useOptimizeRequest.getState();
     s.setCharacterKey(characterKey);
     if (entry?.weaponKey) s.setWeaponKey(entry.weaponKey);
+    // The drawer unmounts at once (no close animation), taking its scroll
+    // lock with it; the Optimise view may still be loading, so the scroll
+    // waits for its section.
     close();
-    // The drawer holds a body scroll lock (overflow:hidden) until it has
-    // finished animating out, so scrolling synchronously here is a no-op.
-    // ponytail: fixed delay rather than watching for the lock to lift —
-    // revisit if vaul's exit timing changes.
-    setTimeout(() => {
-      goTo('optimise');
-      scrollToId('step-optimise');
-    }, DRAWER_EXIT_MS);
+    goTo('optimise');
+    scrollToIdWhenShown('step-optimise');
   };
 
   return (

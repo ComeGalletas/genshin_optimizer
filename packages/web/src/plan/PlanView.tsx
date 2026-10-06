@@ -25,7 +25,7 @@ import {
 import { recommendAbyss } from '@genshin-build-lab/engine/teams/recommend';
 import { archetypeName } from '@genshin-build-lab/engine/teams/comps';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
-import { formatScore, objectiveHint, objectiveLabel } from '../labels';
+import { countOf, formatScore, objectiveHint, objectiveLabel } from '../labels';
 import { gradeBuild, type Grade } from '@genshin-build-lab/engine/meta/grade';
 import { GradeMarker } from '../components/ui/GradeMarker';
 import { SourceLink } from '../components/ui/SourceLink';
@@ -126,7 +126,7 @@ function SummaryRow({
           )}
           <span className="w-20 flex-none text-right text-2xs text-muted">
             {build.conflicts.length > 0
-              ? `${build.conflicts.length} conflict${build.conflicts.length === 1 ? '' : 's'}`
+              ? countOf(build.conflicts.length, 'conflict')
               : ''}
           </span>
         </summary>

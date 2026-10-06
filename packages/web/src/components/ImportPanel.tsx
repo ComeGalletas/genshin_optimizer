@@ -17,6 +17,7 @@ import { useAccount } from '../state/account';
 import { demoAccount } from '@genshin-build-lab/engine/sample/demoAccount';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
 import { HelpButton, HelpPanel } from './help/Help';
+import { countOf, formatCount, pluralWord } from '../labels';
 
 // WCAG 3.3.1: describe what actually went wrong. fetchUidArtifacts already
 // distinguishes the three cases; collapsing them into one message left the
@@ -43,13 +44,6 @@ const BAD_FILE =
 function entries(json: unknown, list: 'artifacts' | 'characters'): number {
   const xs = (json as Record<string, unknown> | null)?.[list];
   return Array.isArray(xs) ? xs.length : 0;
-}
-
-/** "1 artifact" / "2 artifacts". English's regular plural is all this panel
- *  needs, and a count of one printed as "1 artifacts" reads as a bug in the
- *  importer rather than in the copy. */
-function plural(n: number, word: string): string {
-  return n === 1 ? word : `${word}s`;
 }
 
 /** Sample gear carries a `sample-` id prefix (see the engine's
@@ -197,8 +191,8 @@ export function ImportPanel() {
       tone: 'success',
       text:
         skipped > 0
-          ? `Imported ${fresh.length} new ${plural(fresh.length, 'artifact')} — ${skipped} ${skipped === 1 ? 'was' : 'were'} already in your inventory.${suffix}`
-          : `Imported ${fresh.length} ${plural(fresh.length, 'artifact')}.${suffix}`,
+          ? `Imported ${countOf(fresh.length, 'new artifact')} — ${formatCount(skipped)} ${pluralWord(skipped, 'was', 'were')} already in your inventory.${suffix}`
+          : `Imported ${countOf(fresh.length, 'artifact')}.${suffix}`,
     });
   }
 
@@ -294,7 +288,7 @@ export function ImportPanel() {
           tone: 'error',
           text:
             sent > 0
-              ? `None of the ${sent} ${plural(sent, 'artifact')} in the local server’s account could be read here, so nothing was replaced.`
+              ? `None of the ${countOf(sent, 'artifact')} in the local server’s account could be read here, so nothing was replaced.`
               : 'The local server’s account is empty, so nothing was replaced.',
         });
         return;
@@ -307,11 +301,11 @@ export function ImportPanel() {
       ] as const;
       const left = dropped
         .filter(([n]) => n > 0)
-        .map(([n, word]) => `${n} ${plural(n, word)}`)
+        .map(([n, word]) => countOf(n, word))
         .join(' and ');
       setNotice({
         tone: 'success',
-        text: `Loaded the local server’s account: ${out.length} ${plural(out.length, 'artifact')}, ${characters} ${plural(characters, 'character')}.${left ? ` Left out ${left} this app couldn’t read.` : ''}`,
+        text: `Loaded the local server’s account: ${countOf(out.length, 'artifact')}, ${countOf(characters, 'character')}.${left ? ` Left out ${left} this app couldn’t read.` : ''}`,
       });
       setSource({ kind: 'server' });
       goTo(characters > 0 ? 'roster' : 'optimise');
@@ -550,7 +544,7 @@ export function ImportPanel() {
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
           <span className="chip">
             <span className="font-mono font-bold text-accent">{count}</span>
-            <span>{plural(count, 'artifact')} loaded</span>
+            <span>{pluralWord(count, 'artifact')} loaded</span>
           </span>
           <div className="flex items-center gap-1">
             <button

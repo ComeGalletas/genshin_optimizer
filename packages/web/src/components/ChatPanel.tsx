@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { AppDrawer } from './ui/Drawer';
 import { Callout } from './ui/Callout';
 import { Disclosure } from './ui/Disclosure';
+import { countOf } from '../labels';
 import { selectExplainReady, useServer } from '../local-server/status';
 import { useChat, type ChatEntry } from '../local-server/chat';
 import { MASK_NOTE, renderAnswer } from './chatText';
@@ -68,7 +69,7 @@ function Steps({ entry }: { entry: Answer }) {
       )}
       {entry.steps.length > 0 && (
         <Disclosure
-          label={`Used ${entry.steps.length} tool${entry.steps.length === 1 ? '' : 's'}${failed ? ` (${failed} failed)` : ''} · ${seconds.toFixed(1)} s`}
+          label={`Used ${countOf(entry.steps.length, 'tool')}${failed ? ` (${failed} failed)` : ''} · ${seconds.toFixed(1)} s`}
         >
           <ol className="mt-1 space-y-1 pl-5" data-testid="chat-steps">
             {entry.steps.map((s, i) => (

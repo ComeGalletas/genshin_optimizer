@@ -30,7 +30,7 @@ import {
 } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
-import { scrollToId } from '../ui/scroll';
+import { scrollToIdWhenShown } from '../ui/scroll';
 import { Callout } from './ui/Callout';
 import { ViewErrorBoundary } from './ErrorBoundary';
 import { cn } from './ui/cn';
@@ -226,7 +226,7 @@ export function App() {
       // Results live on Optimise; a run started from elsewhere (the
       // roster's "optimise this character") lands there.
       goTo('optimise');
-      setTimeout(() => scrollToId('results-section'), 50);
+      scrollToIdWhenShown('results-section');
     },
   });
 
@@ -383,7 +383,6 @@ export function App() {
           <ViewErrorBoundary key={view}>
             {view === 'start' && (
               <Section
-                id="step-load"
                 help="start"
                 title="Load Data"
                 hint="Start from the demo data, your account on the local server, or a new source."
@@ -396,7 +395,6 @@ export function App() {
             {view === 'roster' &&
               (hasRoster ? (
                 <Section
-                  id="step-roster"
                   help="roster"
                   title="Your Roster"
                   hint="How built each of your characters is, scored 0–100 from level, talents, weapon and artifacts, best first. Open one for its details."
@@ -413,7 +411,6 @@ export function App() {
             {view === 'teams' &&
               (hasRoster ? (
                 <Section
-                  id="step-teams"
                   help="teams"
                   title="Endgame Teams"
                   hint="Two Abyss halves that share no character, matched from your roster."
@@ -430,7 +427,6 @@ export function App() {
             {view === 'plan' &&
               (hasRoster ? (
                 <Section
-                  id="step-plan"
                   help="plan"
                   title="Your Plan"
                   hint="An optimised build for all eight members of your two teams from one shared inventory, plus one list of what to farm."

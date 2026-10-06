@@ -15,15 +15,15 @@ import userEvent from '@testing-library/user-event';
 import { App } from './App';
 import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
-import { useOptimizeRequest } from '../state/optimizeRequest';
 import { loadSampleGOOD } from '@genshin-build-lab/engine/test-fixtures/sampleAccount';
 import { decodeBuild } from '@genshin-build-lab/engine/share/url';
+import { resetOptimizeRequest } from '../test-utils/stores';
 
 describe('golden path: import -> optimize -> share -> decode', () => {
   beforeEach(() => {
     useInventory.getState().clear();
     useRoster.getState().clear();
-    useOptimizeRequest.getState().reset();
+    resetOptimizeRequest();
     window.history.pushState({}, '', '/');
   });
 

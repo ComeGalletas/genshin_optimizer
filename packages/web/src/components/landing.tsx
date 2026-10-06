@@ -16,7 +16,6 @@ import type { OptimizeRequest } from '@genshin-build-lab/engine/game/types';
 import type { SharedSim } from '@genshin-build-lab/engine/share/url';
 
 export function Section({
-  n,
   id,
   title,
   hint,
@@ -24,8 +23,6 @@ export function Section({
   delay,
   children,
 }: {
-  /** Omitted for Results: it's an output of the sequence, not a step in it. */
-  n?: number;
   id?: string;
   title: string;
   hint?: string;
@@ -50,11 +47,6 @@ export function Section({
             id={headingId}
             className="text-pretty font-display text-2xl font-bold tracking-tight text-paper"
           >
-            {n != null && (
-              <span className="section-badge mr-3 align-middle">
-                {String(n).padStart(2, '0')}
-              </span>
-            )}
             {title}
           </h2>
           {help && <HelpButton id={help} />}
