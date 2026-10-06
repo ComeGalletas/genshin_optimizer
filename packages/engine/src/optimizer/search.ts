@@ -273,7 +273,7 @@ export function reachableCeiling(
   return ceiling;
 }
 
-function makeBuildResult(
+export function makeBuildResult(
   ctx: OptimizeContext,
   req: OptimizeRequest,
   chosen: Artifact[],
