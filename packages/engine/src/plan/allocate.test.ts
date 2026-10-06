@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   allocateGreedy,
-  memberFromSpec,
+  memberFromRun,
   pickingOrder,
   type AllocationMember,
   type RunOptimize,
@@ -13,6 +13,7 @@ import { SLOTS } from '../game/types';
 import { normalizeGOOD } from '../good/normalize';
 import { loadSampleGOOD } from '../test-fixtures/sampleAccount';
 import { parseConstraintSpec } from '../constraints/spec';
+import { specToRun } from '../constraints/toRequest';
 
 const run: RunOptimize = (req, inv, extras) =>
   Promise.resolve(searchBuilds(req, inv, buildContext(req, extras)));
@@ -166,7 +167,7 @@ describe('allocateGreedy (TODO 7.1)', () => {
   });
 });
 
-describe('memberFromSpec', () => {
+describe('memberFromRun', () => {
   const g = normalizeGOOD(loadSampleGOOD())!;
   const account = {
     roster: g.roster,
@@ -177,6 +178,18 @@ describe('memberFromSpec', () => {
     const p = parseConstraintSpec(x);
     if (!p.ok) throw new Error(JSON.stringify(p.issues));
     return p.spec;
+  };
+  // As the server builds a member: the spec mapped onto the account, as a
+  // single search maps it, then the member from that run.
+  const memberFromSpec = (
+    s: ReturnType<typeof spec>,
+    acc: typeof account,
+    opts: { priority: number; weight?: number },
+  ) => {
+    const mapped = specToRun(s, acc, { topK: 1 });
+    return mapped.ok
+      ? { ok: true as const, member: memberFromRun(mapped.run, opts) }
+      : mapped;
   };
 
   it('maps a spec the way a single search does: request, extras, allowed pieces', () => {

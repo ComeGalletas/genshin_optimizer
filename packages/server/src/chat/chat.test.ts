@@ -12,12 +12,7 @@ import type {
   LlmClient,
   ToolCall,
 } from '../llm/client';
-import {
-  MASK,
-  maskUngrounded,
-  sourceValues,
-  ungroundedNumbers,
-} from './grounding';
+import { MASK, maskUngrounded, ungroundedNumbers } from './grounding';
 import { chatTools, runChat, CHAT_SYSTEM } from './loop';
 import { createHash } from 'node:crypto';
 import { readResult } from '../sim/result';
@@ -172,7 +167,8 @@ describe('grounding', () => {
     // The engine's seeded PRNG, so a failure reproduces.
     const rand = mulberry32(7);
     const pick = <T>(xs: T[]) => xs[Math.floor(rand() * xs.length)];
-    const grounded = sourceValues(sources);
+    // Numbers from the sources to mix in; the property holds for any.
+    const grounded = sources.flatMap((s) => s.match(/\d+(?:\.\d+)?/g) ?? []);
     for (let i = 0; i < 200; i++) {
       const words = Array.from({ length: 12 }, () =>
         pick([

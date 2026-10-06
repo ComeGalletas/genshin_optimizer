@@ -72,16 +72,3 @@ export function buildSidecar(n: NormalizedGood): Sidecar {
   }
   return { source: n.source, entries };
 }
-
-/** Fingerprint → its entries, in file order. */
-export function indexSidecar(
-  entries: readonly SidecarEntry[],
-): Map<string, SidecarEntry[]> {
-  const byPrint = new Map<string, SidecarEntry[]>();
-  for (const e of entries) {
-    const list = byPrint.get(e.fingerprint);
-    if (list) list.push(e);
-    else byPrint.set(e.fingerprint, [e]);
-  }
-  return byPrint;
-}

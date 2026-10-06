@@ -40,7 +40,6 @@ import { WIKI } from '../../curation';
 
 /** A weapon's refinement, R1 to R5. */
 export type Refinement = 1 | 2 | 3 | 4 | 5;
-export const REFINEMENTS: readonly Refinement[] = [1, 2, 3, 4, 5];
 
 export function isRefinement(x: unknown): x is Refinement {
   return x === 1 || x === 2 || x === 3 || x === 4 || x === 5;

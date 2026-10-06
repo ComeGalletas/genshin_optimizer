@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { SimCharacter } from './configgen';
 import {
-  assignSlots,
   fillBurstWaits,
   renderTemplate,
   rotationConfig,
@@ -227,22 +226,6 @@ describe('rotationIssues', () => {
         REFERENCE.replace('xiangling char', 'xiangling  add'),
       ),
     ).toEqual(['reference has no "xiangling char" line']);
-  });
-});
-
-describe('assignSlots', () => {
-  it('fills each slot from the team, any of its characters', () => {
-    expect(assignSlots(META, ['bennett', 'raiden_shogun'])).toEqual({
-      ok: true,
-      slots: { raiden: 'raiden_shogun', pyro: 'bennett' },
-    });
-  });
-  it('says who is missing and who has no slot', () => {
-    expect(assignSlots(META, ['raiden_shogun', 'yelan'])).toEqual({
-      ok: false,
-      missing: ['xiangling or bennett'],
-      extra: ['yelan'],
-    });
   });
 });
 

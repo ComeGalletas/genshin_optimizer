@@ -22,12 +22,7 @@ import type {
 } from '../game/types';
 import { SLOTS } from '../game/types';
 import type { ContextExtras } from '../optimizer/context';
-import type { ConstraintSpec, SpecIssue } from '../constraints/spec';
-import {
-  specToRun,
-  type SpecAccount,
-  type SpecRun,
-} from '../constraints/toRequest';
+import type { SpecRun } from '../constraints/toRequest';
 import { COMP_ARCHETYPES } from '../teams/comps';
 import type { Role } from '../teams/types';
 
@@ -171,18 +166,6 @@ export async function allocateGreedy(
     opts.onProgress?.(builds.length, order.length);
   }
   return { builds, taken };
-}
-
-/** A member from a checked ConstraintSpec: its request, extras and the
- *  pieces it may use, from the same mapping a single search uses. */
-export function memberFromSpec(
-  spec: ConstraintSpec,
-  account: SpecAccount,
-  opts: { priority: number; weight?: number },
-): { ok: true; member: AllocationMember } | { ok: false; issues: SpecIssue[] } {
-  const mapped = specToRun(spec, account, { topK: 1 });
-  if (!mapped.ok) return mapped;
-  return { ok: true, member: memberFromRun(mapped.run, opts) };
 }
 
 /** A member from a spec already mapped onto the account (the server's
