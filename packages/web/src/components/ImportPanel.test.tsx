@@ -573,6 +573,42 @@ describe('ImportPanel: the local server’s account (TODO 3.5)', () => {
     expect(useInventory.getState().artifacts[0].id).toBe('mine-1');
   });
 
+  it('replaces nothing when no artifact in the account can be read (QA M3)', async () => {
+    useInventory.setState({ artifacts: SAMPLE_INVENTORY });
+    useRoster.getState().setRoster({ bennett: { buildLevel: 90 } });
+    serveAccount({
+      format: 'GOOD',
+      version: 3,
+      artifacts: [{ setKey: 1, slotKey: 'hat' }, null, 'x'],
+      characters: [{ key: 'Furina', level: 'ninety' }],
+      weapons: [],
+    });
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'None of the 3 artifacts in the local server’s account could be read here, so nothing was replaced.',
+      ),
+    );
+    expect(useInventory.getState().artifacts).toBe(SAMPLE_INVENTORY);
+    expect(Object.keys(useRoster.getState().entries)).toEqual(['bennett']);
+  });
+
+  it('says what it left out when only some of the account can be read (QA M3)', async () => {
+    useInventory.setState({ artifacts: SAMPLE_INVENTORY });
+    serveAccount({
+      ...account,
+      artifacts: [...account.artifacts, { setKey: 1 }],
+    });
+    render(<ImportPanel />);
+    await userEvent.click(loadButton());
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'Loaded the local server’s account: 1 artifact, 1 character. Left out 1 artifact this app couldn’t read.',
+      ),
+    );
+  });
+
   it('shows the server’s reason when it has no account, and keeps what is loaded', async () => {
     useInventory.setState({ artifacts: SAMPLE_INVENTORY });
     serveAccount(

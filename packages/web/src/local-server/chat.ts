@@ -7,7 +7,7 @@
  */
 
 import { create } from 'zustand';
-import { RequestStopped, serverJson } from './client';
+import { isRecord, RequestStopped, serverJson } from './client';
 
 /** A tool the model called for an answer (as the server reports it). */
 export interface ChatStep {
@@ -55,6 +55,11 @@ export function sendChat(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages }),
     timeoutMs: CHAT_TIMEOUT_MS,
+    expect: (x) =>
+      isRecord(x) &&
+      typeof x.answer === 'string' &&
+      Array.isArray(x.steps) &&
+      Array.isArray(x.masked),
     ...(signal && { signal }),
   });
 }

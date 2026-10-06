@@ -287,7 +287,6 @@ export function RotationLibrary() {
       </ul>
       {opened && (
         <AppDrawer
-          open
           onClose={() => setOpen(null)}
           title={opened.name ?? opened.id}
         >

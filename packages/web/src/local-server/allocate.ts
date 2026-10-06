@@ -13,7 +13,7 @@ import type {
   OptimizeRequest,
   Slot,
 } from '@genshin-build-lab/engine/game/types';
-import { serverJson } from './client';
+import { serverJson, withArrays } from './client';
 
 export type AllocateMode = 'exact' | 'v1' | 'greedy';
 
@@ -72,5 +72,7 @@ export function postAllocate(req: AllocateRequest): Promise<AllocateResult> {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(req),
     timeoutMs: 600_000,
+    expect: (x) =>
+      withArrays('members', 'farming')(x) && withArrays('moves')(x.moves),
   });
 }

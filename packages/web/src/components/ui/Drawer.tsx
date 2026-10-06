@@ -1,10 +1,17 @@
 /**
  * App-wide detail drawer: slides from the left on desktop, from the bottom on
- * mobile. vaul supplies the focus trap, scroll lock and esc-close. It does
+ * mobile. Open while mounted: callers render it to open it and unmount it to
+ * close it. vaul supplies the focus trap, scroll lock and esc-close. It does
  * *not* set `aria-modal` (measured: null on Vaul.Content), so this sets it.
  * @packageDocumentation
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { Drawer as Vaul } from 'vaul';
 
 const DESKTOP = '(min-width: 768px)';
@@ -22,8 +29,36 @@ function useIsDesktop() {
   return desktop;
 }
 
+/**
+ * Give focus back to whatever had it when the drawer opened (the row or
+ * button that opened it), once the drawer is gone. Radix restores focus only
+ * to a `Dialog.Trigger`, which the app doesn't use, so without this every
+ * close (✕, Escape, unmounting) dropped focus to <body>. The layout effect
+ * reads the trigger before Radix's own effect moves focus into the drawer.
+ */
+function useRestoreFocus() {
+  const mounted = useRef(false);
+  useLayoutEffect(() => {
+    mounted.current = true;
+    const trigger = document.activeElement;
+    return () => {
+      mounted.current = false;
+      // After Radix's own close handling; skipped if the drawer is back
+      // (StrictMode mounts effects twice).
+      setTimeout(() => {
+        if (
+          !mounted.current &&
+          trigger instanceof HTMLElement &&
+          trigger !== document.body &&
+          trigger.isConnected
+        )
+          trigger.focus();
+      }, 0);
+    };
+  }, []);
+}
+
 export function AppDrawer({
-  open,
   onClose,
   title,
   children,
@@ -31,7 +66,6 @@ export function AppDrawer({
   titleAction,
   largeTitle = false,
 }: {
-  open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
@@ -45,25 +79,16 @@ export function AppDrawer({
   largeTitle?: boolean;
 }) {
   const desktop = useIsDesktop();
-  // Vaul/Radix only restore focus to the triggering element on the escape
-  // key or an outside pointerdown — a close driven by our own onClose
-  // handler (the ✕ button) changes `open` via a plain prop update, which
-  // skips Radix's onCloseAutoFocus path and drops focus to <body>. Track
-  // the pre-open activeElement ourselves and restore it explicitly.
-  const triggerRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    if (open) {
-      triggerRef.current = document.activeElement as HTMLElement | null;
-    } else if (triggerRef.current) {
-      triggerRef.current.focus();
-      triggerRef.current = null;
-    }
-  }, [open]);
+  useRestoreFocus();
   return (
     <Vaul.Root
-      open={open}
+      open
       onOpenChange={(o) => !o && onClose()}
       direction={desktop ? 'left' : 'bottom'}
+      // Focus moves into the drawer (its first control), so keyboard and
+      // screen-reader users land in the dialog, not behind it (vaul turns
+      // this off by default).
+      autoFocus
     >
       <Vaul.Portal>
         <Vaul.Overlay className="fixed inset-0 z-40 bg-surface-900/60 backdrop-blur-sm" />

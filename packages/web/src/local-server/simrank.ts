@@ -14,7 +14,7 @@ import type {
   Slot,
 } from '@genshin-build-lab/engine/game/types';
 import type { ConstraintSpec } from '@genshin-build-lab/engine/constraints/spec';
-import { serverJson } from './client';
+import { isRecord, serverJson } from './client';
 
 type Pieces = { artifacts: Record<Slot, Artifact> };
 
@@ -68,5 +68,10 @@ export function runSimSpec(spec: ConstraintSpec): Promise<SimRun> {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ spec }),
     timeoutMs: 600_000,
+    // An `ok` run always lists its builds.
+    expect: (x) =>
+      isRecord(x) &&
+      typeof x.status === 'string' &&
+      (x.status !== 'ok' || Array.isArray(x.builds)),
   });
 }

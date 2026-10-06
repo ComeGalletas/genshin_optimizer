@@ -28,7 +28,6 @@ export function ChatPanel() {
       </button>
       {open && (
         <AppDrawer
-          open
           onClose={() => setOpen(false)}
           title="Ask About Your Account"
         >
