@@ -310,7 +310,7 @@ describe('queries, comparisons and MCP over HTTP', () => {
       });
     const r = await rpc(H);
     expect(r.statusCode).toBe(200);
-    expect(r.json().result.tools.length).toBe(10);
+    expect(r.json().result.tools.length).toBe(11);
     expect((await rpc({ host: 'evil.example' })).statusCode).toBe(403);
     expect((await get('/mcp')).statusCode).toBe(405);
   });

@@ -51,6 +51,7 @@ describe('MCP server', () => {
       'list_rotations',
       'optimize_build',
       'query_artifacts',
+      'simulate_team',
     ]);
     expect(
       tools.filter((t) => !t.annotations?.readOnlyHint).map((t) => t.name),

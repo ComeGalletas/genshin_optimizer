@@ -61,7 +61,7 @@ const Key = z.string().check(z.minLength(1), z.maxLength(MAX_KEY_LEN));
 const Stat = z.enum(STAT_KEYS);
 /** A stat amount: flat HP runs to tens of thousands. */
 const Amount = z.number().check(z.minimum(0), z.maximum(1_000_000));
-const StatAmounts = z.partialRecord(Stat, Amount);
+export const StatAmounts = z.partialRecord(Stat, Amount);
 
 export const SetRule = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('4pc'), setKey: Key }),
@@ -96,7 +96,7 @@ export const SIM_TOP_K = 20;
 export const SIM_ITERATIONS = 500;
 
 /** `"any"` clears a default main-stat lock for that slot. */
-const MainStat = z.union([Stat, z.literal('any')]);
+export const MainStat = z.union([Stat, z.literal('any')]);
 
 export const ConstraintSpecSchema = z.strictObject({
   version: z.optional(z.literal(SPEC_VERSION)),

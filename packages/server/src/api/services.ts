@@ -75,6 +75,9 @@ import { gcsimName } from '@genshin-build-lab/engine/sim/configgen';
 import { rankBySim } from '@genshin-build-lab/engine/sim/rank';
 import { setsInPlay, unsimulated } from '@genshin-build-lab/engine/sim/support';
 import { GcsimError } from '../sim/gcsim';
+import { TeamSimSpec } from '@genshin-build-lab/engine/sim/team';
+import { describeIssues } from '@genshin-build-lab/engine/zodIssues';
+import { simulateTeam, TeamSimError } from '../sim/teamsim';
 import { SimPool, StoreSimCache } from '../sim/pool';
 import {
   candidate,
@@ -877,6 +880,66 @@ export class Services {
         };
       }),
     };
+  }
+
+  /** A team in a library rotation as the owner has it, and up to five
+   *  variants, simulated side by side and compared (TODO 6.1). */
+  async simulateTeam(input: unknown) {
+    const parsed = TeamSimSpec.safeParse(input);
+    if (!parsed.success) {
+      const issues = describeIssues(parsed.error.issues, '');
+      throw new ServiceError(
+        400,
+        'invalid_request',
+        `the request has ${issues.length === 1 ? 'a problem' : `${issues.length} problems`}: ${issues
+          .map((i) => `${i.path || 'request'}: ${i.message}`)
+          .join('; ')}`,
+        issues,
+      );
+    }
+    const deps = this.rotations.deps;
+    if (!deps)
+      throw new ServiceError(
+        503,
+        'gcsim_unavailable',
+        'gcsim is not installed here: run npm run sim:check',
+      );
+    this.pool ??= new SimPool(deps.runner, deps.commit ?? deps.gcsim, {
+      cache: new StoreSimCache(this.db),
+    });
+    const t0 = performance.now();
+    try {
+      const r = await simulateTeam(parsed.data, {
+        account: this.simAccount(),
+        dir: this.rotationsDir,
+        pool: this.pool,
+        gcsim: deps.gcsim,
+        bestBuild: async (character, weapon, conditions, keepOn) => {
+          try {
+            const run = await this.runSpec(
+              { character, weapon, ...conditions, keepEquippedOn: keepOn },
+              1,
+            );
+            if (run.status === 'ok' && 'builds' in run && run.builds.length)
+              return Object.values(run.builds[0].artifacts);
+            return {
+              problem:
+                run.status === 'infeasible'
+                  ? 'no build fits those conditions'
+                  : `the search ended ${run.status}`,
+            };
+          } catch (e) {
+            if (e instanceof ServiceError) return { problem: e.message };
+            throw e;
+          }
+        },
+      });
+      return { ...r, ms: Math.round(performance.now() - t0) };
+    } catch (e) {
+      if (e instanceof TeamSimError)
+        throw new ServiceError(400, 'invalid_team', e.message, e.issues);
+      throw e;
+    }
   }
 
   /** Draft a rotation for characters the owner has (TODO 5.7): saved only

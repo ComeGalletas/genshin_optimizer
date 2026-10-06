@@ -18,6 +18,7 @@ import type { Services } from '../api/services';
 import { ArtifactQuery, CompareBody } from '../api/schemas';
 import { ConstraintSpecSchema } from '@genshin-build-lab/engine/constraints/spec';
 import { DraftInput } from '../sim/drafts';
+import { TeamSimSpec } from '@genshin-build-lab/engine/sim/team';
 
 export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact account: imported artifacts, characters and weapons, an exact build optimizer, and import history.
 - Every number you give the owner must come from a tool result. If a tool fails, say so; never estimate.
@@ -210,6 +211,53 @@ export function accountTools(services: Services): ToolDef[] {
       description:
         "The latest import at a glance: how many snapshots, faulty scans left out, the current merge, and what the newest import changed (new, gone, upgraded, moved, lock changes, and anything it couldn't explain).",
       run: () => services.importReport(),
+    }),
+    tool({
+      name: 'simulate_team',
+      title: 'Simulate and compare teams',
+      description:
+        'Simulate a team in a library rotation (list_rotations) with the owner\'s characters as equipped, and up to five variants of it, side by side. A variant has a label and changes any of: swap ({"kaedehara_kazuha": "sucrose"}: only to a character the rotation\'s slot takes; otherwise use another rotation), weapons ({"raiden_shogun": {"weapon": "the_catch", "refinement": 5}}), builds ({"raiden_shogun": {"set": {"kind": "4pc", "setKey": "ThunderingFury"}}}: conditions the optimizer fills from the account, teammates\' pieces left alone; or {"artifacts": [ids]}), rotation (another id), enemy ({"level", "res" in percent, "count" of targets}). Returns each run\'s team DPS with its 95% interval, per character DPS, share, field time and energy waits, reactions and warnings, and for each variant `vsBase.text` ("+7.4% ± 1.2%"): cite that text as it is, and call a variant whose `withinNoise` is true no different from the base. A variant that can\'t be built says why; one gcsim can\'t simulate is `notSimulated`. Takes seconds; repeats come from a cache.',
+      input: TeamSimSpec.shape,
+      run: async (args) => {
+        const r = await services.simulateTeam(args);
+        const n = (x: number) => Math.round(x);
+        return {
+          iterations: r.iterations,
+          burstWaits: r.burstWaits,
+          runs: r.runs.map((run) => ({
+            ...run,
+            ...(run.dps && {
+              dps: n(run.dps.mean),
+              dpsCi95: run.dps.ci95.map(n),
+            }),
+            ...(run.fightSec !== undefined && {
+              fightSec: r1(run.fightSec),
+            }),
+            ...(run.characters && {
+              characters: run.characters.map((c) => ({
+                character: c.character,
+                dps: n(c.dps),
+                sharePct: r1(100 * c.share),
+                fieldSec: r1(c.fieldSec),
+                energyWaitSec: r1(c.energyWaitSec),
+              })),
+            }),
+            ...(run.reactions && {
+              reactions: Object.fromEntries(
+                Object.entries(run.reactions).map(([k, v]) => [k, r1(v)]),
+              ),
+            }),
+            ...(run.vsBase && {
+              vsBase: {
+                text: run.vsBase.text,
+                pct: r1(run.vsBase.pct),
+                ci95Pct: r1(run.vsBase.ci95Pct),
+                withinNoise: run.vsBase.withinNoise,
+              },
+            }),
+          })),
+        };
+      },
     }),
     tool({
       name: 'list_rotations',

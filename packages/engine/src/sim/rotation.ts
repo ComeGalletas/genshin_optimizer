@@ -24,6 +24,7 @@
  */
 
 import * as z from 'zod/mini';
+import { describeIssues } from '../zodIssues';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { COMP_ARCHETYPES } from '../teams/comps';
 import {
@@ -172,7 +173,10 @@ export function rotationIssues(input: {
   reference?: string;
 }): string[] {
   const shape = RotationMetaSchema.safeParse(input.meta);
-  if (!shape.success) return shape.error.issues.flatMap(describeIssue);
+  if (!shape.success)
+    return describeIssues(shape.error.issues, 'meta').map(
+      (i) => `${i.path}: ${i.message}`,
+    );
   const meta = shape.data;
   const out: string[] = [];
   const ids = meta.slots.map((s) => s.id);
@@ -228,41 +232,6 @@ export function rotationIssues(input: {
         out.push(`reference has no "${n} char" line`);
   }
   return out;
-}
-
-type MetaIssue = NonNullable<
-  ReturnType<typeof RotationMetaSchema.safeParse>['error']
->['issues'][number];
-
-/** zod/mini has no English messages (ADR-0022): these are for a person
- *  editing `meta.json`. */
-function describeIssue(issue: MetaIssue): string[] {
-  const at = (p: readonly PropertyKey[]) =>
-    ['meta', ...p.map(String)].join('.');
-  switch (issue.code) {
-    case 'unrecognized_keys':
-      return issue.keys.map((k) => `${at([...issue.path, k])}: unknown field`);
-    case 'invalid_type':
-      return [`${at(issue.path)}: expected ${issue.expected}`];
-    case 'invalid_value':
-      return [
-        `${at(issue.path)}: must be ${issue.values.map((v) => JSON.stringify(v)).join(' or ')}`,
-      ];
-    case 'invalid_format':
-      return [
-        'pattern' in issue && issue.format === 'regex'
-          ? `${at(issue.path)}: must match ${String(issue.pattern)}`
-          : `${at(issue.path)}: not a valid ${issue.format}`,
-      ];
-    case 'too_small':
-      return [`${at(issue.path)}: at least ${issue.minimum}`];
-    case 'too_big':
-      return [`${at(issue.path)}: at most ${issue.maximum}`];
-    case 'invalid_union':
-      return [`${at(issue.path)}: not one of the accepted forms`];
-    default:
-      return [`${at(issue.path)}: ${issue.message}`];
-  }
 }
 
 /** The non-comment lines of a reference block. */
@@ -368,6 +337,9 @@ export interface RotationRun {
   /** Overrides the rotation's `energyWait`, e.g. to fill waits with the
    *  owner's builds while keeping a published rotation's own (idle). */
   energyWait?: 'idle' | 'attack';
+  /** Changes to the rotation's enemy (level, resistance in percent, how
+   *  many targets; TODO 6.1). */
+  enemy?: { level?: number; res?: number; count?: number };
 }
 
 /** A config for this rotation: our characters (one per slot, keyed by slot
@@ -413,7 +385,7 @@ export function rotationConfig(
     characters: blocks,
     active: slots[meta.active],
     rotation: renderTemplate(template, slots),
-    enemy: fight.enemy,
+    enemy: { ...fight.enemy, ...run.enemy },
     energy: fight.energy,
     iterations: run.iterations,
     duration:

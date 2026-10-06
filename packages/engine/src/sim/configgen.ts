@@ -93,6 +93,9 @@ export interface SimEnemy {
   /** Hitbox radius and position, in gcsim's units. */
   radius?: number;
   pos?: readonly [number, number];
+  /** How many targets (default 1). The others are copies of the first, 2
+   *  apart on a line through it: (x+2, y), (x-2, y), (x+4, y), … (TODO 6.1). */
+  count?: number;
 }
 
 /** One build's artifact lines, summed per stat in gcsim's names and units.
@@ -131,15 +134,21 @@ export const DEFAULT_ENERGY = 'energy every interval=480,720 amount=1;';
 
 /** The target. No hp unless asked for: with one, gcsim fights until the
  *  target dies or the actions run out, not for the duration (TODO 5.3). */
-function targetLine(enemy: SimEnemy = {}): string {
-  const parts = [
-    `lvl=${enemy.level ?? 100}`,
-    `resist=${num((enemy.res ?? 10) / 100)}`,
-  ];
-  if (enemy.radius !== undefined) parts.push(`radius=${num(enemy.radius)}`);
-  if (enemy.pos) parts.push(`pos=${enemy.pos.map(num).join(',')}`);
-  if (enemy.hp !== undefined) parts.push(`hp=${num(enemy.hp)}`);
-  return `target ${parts.join(' ')};`;
+function targetLines(enemy: SimEnemy = {}): string[] {
+  const count = enemy.count ?? 1;
+  const [x, y] = enemy.pos ?? [0, 0];
+  return Array.from({ length: count }, (_, i) => {
+    const parts = [
+      `lvl=${enemy.level ?? 100}`,
+      `resist=${num((enemy.res ?? 10) / 100)}`,
+    ];
+    if (enemy.radius !== undefined) parts.push(`radius=${num(enemy.radius)}`);
+    // 0, +2, -2, +4, -4, … along x.
+    const dx = i === 0 ? 0 : (i % 2 ? 1 : -1) * 2 * Math.ceil(i / 2);
+    if (enemy.pos || count > 1) parts.push(`pos=${num(x + dx)},${num(y)}`);
+    if (enemy.hp !== undefined) parts.push(`hp=${num(enemy.hp)}`);
+    return `target ${parts.join(' ')};`;
+  });
 }
 
 /** One character's build lines: level, constellation and talents, weapon,
@@ -172,7 +181,7 @@ export function gcsimConfig(team: SimTeam): string {
     `swap_delay=${team.swapDelay ?? 12}`,
   ];
   lines.push(`options ${opts.join(' ')};`);
-  lines.push(targetLine(team.enemy), team.energy ?? DEFAULT_ENERGY, '');
+  lines.push(...targetLines(team.enemy), team.energy ?? DEFAULT_ENERGY, '');
   for (const c of team.characters) {
     if (typeof c === 'string') {
       lines.push(c.trim(), '');
