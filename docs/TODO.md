@@ -2,8 +2,8 @@
 
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
-**Current phase:** 9 (UI refresh). Phases 0 to 8 are accepted (Phase 2 and Phase 8 on 2026-10-06).
-**Next item:** 9.11, hover windows (on hold; scope to settle with the owner)
+**Current phase:** 10 (reorganization). Phases 0 to 9 are accepted (Phases 2, 8 and 9 on 2026-10-06).
+**Next item:** 10.1, the owner's scope for the reorganization; then 10.2's ADR on guide sources
 
 ## Housekeeping (done 2026-09-24)
 
@@ -446,8 +446,21 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - (6) Rolls: `rollSplit.ts` splits each line only as far as the value proves. The first roll is exact from Irminsul; the upgrades are the tier combinations whose counts fit the piece's rolls; ambiguous splits show only their count and sum. On the owner's 309 +20 pieces: 992 of 1,236 lines exact, 220 by count, 24 open, every claimed split consistent with the export. The roll data now rides on the artifact (`rolls`), from a file or from the server's account (`/account/good` writes each piece's extras).
   - The owner's check: Skirk (C1) showed no constellations. The texts files were fine (all 120 in the build); the dev server had mapped the texts folder while `build:data` was rewriting it, so 2 of 120 were missing until it restarted. Constellations are now rows that open like the talents, the game's highlighted terms (genshin-db's `**…**`) show in bold, and a texts load that finds nothing is retried on the next window instead of kept.
   - Tests: talent value formats, texts for every character, set effects for every set, roll splits (unit cases and the real export), roll data kept on import, validated in storage and carried by the server; the window's tabs, header button, talents, constellations, main stats, rolls and set effects.
-- [ ] 9.11 Hover windows on some elements: proposed for the owner to settle when it starts: a set's name (its 2- and 4-piece effects), a weapon's name (its passive at the refinement), a stat's name (what it does), a substat's rolls (each roll's tier), a character's portrait in lists (level, constellation, weapon, build score); opened on hover and on keyboard focus, never the only way to reach the information
-- [ ] **Accept:** the app opens empty, with no demo or tutorial content, offering demo data, the local server's account or a new source; every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load no larger than before Phase 9
+- 9.11 Hover windows: moved out of Phase 9 on the owner's call (2026-10-06), narrowed to weapons only, as 10.3
+- [x] **Accept:** the app opens empty, with no demo or tutorial content, offering demo data, the local server's account or a new source; every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load no larger than before Phase 9
+  - Accepted by the owner on 2026-10-06, after 9.1 to 9.10. First load: 173.7 KB gzipped, summing Vite's per-chunk sizes for the JS and CSS the page loads before any view. The earlier figures (169.7 KB before Phase 9, 163.8 KB at 9.6, ADR-0054) came from a method not recorded, so they aren't directly comparable. Measured the same way, the character window adds 0.3 KB and the roll data check 0.35 KB. Every lazy view, the window and its data stay out of the first load.
+  - The QA pass the owner asked for (a separate session, report only) was still running at acceptance; its findings become Phase 10 fixes.
+
+## Phase 10: Reorganization
+
+- [ ] 10.1 Owner: the reorganization's scope, meaning what moves where and which new functions come in. The items below grow from it.
+- [ ] 10.2 More guide sources for the build and team previews, beside KQM's: [ADR](adr/) first.
+  - genshin-builds.com, whose robots.txt allows crawlers and AI agents and whose pages follow one template per character. An extractor run by hand at data-build time (not in the browser, not on every load) reads each character's page into a checked schema: ranked weapons, artifact sets, main stats per slot, substat and talent priority, teams. Facts only, mapped to dataset keys, never the prose. Each record keeps its URL, fetch date and game version, and the owner reviews it before it counts, as with rotations. Polite fetching: one request at a time, cached, with an identifying user agent. Ask the site's author first.
+  - Game8: links only. Its terms allow browsing alone and forbid copying, reproducing, and using unauthorized software on its content, and its robots.txt blocks AI crawlers. Each preview links to the character's Game8 guide, with the URLs kept by hand.
+  - The previews show the sources side by side, where they agree and where they don't, with the source named on every line. The optimizer's defaults stay on one chosen source.
+- [ ] 10.3 (Side) Hover window for weapons only: a weapon's name shows its passive at its refinement and its base ATK and substat at its level. It opens on hover and on keyboard focus, and the window's Gear tab stays the full view.
+- [ ] 10.4 (Future, to consider) Stygian Onslaught teams among the Teams view's options, beside the Spiral Abyss: its rules, enemies and team restrictions, and whether curated teams exist for it.
+- [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog
 

@@ -142,9 +142,18 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 - Long sections tightened: the rotation library as a grid of compact cards with details in a drawer; Compare Teams' form and results grouped.
 - A character window, opened wherever a character can be clicked, showing their current state: the weapon (level, refinement, base ATK and substat, the passive at that refinement, its description), the stat sheet as base + artifact gains = total (HP 13,103 + 9,820 = 24,931), the talents at their base level with +3 where a constellation raises one, and each equipped artifact with its substats; the character's splash art behind it. All values at the exact current level and ascension: the dataset carries the game's growth curves and ascension bonuses.
 - The character window's quality pass, after the owner's review: three tabs (Overview with Teams, then Recommended, then Optimise at the bottom; Stats; Gear); a larger name with a small Optimize button beside it on Stats and Gear; the talents on Stats, each opening to its description and its values at the level that applies (constellations included); the active constellations with their descriptions below the stats; the active set effects under the artifacts; each artifact's main stat on its own line, with its element; each substat's rolls (the first roll exact from Irminsul, the upgrades where the total fixes them).
-- Hover windows: a small card on hover or focus for the things a reader would otherwise have to open or look up (scope settled with the owner when it starts).
 
 **Accept:** the app opens empty, with no demo or tutorial content, and offers demo data, the local server's account or a new source; every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load is no larger than before Phase 9.
+
+## Phase 10: Reorganization
+
+Moving elements and functions around, and adding new ones, to the owner's scope (still to be written down: TODO 10.1).
+
+- More guide sources for the build and team previews, beside KQM's. genshin-builds.com is extracted at data-build time into a checked schema: facts only, each with its URL and date, reviewed by the owner before use. Game8 is linked, never extracted, because its terms forbid reproduction and unauthorized software. The previews compare the sources and name them. ADR.
+- On the side: a hover window for weapons only (its passive at its refinement, its stats at its level).
+- To consider for later: Stygian Onslaught teams beside the Spiral Abyss ones.
+
+**Accept:** settled with the owner once the scope is.
 
 ---
 
