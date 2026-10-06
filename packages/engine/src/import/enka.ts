@@ -6,6 +6,7 @@
 import type { Artifact, Element, Slot, StatKey, SubStat } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { MAX_KEY_LEN, validateArtifactDraft } from '../game/artifactValidation';
+import { isRecord } from '../json';
 
 export type UidError = { error: 'NOT_FOUND' | 'NO_SHOWCASE' | 'NETWORK' };
 
@@ -67,19 +68,16 @@ export function parseEnkaResponse(
   // Enka's payload is untrusted third-party JSON: every level of the nesting
   // gets a shape guard, and a piece that fails validation is skipped rather
   // than thrown on — the same skip-don't-throw contract parseGOOD states.
-  const isObj = (x: unknown): x is Record<string, unknown> =>
-    typeof x === 'object' && x !== null;
-
   const out: Artifact[] = [];
   for (const av of avatars) {
-    if (!isObj(av)) continue;
+    if (!isRecord(av)) continue;
     const equipList = Array.isArray(av.equipList) ? av.equipList : [];
     for (const equip of equipList) {
-      if (!isObj(equip)) continue;
-      const flat = isObj(equip.flat) ? equip.flat : undefined;
+      if (!isRecord(equip)) continue;
+      const flat = isRecord(equip.flat) ? equip.flat : undefined;
       if (!flat || flat.itemType !== 'ITEM_RELIQUARY') continue;
       const slot = EQUIP_SLOT[flat.equipType as string];
-      const reliquaryMainstat = isObj(flat.reliquaryMainstat)
+      const reliquaryMainstat = isRecord(flat.reliquaryMainstat)
         ? (flat.reliquaryMainstat as {
             mainPropId?: string;
             statValue?: number;
@@ -91,7 +89,7 @@ export function parseEnkaResponse(
         ? flat.reliquarySubstats
         : [];
       const subStats: SubStat[] = rawSubs
-        .filter(isObj)
+        .filter(isRecord)
         .map((s) => ({
           key: PROP_STAT[s.appendPropId as string],
           value: s.statValue as number,
@@ -100,7 +98,7 @@ export function parseEnkaResponse(
         // A sub-stat can't duplicate the main stat, and there are at most four.
         .filter((s) => s.key !== mainStat)
         .slice(0, 4);
-      const reliquary = isObj(equip.reliquary) ? equip.reliquary : undefined;
+      const reliquary = isRecord(equip.reliquary) ? equip.reliquary : undefined;
       const rawLevel = reliquary?.level;
       const level = Math.max(
         0,

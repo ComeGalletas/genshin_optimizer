@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { explainBuild } from './explainClient';
 import type { ExplainPayload } from '@genshin-build-lab/engine/explain/explain';
+import { UNREADABLE_REPLY } from '../local-server/client';
 
 const payload: ExplainPayload = {
   characterKey: 'furina',
@@ -59,6 +60,6 @@ describe('explainBuild', () => {
       'fetch',
       vi.fn(async () => ({ ok: true, json: async () => ({ nope: 1 }) })),
     );
-    await expect(explainBuild(payload)).rejects.toThrow();
+    await expect(explainBuild(payload)).rejects.toThrow(UNREADABLE_REPLY);
   });
 });

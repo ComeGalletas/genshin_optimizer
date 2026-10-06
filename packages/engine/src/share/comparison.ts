@@ -11,6 +11,7 @@
  */
 
 import { packJson, unpackJson } from './url';
+import { isRecord } from '../json';
 
 export const SHARED_COMPARISON_VERSION = 1;
 
@@ -69,20 +70,18 @@ const isNum = (x: unknown): x is number =>
   typeof x === 'number' && Number.isFinite(x);
 const isText = (x: unknown, max = MAX_TEXT): x is string =>
   typeof x === 'string' && x.length > 0 && x.length <= max;
-const isObj = (x: unknown): x is Record<string, unknown> =>
-  typeof x === 'object' && x !== null && !Array.isArray(x);
 const isTexts = (x: unknown): x is string[] =>
   Array.isArray(x) && x.length <= MAX_LIST && x.every((t) => isText(t));
 const optional = (x: unknown, ok: (x: unknown) => boolean) =>
   x === undefined || ok(x);
 
 function isRun(x: unknown): x is SharedRun {
-  if (!isObj(x) || !isText(x.label, 120)) return false;
+  if (!isRecord(x) || !isText(x.label, 120)) return false;
   return (
     optional(
       x.rotation,
       (r) =>
-        isObj(r) &&
+        isRecord(r) &&
         isText(r.id, 80) &&
         isText(r.name, 120) &&
         isText(r.status, 20),
@@ -94,7 +93,7 @@ function isRun(x: unknown): x is SharedRun {
         t.length <= MAX_MEMBERS &&
         t.every(
           (m) =>
-            isObj(m) &&
+            isRecord(m) &&
             isText(m.slot, 80) &&
             isText(m.character, 80) &&
             isText(m.weapon, 80) &&
@@ -109,7 +108,7 @@ function isRun(x: unknown): x is SharedRun {
     optional(
       x.enemy,
       (e) =>
-        isObj(e) &&
+        isRecord(e) &&
         optional(e.level, isNum) &&
         optional(e.res, isNum) &&
         optional(e.count, isNum),
@@ -119,7 +118,7 @@ function isRun(x: unknown): x is SharedRun {
     optional(
       x.dps,
       (d) =>
-        isObj(d) &&
+        isRecord(d) &&
         isNum(d.mean) &&
         isNum(d.sd) &&
         Array.isArray(d.ci95) &&
@@ -137,7 +136,7 @@ function isRun(x: unknown): x is SharedRun {
         cs.length <= MAX_MEMBERS &&
         cs.every(
           (c) =>
-            isObj(c) &&
+            isRecord(c) &&
             isText(c.character, 80) &&
             ['dps', 'share', 'fieldSec', 'energyWaitSec'].every((k) =>
               isNum(c[k]),
@@ -147,7 +146,7 @@ function isRun(x: unknown): x is SharedRun {
     optional(
       x.reactions,
       (r) =>
-        isObj(r) &&
+        isRecord(r) &&
         Object.keys(r).length <= MAX_REACTIONS &&
         Object.entries(r).every(([k, v]) => isText(k, 40) && isNum(v)),
     ) &&
@@ -155,7 +154,7 @@ function isRun(x: unknown): x is SharedRun {
     optional(
       x.vsBase,
       (v) =>
-        isObj(v) &&
+        isRecord(v) &&
         isNum(v.pct) &&
         isNum(v.ci95Pct) &&
         typeof v.withinNoise === 'boolean' &&
@@ -166,7 +165,7 @@ function isRun(x: unknown): x is SharedRun {
 
 /** Validate an untrusted decoded comparison: the typed value, or null. */
 export function parseSharedComparison(x: unknown): SharedComparison | null {
-  if (!isObj(x) || x.v !== SHARED_COMPARISON_VERSION) return null;
+  if (!isRecord(x) || x.v !== SHARED_COMPARISON_VERSION) return null;
   if (!Number.isInteger(x.iterations) || (x.iterations as number) < 1)
     return null;
   if (!isText(x.burstWaits, 40) || !isNum(x.ms)) return null;
