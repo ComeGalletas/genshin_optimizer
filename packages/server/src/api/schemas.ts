@@ -172,6 +172,30 @@ export const SpecBody = z
   .strict();
 export type SpecBody = z.infer<typeof SpecBody>;
 
+/** An allocation (TODO 7.4): characters with their own specs, sharing one
+ *  inventory. The specs are checked by the engine, as `SpecBody`'s. */
+export const AllocateBody = z
+  .object({
+    members: z
+      .array(
+        z
+          .object({
+            spec: z.unknown(),
+            /** Lower picks first in the greedy pass; their order otherwise. */
+            priority: z.number().int().min(0).max(100).optional(),
+            /** Their share of the plan's score; their role's otherwise. */
+            weight: z.number().positive().max(10).optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(12),
+    mode: z.enum(['greedy', 'v1', 'exact']).optional(),
+    topM: z.number().int().min(1).max(50).optional(),
+  })
+  .strict();
+export type AllocateBody = z.infer<typeof AllocateBody>;
+
 /** A request in words for the translator (TODO 4.3). */
 export const TranslateBody = z
   .object({ text: z.string().trim().min(1).max(1000) })

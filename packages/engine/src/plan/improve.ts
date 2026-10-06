@@ -102,6 +102,9 @@ export interface AllocationV1 {
   /** Each member's solo best objective value; null when no build fits
    *  them even alone. */
   solo: Record<string, number | null>;
+  /** The pieces of each member's solo best (what the plan's notes compare
+   *  with), or null. */
+  soloPieces: Record<string, string[] | null>;
   /** Improving moves applied, by kind. */
   moves: { swap: number; take: number; reoptimise: number; pair: number };
 }
@@ -130,9 +133,11 @@ export async function allocateV1(
 
   // Each member's solo best: the normaliser of their share of the score.
   const solo = new Map<AllocationMember, number | null>();
+  const soloPieces = new Map<AllocationMember, string[] | null>();
   for (const [i, m] of order.entries()) {
     if (m.problem) {
       solo.set(m, null);
+      soloPieces.set(m, null);
     } else {
       ctx.set(m, buildContext(m.request, m.extras));
       const r = await runOptimize(
@@ -142,6 +147,12 @@ export async function allocateV1(
       );
       const best = r.status === 'ok' ? r.builds[0].score : null;
       solo.set(m, best !== null && best > 0 ? best : null);
+      soloPieces.set(
+        m,
+        r.status === 'ok' && best !== null && best > 0
+          ? SLOTS.map((s) => r.builds[0].artifactIds[s])
+          : null,
+      );
     }
     opts.onProgress?.(order.length + i + 1, order.length * 2);
   }
@@ -353,6 +364,9 @@ export async function allocateV1(
     builds,
     score: { greedy: greedyScore, improved: score() },
     solo: Object.fromEntries(order.map((m) => [m.characterKey, solo.get(m)!])),
+    soloPieces: Object.fromEntries(
+      order.map((m) => [m.characterKey, soloPieces.get(m)!]),
+    ),
     moves,
   };
 }

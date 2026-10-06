@@ -259,9 +259,80 @@ describe('imports and later phases', () => {
     expect((await get('/imports/9/changes')).statusCode).toBe(404);
   });
 
-  it('answers 501 for allocation until its phase', async () => {
-    expect((await post('/allocate', {})).statusCode).toBe(501);
+  it('answers 404 for a route it doesn’t have', async () => {
     expect((await get('/nope')).statusCode).toBe(404);
+  });
+});
+
+describe('allocation (TODO 7.4)', () => {
+  const spec = (character: string, over: object = {}) => ({
+    spec: { version: 1, character, set: { kind: 'any' }, ...over },
+  });
+
+  it('shares the pieces out, no piece twice, with each member’s share, the moves and the farming list', async () => {
+    const r = await post('/allocate', {
+      members: [spec('neuvillette'), spec('raiden_shogun')],
+    });
+    expect(r.statusCode).toBe(200);
+    const body = r.json();
+    expect(body.mode).toBe('exact');
+    expect(body.solver.exact).toBe(true);
+    expect(body.score.exact).toBeGreaterThanOrEqual(body.score.improved);
+    expect(
+      body.members.map((m: { characterKey: string }) => m.characterKey),
+    ).toEqual(['neuvillette', 'raiden_shogun']);
+    // Both carries: weight 2 by role, unless told.
+    expect(body.members[0]).toMatchObject({ weight: 2, status: 'ok' });
+    expect(body.members[0].understood).toMatch(/Neuvillette/);
+    const ids = body.members.flatMap(
+      (m: { build?: { artifactIds: object } }) =>
+        m.build ? Object.values(m.build.artifactIds) : [],
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const m of body.members)
+      if (m.status === 'ok') expect(m.share).toBeLessThanOrEqual(1 + 1e-9);
+    // Every planned piece is either in place or moved.
+    expect(body.moves.inPlace + body.moves.moves.length).toBe(ids.length);
+    expect(Array.isArray(body.farming)).toBe(true);
+  });
+
+  it('runs greedy and v1 too, and keeps a weight it is given', async () => {
+    const greedy = (
+      await post('/allocate', {
+        members: [spec('furina'), { ...spec('neuvillette'), weight: 3 }],
+        mode: 'greedy',
+      })
+    ).json();
+    expect(greedy.score).toBeUndefined();
+    expect(greedy.members[1]).toMatchObject({ weight: 3 });
+    expect(greedy.members[0].share).toBeUndefined();
+    const v1 = (
+      await post('/allocate', {
+        members: [spec('furina'), spec('neuvillette')],
+        mode: 'v1',
+      })
+    ).json();
+    expect(v1.score.improved).toBeGreaterThanOrEqual(v1.score.greedy);
+    expect(v1.improvements).toBeDefined();
+  });
+
+  it('names every problem in every spec at once, with where it is', async () => {
+    const r = await post('/allocate', {
+      members: [
+        spec('furnia'),
+        spec('neuvillette', { objective: 'sim' }),
+        spec('furina'),
+        spec('furina'),
+      ],
+    });
+    expect(r.statusCode).toBe(400);
+    const paths = r.json().issues.map((i: { path: string }) => i.path);
+    expect(paths).toEqual([
+      'members.0.character',
+      'members.1.objective',
+      'members.3.character',
+    ]);
+    expect((await post('/allocate', { members: [] })).statusCode).toBe(400);
   });
 });
 
@@ -342,7 +413,7 @@ describe('queries, comparisons and MCP over HTTP', () => {
       });
     const r = await rpc(H);
     expect(r.statusCode).toBe(200);
-    expect(r.json().result.tools.length).toBe(11);
+    expect(r.json().result.tools.length).toBe(12);
     expect((await rpc({ host: 'evil.example' })).statusCode).toBe(403);
     expect((await get('/mcp')).statusCode).toBe(405);
   });

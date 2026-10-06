@@ -21,6 +21,7 @@ import { DEFAULT_INBOX, processInbox } from '../inbox/inbox';
 import { SearchRunner } from '../optimize/pool';
 import { createMcpServer } from '../mcp/server';
 import {
+  AllocateBody,
   ArtifactQuery,
   ChatBody,
   CompareBody,
@@ -278,15 +279,11 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     return { ...r, provider: llmClient.provider, model: llmClient.model };
   });
 
-  // ---- later phases ----------------------------------------------------------
-  app.post('/allocate', async (_req, reply) =>
-    fail(
-      reply,
-      501,
-      'not_implemented',
-      'account-wide allocation comes in Phase 7',
-    ),
-  );
+  // ---- allocation (Phase 7, ADR-0048) ----------------------------------------
+  app.post('/allocate', async (req, reply) => {
+    const body = parse(AllocateBody, req.body, reply);
+    if (body) return services.allocate(body);
+  });
 
   // ---- imports ---------------------------------------------------------------
   app.get('/imports', async () => services.imports());

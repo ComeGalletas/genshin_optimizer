@@ -93,7 +93,32 @@ import { statLabel } from '@genshin-build-lab/engine/labels-core';
 import { translateRequest, translationCatalog } from '../llm/translate';
 import type { LlmClient } from '../llm/client';
 import type { OptimizeContext } from '@genshin-build-lab/engine/game/types';
-import type { ArtifactQuery, CompareBody, OptimizeBody } from './schemas';
+import type {
+  AllocateBody,
+  ArtifactQuery,
+  CompareBody,
+  OptimizeBody,
+} from './schemas';
+import {
+  allocateGreedy,
+  memberFromRun,
+  type AllocatedBuild,
+  type AllocationMember,
+  type RunOptimize,
+} from '@genshin-build-lab/engine/plan/allocate';
+import {
+  allocateV1,
+  type AllocationV1,
+} from '@genshin-build-lab/engine/plan/improve';
+import {
+  allocateV2,
+  type AllocationV2,
+} from '@genshin-build-lab/engine/plan/exact';
+import {
+  planFarming,
+  planMoves,
+  planShare,
+} from '@genshin-build-lab/engine/plan/output';
 
 export class ServiceError extends Error {
   constructor(
@@ -513,6 +538,132 @@ export class Services {
       }),
       // "sim" asked, stat search given: say why (5.9).
       ...(notSimulated && { notSimulated }),
+    };
+  }
+
+  /** Share the account's artifacts out between characters (TODO 7.4,
+   *  ADR-0048): each member's spec checked and mapped as a single search's,
+   *  then the greedy pass, v1 or v2 (the default), and the plan's output:
+   *  builds, each member's share of their best alone, the moves from what
+   *  each piece is on now, and the farming list. */
+  async allocate(body: AllocateBody) {
+    const issues: SpecIssue[] = [];
+    const members: AllocationMember[] = [];
+    const understood: Record<string, string> = {};
+    const seen = new Set<string>();
+    for (const [i, m] of body.members.entries()) {
+      const at = (path: string) => `members.${i}.${path}`;
+      const objective = (m.spec as { objective?: unknown } | null)?.objective;
+      if (objective === 'sim') {
+        issues.push({
+          path: at('objective'),
+          message:
+            'an allocation ranks builds by a stat objective; "sim" re-ranks one character\'s builds (optimize_build). Use the stat objective the sim would re-rank, e.g. avg_damage or crit_value.',
+        });
+        continue;
+      }
+      let checked;
+      try {
+        checked = this.checkSpec(m.spec, 1);
+      } catch (e) {
+        if (!(e instanceof ServiceError && e.issues)) throw e;
+        issues.push(...e.issues.map((x) => ({ ...x, path: at(x.path) })));
+        continue;
+      }
+      const key = checked.run.request.characterKey;
+      if (seen.has(key)) {
+        issues.push({
+          path: at('character'),
+          message: `${genshinAdapter.characterName(key)} is in the allocation twice; one spec per character.`,
+        });
+        continue;
+      }
+      seen.add(key);
+      understood[key] = checked.understood.text;
+      members.push(
+        memberFromRun(checked.run, {
+          priority: m.priority ?? i,
+          ...(m.weight !== undefined && { weight: m.weight }),
+        }),
+      );
+    }
+    if (issues.length) throw invalidSpec(issues);
+
+    const run: RunOptimize = async (req, inv, extras) => {
+      try {
+        return await this.searches.run(
+          req,
+          zeroOffElementGoblets(inv, req.characterKey),
+          buildContext(req, extras),
+        );
+      } catch (e) {
+        if (e instanceof SearchTimeout)
+          throw new ServiceError(
+            504,
+            'timeout',
+            `${genshinAdapter.characterName(req.characterKey)}'s search: ${e.message}`,
+          );
+        throw e;
+      }
+    };
+    const inventory = this.artifacts();
+    const mode = body.mode ?? 'exact';
+    const t0 = performance.now();
+    const r: Pick<AllocationV1, 'builds'> &
+      Partial<Omit<AllocationV1, 'score'>> & {
+        score?: AllocationV1['score'] & { exact?: number };
+        solver?: AllocationV2['solver'];
+      } =
+      mode === 'greedy'
+        ? await allocateGreedy(members, inventory, run)
+        : mode === 'v1'
+          ? await allocateV1(members, inventory, run)
+          : await allocateV2(members, inventory, run, {
+              ...(body.topM !== undefined && { topM: body.topM }),
+            });
+    const ms = Math.round(performance.now() - t0);
+    const solo =
+      r.solo && r.soloPieces
+        ? { solo: r.solo, soloPieces: r.soloPieces }
+        : undefined;
+    const byId = new Map(inventory.map((a) => [a.id, a]));
+    const memberOf = new Map(members.map((m) => [m.characterKey, m]));
+    const show = (b: AllocatedBuild) => {
+      const m = memberOf.get(b.characterKey)!;
+      const best = b.result.status === 'ok' ? b.result.builds[0] : null;
+      const share = planShare(b, solo?.solo[b.characterKey]);
+      return {
+        characterKey: b.characterKey,
+        understood: understood[b.characterKey],
+        priority: m.priority,
+        weight: m.weight,
+        objective: b.objective,
+        ...(share !== null && { share }),
+        ...(best
+          ? {
+              status: 'ok' as const,
+              build: {
+                ...best,
+                artifacts: Object.fromEntries(
+                  SLOTS.map((s: Slot) => [s, byId.get(best.artifactIds[s])!]),
+                ) as Record<Slot, Artifact>,
+              },
+            }
+          : { status: 'no_build' as const }),
+        // The greedy pass's notes, true of its plan only.
+        ...(mode === 'greedy' &&
+          b.conflicts.length && { conflicts: b.conflicts }),
+      };
+    };
+    return {
+      mode,
+      ms,
+      ...(r.score && { score: r.score }),
+      ...(r.solver && { solver: r.solver }),
+      ...(r.moves && { improvements: r.moves }),
+      members: r.builds.map(show),
+      moves: planMoves(r.builds, inventory),
+      farming: planFarming(members, r.builds, inventory, solo),
     };
   }
 

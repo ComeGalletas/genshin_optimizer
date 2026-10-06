@@ -6,8 +6,9 @@
  *
  * Results are compact JSON objects (stats rounded to one decimal,
  * artifacts as set/slot/level/main/substats): a model reads every token of
- * them. Tools for later phases (`simulate_team`, `allocate_team`) are added
- * when they exist, not before: a tool that always fails wastes a turn.
+ * them. Tools for later phases were added when they existed, not before
+ * (`simulate_team` in 6.2, `allocate_team` in 7.4): a tool that always
+ * fails wastes a turn.
  * @packageDocumentation
  */
 
@@ -27,6 +28,7 @@ export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact acco
 - optimize_build takes a ConstraintSpec that extends the character's curated defaults: pass only what the owner asked for. It is exact and can take tens of seconds on a large account; when it times out, narrow the spec (a set, main stats, or keepEquippedOn "all").
 - When you report builds, start with optimize_build's "understood" sentence, so the owner can check the request was read right.
 - simulate_team compares team variants with a base. Cite each variant as "<label>: <vsBase.text> team DPS", copying vsBase.text exactly (sign, digits and the ± interval: "Kazuha swap: +7.4% ± 1.2% team DPS"); never round it or move an interval to another variant. A variant whose withinNoise is true is no different from the base: say so, whatever its sign. A run with problems or notSimulated has no numbers: say why.
+- allocate_team shares the artifacts out between several characters, no piece twice. Report each member's build and sharePct (their share of their best build alone), then the moves in order and the farming list as given.
 - Rotations (gcsim action lists for a team) are in list_rotations and get_rotation. draft_rotation saves a new one only as a draft; tell the owner it needs their review (npm run rotations -- review <id>) before it counts, and never call a draft validated.`;
 
 const r1 = (x: number) => Math.round(x * 10) / 10;
@@ -274,6 +276,65 @@ export function accountTools(services: Services): ToolDef[] {
         'One rotation by id: its meta (slots, fight, source, validation) and its template, the gcsim action list with {{slot}} placeholders. Read one or two before drafting: they show the syntax that works.',
       input: { id: z.string().max(60) },
       run: ({ id }) => services.getRotation(id),
+    }),
+    tool({
+      name: 'allocate_team',
+      title: 'Share artifacts between characters',
+      description:
+        'Builds for several characters at once (up to 12) from the account\'s artifacts, no piece used twice: the joint answer to "build my Mualani team" when one-at-a-time optimize_build would hand the same pieces to two characters. Each member is a ConstraintSpec as optimize_build takes it (except objective "sim"), with an optional priority (lower picks first in the greedy start; their order otherwise) and weight (how much their build counts when two want the same pieces; by default by role: on-field DPS 2, off-field DPS 1.5, others 1). mode "exact" (default) is the best plan within each member\'s topM builds (default 20), proven by a branch and bound; "v1" a local search from the greedy pass; "greedy" the fastest, each member in turn over what is left. Returns per member the "understood" sentence, the build, and sharePct (their build as a percent of their best build alone, when nobody else wants a piece); the plan\'s score (the weighted mean share); the moves in order (who to equip with which piece, from whom, following the game\'s swaps) and how many pieces are already in place; and the farming list (meta-target gaps, shares below 100% with who holds the missing pieces, members without a build and why). Takes a search per member and, for exact, a top-M search per member: up to a minute or two on a large account.',
+      input: {
+        members: z
+          .array(
+            z
+              .object({
+                spec: ConstraintSpecSchema,
+                priority: z.number().int().min(0).max(100).optional(),
+                weight: z.number().positive().max(10).optional(),
+              })
+              .strict(),
+          )
+          .min(1)
+          .max(12),
+        mode: z.enum(['greedy', 'v1', 'exact']).optional(),
+        topM: z.number().int().min(1).max(50).optional(),
+      },
+      run: async (args) => {
+        const r = await services.allocate(args);
+        const pct = (x: number) => r1(100 * x);
+        return {
+          mode: r.mode,
+          ...(r.score && {
+            planScorePct: Object.fromEntries(
+              Object.entries(r.score).map(([k, v]) => [k, pct(v)]),
+            ),
+          }),
+          ...(r.solver && { solver: r.solver }),
+          members: r.members.map((m) => ({
+            character: m.characterKey,
+            understood: m.understood,
+            weight: m.weight,
+            ...(m.share !== undefined && { sharePct: pct(m.share) }),
+            ...(m.status === 'ok'
+              ? {
+                  build: {
+                    score: r1(m.build.score),
+                    objectiveValue: r1(m.build.objectiveValue),
+                    totals: round(m.build.totals),
+                    artifacts: Object.fromEntries(
+                      Object.entries(m.build.artifacts).map(([s, a]) => [
+                        s,
+                        compact(a),
+                      ]),
+                    ),
+                  },
+                }
+              : { build: null }),
+          })),
+          moves: r.moves.moves.map((m) => m.text),
+          piecesInPlace: r.moves.inPlace,
+          farming: r.farming,
+        };
+      },
     }),
     tool({
       name: 'draft_rotation',

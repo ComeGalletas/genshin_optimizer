@@ -54,6 +54,18 @@ thousands, crit value to hundreds, a stat to tens.
   knows each slot's role; an allocation from specs takes the role the
   character fills most in the curated archetypes (`defaultRole`), and 1 for
   one in none. A member's weight can always be given.
+- **Output** (`plan/output.ts`, TODO 7.4): each member's build and share
+  of their best alone; the **move list**, every planned piece not on its
+  member, in plan order, following the game's swaps (equipping a piece
+  another character wears gives them the piece it replaces), so each move
+  names who wears the piece at that point and a swap that lands a planned
+  piece on its member saves a move; and the farming list: the curated meta
+  target's gaps over the pieces left to each member (ADR-0019's list), a
+  share below 100% with who holds that build's pieces, a planned piece
+  below its top level, and why a member has no build. The server serves
+  it as `POST /allocate` and the MCP tool `allocate_team` (v2 by default;
+  `v1` and `greedy` on request). The greedy pass's conflict notes are
+  shown only for the greedy plan, the one they are true of.
 
 ## Consequences
 
@@ -68,4 +80,8 @@ thousands, crit value to hundreds, a stat to tens.
 - v2 is exact only within the candidates: a build outside every member's
   top-M is never seen. v1's build is always in the pool, so v2 ≥ v1.
 - Greedy stays the fast path (`composePlan`); v1 and v2 cost a search per
-  member for the solo best, and v2 a top-M search per member.
+  member for the solo best, and v2 a top-M search per member. The owner's
+  Mualani team (four members) takes 15 s through `/allocate`.
+- The move list trusts each piece's `location` from the latest import: a
+  piece moved in the game since then makes a move name the wrong wearer
+  until the next import.

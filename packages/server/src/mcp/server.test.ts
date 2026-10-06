@@ -41,6 +41,7 @@ describe('MCP server', () => {
   it('offers its tools with instructions, all read-only but drafting a rotation', async () => {
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name).sort()).toEqual([
+      'allocate_team',
       'compare_builds',
       'draft_rotation',
       'get_account_summary',
@@ -122,6 +123,36 @@ describe('MCP server', () => {
       cmp.b.objectiveValue - cmp.a.objectiveValue,
       0,
     );
+  });
+
+  it('allocates a team: builds, shares, moves and farming, compactly (TODO 7.4)', async () => {
+    const { r, data } = await call('allocate_team', {
+      members: [
+        { spec: { character: 'neuvillette', set: { kind: 'any' } } },
+        { spec: { character: 'raiden_shogun', set: { kind: 'any' } } },
+      ],
+    });
+    expect(r.isError).toBeFalsy();
+    expect(data.mode).toBe('exact');
+    expect(data.planScorePct.exact).toBeGreaterThanOrEqual(
+      data.planScorePct.improved,
+    );
+    expect(data.members[0]).toMatchObject({
+      character: 'neuvillette',
+      weight: 2,
+      understood: expect.stringMatching(/^I understood: build Neuvillette/),
+    });
+    expect(Object.keys(data.members[0].build.artifacts)).toHaveLength(5);
+    for (const m of data.members)
+      expect(Math.round(m.sharePct * 10) / 10).toBe(m.sharePct);
+    expect(data.moves.every((m: unknown) => typeof m === 'string')).toBe(true);
+    expect(typeof data.piecesInPlace).toBe('number');
+    // A spec's problems name the member they are in.
+    const bad = await call('allocate_team', {
+      members: [{ spec: { character: 'furina', objective: 'sim' } }],
+    });
+    expect(bad.r.isError).toBe(true);
+    expect(bad.text).toMatch(/members\.0\.objective: an allocation ranks/);
   });
 
   it('reports problems as tool errors the model can read', async () => {
