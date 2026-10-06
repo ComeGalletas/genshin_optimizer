@@ -382,6 +382,24 @@ describe('App — views (TODO 9.3–9.5)', () => {
     );
   });
 
+  it.each([
+    ['roster', 'The roster needs a roster.'],
+    ['teams', 'Teams needs a roster.'],
+    ['plan', 'The plan needs a roster.'],
+    ['optimise', 'Optimising needs artifacts.'],
+    ['simulate', 'Simulating needs the local server.'],
+    ['imports', 'The import center needs the local server.'],
+  ])(
+    'says in place what the %s view needs, nothing loaded and no server (TODO 9.8)',
+    async (view, text) => {
+      window.history.pushState({}, '', `/#/${view}`);
+      render(<App />);
+      expect(
+        await screen.findByTestId('needs-data', {}, { timeout: 5000 }),
+      ).toHaveTextContent(text);
+    },
+  );
+
   it('opens on the roster once one is loaded, shows the account bar, and follows the address', async () => {
     useRoster.getState().setRoster({ amber: { level: 90 } });
     useInventory.getState().addMany(

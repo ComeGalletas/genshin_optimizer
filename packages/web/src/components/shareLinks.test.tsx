@@ -80,6 +80,25 @@ describe('share links with simulation results (TODO 8.3)', () => {
     );
   });
 
+  it('opens a link from before simulations on Optimise, with its build and no simulation line (TODO 9.8)', async () => {
+    const param = await encodeBuild({ request, build, artifacts });
+    window.history.pushState({}, '', `/?b=${param}`);
+    render(<App />);
+    expect(
+      await screen.findByRole(
+        'heading',
+        { name: 'Results' },
+        { timeout: 5000 },
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Optimise' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(screen.getByText(/Shared build/)).toBeInTheDocument();
+    expect(screen.queryByTestId('shared-sim')).toBeNull();
+  });
+
   it('opens a shared comparison before any import, and closes it', async () => {
     const param = (await encodeComparison({
       iterations: 1000,

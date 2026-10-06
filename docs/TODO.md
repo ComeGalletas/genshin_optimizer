@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 9 (UI refresh). Phases 0, 1 and 3 to 8 are accepted (Phase 8 on 2026-10-06); Phase 2 still waits on its acceptance check (the owner's second Irminsul export).
-**Next item:** 9.8, the tests, then Phase 9's acceptance; Phase 2's acceptance check whenever the owner's second export is in
+**Next item:** Phase 9's acceptance (the owner's); Phase 2's acceptance check whenever the owner's second export is in
 
 ## Housekeeping (done 2026-09-24)
 
@@ -426,7 +426,8 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 - [x] 9.7 Long sections tightened: the rotation library as a card grid with details in a drawer; Compare Teams grouped
   - **Rotation Library**: a two-column grid of compact cards (team portraits, status, the summary to three lines, source and DPS, the slots the account can't field), Details opening a drawer (slots and roles, fight, validation, review, source, the action list, and Compare this team), so the library no longer lengthens the page. **Compare Teams**: the form in three groups (1 · the base team, 2 · variants with a note while there are none, 3 · run); the result's summary table first, the rest behind tabs (Damage share, DPS spread, Per character, Teams, Reactions when there are any, Energy). Checked in the browser on the owner's library.
   - Tests: the library's details read from the drawer and its Compare this team; the comparison tests open the tab they read.
-- [ ] 9.8 Tests: app and end-to-end tests on the views, each empty state, the account bar, old share links, the image fallbacks and the dataset's image coverage
+- [x] 9.8 Tests: app and end-to-end tests on the views, each empty state, the account bar, old share links, the image fallbacks and the dataset's image coverage
+  - Across Phase 9: the views (opening empty on Start with every view unlocked, the roster once loaded, an address followed, server views only with the server), every view's empty state (one parameterised test: roster, teams, plan, optimise, simulate, imports), the account bar and the last load's confirmation, the Start view's choices and the demo data, old share links (a build link from before simulations opens on Optimise without a simulation line; comparison links), the image fallbacks and every dataset entry's image name, the in-app help, the library's drawer and the comparison's tabs, and the end-to-end path through the menu. The full suite passes three times running; coverage without gcsim (as CI runs) stays above its floors.
 - [ ] **Accept:** the app opens empty, with no demo or tutorial content, offering demo data, the local server's account or a new source; every view one click away from the start, nothing locked; loading is one bar once an account is loaded; every character, weapon and artifact shown with its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load no larger than before Phase 9
 
 ## Backlog
