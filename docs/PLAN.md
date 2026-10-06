@@ -138,9 +138,10 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 - Separate views instead of one long page: Roster, Teams, Plan, Optimise (with Results and Rank by Team DPS), Simulate (Rotation Library and Compare Teams) and Imports (Import Center), each at its own address and loaded when opened; Simulate and Imports only while the local server runs. Share links open their view (`?b=` Optimise, `#c=` Simulate). ADR.
 - Load once, and start empty: no demo or tutorial content on first load (no hero demo numbers, no "try a sample build" walkthrough). The app opens empty with three choices: the demo data, the account on the local server (when it runs), or a new source (a GOOD file, a UID, or pieces by hand). Once something is loaded, loading collapses to an account bar ("1,650 artifacts · 94 characters · local server, imported … · Change") that brings the three choices back.
 - Nothing locked: every view reachable from the start, a view that needs a roster saying so in place with one action.
+- In-app help: each view's sections open with a short description of what they do, and a "?" button beside a section's title (and its subsections' where useful) opens a larger panel with the steps to follow: how to load data from each source, how to read a result, what a control does. On demand, never in the way.
 - Long sections tightened: the rotation library as a grid of compact cards with details in a drawer; Compare Teams' form and results grouped.
 
-**Accept:** the app opens empty, with no demo or tutorial content, and offers demo data, the local server's account or a new source; every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; the first load is no larger than before Phase 9.
+**Accept:** the app opens empty, with no demo or tutorial content, and offers demo data, the local server's account or a new source; every view is one click away from the start, nothing locked; with an account loaded, loading is one bar; every character, weapon and artifact the app shows has its game image or the fallback; existing share links still open; every view's sections describe themselves and offer their help; the first load is no larger than before Phase 9.
 
 ---
 
