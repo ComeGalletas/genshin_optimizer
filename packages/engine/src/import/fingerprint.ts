@@ -18,15 +18,14 @@
  * @packageDocumentation
  */
 
-import type { Artifact, StatKey, SubStat } from '../game/types';
-
-/** Flat stats show as integers; every other stat shows one decimal. */
-const FLAT: ReadonlySet<StatKey> = new Set(['hp', 'atk', 'def', 'em']);
+import type { Artifact, SubStat } from '../game/types';
+import { isFlatStat } from '../game/types';
 
 /** A substat value in display steps: whole points for flat stats, tenths
- *  for percentages. Integers, so comparisons are exact. */
+ *  for percentages, as the game shows them. Integers, so comparisons are
+ *  exact. */
 export const displaySteps = (s: SubStat): number =>
-  Math.round(FLAT.has(s.key) ? s.value : s.value * 10);
+  Math.round(isFlatStat(s.key) ? s.value : s.value * 10);
 
 const sortedSubs = (a: Artifact) =>
   [...a.subStats].sort((x, y) => x.key.localeCompare(y.key));

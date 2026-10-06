@@ -135,6 +135,12 @@ export const genshinAdapter = {
     return CHARACTER_BY_KEY.get(key)?.name ?? key;
   },
 
+  /** A weapon key as display copy, the raw key when the snapshot doesn't
+   *  know it (as `characterName`). */
+  weaponName(key: string): string {
+    return WEAPON_BY_KEY.get(key)?.name ?? key;
+  },
+
   weapons(): readonly WeaponMeta[] {
     return WEAPONS;
   },
@@ -166,11 +172,12 @@ export const genshinAdapter = {
     return SETS;
   },
 
-  /** The dataset's display name for a set key ("Gladiator's Finale", with the
-   *  apostrophe the key can't carry), or undefined for a key the frozen
-   *  snapshot doesn't know. */
-  setName(key: string): string | undefined {
-    return SET_BY_KEY.get(key)?.name;
+  /** A set key as display copy ("Gladiator's Finale", with the apostrophe
+   *  the key can't carry), the raw key when the snapshot doesn't know it (as
+   *  `characterName`). The web's `formatSetName` spaces an unknown key's
+   *  words instead, for the UI. */
+  setName(key: string): string {
+    return SET_BY_KEY.get(key)?.name ?? key;
   },
 
   baseStats(
@@ -220,3 +227,11 @@ export const genshinAdapter = {
     return arr[Math.max(0, Math.min(level, arr.length - 1))] ?? 0;
   },
 };
+
+/** The three display-name lookups as one table, for code that names
+ *  characters, weapons and sets alike (gcsim's support lines). */
+export const DISPLAY_NAMES = {
+  character: (key: string) => genshinAdapter.characterName(key),
+  weapon: (key: string) => genshinAdapter.weaponName(key),
+  set: (key: string) => genshinAdapter.setName(key),
+} as const;

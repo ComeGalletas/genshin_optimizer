@@ -65,18 +65,15 @@ const WARNING: Record<string, string> = {
 };
 const warning = (w: string) => WARNING[w] ?? w.replace(/_/g, ' ');
 const ITERATIONS = ['500', '1000', '2000'] as const;
-const name = (k: string) => genshinAdapter.character(k)?.name ?? k;
-const weaponName = (k: string) => genshinAdapter.weapon(k)?.name ?? k;
-const setName = (k: string) =>
-  genshinAdapter.sets().find((s) => s.key === k)?.name ?? k;
+const name = (k: string) => genshinAdapter.characterName(k);
 
 /** The label a variant gets unless the owner writes one. */
 function autoLabel(d: Draft, rotations: RotationSummary[]): string {
   switch (d.kind) {
     case 'weapon':
-      return `${name(d.character)}: ${weaponName(d.weapon)} R${d.refinement}`;
+      return `${name(d.character)}: ${genshinAdapter.weaponName(d.weapon)} R${d.refinement}`;
     case 'set':
-      return `${name(d.character)}: ${d.set ? `4pc ${setName(d.set)}` : 'any set'}`;
+      return `${name(d.character)}: ${d.set ? `4pc ${genshinAdapter.setName(d.set)}` : 'any set'}`;
     case 'swap':
       return `${name(d.to)} for ${name(d.character)}`;
     case 'enemy':

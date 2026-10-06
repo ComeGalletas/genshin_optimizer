@@ -8,6 +8,7 @@
  */
 
 import type { Objective, StatKey, StatVec } from '../game/types';
+import { isFlatStat } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { objectiveLabel, statLabel } from '../labels-core';
 import { SIM_ITERATIONS, SIM_TOP_K, type ConstraintSpec } from './spec';
@@ -27,11 +28,9 @@ export interface Understood {
   conditions: UnderstoodLine[];
 }
 
-const FLAT = new Set<StatKey>(['hp', 'atk', 'def', 'em']);
 const amount = (k: StatKey, v: number) =>
-  `${Number.isInteger(v) ? v : v.toFixed(1)}${FLAT.has(k) ? '' : '%'}`;
-const setName = (key: string) =>
-  genshinAdapter.sets().find((s) => s.key === key)?.name ?? key;
+  `${Number.isInteger(v) ? v : v.toFixed(1)}${isFlatStat(k) ? '' : '%'}`;
+const setName = (key: string) => genshinAdapter.setName(key);
 const statList = (v: StatVec, sign = '') =>
   (Object.entries(v) as [StatKey, number][])
     .map(([k, x]) => `${statLabel(k)} ${sign}${amount(k, x)}`)
@@ -63,10 +62,8 @@ export function describeRun(
 ): Understood {
   const { request, extras } = run;
   const c = request.constraints;
-  const character =
-    genshinAdapter.character(request.characterKey)?.name ??
-    request.characterKey;
-  const weapon = `${genshinAdapter.weapon(request.weaponKey)?.name ?? request.weaponKey}${
+  const character = genshinAdapter.characterName(request.characterKey);
+  const weapon = `${genshinAdapter.weaponName(request.weaponKey)}${
     request.refinement ? ` R${request.refinement}` : ''
   }`;
   const lines: UnderstoodLine[] = [];
@@ -126,7 +123,7 @@ export function describeRun(
   else if (keep?.length)
     line(
       `leaving the pieces ${keep
-        .map((k) => genshinAdapter.character(k)?.name ?? k)
+        .map((k) => genshinAdapter.characterName(k))
         .join(', ')} ${keep.length === 1 ? 'wears' : 'wear'}`,
       true,
     );

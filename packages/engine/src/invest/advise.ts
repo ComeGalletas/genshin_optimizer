@@ -31,7 +31,7 @@ const MAX_ADVICE = 10;
 /** No banner-schedule data ships with the app — say so rather than guess. */
 const ROTATES = 'Availability rotates — check a banner tracker before pulling.';
 
-const weaponName = (key: string) => genshinAdapter.weapon(key)?.name ?? key;
+const weaponName = (key: string) => genshinAdapter.weaponName(key);
 
 /** The best craftable weapon in the curated table for a given weapon type. */
 function craftableFor(weaponType: string): string | undefined {

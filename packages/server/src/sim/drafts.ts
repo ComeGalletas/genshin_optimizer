@@ -38,7 +38,7 @@ import {
   sampleTable,
   summarizeSample,
 } from '@genshin-build-lab/engine/sim/sample';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { DISPLAY_NAMES } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { setsInPlay, unsimulated } from '@genshin-build-lab/engine/sim/support';
 import { GcsimError, gcsimPath, loadGcsimTool } from './gcsim';
 import type { SimResult } from './result';
@@ -196,11 +196,7 @@ export async function draftRotation(
       weapons: builds.map((c) => c.weapon.key),
       sets: builds.flatMap((c) => setsInPlay(c.artifacts)),
     },
-    {
-      character: (k) => genshinAdapter.character(k)?.name ?? k,
-      weapon: (k) => genshinAdapter.weapon(k)?.name ?? k,
-      set: (k) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
-    },
+    DISPLAY_NAMES,
   );
   if (lacking.length)
     return {

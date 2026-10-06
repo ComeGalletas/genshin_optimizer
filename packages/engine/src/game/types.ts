@@ -28,6 +28,19 @@ export const STAT_KEYS = [
 
 export type StatKey = (typeof STAT_KEYS)[number];
 
+/** The flat stats. Every other stat is a percentage, kept in percent
+ *  (ADR-0023): shown with one decimal, and a fraction only at gcsim. */
+export const FLAT_STATS: ReadonlySet<StatKey> = new Set([
+  'hp',
+  'atk',
+  'def',
+  'em',
+]);
+
+/** Whether a stat is flat (a key that isn't a stat is not). */
+export const isFlatStat = (key: string): boolean =>
+  FLAT_STATS.has(key as StatKey);
+
 export function isStatKey(x: unknown): x is StatKey {
   return typeof x === 'string' && (STAT_KEYS as readonly string[]).includes(x);
 }

@@ -20,6 +20,7 @@
  */
 
 import type { Artifact, StatKey } from '../game/types';
+import { isFlatStat } from '../game/types';
 
 /** Our stat keys in gcsim's names. `elemental_dmg` is per element. */
 const GCSIM_STAT: Record<Exclude<StatKey, 'elemental_dmg'>, string> = {
@@ -36,9 +37,6 @@ const GCSIM_STAT: Record<Exclude<StatKey, 'elemental_dmg'>, string> = {
   physical_dmg: 'phys%',
   healing: 'heal',
 };
-
-/** Flat stats pass as they are; the rest are percent, passed as fractions. */
-const FLAT = new Set<StatKey>(['hp', 'atk', 'def', 'em']);
 
 /** gcsim's names: lowercase, letters and digits only (`raiden_shogun` →
  *  `raidenshogun`, `wolf's_gravestone` → `wolfsgravestone`,
@@ -108,7 +106,8 @@ export function gcsimStats(artifacts: readonly Artifact[]): [string, number][] {
     if (stat === 'elemental_dmg' && !element)
       throw new Error('an Elemental DMG goblet needs its element');
     const name = stat === 'elemental_dmg' ? `${element}%` : GCSIM_STAT[stat];
-    const v = FLAT.has(stat) ? value : value / 100;
+    // Flat stats pass as they are; the rest are percent, passed as fractions.
+    const v = isFlatStat(stat) ? value : value / 100;
     sums.set(name, (sums.get(name) ?? 0) + v);
   };
   for (const a of artifacts) {

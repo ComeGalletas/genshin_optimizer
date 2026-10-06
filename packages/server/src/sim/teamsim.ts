@@ -17,7 +17,10 @@
  */
 
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import {
+  DISPLAY_NAMES,
+  genshinAdapter,
+} from '@genshin-build-lab/engine/game/genshin/adapter';
 import {
   simCharacterFromAccount,
   type SimAccount,
@@ -68,13 +71,7 @@ export class TeamSimError extends Error {
   }
 }
 
-const name = (k: string) => genshinAdapter.character(k)?.name ?? k;
-const weaponName = (k: string) => genshinAdapter.weapon(k)?.name ?? k;
-const NAMES = {
-  character: name,
-  weapon: weaponName,
-  set: (k: string) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
-};
+const name = (k: string) => genshinAdapter.characterName(k);
 
 interface Setup {
   rotation: Rotation;
@@ -234,7 +231,7 @@ async function prepare(
         weapons: members.map((c) => c.weapon.key),
         sets: members.flatMap((c) => setsInPlay(c.artifacts)),
       },
-      NAMES,
+      DISPLAY_NAMES,
     ),
   };
 }

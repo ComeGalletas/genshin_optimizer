@@ -13,9 +13,9 @@ import { CharacterButton } from '../character-window/CharacterButton';
 
 type Member = NonNullable<TeamRun['team']>[number];
 
-const name = (k: string) => genshinAdapter.character(k)?.name ?? k;
+const name = (k: string) => genshinAdapter.characterName(k);
 const weapon = (m: Member) =>
-  `${genshinAdapter.weapon(m.weapon)?.name ?? m.weapon} R${m.refinement}`;
+  `${genshinAdapter.weaponName(m.weapon)} R${m.refinement}`;
 const sets = (m: Member) =>
   m.sets.length ? m.sets.map(formatSetName).join(' + ') : 'no set bonus';
 const gear = (m: Member) => `${weapon(m)} · ${sets(m)}`;

@@ -15,6 +15,7 @@
  */
 
 import type { Objective, SetRequirement, Slot, StatKey } from './game/types';
+import { isFlatStat, isStatKey } from './game/types';
 
 /** Human-friendly display names for stat keys. */
 export const STAT_LABELS: Record<StatKey, string> = {
@@ -64,21 +65,9 @@ export function statLabel(key: StatKey): string {
   return STAT_LABELS[key] ?? key;
 }
 
-// Stats whose values are conventionally displayed as a percentage.
-const PCT_STATS = new Set<StatKey>([
-  'hp_pct',
-  'atk_pct',
-  'def_pct',
-  'er_pct',
-  'crit_rate',
-  'crit_dmg',
-  'elemental_dmg',
-  'physical_dmg',
-  'healing',
-]);
-
+/** Stats displayed as a percentage: every stat but the flat ones. */
 export function isPctStat(key: StatKey): boolean {
-  return PCT_STATS.has(key);
+  return isStatKey(key) && !isFlatStat(key);
 }
 
 export function objectiveLabel(obj: Objective): string {

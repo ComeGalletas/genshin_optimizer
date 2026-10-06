@@ -9,6 +9,7 @@
  */
 
 import type { StatKey, SubStat } from '../game/types';
+import { isFlatStat } from '../game/types';
 import {
   SUBSTAT_TIERS_5,
   UPGRADE_EVERY,
@@ -52,9 +53,8 @@ export function seeded(seed: number) {
 }
 
 const SUB_KEYS = Object.keys(SUBSTAT_TIERS_5) as SubStatKey[];
-const FLAT = new Set<StatKey>(['hp', 'atk', 'def', 'em']);
 const shown = (key: StatKey, v: number) =>
-  FLAT.has(key) ? Math.round(v) : Math.round(v * 10) / 10;
+  isFlatStat(key) ? Math.round(v) : Math.round(v * 10) / 10;
 
 function clone(p: SnapshotPiece): SnapshotPiece {
   return JSON.parse(JSON.stringify(p)) as SnapshotPiece;
