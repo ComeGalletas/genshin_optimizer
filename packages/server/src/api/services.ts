@@ -158,10 +158,25 @@ export class Services {
   constructor(
     readonly db: Store,
     readonly searches: SearchRunner = new SearchRunner(),
-    /** The rotation library, and gcsim to run drafts (TODO 5.7); without
-     *  `deps` (gcsim not installed) drafting is refused, listing works. */
-    readonly rotations: { dir?: string; deps?: RotationDeps } = {},
+    /** The rotation library, and gcsim to run simulations (TODO 5.7):
+     *  given, or a function that looks for it, asked again on every request
+     *  until it answers, so installing gcsim (`npm run sim:check`) while
+     *  the server runs needs no restart. Without it simulating is refused,
+     *  listing works. */
+    readonly rotations: {
+      dir?: string;
+      deps?: RotationDeps | (() => RotationDeps | undefined);
+    } = {},
   ) {}
+
+  private foundDeps?: RotationDeps;
+
+  /** gcsim, if it is installed (now or since the server started). */
+  private get simDeps(): RotationDeps | undefined {
+    const d = this.rotations.deps;
+    if (typeof d !== 'function') return d;
+    return (this.foundDeps ??= d());
+  }
 
   health() {
     return {
@@ -750,7 +765,7 @@ export class Services {
     understood: string,
     team: SimTeam,
   ) {
-    const deps = this.rotations.deps;
+    const deps = this.simDeps;
     if (!deps)
       throw new ServiceError(
         503,
@@ -897,7 +912,7 @@ export class Services {
         issues,
       );
     }
-    const deps = this.rotations.deps;
+    const deps = this.simDeps;
     if (!deps)
       throw new ServiceError(
         503,
@@ -945,7 +960,7 @@ export class Services {
   /** Draft a rotation for characters the owner has (TODO 5.7): saved only
    *  as a draft, and only once gcsim runs it cleanly on their builds. */
   async draftRotation(input: DraftInput) {
-    const deps = this.rotations.deps;
+    const deps = this.simDeps;
     if (!deps)
       throw new ServiceError(
         503,

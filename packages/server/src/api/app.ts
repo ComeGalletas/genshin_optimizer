@@ -54,7 +54,10 @@ export interface AppOptions {
   llmClient?: LlmClient;
   /** The rotation library and the gcsim that runs drafts (TODO 5.7); by
    *  default the repository's library and gcsim if installed. */
-  rotations?: { dir?: string; deps?: RotationDeps };
+  rotations?: {
+    dir?: string;
+    deps?: RotationDeps | (() => RotationDeps | undefined);
+  };
 }
 
 /** An explain request is a few hundred bytes (`parseExplainPayload` bounds
@@ -122,7 +125,7 @@ export function buildApp(opts: AppOptions): FastifyInstance {
   const services = new Services(
     opts.db,
     new SearchRunner(opts.searchLimitMs),
-    opts.rotations ?? { deps: installedRotationDeps() },
+    opts.rotations ?? { deps: installedRotationDeps },
   );
   const llmClient =
     opts.llmClient ?? (opts.llm ? createLlmClient(opts.llm) : undefined);

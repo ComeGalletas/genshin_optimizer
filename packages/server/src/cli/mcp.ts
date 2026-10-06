@@ -18,7 +18,7 @@ const args = process.argv.slice(2);
 const i = args.indexOf('--store');
 const db = openStore(i >= 0 ? args[i + 1] : DEFAULT_STORE_PATH);
 const services = new Services(db, undefined, {
-  deps: installedRotationDeps(),
+  deps: installedRotationDeps,
 });
 const server = createMcpServer(services);
 await server.connect(new StdioServerTransport());

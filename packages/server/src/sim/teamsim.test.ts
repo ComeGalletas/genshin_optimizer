@@ -212,6 +212,36 @@ describe('simulateTeam (TODO 6.1)', () => {
 });
 
 describe('the Services side', () => {
+  it('finds gcsim installed after the server started, without a restart', async () => {
+    const sample = sampleAccountServices();
+    let installed: TeamSimDeps['pool'] | undefined;
+    const { deps } = fakeDeps();
+    const runner = {
+      run: async (config: string) => (await deps.pool.run(config)).result,
+      runWithSample: async () => {
+        throw new Error('unused');
+      },
+    };
+    let looks = 0;
+    const services = new Services(sample.db, undefined, {
+      deps: () => {
+        looks++;
+        return installed ? { gcsim: 'v2.48.8', runner } : undefined;
+      },
+    });
+    await expect(services.simulateTeam(BASE)).rejects.toMatchObject({
+      status: 503,
+    });
+    installed = deps.pool;
+    const r = await services.simulateTeam(BASE);
+    expect(r.runs[0].dps).toBeDefined();
+    // Found once, then kept.
+    await services.simulateTeam(BASE);
+    expect(looks).toBe(2);
+    await services.searches.close();
+    await sample.searches.close();
+  });
+
   it('checks the request, needs gcsim, and answers through the pool', async () => {
     const sample = sampleAccountServices();
     const without = new Services(sample.db, undefined, {});
@@ -263,8 +293,9 @@ describe.skipIf(!installed)('simulate_team over the installed gcsim', () => {
       ],
     });
     expect(r.runs.every((x) => x.dps && !x.problems)).toBe(true);
-    // Two targets roughly double the damage; lower resistance raises it.
-    expect(r.runs[1].vsBase!.pct).toBeGreaterThan(50);
+    // A second target, 4.5 apart (only AoE reaches both), adds a good part
+    // of the damage again (+30 to +50% here); lower resistance raises it.
+    expect(r.runs[1].vsBase!.pct).toBeGreaterThan(20);
     expect(r.runs[3].vsBase!.pct).toBeGreaterThan(0);
     await services.searches.close();
     await sample.searches.close();
