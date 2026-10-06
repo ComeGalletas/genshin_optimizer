@@ -17,6 +17,8 @@ const notify = () => listeners.forEach((l) => l());
 
 function subscribe(fn: () => void) {
   listeners.add(fn);
+  // A failed load isn't kept for the session: the next window tries again.
+  if (failed && !loading) failed = false;
   loading ??= loadDetails().then(
     (d) => {
       details = d;
@@ -24,6 +26,7 @@ function subscribe(fn: () => void) {
     },
     () => {
       failed = true;
+      loading = null;
       notify();
     },
   );

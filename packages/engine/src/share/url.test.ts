@@ -104,6 +104,18 @@ describe('decodeBuild validation', () => {
     expect(out).toEqual({ request, build, artifacts });
   });
 
+  // QA m4: a link whose roll data is bad still opens; only the rolls go.
+  it('opens a link with bad roll data, without those rolls', async () => {
+    const withBadRolls = artifacts.map((a, i) =>
+      i === 0 ? { ...a, rolls: { total: 12 } } : a,
+    );
+    const out = await decodeBuild(
+      await encodeBuild({ request, build, artifacts: withBadRolls }),
+    );
+    expect(out).not.toHaveProperty('error');
+    expect((out as { artifacts: unknown }).artifacts).toEqual(artifacts);
+  });
+
   it('rejects an unknown objective', async () => {
     const bad = await encodeBuild({
       request: { ...request, objective: 'haste' as never },

@@ -16,8 +16,21 @@ interface RosterState {
   clear: () => void;
 }
 
-function isOptionalInt(v: unknown): boolean {
-  return v === undefined || (typeof v === 'number' && Number.isInteger(v));
+function isOptionalInt(v: unknown, min = -Infinity, max = Infinity): boolean {
+  return (
+    v === undefined ||
+    (typeof v === 'number' && Number.isInteger(v) && v >= min && v <= max)
+  );
+}
+
+/** Talent levels: three whole numbers the game can show (1 to 15). */
+function isTalents(v: unknown): boolean {
+  if (v === undefined) return true;
+  if (typeof v !== 'object' || v === null) return false;
+  const t = v as Record<string, unknown>;
+  return (['auto', 'skill', 'burst'] as const).every(
+    (k) => t[k] !== undefined && isOptionalInt(t[k], 1, 15),
+  );
 }
 
 /** A rehydrated roster row the app can actually use: a key the frozen snapshot
@@ -30,10 +43,13 @@ function isRosterEntry(key: string, v: unknown): v is RosterEntry {
   return (
     (e.buildLevel === undefined ||
       (BUILD_LEVELS as number[]).includes(e.buildLevel as BuildLevel)) &&
-    isOptionalInt(e.level) &&
-    isOptionalInt(e.constellation) &&
-    isOptionalInt(e.weaponLevel) &&
-    isOptionalInt(e.weaponAscension) &&
+    // Ranges too: a corrupted row showed "Lv 500" and "C-4". The import
+    // never writes these, so a row outside them is dropped like a bad type.
+    isOptionalInt(e.level, 1, 100) &&
+    isOptionalInt(e.constellation, 0, 6) &&
+    isTalents(e.talents) &&
+    isOptionalInt(e.weaponLevel, 1, 100) &&
+    isOptionalInt(e.weaponAscension, 0, 6) &&
     (e.weaponRefinement === undefined || isRefinement(e.weaponRefinement)) &&
     (e.weaponKey === undefined || typeof e.weaponKey === 'string')
   );

@@ -107,6 +107,9 @@ function ArtSetting() {
   );
 }
 
+/** How often the local server's status is re-checked while the tab is visible. */
+const SERVER_RECHECK_MS = 20_000;
+
 export function App() {
   const artifacts = useInventory((s) => s.artifacts);
   const rosterEntries = useRoster((s) => s.entries);
@@ -133,11 +136,20 @@ export function App() {
   // Is the local server running (TODO 3.5)? Checked on start and on every
   // return to the tab, so starting it later needs no reload; without it the
   // app stays client-only (ADR-0021 §3).
+  // Also every 20 s while the tab is visible: a server stopped while the
+  // reader stays on the page was still shown as online until they left
+  // and came back.
   useEffect(() => {
     const check = () => void useServer.getState().check();
     check();
     window.addEventListener('focus', check);
-    return () => window.removeEventListener('focus', check);
+    const every = window.setInterval(() => {
+      if (document.visibilityState === 'visible') check();
+    }, SERVER_RECHECK_MS);
+    return () => {
+      window.removeEventListener('focus', check);
+      window.clearInterval(every);
+    };
   }, []);
 
   // Once a roster exists the app's opening pair is no longer the most useful

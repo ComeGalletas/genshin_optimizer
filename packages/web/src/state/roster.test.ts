@@ -46,6 +46,31 @@ describe('roster rehydration is a trust boundary', () => {
     ]);
   });
 
+  // QA c3: values out of the game's ranges showed as "Lv 500" and "C-4".
+  it('drops rows with values outside the game’s ranges', async () => {
+    localStorage.setItem(
+      'rpg-build-optimizer/roster',
+      JSON.stringify({
+        state: {
+          entries: {
+            furina: {
+              level: 90,
+              constellation: 2,
+              talents: { auto: 1, skill: 10, burst: 10 },
+            },
+            nahida: { level: 500 },
+            klee: { constellation: -4 },
+            bennett: { talents: { auto: 'x', skill: 1, burst: 1 } },
+            xingqiu: { talents: { auto: 1, skill: 1 } },
+            raiden_shogun: { weaponAscension: 9 },
+          },
+        },
+      }),
+    );
+    await useRoster.persist.rehydrate();
+    expect(Object.keys(useRoster.getState().entries)).toEqual(['furina']);
+  });
+
   it('survives a blob whose entries field is not an object', async () => {
     localStorage.setItem(
       'rpg-build-optimizer/roster',

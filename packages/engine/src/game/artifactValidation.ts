@@ -55,7 +55,7 @@ function isFiniteNumber(x: unknown): x is number {
 
 /** Optional roll data (TODO 9.10): a roll count up to the 9 a 5★ piece
  *  can have, and first rolls only for the piece's own lines. */
-function isRolls(x: unknown, subStats: SubStat[]): boolean {
+export function isRolls(x: unknown, subStats: readonly SubStat[]): boolean {
   if (x === undefined) return true;
   if (typeof x !== 'object' || x === null) return false;
   const r = x as Record<string, unknown>;
@@ -111,11 +111,23 @@ export function isPersistedArtifact(x: unknown): x is Artifact {
       ((ELEMENTS as readonly string[]).includes(a.element as string) &&
         a.slot === 'goblet' &&
         a.mainStat === 'elemental_dmg')) &&
-    isRolls(a.rolls, a.subStats as SubStat[]) &&
     validateArtifactDraft({
       mainStat: a.mainStat,
       level: a.level,
       subStats: a.subStats as SubStat[],
     }) === null
   );
+}
+
+/**
+ * A stored or shared piece with its roll data kept only if it is valid. The
+ * rolls are for display and never scored (ADR-0056), so a bad `rolls` field
+ * costs the piece its rolls, not the piece: `isPersistedArtifact` doesn't
+ * judge it, and every reader passes pieces through here.
+ */
+export function withValidRolls(a: Artifact): Artifact {
+  if (a.rolls === undefined || isRolls(a.rolls, a.subStats)) return a;
+  const { rolls: _dropped, ...rest } = a;
+  void _dropped;
+  return rest;
 }

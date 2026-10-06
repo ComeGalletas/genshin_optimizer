@@ -138,8 +138,10 @@ function TalentRow({
                   : `At Lv ${level} (not in your roster)`}
               </p>
               <dl className="grid gap-0.5">
-                {talentValues(text, level).map((v) => (
-                  <div key={v.label} className="flex justify-between gap-4">
+                {/* Keyed by position: labels repeat (Nahida's burst, Qiqi's
+                    two CDs). */}
+                {talentValues(text, level).map((v, i) => (
+                  <div key={i} className="flex justify-between gap-4">
                     <dt className="text-muted">{v.label}</dt>
                     <dd className="text-right font-mono text-paper">
                       {v.value}

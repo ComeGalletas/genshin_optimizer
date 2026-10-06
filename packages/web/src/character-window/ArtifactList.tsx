@@ -3,7 +3,12 @@
  * then its main stat (an elemental goblet with its element), then its
  * substats with their rolls; under them, the set effects they activate.
  */
-import type { Artifact, StatKey } from '@genshin-build-lab/engine/game/types';
+import type {
+  Artifact,
+  StatKey,
+  SubStat,
+} from '@genshin-build-lab/engine/game/types';
+import { displaySteps } from '@genshin-build-lab/engine/import/fingerprint';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import type { Details } from '@genshin-build-lab/engine/game/genshin/details';
 import { countSets } from '@genshin-build-lab/engine/optimizer/score';
@@ -30,9 +35,28 @@ function mainStatLabel(a: Artifact): string {
     : statLabel(a.mainStat);
 }
 
-/** A roll's value as the game shows it, without the unit. */
-const rollValue = (key: StatKey, v: number) =>
-  formatScore(v, isPctStat(key) ? 1 : 0);
+/** A value at the game's display precision, without the unit. */
+const shown = (key: StatKey, steps: number) =>
+  formatScore(isPctStat(key) ? steps / 10 : steps, isPctStat(key) ? 1 : 0);
+
+/**
+ * Each roll at display precision, rounded so the rolls add up to the
+ * value the game shows: rounding them one by one could overshoot (Skirk's
+ * ATK 31 read "16 + 16"). Floors first, then the leftover steps go to the
+ * largest remainders.
+ */
+function apportion(line: SubStat, values: number[]): number[] {
+  const scale = isPctStat(line.key) ? 10 : 1;
+  const raw = values.map((v) => v * scale);
+  const floors = raw.map(Math.floor);
+  const left = displaySteps(line) - floors.reduce((a, b) => a + b, 0);
+  if (left < 0 || left > values.length) return raw.map(Math.round);
+  const order = raw
+    .map((r, i) => ({ i, rem: r - floors[i] }))
+    .sort((a, b) => b.rem - a.rem);
+  for (let k = 0; k < left; k++) floors[order[k].i]++;
+  return floors;
+}
 
 const TIER_PCT = ['70%', '80%', '90%', '100%'];
 const TIER_TONE = [
@@ -42,26 +66,36 @@ const TIER_TONE = [
   'text-accent-bright',
 ];
 
-function RollList({ stat, split }: { stat: StatKey; split: LineRolls }) {
+function RollList({ line, split }: { line: SubStat; split: LineRolls }) {
   if (split.kind === 'unknown') return null;
-  const one = (r: Roll, i: number) => (
+  const stat = line.key;
+  const one = (r: Roll, i: number, steps: number) => (
     <span key={i} className={TIER_TONE[r.tier]}>
       {i > 0 && <span className="text-muted/60"> + </span>}
-      {rollValue(stat, r.value)}
+      {shown(stat, steps)}
     </span>
   );
   if (split.kind === 'exact') {
+    const steps = apportion(
+      line,
+      split.rolls.map((r) => r.value),
+    );
     const title = `Rolls: ${split.rolls.map((r) => TIER_PCT[r.tier]).join(', ')} of the maximum${
       split.firstKnown ? ' (the first roll first)' : ''
     }`;
     return (
       <span className="font-mono text-2xs" title={title} data-testid="rolls">
         {' ('}
-        {split.rolls.map(one)})
+        {split.rolls.map((r, i) => one(r, i, steps[i]))})
       </span>
     );
   }
   const others = split.first ? split.count - 1 : split.count;
+  // The first roll as the game shows it, and the others as what is left of
+  // the shown value, so the two add up.
+  const firstSteps = split.first
+    ? displaySteps({ key: stat, value: split.first.value })
+    : 0;
   return (
     <span
       className="font-mono text-2xs text-muted"
@@ -71,12 +105,12 @@ function RollList({ stat, split }: { stat: StatKey; split: LineRolls }) {
       {' ('}
       {split.first && (
         <>
-          {one(split.first, 0)}
+          {one(split.first, 0, firstSteps)}
           <span className="text-muted/60"> + </span>
         </>
       )}
       {split.first
-        ? `${others} ${others === 1 ? 'roll' : 'rolls'}: ${rollValue(stat, split.rest)}`
+        ? `${others} ${others === 1 ? 'roll' : 'rolls'}: ${shown(stat, displaySteps(line) - firstSteps)}`
         : `${split.count} rolls`}
       )
     </span>
@@ -98,61 +132,79 @@ export function ArtifactList({
     <section aria-label="Artifacts" className="space-y-1.5">
       <h3 className="text-xs font-semibold uppercase text-muted">Artifacts</h3>
       <ul className="space-y-1.5">
-        {SLOTS.map((s) => {
-          const a = artifacts.find((x) => x.slot === s);
-          const rolls = a ? splitRolls(a) : [];
-          return (
-            <li key={s} className="well flex items-start gap-2 px-3 py-2">
-              {a ? (
-                <ArtifactIcon setKey={a.setKey} slot={s} size={36} />
-              ) : (
-                <span className="w-9 flex-none" />
-              )}
-              <div className="min-w-0 flex-1">
-                <p className="flex flex-wrap items-center gap-x-2">
-                  <span className="text-xs uppercase text-muted">
-                    {SLOT_LABELS[s]}
-                  </span>
-                  {a ? (
-                    <>
-                      <span className="text-paper">
-                        {formatSetName(a.setKey)}
-                      </span>
-                      <span className="chip px-2 py-0.5 text-2xs">
-                        Lv {a.level}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-muted">empty</span>
-                  )}
-                </p>
-                {a && (
-                  <p
-                    className="text-[17px] font-semibold leading-snug text-paper"
-                    data-testid="main-stat"
-                  >
-                    {mainStatLabel(a)}{' '}
-                    <span className="font-mono">
-                      {formatStat(a.mainStat, a.mainStatValue)}
+        {SLOTS.flatMap((s) => {
+          // Every piece the account puts in the slot: two means the data
+          // holds two copies (often one piece before and after levelling
+          // that a source couldn't pair, ADR-0025). Stats count both, so
+          // both show here, flagged.
+          const inSlot = artifacts.filter((x) => x.slot === s);
+          return (inSlot.length ? inSlot : [undefined]).map((a, k) => {
+            const rolls = a ? splitRolls(a) : [];
+            return (
+              <li
+                key={`${s}-${k}`}
+                className="well flex items-start gap-2 px-3 py-2"
+              >
+                {a ? (
+                  <ArtifactIcon setKey={a.setKey} slot={s} size={36} />
+                ) : (
+                  <span className="w-9 flex-none" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="flex flex-wrap items-center gap-x-2">
+                    <span className="text-xs uppercase text-muted">
+                      {SLOT_LABELS[s]}
                     </span>
-                  </p>
-                )}
-                {a && a.subStats.length > 0 && (
-                  <ul className="mt-1 grid gap-0.5 text-xs text-muted">
-                    {a.subStats.map((sub, i) => (
-                      <li key={sub.key}>
-                        {statLabel(sub.key)}{' '}
-                        <span className="font-mono text-paper/80">
-                          {formatStat(sub.key, sub.value)}
+                    {a ? (
+                      <>
+                        <span className="text-paper">
+                          {formatSetName(a.setKey)}
                         </span>
-                        <RollList stat={sub.key} split={rolls[i]} />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </li>
-          );
+                        <span className="chip px-2 py-0.5 text-2xs">
+                          Lv {a.level}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-muted">empty</span>
+                    )}
+                  </p>
+                  {inSlot.length > 1 && k === 0 && (
+                    <p
+                      className="text-xs text-amber"
+                      data-testid="slot-duplicate"
+                    >
+                      {inSlot.length} pieces in this slot: the account data
+                      lists both, and the stats count both.
+                    </p>
+                  )}
+                  {a && (
+                    <p
+                      className="text-[17px] font-semibold leading-snug text-paper"
+                      data-testid="main-stat"
+                    >
+                      {mainStatLabel(a)}{' '}
+                      <span className="font-mono">
+                        {formatStat(a.mainStat, a.mainStatValue)}
+                      </span>
+                    </p>
+                  )}
+                  {a && a.subStats.length > 0 && (
+                    <ul className="mt-1 grid gap-0.5 text-xs text-muted">
+                      {a.subStats.map((sub, i) => (
+                        <li key={sub.key}>
+                          {statLabel(sub.key)}{' '}
+                          <span className="font-mono text-paper/80">
+                            {formatStat(sub.key, sub.value)}
+                          </span>
+                          <RollList line={sub} split={rolls[i]} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </li>
+            );
+          });
         })}
       </ul>
       {sets.length > 0 && (

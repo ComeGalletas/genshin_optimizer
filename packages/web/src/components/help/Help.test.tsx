@@ -9,6 +9,30 @@ import { Section } from '../landing';
 afterEach(() => useHelpOpen.setState({ open: new Set() }));
 
 describe('in-app help (TODO 9.6)', () => {
+  // QA m6: Close took its own button away and left focus on the page.
+  it('gives focus back to the "?" when the panel’s Close is pressed', async () => {
+    render(
+      <>
+        <HelpButton id="optimise" />
+        <HelpPanel id="optimise" />
+      </>,
+    );
+    const button = screen.getByRole('button', {
+      name: 'Help: Optimising a build',
+    });
+    await userEvent.click(button);
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('region')).toBeNull();
+    expect(button).toHaveFocus();
+  });
+
+  // QA m3: the server never reads the inbox; npm run inbox does.
+  it('tells the reader how the inbox is really imported', () => {
+    const steps = HELP['start-server'].steps!.join(' ');
+    expect(steps).toMatch(/npm run inbox/);
+    expect(steps).not.toMatch(/keeps watching it/);
+  });
+
   it('opens a larger panel with the steps from a "?" button, and closes it again', async () => {
     render(
       <>

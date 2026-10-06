@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
@@ -294,6 +294,144 @@ describe('character window', () => {
     const pieces = screen.getByRole('region', { name: 'Artifacts' });
     expect(pieces).toHaveTextContent('Golden Troupe');
     expect(pieces).toHaveTextContent('HP% 10.0%');
+  });
+
+  // QA m1: a roster saved before 9.9 has no weapon ascension, so at a cap
+  // the stats are shown before ascending, and the window says so.
+  it('flags a weapon at a cap whose ascension the saved roster lacks', async () => {
+    const user = userEvent.setup();
+    const at80 = (weaponAscension?: number) =>
+      useRoster.getState().setRoster({
+        furina: {
+          buildLevel: 90,
+          level: 90,
+          weaponKey: 'splendor_of_tranquil_waters',
+          weaponLevel: 80,
+          ...(weaponAscension !== undefined && { weaponAscension }),
+        },
+      });
+    at80();
+    const { unmount } = render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    expect(
+      await screen.findByTestId('weapon-cap-unknown', undefined, LAZY),
+    ).toHaveTextContent(/Lv 80 is an ascension cap/);
+    await user.click(screen.getByRole('tab', { name: 'Stats' }));
+    expect(
+      await screen.findByTestId('weapon-cap-unknown', undefined, LAZY),
+    ).toBeInTheDocument();
+    unmount();
+    useCharacterWindow.getState().close();
+    at80(6);
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    await screen.findByRole('region', { name: 'Weapon' }, LAZY);
+    expect(screen.queryByTestId('weapon-cap-unknown')).toBeNull();
+  });
+
+  // QA m2: two pieces in one slot were summed by Stats but only one was
+  // shown by Gear.
+  it('shows every piece in a slot, and flags two', async () => {
+    const user = userEvent.setup();
+    furina();
+    useInventory
+      .getState()
+      .addMany([
+        { ...flower, id: 'f2', subStats: [{ key: 'atk', value: 19 }] },
+      ]);
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    const pieces = await screen.findByRole(
+      'region',
+      { name: 'Artifacts' },
+      LAZY,
+    );
+    expect(within(pieces).getAllByText('Flower')).toHaveLength(2);
+    expect(within(pieces).getByTestId('slot-duplicate')).toHaveTextContent(
+      '2 pieces in this slot',
+    );
+  });
+
+  // QA c2: rolls rounded one by one overshot the shown value ("ATK 31
+  // (16 + 16)"); they now add up to it.
+  it('rounds the rolls so they add up to the value shown', async () => {
+    const user = userEvent.setup();
+    furina();
+    useInventory.getState().addMany([
+      {
+        id: 'p1',
+        setKey: 'GoldenTroupe',
+        slot: 'plume',
+        rarity: 5,
+        level: 4,
+        mainStat: 'atk',
+        mainStatValue: 311,
+        subStats: [
+          { key: 'atk', value: 31 },
+          { key: 'crit_rate', value: 3.9 },
+          { key: 'hp', value: 209 },
+          { key: 'def', value: 16 },
+        ],
+        rolls: {
+          first: { atk: 15.56, crit_rate: 3.89, hp: 209.13, def: 16.2 },
+          total: 5,
+        },
+        location: 'furina',
+      },
+    ]);
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    const pieces = await screen.findByRole(
+      'region',
+      { name: 'Artifacts' },
+      LAZY,
+    );
+    const texts = within(pieces)
+      .getAllByTestId('rolls')
+      .map((r) => r.textContent);
+    expect(texts).toContain(' (16 + 15)');
+  });
+
+  // QA m7: repeated labels (Nahida's burst) and names (Aloy) made duplicate
+  // React keys.
+  it('renders repeated talent lines without duplicate keys', async () => {
+    const user = userEvent.setup();
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      useRoster.getState().setRoster({
+        nahida: {
+          buildLevel: 90,
+          level: 90,
+          constellation: 0,
+          talents: { auto: 1, skill: 9, burst: 9 },
+        },
+      });
+      render(<CharacterWindow />);
+      openCharacter('nahida');
+      await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
+      const burst = await screen.findByTestId('talent-burst', undefined, LAZY);
+      await user.click(within(burst).getByRole('button'));
+      await within(burst).findByText(/Lv 9/, undefined, LAZY);
+      expect(
+        errors.mock.calls.some((c) => String(c[0]).includes('same key')),
+      ).toBe(false);
+    } finally {
+      errors.mockRestore();
+    }
+  });
+
+  // QA c4: the header scrolled away under long talent text.
+  it('keeps the name, Optimize and close at the top', async () => {
+    furina();
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    const dialog = await screen.findByRole('dialog', undefined, LAZY);
+    const close = within(dialog).getByRole('button', { name: 'Close' });
+    expect(close.parentElement).toHaveClass('sticky');
   });
 
   it('opens for a character not in the roster, at level 90', async () => {

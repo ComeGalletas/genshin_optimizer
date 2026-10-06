@@ -100,6 +100,30 @@ describe('App shell', () => {
     useServer.setState({ status: 'checking', llm: null });
   });
 
+  // QA m8: a server stopped while the reader stayed on the page was shown
+  // as online until the tab lost and regained focus.
+  it('re-checks the local server every 20 s while the tab is visible', () => {
+    const real = useServer.getState().check;
+    const check = vi.fn(() => Promise.resolve());
+    useServer.setState({ check });
+    vi.useFakeTimers();
+    try {
+      render(<App />);
+      expect(check).toHaveBeenCalledTimes(1);
+      act(() => {
+        vi.advanceTimersByTime(20_000);
+      });
+      expect(check).toHaveBeenCalledTimes(2);
+      act(() => {
+        vi.advanceTimersByTime(40_000);
+      });
+      expect(check).toHaveBeenCalledTimes(4);
+    } finally {
+      vi.useRealTimers();
+      useServer.setState({ check: real });
+    }
+  });
+
   it('shows the empty-state import choices on first load', () => {
     render(<App />);
     expect(screen.getByText(/Upload GOOD export/i)).toBeInTheDocument();

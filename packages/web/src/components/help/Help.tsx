@@ -55,7 +55,14 @@ export function HelpPanel({ id }: { id: HelpId }) {
         <button
           type="button"
           className="btn-ghost flex-none text-xs"
-          onClick={() => close(id)}
+          onClick={() => {
+            close(id);
+            // The panel and this button go away: focus goes back to the "?"
+            // that opened it, not to the page.
+            document
+              .querySelector<HTMLElement>(`[aria-controls="${panelId(id)}"]`)
+              ?.focus();
+          }}
         >
           Close
         </button>

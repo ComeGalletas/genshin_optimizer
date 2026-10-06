@@ -98,7 +98,16 @@ export function AppDrawer({
               className="relative mx-auto mb-3 h-1 w-9 rounded-full bg-white/15"
             />
           )}
-          <div className="relative mb-4 flex items-center justify-between gap-3">
+          {/* Sticky: long content (a talent's description) scrolled the
+              name, Optimize and ✕ away. The negative top and margins match
+              the drawer's padding, so it sits flush at the top edge. */}
+          <div
+            className={
+              desktop
+                ? 'sticky -top-6 z-10 -mx-6 mb-4 flex items-center justify-between gap-3 bg-surface-700/90 px-6 py-3 backdrop-blur-md'
+                : 'sticky -top-5 z-10 -mx-5 mb-4 flex items-center justify-between gap-3 bg-surface-700/90 px-5 py-3 backdrop-blur-md'
+            }
+          >
             <div className="flex min-w-0 items-center gap-7">
               <Vaul.Title
                 className={

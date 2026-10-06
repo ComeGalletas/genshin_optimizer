@@ -5,6 +5,7 @@
  */
 import {
   passiveText,
+  weaponCapUnknown,
   weaponStatsAt,
   type Details,
 } from '@genshin-build-lab/engine/game/genshin/details';
@@ -12,6 +13,11 @@ import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { formatStat, statLabel } from '../labels';
 import { WeaponIcon } from '../components/GameArt';
+
+/** Lv 80 is a cap, and a roster saved before TODO 9.9 doesn't say which
+ *  side of it the weapon is on. */
+const UNKNOWN_CAP = (level: number) =>
+  `Lv ${level} is an ascension cap, and this saved roster doesn’t say whether the weapon has ascended: its stats are shown before ascending. Load your account again for the exact values.`;
 
 export function WeaponCard({
   details,
@@ -68,6 +74,13 @@ export function WeaponCard({
           )}
         </dl>
       )}
+      {w &&
+        level !== undefined &&
+        weaponCapUnknown(w, level, entry.weaponAscension) && (
+          <p className="text-xs text-amber" data-testid="weapon-cap-unknown">
+            {UNKNOWN_CAP(level)}
+          </p>
+        )}
       {w?.passive && (
         <div className="text-xs leading-relaxed">
           <p className="font-semibold text-paper">

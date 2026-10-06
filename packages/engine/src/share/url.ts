@@ -12,7 +12,11 @@ import type {
   StatVec,
 } from '../game/types';
 import { isStatKey, isObjective, BUILD_LEVELS, SLOTS } from '../game/types';
-import { isPersistedArtifact, MAX_KEY_LEN } from '../game/artifactValidation';
+import {
+  isPersistedArtifact,
+  MAX_KEY_LEN,
+  withValidRolls,
+} from '../game/artifactValidation';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { isRefinement } from '../game/genshin/passives';
 
@@ -361,7 +365,7 @@ export function parseBuildSnapshot(input: unknown): BuildSnapshot | null {
   return {
     request,
     build,
-    artifacts: artifacts as Artifact[],
+    artifacts: (artifacts as Artifact[]).map(withValidRolls),
     ...(sim !== undefined && { sim: sim as SharedSim }),
   };
 }

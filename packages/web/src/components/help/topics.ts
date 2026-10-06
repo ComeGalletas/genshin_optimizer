@@ -47,7 +47,8 @@ export const HELP = {
     steps: [
       'Export your account as a GOOD .json file: Irminsul is the most complete source; an OCR scanner such as Inventory Kamera also works.',
       'Put the file in the project’s imports/inbox/ folder.',
-      'Start the server from the project folder: npm run server. It imports what is in the inbox and keeps watching it.',
+      'Import it from the project folder: npm run inbox (or npm run inbox -- --watch to keep importing new files).',
+      'Start the server: npm run server. With it running, the Imports view’s Scan the Inbox does the same import.',
       'Come back here and press Load Account.',
     ],
     tips: [

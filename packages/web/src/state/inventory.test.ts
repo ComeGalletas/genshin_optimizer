@@ -48,6 +48,23 @@ describe('inventory rehydration is a trust boundary', () => {
     ]);
   });
 
+  // QA m4: bad roll data (display only) costs a piece its rolls, not the
+  // piece.
+  it('keeps a piece whose roll data is bad, without the rolls', async () => {
+    localStorage.setItem(
+      'rpg-build-optimizer/inventory',
+      JSON.stringify({
+        state: {
+          artifacts: [{ ...sample({ id: 'odd-rolls' }), rolls: { total: 12 } }],
+        },
+      }),
+    );
+    await useInventory.persist.rehydrate();
+    const [a] = useInventory.getState().artifacts;
+    expect(a.id).toBe('odd-rolls');
+    expect(a.rolls).toBeUndefined();
+  });
+
   it('survives a blob whose artifacts field is not an array', async () => {
     localStorage.setItem(
       'rpg-build-optimizer/inventory',

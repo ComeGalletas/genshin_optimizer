@@ -4,7 +4,10 @@
  * ascension stat add, and the total: "HP 15307 + 9180 = 24487".
  */
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
-import type { Details } from '@genshin-build-lab/engine/game/genshin/details';
+import {
+  weaponCapUnknown,
+  type Details,
+} from '@genshin-build-lab/engine/game/genshin/details';
 import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 import {
   ascensionOf,
@@ -66,6 +69,11 @@ export function CharacterStats({
       </p>
     );
   const element = genshinAdapter.character(characterKey)?.element;
+  const w = entry?.weaponKey ? details.weapons[entry.weaponKey] : undefined;
+  const capUnknown =
+    !!w &&
+    entry?.weaponLevel !== undefined &&
+    weaponCapUnknown(w, entry.weaponLevel, entry.weaponAscension);
   return (
     <div className="well px-3 py-2">
       <dl className="divide-y divide-white/5">
@@ -101,6 +109,13 @@ export function CharacterStats({
         = <span className="text-paper">total</span>. Weapon passives, 4-piece
         bonuses and constellations are left out: most depend on the fight.
       </p>
+      {capUnknown && (
+        <p className="mt-1 text-xs text-amber" data-testid="weapon-cap-unknown">
+          The weapon is at an ascension cap and this saved roster doesn’t say
+          whether it has ascended: its ATK and substat are counted before
+          ascending. Load your account again for the exact values.
+        </p>
+      )}
     </div>
   );
 }

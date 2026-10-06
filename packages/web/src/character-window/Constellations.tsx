@@ -25,8 +25,9 @@ export function Constellations({
       </h3>
       <ul className="divide-y divide-white/5">
         {texts.constellations.slice(0, n).map((c, i) => (
+          // By position: names can repeat (Aloy's six).
           <ConstellationRow
-            key={c.name}
+            key={i}
             n={i + 1}
             name={c.name}
             description={c.description}

@@ -453,6 +453,22 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 10: Reorganization
 
+- [ ] 10.0 Fix the Phase 9 QA report's findings (`.claude/notes/2026-10-06-phase9-qa-report.md`)
+  - M1 to M3 (malformed server answers, the window's focus, a fully unreadable server account): another session is working on them.
+  - Minor and cosmetic, fixed with a test each:
+    - m1: a weapon at a cap in a roster saved before 9.9 is flagged in Gear and Stats, since its ascension is unknown.
+    - m2: every piece in a slot shows, and two in one slot are flagged.
+    - m3: the server help names `npm run inbox`.
+    - m4: bad roll data drops only the rolls, from storage and share links.
+    - m5: fixed earlier, in `720079a`.
+    - m6: a help panel's Close gives focus back to its "?".
+    - m7: talent and constellation rows are keyed by position.
+    - m8: the server status is re-checked every 20 s while the tab is visible.
+    - c1: empty `****` markers are dropped.
+    - c2: rolls are rounded so they add up to the value shown.
+    - c3: stored roster rows outside the game's ranges are dropped.
+    - c4: the drawer's header stays at the top.
+    - The suspicion that one failed details load stuck for the session: the next window now retries.
 - [ ] 10.1 Owner: the reorganization's scope, meaning what moves where and which new functions come in. The items below grow from it.
 - [ ] 10.2 More guide sources for the build and team previews, beside KQM's: [ADR](adr/) first.
   - genshin-builds.com, whose robots.txt allows crawlers and AI agents and whose pages follow one template per character. An extractor run by hand at data-build time (not in the browser, not on every load) reads each character's page into a checked schema: ranked weapons, artifact sets, main stats per slot, substat and talent priority, teams. Facts only, mapped to dataset keys, never the prose. Each record keeps its URL, fetch date and game version, and the owner reviews it before it counts, as with rotations. Polite fetching: one request at a time, cached, with an identifying user agent. Ask the site's author first.

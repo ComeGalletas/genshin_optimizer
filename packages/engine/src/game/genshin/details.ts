@@ -79,6 +79,20 @@ export function phaseAt(
   return 0;
 }
 
+/** Whether a weapon's stats at this level depend on an ascension the data
+ *  doesn't give: the level is a cap (20, 40 … 80) and `ascension` is
+ *  unknown (a roster saved before 9.9). Shown as the side before
+ *  ascending, and flagged. */
+export function weaponCapUnknown(
+  w: WeaponDetails,
+  level: number,
+  ascension: number | undefined,
+): boolean {
+  if (ascension !== undefined) return false;
+  const caps = w.promotion.map((p) => p[0]);
+  return caps.slice(0, -1).includes(level);
+}
+
 const curveAt = (curve: (number | null)[] | undefined, level: number) =>
   curve?.[level - 1] ?? NaN;
 

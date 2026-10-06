@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { safeStorage } from './safeStorage';
-import { isPersistedArtifact } from '@genshin-build-lab/engine/game/artifactValidation';
+import {
+  isPersistedArtifact,
+  withValidRolls,
+} from '@genshin-build-lab/engine/game/artifactValidation';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 interface InventoryState {
@@ -48,7 +51,7 @@ export const useInventory = create<InventoryState>()(
         return {
           ...current,
           artifacts: Array.isArray(rows)
-            ? rows.filter(isPersistedArtifact)
+            ? rows.filter(isPersistedArtifact).map(withValidRolls)
             : [],
         };
       },

@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
   isPersistedArtifact,
+  isRolls,
   MAX_KEY_LEN,
   validateArtifactDraft,
+  withValidRolls,
 } from './artifactValidation';
+import type { Artifact, SubStat } from './types';
 
 describe('validateArtifactDraft', () => {
   // NaN and Infinity fail every comparison, so the range check below can't see
@@ -101,16 +104,22 @@ describe('isPersistedArtifact', () => {
   });
 
   // Roll data (TODO 9.10): first rolls of the piece's own lines, a count a
-  // 5★ piece can have.
-  it('checks the optional roll data', () => {
-    const rolls = (r: unknown) => isPersistedArtifact({ ...ok, rolls: r });
-    expect(rolls({ first: { crit_dmg: 7.77 }, total: 8 })).toBe(true);
-    expect(rolls({})).toBe(true);
-    expect(rolls({ first: { hp: 209.13 } })).toBe(false);
-    expect(rolls({ first: { crit_dmg: 'x' } })).toBe(false);
-    expect(rolls({ total: 12 })).toBe(false);
-    expect(rolls({ total: 2.5 })).toBe(false);
-    expect(rolls('many')).toBe(false);
+  // 5★ piece can have. Display only (ADR-0056), so a bad field costs the
+  // piece its rolls, never the piece (QA m4).
+  it('checks the optional roll data, and drops only bad rolls', () => {
+    const subs = ok.subStats as SubStat[];
+    expect(isRolls({ first: { crit_dmg: 7.77 }, total: 8 }, subs)).toBe(true);
+    expect(isRolls({}, subs)).toBe(true);
+    expect(isRolls({ first: { hp: 209.13 } }, subs)).toBe(false);
+    expect(isRolls({ first: { crit_dmg: 'x' } }, subs)).toBe(false);
+    expect(isRolls({ total: 12 }, subs)).toBe(false);
+    expect(isRolls({ total: 2.5 }, subs)).toBe(false);
+    expect(isRolls('many', subs)).toBe(false);
+    const bad = { ...ok, rolls: { total: 12 } } as unknown as Artifact;
+    expect(isPersistedArtifact(bad)).toBe(true);
+    expect(withValidRolls(bad)).toEqual(ok);
+    const good = { ...ok, rolls: { total: 8 } } as unknown as Artifact;
+    expect(withValidRolls(good)).toBe(good);
   });
 
   // An unlevelled artifact is a real artifact — the player just hasn't spent
