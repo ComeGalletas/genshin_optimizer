@@ -9,7 +9,6 @@
  */
 
 import type { Artifact, StatKey, StatVec } from '../game/types';
-import { BUILD_LEVELS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import {
   characterStatsAt,
@@ -139,16 +138,4 @@ export function characterSheet(
         ? { atk: weaponAt.atk, sub: weaponAt.sub, subStat: w.subStat }
         : null,
   };
-}
-
-/** A character's ascension from the roster's build level, the cap the
- *  import set from it (80 is ascension 5's); undefined without one. */
-export function ascensionOf(
-  buildLevel: number | undefined,
-): number | undefined {
-  const i =
-    buildLevel === undefined
-      ? -1
-      : (BUILD_LEVELS.slice(1) as number[]).indexOf(buildLevel);
-  return i < 0 ? undefined : i;
 }

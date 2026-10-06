@@ -76,6 +76,16 @@ export type WeaponType = (typeof WEAPON_TYPES)[number];
 export type BuildLevel = 1 | 20 | 40 | 50 | 60 | 70 | 80 | 90;
 export const BUILD_LEVELS: BuildLevel[] = [1, 20, 40, 50, 60, 70, 80, 90];
 
+/** Ascension 0..6 → that phase's level cap: 20 at ascension 0 … 90 at 6. */
+export const ASCENSION_CAPS = BUILD_LEVELS.slice(1) as readonly BuildLevel[];
+
+/** The ascension whose cap this level is (80 → 5): a roster's build level
+ *  is the cap its ascension gives (ADR-0015). Undefined for anything else. */
+export function ascensionOf(cap: number | undefined): number | undefined {
+  const i = cap === undefined ? -1 : (ASCENSION_CAPS as number[]).indexOf(cap);
+  return i < 0 ? undefined : i;
+}
+
 /** A sparse stat vector. Missing keys are treated as 0. */
 export type StatVec = Partial<Record<StatKey, number>>;
 
