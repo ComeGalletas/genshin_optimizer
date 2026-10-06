@@ -18,6 +18,7 @@ import { ImportPanel } from './ImportPanel';
 import { ServerChip } from './ServerChip';
 import { ChatPanel } from './ChatPanel';
 import { useServer } from '../local-server/status';
+import { useSettings } from '../state/settings';
 import { ArtifactForm } from './ArtifactForm';
 import { OptimizePanel } from './OptimizePanel';
 import { Results } from './Results';
@@ -108,6 +109,23 @@ function PanelFallback() {
 const GAME_TAGLINE =
   'Find the mathematically optimal artifact build for any character.';
 const GAME_SOURCE = 'genshin-db';
+
+/** "Show game art" (ADR-0052): the game's images are loaded from Enka and
+ *  HoYoverse, which see the reader's address; off, the app's own glyphs. */
+function ArtSetting() {
+  const showArt = useSettings((s) => s.showArt);
+  const setShowArt = useSettings((s) => s.setShowArt);
+  return (
+    <label className="mt-2 flex items-center justify-center gap-2">
+      <input
+        type="checkbox"
+        checked={showArt}
+        onChange={(e) => setShowArt(e.target.checked)}
+      />
+      Show game art (images from Enka and HoYoverse)
+    </label>
+  );
+}
 
 export function App() {
   const artifacts = useInventory((s) => s.artifacts);
@@ -650,6 +668,7 @@ export function App() {
         Curated tables:{' '}
         <span className="whitespace-nowrap">patch {CURATION_PATCH}</span> · Not
         affiliated with the game’s publisher.
+        <ArtSetting />
       </footer>
       <ChatPanel />
     </div>

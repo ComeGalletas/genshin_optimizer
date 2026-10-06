@@ -309,6 +309,68 @@ const MAIN_STAT_VALUES: Record<string, Record<string, number[]>> = {
 };
 
 // ---------------------------------------------------------------------------
+// Image names (ADR-0052)
+// ---------------------------------------------------------------------------
+
+/** The game's asset names for each character, weapon and artifact piece,
+ *  by dataset key. Only names: the app builds HoYoverse's and Enka's URLs
+ *  from them, and no image is ever stored here. Written to
+ *  `images.generated.json`, apart from the dataset, so the page can load it
+ *  after it starts. */
+const IMAGES: {
+  characters: Record<string, { icon: string; side?: string }>;
+  weapons: Record<string, string>;
+  sets: Record<string, Record<string, string>>;
+} = { characters: {}, weapons: {}, sets: {} };
+const SLOT_NAMES = ['flower', 'plume', 'sands', 'goblet', 'circlet'] as const;
+
+/** The game numbers a set's pieces flower 4, plume 2, sands 5, goblet 1,
+ *  circlet 3 (`UI_RelicIcon_<set>_<n>`). */
+const PIECE_NUMBER = { flower: 4, plume: 2, sands: 5, goblet: 1, circlet: 3 };
+
+/** The names as stored: only the part that varies (`Furina` for
+ *  `UI_AvatarIcon_Furina` and `UI_AvatarIcon_Side_Furina`, `Sword_Regalis`
+ *  for `UI_EquipIcon_Sword_Regalis`, a set's number for its five
+ *  `UI_RelicIcon_<n>_<piece>`), which `game/genshin/images.ts` expands. A
+ *  name that breaks the pattern stops the build rather than being guessed:
+ *  the pattern is the game's, and a change in it needs a look. */
+function compactImages(all: typeof IMAGES) {
+  const fail = (what: string) => {
+    throw new Error(`image name outside the known pattern: ${what}`);
+  };
+  const characters = Object.fromEntries(
+    Object.entries(all.characters).map(([k, v]) => {
+      const m = /^UI_AvatarIcon_(.+)$/.exec(v.icon);
+      if (!m || (v.side && v.side !== `UI_AvatarIcon_Side_${m[1]}`))
+        fail(`character ${k} ${JSON.stringify(v)}`);
+      return [k, m![1]];
+    }),
+  );
+  const weapons = Object.fromEntries(
+    Object.entries(all.weapons).map(([k, v]) => {
+      const m = /^UI_EquipIcon_(.+)$/.exec(v);
+      if (!m) fail(`weapon ${k} ${v}`);
+      return [k, m![1]];
+    }),
+  );
+  const sets = Object.fromEntries(
+    Object.entries(all.sets).map(([k, v]) => {
+      const ids = new Set(
+        SLOT_NAMES.map((slot) => {
+          const m = /^UI_RelicIcon_(\d+)_(\d)$/.exec(v[slot]);
+          if (!m || Number(m[2]) !== PIECE_NUMBER[slot])
+            fail(`set ${k} ${slot} ${v[slot]}`);
+          return m![1];
+        }),
+      );
+      if (ids.size !== 1) fail(`set ${k} ${JSON.stringify(v)}`);
+      return [k, Number([...ids][0])];
+    }),
+  );
+  return { characters, weapons, sets };
+}
+
+// ---------------------------------------------------------------------------
 // Build characters
 // ---------------------------------------------------------------------------
 
@@ -372,6 +434,12 @@ function buildCharacters() {
       weaponType,
       baseByLevel,
     });
+    // The game's own image names (ADR-0052): referenced, never copied.
+    if (c.images?.filename_icon)
+      IMAGES.characters[key] ??= {
+        icon: c.images.filename_icon,
+        ...(c.images.filename_sideIcon && { side: c.images.filename_sideIcon }),
+      };
   }
 
   return result;
@@ -421,6 +489,7 @@ function buildWeapons() {
       .replace(/[^a-zA-Z0-9_']/g, '')
       .toLowerCase();
 
+    if (w.images?.filename_icon) IMAGES.weapons[key] ??= w.images.filename_icon;
     result.push({
       key,
       name,
@@ -467,6 +536,11 @@ function buildSets() {
 
     const key = goodKey(name); // GOOD-standard set key so imported artifacts match
 
+    const pieces = Object.fromEntries(
+      SLOT_NAMES.map((slot) => [slot, a.images?.[`filename_${slot}`]]),
+    );
+    if (SLOT_NAMES.every((slot) => pieces[slot]))
+      IMAGES.sets[key] ??= pieces as Record<string, string>;
     result.push({ key, name, twoPiece });
   }
 
@@ -522,7 +596,27 @@ function main() {
 
   fs.writeFileSync(outPath, JSON.stringify(snapshot, null, 2), 'utf-8');
 
+  // Only for what the dataset kept (a dropped duplicate's images go too).
+  const keep = <T>(rec: Record<string, T>, items: { key: string }[]) =>
+    Object.fromEntries(
+      items.filter((i) => rec[i.key]).map((i) => [i.key, rec[i.key]]),
+    );
+  const images = compactImages({
+    characters: keep(IMAGES.characters, characters),
+    weapons: keep(IMAGES.weapons, weapons),
+    sets: keep(IMAGES.sets, sets),
+  });
+  const imagesPath = path.join(path.dirname(outPath), 'images.generated.json');
+  fs.writeFileSync(
+    imagesPath,
+    JSON.stringify({ genshinDbVersion, ...images }),
+    'utf-8',
+  );
+
   console.log(`✓ Wrote ${outPath}`);
+  console.log(
+    `✓ Wrote ${imagesPath} (${Object.keys(images.characters).length} characters, ${Object.keys(images.weapons).length} weapons, ${Object.keys(images.sets).length} sets)`,
+  );
   console.log(
     `  genshin-db ${snapshot.genshinDbVersion} (released ${snapshot.generatedAt}), game version ${snapshot.gameVersion}`,
   );
