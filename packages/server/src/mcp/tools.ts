@@ -20,6 +20,7 @@ import { ArtifactQuery, CompareBody } from '../api/schemas';
 import { ConstraintSpecSchema } from '@genshin-build-lab/engine/constraints/spec';
 import { DraftInput } from '../sim/drafts';
 import { TeamSimSpec } from '@genshin-build-lab/engine/sim/team';
+import { round1 } from '@genshin-build-lab/engine/numbers';
 
 export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact account: imported artifacts, characters and weapons, an exact build optimizer, and import history.
 - Every number you give the owner must come from a tool result. If a tool fails, say so; never estimate.
@@ -31,9 +32,8 @@ export const TOOL_INSTRUCTIONS = `Tools over the owner's own Genshin Impact acco
 - allocate_team shares the artifacts out between several characters, no piece twice. Report each member's build and sharePct (their share of their best build alone), then the moves in order and the farming list as given.
 - Rotations (gcsim action lists for a team) are in list_rotations and get_rotation. draft_rotation saves a new one only as a draft; tell the owner it needs their review (npm run rotations -- review <id>) before it counts, and never call a draft validated.`;
 
-const r1 = (x: number) => Math.round(x * 10) / 10;
 const round = (v: StatVec) =>
-  Object.fromEntries(Object.entries(v).map(([k, x]) => [k, r1(x!)]));
+  Object.fromEntries(Object.entries(v).map(([k, x]) => [k, round1(x!)]));
 
 /** An artifact as a model needs it. */
 export const compact = (a: Artifact & { lock?: boolean | null }) => ({
@@ -43,8 +43,8 @@ export const compact = (a: Artifact & { lock?: boolean | null }) => ({
   level: a.level,
   rarity: a.rarity,
   main: a.element ? `${a.element}_dmg` : a.mainStat,
-  mainValue: r1(a.mainStatValue),
-  subs: Object.fromEntries(a.subStats.map((s) => [s.key, r1(s.value)])),
+  mainValue: round1(a.mainStatValue),
+  subs: Object.fromEntries(a.subStats.map((s) => [s.key, round1(s.value)])),
   ...(a.location && { wornBy: a.location }),
   ...(a.lock !== undefined && a.lock !== null && { locked: a.lock }),
 });
@@ -158,14 +158,14 @@ export function accountTools(services: Services): ToolDef[] {
               statRank: b.statRank,
               teamDps: Math.round(b.teamDps.mean),
               teamDpsCi95: b.teamDps.ci95.map(Math.round),
-              behindPct: r1(b.behindPct),
+              behindPct: round1(b.behindPct),
               tiedWithBest: b.tiedWithBest,
               ...(b.characterDps && {
                 characterDps: Math.round(b.characterDps.mean),
-                characterShare: r1(100 * b.characterDps.share),
+                characterShare: round1(100 * b.characterDps.share),
               }),
-              fightSec: r1(b.fightSec),
-              objectiveValue: r1(b.objectiveValue),
+              fightSec: round1(b.fightSec),
+              objectiveValue: round1(b.objectiveValue),
               totals: round(b.totals),
               artifacts: Object.fromEntries(
                 Object.entries(b.artifacts).map(([s, a]) => [s, compact(a)]),
@@ -175,8 +175,8 @@ export function accountTools(services: Services): ToolDef[] {
         return {
           ...r,
           builds: r.builds.map((b) => ({
-            score: r1(b.score),
-            objectiveValue: r1(b.objectiveValue),
+            score: round1(b.score),
+            objectiveValue: round1(b.objectiveValue),
             totals: round(b.totals),
             bindingConstraints: b.diagnostics.bindingConstraints,
             artifacts: Object.fromEntries(
@@ -197,14 +197,14 @@ export function accountTools(services: Services): ToolDef[] {
         const side = (s: typeof c.a) => ({
           artifacts: s.artifacts.map(compact),
           totals: round(s.totals),
-          objectiveValue: r1(s.objectiveValue),
+          objectiveValue: round1(s.objectiveValue),
         });
         return {
           ...c,
           a: side(c.a),
           b: side(c.b),
           diff: round(c.diff),
-          objectiveDiff: r1(c.objectiveDiff),
+          objectiveDiff: round1(c.objectiveDiff),
         };
       },
     }),
@@ -234,27 +234,27 @@ export function accountTools(services: Services): ToolDef[] {
               dpsCi95: run.dps.ci95.map(n),
             }),
             ...(run.fightSec !== undefined && {
-              fightSec: r1(run.fightSec),
+              fightSec: round1(run.fightSec),
             }),
             ...(run.characters && {
               characters: run.characters.map((c) => ({
                 character: c.character,
                 dps: n(c.dps),
-                sharePct: r1(100 * c.share),
-                fieldSec: r1(c.fieldSec),
-                energyWaitSec: r1(c.energyWaitSec),
+                sharePct: round1(100 * c.share),
+                fieldSec: round1(c.fieldSec),
+                energyWaitSec: round1(c.energyWaitSec),
               })),
             }),
             ...(run.reactions && {
               reactions: Object.fromEntries(
-                Object.entries(run.reactions).map(([k, v]) => [k, r1(v)]),
+                Object.entries(run.reactions).map(([k, v]) => [k, round1(v)]),
               ),
             }),
             ...(run.vsBase && {
               vsBase: {
                 text: run.vsBase.text,
-                pct: r1(run.vsBase.pct),
-                ci95Pct: r1(run.vsBase.ci95Pct),
+                pct: round1(run.vsBase.pct),
+                ci95Pct: round1(run.vsBase.ci95Pct),
                 withinNoise: run.vsBase.withinNoise,
               },
             }),
@@ -300,7 +300,7 @@ export function accountTools(services: Services): ToolDef[] {
       },
       run: async (args) => {
         const r = await services.allocate(args);
-        const pct = (x: number) => r1(100 * x);
+        const pct = (x: number) => round1(100 * x);
         return {
           mode: r.mode,
           ...(r.score && {
@@ -317,8 +317,8 @@ export function accountTools(services: Services): ToolDef[] {
             ...(m.status === 'ok'
               ? {
                   build: {
-                    score: r1(m.build.score),
-                    objectiveValue: r1(m.build.objectiveValue),
+                    score: round1(m.build.score),
+                    objectiveValue: round1(m.build.objectiveValue),
                     totals: round(m.build.totals),
                     artifacts: Object.fromEntries(
                       Object.entries(m.build.artifacts).map(([s, a]) => [

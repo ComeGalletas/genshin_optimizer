@@ -8,6 +8,7 @@ import {
   type SnapshotPiece,
   type SourceSnapshot,
 } from './merge';
+import { mulberry32 } from '../numbers';
 
 const sub = (key: SubStat['key'], value: number): SubStat => ({ key, value });
 let id = 0;
@@ -223,14 +224,9 @@ describe('mergeSnapshots', () => {
   // Property: whatever the snapshots, every piece of every merged snapshot
   // lands in exactly one merged artifact (TODO 2.9 widens this).
   it('never loses or double-counts a piece', () => {
-    // mulberry32: a small seeded PRNG, so the run is reproducible.
-    let seed = 7;
-    const rand = (n: number) => {
-      seed = (seed + 0x6d2b79f5) | 0;
-      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return Math.floor((((t ^ (t >>> 14)) >>> 0) / 4294967296) * n);
-    };
+    // The engine's seeded PRNG, so the run is reproducible.
+    const next = mulberry32(7);
+    const rand = (n: number) => Math.floor(next() * n);
     const kinds = ['irminsul', 'ocr', 'good', 'enka'] as const;
     const reached = {
       fuzzy: 0,

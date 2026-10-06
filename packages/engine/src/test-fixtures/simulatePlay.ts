@@ -18,6 +18,7 @@ import {
 import { fingerprint } from '../import/fingerprint';
 import { genshinAdapter } from '../game/genshin/adapter';
 import type { SnapshotPiece } from '../merge/merge';
+import { mulberry32 } from '../numbers';
 
 export interface PlayCounts {
   upgrades: number;
@@ -36,15 +37,9 @@ export interface PlayTruth {
   lockChanged: [number, number][];
 }
 
-/** mulberry32: small, seeded, good enough for test data. */
+/** The engine's seeded PRNG with the two draws test data needs. */
 export function seeded(seed: number) {
-  let s = seed | 0;
-  const next = () => {
-    s = (s + 0x6d2b79f5) | 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+  const next = mulberry32(seed);
   return {
     next,
     int: (n: number) => Math.floor(next() * n),

@@ -1,7 +1,7 @@
 import type { Artifact, Slot, StatKey, SubStat } from '../game/types';
 import { SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
-import { mulberry32 } from '../optimizer/benchmark';
+import { mulberry32, round1 } from '../numbers';
 
 // Featured sets present in the snapshot. GladiatorsFinale appears in every slot
 // so a full 4-piece set is always formable; the rest add realism and anti-clone
@@ -66,8 +66,6 @@ const SUB_RANGE: Partial<Record<StatKey, [number, number]>> = {
  *  reloads can't be screenshotted, cited, or regression-tested. Distinct from
  *  benchmark.ts's DEFAULT_SEED so the two datasets can't be confused. */
 const SAMPLE_SEED = 20260821;
-
-const round1 = (x: number): number => Math.round(x * 10) / 10;
 
 /**
  * Three or four distinct substats, never equal to the main, crit-leaning.

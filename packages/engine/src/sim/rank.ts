@@ -36,6 +36,14 @@ const Z95 = 1.96;
 
 const se = (d: DpsSample) => d.sd / Math.sqrt(Math.max(1, d.iterations));
 
+/** Half-width of a mean's 95% interval. */
+export const ci95Half = (d: DpsSample) => Z95 * se(d);
+
+/** Half-width of the 95% interval of the difference of two means: within
+ *  it, the runs can't tell the two apart. */
+export const diffCi95Half = (a: DpsSample, b: DpsSample) =>
+  Z95 * Math.hypot(se(a), se(b));
+
 /** Candidates by mean DPS, highest first (the stat search's order breaks
  *  exact ties), with intervals and the ties to the best. */
 export function rankBySim<T>(
@@ -47,8 +55,8 @@ export function rankBySim<T>(
   const best = sorted[0];
   if (!best) return [];
   const ranked = sorted.map((e, i): SimRanked<T> => {
-    const half = Z95 * se(e.dps);
-    const noise = Z95 * Math.hypot(se(best.dps), se(e.dps));
+    const half = ci95Half(e.dps);
+    const noise = diffCi95Half(best.dps, e.dps);
     return {
       item: e.item,
       rank: i + 1,

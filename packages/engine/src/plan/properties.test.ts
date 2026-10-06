@@ -25,14 +25,13 @@ import type {
   StatKey,
 } from '../game/types';
 import { SLOTS } from '../game/types';
+import { mulberry32 } from '../numbers';
 
 const run: RunOptimize = (req, inv, extras) =>
   Promise.resolve(searchBuilds(req, inv, buildContext(req, extras)));
 
-/** A seeded PRNG, so a failure reproduces. */
-function prng(seed: number) {
-  return () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31;
-}
+/** The engine's seeded PRNG, so a failure reproduces. */
+const prng = mulberry32;
 type Rand = () => number;
 const pick = <T>(rand: Rand, xs: readonly T[]) =>
   xs[Math.floor(rand() * xs.length)];

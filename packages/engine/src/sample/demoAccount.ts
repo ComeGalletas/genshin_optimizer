@@ -20,11 +20,9 @@ import { SLOTS } from '../game/types';
 import type { RosterEntry } from '../good/normalize';
 import { SAMPLE_INVENTORY } from './sampleInventory';
 import { genshinAdapter } from '../game/genshin/adapter';
-import { mulberry32 } from '../optimizer/benchmark';
+import { mulberry32, round1 } from '../numbers';
 
 const DEMO_SEED = 20261006;
-const round1 = (x: number) => Math.round(x * 10) / 10;
-
 /** A +20 piece of the member's set for a slot the bag has run out of:
  *  crit-leaning substats, like the bag's. */
 function extraPiece(m: DemoMember, slot: Slot, rng: () => number): Artifact {

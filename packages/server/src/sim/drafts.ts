@@ -50,6 +50,7 @@ import {
   writeMeta,
   writeRotation,
 } from './rotations';
+import { round1 } from '@genshin-build-lab/engine/numbers';
 
 /** What a model sends to draft a rotation. */
 export const DraftInput = z.strictObject({
@@ -140,8 +141,6 @@ export type DraftOutcome =
       next: string;
     }
   | { saved: false; problems: string[] };
-
-const r1 = (x: number) => Math.round(x * 10) / 10;
 
 /** A failed run, as problems a model can act on. */
 function runProblem(e: unknown): string[] {
@@ -263,7 +262,7 @@ export async function draftRotation(
     iterations: result.iterations,
     dps: Math.round(result.dps.mean),
     sd: Math.round(result.dps.sd),
-    durationSec: r1(result.durationSec),
+    durationSec: round1(result.durationSec),
     warnings: result.warnings,
   };
   writeRotation(rotation, dir);
@@ -278,7 +277,7 @@ export async function draftRotation(
     durationSec: meta.validation.durationSec,
     warnings: result.warnings,
     energyWaitSec: Object.fromEntries(
-      result.characters.map((c) => [c.name, r1(c.energyWaitSec)]),
+      result.characters.map((c) => [c.name, round1(c.energyWaitSec)]),
     ),
     next: `Saved as a draft. The owner reviews it with \`npm run rotations -- review ${input.id}\` and promotes it with \`npm run rotations -- promote ${input.id}\`; until then it stays a draft.`,
   };
@@ -379,7 +378,7 @@ export async function reviewRotation(
         iterations: result.iterations,
         dps: Math.round(result.dps.mean),
         sd: Math.round(result.dps.sd),
-        durationSec: r1(result.durationSec),
+        durationSec: round1(result.durationSec),
         warnings: result.warnings,
         ...(published && {
           offPct:

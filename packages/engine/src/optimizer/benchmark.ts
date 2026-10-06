@@ -10,6 +10,7 @@ import { SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { buildContext } from './context';
 import { searchBuilds } from './search';
+import { mulberry32, round1 } from '../numbers';
 
 /** Shared "N× fewer evaluations" formatting — used by the doc-generating
  *  benchmark script (scripts/benchmark.ts) so the concept reads consistently
@@ -18,20 +19,6 @@ export function formatReduction(r: number): string {
   if (r < 1) return `${r.toFixed(2)}×`;
   if (r < 10) return `${r.toFixed(1)}×`;
   return `${Math.round(r).toLocaleString('en-US')}×`;
-}
-
-/** Deterministic PRNG so committed benchmark numbers reproduce anywhere.
- *  Exported because the curated sample bag (src/sample/sampleInventory.ts)
- *  needs the same reproducibility guarantee — one generator, so "deterministic"
- *  means the same thing in both places. */
-export function mulberry32(seed: number): () => number {
-  let s = seed >>> 0;
-  return function () {
-    s = (s + 0x6d2b79f5) >>> 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
 }
 
 /** The full in-game main-stat pool per slot. Same name as the table in
@@ -72,8 +59,6 @@ const SUBSTAT_POOL: StatKey[] = [
   'crit_rate',
   'crit_dmg',
 ];
-
-const round1 = (x: number): number => Math.round(x * 10) / 10;
 
 /** Plausible single-artifact substat magnitudes; realism affects which build wins, not whether the benchmark runs. */
 function subValue(stat: StatKey, rng: () => number): number {

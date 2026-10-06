@@ -25,6 +25,8 @@ import { useCompareRotation } from './compareRotation';
 import { PerCharacter, TeamAsRun } from './runDetails';
 import { ShareButton } from '../components/ShareButton';
 import { encodeComparison } from '@genshin-build-lab/engine/share/comparison';
+// The server's own limit on variants, so the form can't drift from it.
+import { MAX_VARIANTS } from '@genshin-build-lab/engine/sim/team';
 import { HelpButton, HelpPanel } from '../components/help/Help';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
@@ -50,8 +52,6 @@ interface Draft {
   res: number;
   level: number;
 }
-
-const MAX_VARIANTS = 5;
 
 /** gcsim's warnings, in words. */
 const WARNING: Record<string, string> = {
