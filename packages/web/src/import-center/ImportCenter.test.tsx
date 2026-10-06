@@ -398,4 +398,15 @@ describe('ImportCenter: the rarer cases', () => {
       'Couldn’t load the report: no route GET /imports/merges/1.',
     );
   });
+
+  it('says so in place when the server sends a list it can’t read (QA M1)', async () => {
+    // An array, not { snapshots, merges }: rendering it used to throw and
+    // take the whole app down.
+    serve({ 'GET /imports': [] });
+    render(<ImportCenter />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'the local server sent a reply this app can’t read',
+    );
+    expect(screen.queryByText('Loading…')).toBeNull();
+  });
 });

@@ -39,6 +39,12 @@ interface Notice {
 const BAD_FILE =
   'That file isn’t a recognised inventory export. Expected a GOOD-format .json.';
 
+/** How many entries a GOOD file's list holds, read or not. */
+function entries(json: unknown, list: 'artifacts' | 'characters'): number {
+  const xs = (json as Record<string, unknown> | null)?.[list];
+  return Array.isArray(xs) ? xs.length : 0;
+}
+
 /** "1 artifact" / "2 artifacts". English's regular plural is all this panel
  *  needs, and a count of one printed as "1 artifacts" reads as a bug in the
  *  importer rather than in the copy. */
@@ -280,11 +286,32 @@ export function ImportPanel() {
       }
       const roster = parseGOODRoster(json);
       const characters = Object.keys(roster).length;
+      // This replaces what's loaded and can't be undone, so an account with
+      // nothing usable in it never gets that far (QA M3).
+      const sent = entries(json, 'artifacts');
+      if (out.length === 0 && (sent > 0 || characters === 0)) {
+        setNotice({
+          tone: 'error',
+          text:
+            sent > 0
+              ? `None of the ${sent} ${plural(sent, 'artifact')} in the local server’s account could be read here, so nothing was replaced.`
+              : 'The local server’s account is empty, so nothing was replaced.',
+        });
+        return;
+      }
       replaceAll(out);
       useRoster.getState().setRoster(roster);
+      const dropped = [
+        [sent - out.length, 'artifact'],
+        [entries(json, 'characters') - characters, 'character'],
+      ] as const;
+      const left = dropped
+        .filter(([n]) => n > 0)
+        .map(([n, word]) => `${n} ${plural(n, word)}`)
+        .join(' and ');
       setNotice({
         tone: 'success',
-        text: `Loaded the local server’s account: ${out.length} ${plural(out.length, 'artifact')}, ${characters} ${plural(characters, 'character')}.`,
+        text: `Loaded the local server’s account: ${out.length} ${plural(out.length, 'artifact')}, ${characters} ${plural(characters, 'character')}.${left ? ` Left out ${left} this app couldn’t read.` : ''}`,
       });
       setSource({ kind: 'server' });
       goTo(characters > 0 ? 'roster' : 'optimise');

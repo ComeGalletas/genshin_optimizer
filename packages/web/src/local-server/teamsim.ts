@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import { serverJson } from './client';
+import { isRecord, serverJson, withArrays } from './client';
 
 export interface RotationSummary {
   id: string;
@@ -87,6 +87,8 @@ export interface RotationDetail {
 export function fetchRotation(id: string): Promise<RotationDetail> {
   return serverJson(`/rotations/${encodeURIComponent(id)}`, {
     timeoutMs: 10_000,
+    expect: (x) =>
+      isRecord(x) && isRecord(x.meta) && typeof x.template === 'string',
   });
 }
 
@@ -158,6 +160,7 @@ export interface TeamSimResult {
 export async function fetchRotations(): Promise<RotationSummary[]> {
   const r = await serverJson<{ rotations: RotationSummary[] }>('/rotations', {
     timeoutMs: 10_000,
+    expect: withArrays('rotations'),
   });
   return r.rotations;
 }
@@ -169,5 +172,6 @@ export function postTeamSim(req: TeamSimRequest): Promise<TeamSimResult> {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(req),
     timeoutMs: 300_000,
+    expect: withArrays('runs'),
   });
 }

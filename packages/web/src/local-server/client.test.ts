@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { probeServer, serverJson, SERVER_URL } from './client';
+import {
+  probeServer,
+  serverJson,
+  SERVER_URL,
+  UNREADABLE_REPLY,
+  withArrays,
+} from './client';
 import { useServer } from './status';
 
 /** A fake fetch answering by path: a status and a JSON body each. */
@@ -53,6 +59,34 @@ describe('serverJson', () => {
     await expect(serverJson('/x')).rejects.toMatchObject({
       message: 'no such thing',
       status: 404,
+    });
+  });
+  it('refuses a success it can’t read: not JSON, or not the shape asked for (QA M1)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => {
+          throw new SyntaxError('Unexpected end of JSON input');
+        },
+      })),
+    );
+    await expect(serverJson('/imports')).rejects.toMatchObject({
+      message: UNREADABLE_REPLY,
+      status: 200,
+    });
+    serve({
+      '/imports': [200, []],
+      '/ok': [200, { snapshots: [], merges: [] }],
+    });
+    const shape = withArrays('snapshots', 'merges');
+    await expect(
+      serverJson('/imports', { expect: shape }),
+    ).rejects.toMatchObject({ message: UNREADABLE_REPLY });
+    await expect(serverJson('/ok', { expect: shape })).resolves.toEqual({
+      snapshots: [],
+      merges: [],
     });
   });
 });

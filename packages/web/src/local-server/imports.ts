@@ -8,7 +8,7 @@
  */
 
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
-import { serverJson } from './client';
+import { isRecord, serverJson, withArrays } from './client';
 
 export type SourceKind = 'irminsul' | 'ocr' | 'good' | 'enka';
 
@@ -103,7 +103,10 @@ export interface InboxRun {
 }
 
 export function fetchImports(): Promise<Imports> {
-  return serverJson('/imports', { timeoutMs: 10_000 });
+  return serverJson('/imports', {
+    timeoutMs: 10_000,
+    expect: withArrays('snapshots', 'merges'),
+  });
 }
 
 export async function fetchChanges(
@@ -111,17 +114,27 @@ export async function fetchChanges(
 ): Promise<SnapshotChanges | null> {
   const r = await serverJson<{ changes: SnapshotChanges | null }>(
     `/imports/${snapshotId}/changes`,
-    { timeoutMs: 30_000 },
+    {
+      timeoutMs: 30_000,
+      expect: (x) => isRecord(x) && (x.changes === null || isRecord(x.changes)),
+    },
   );
   return r.changes;
 }
 
 export function fetchMergeReport(mergeId: number): Promise<MergeReport> {
-  return serverJson(`/imports/merges/${mergeId}`, { timeoutMs: 30_000 });
+  return serverJson(`/imports/merges/${mergeId}`, {
+    timeoutMs: 30_000,
+    expect: (x) => withArrays('reports')(x) && isRecord(x.merge),
+  });
 }
 
 export function scanInbox(): Promise<InboxRun> {
-  return serverJson('/imports/scan', { method: 'POST', timeoutMs: 120_000 });
+  return serverJson('/imports/scan', {
+    method: 'POST',
+    timeoutMs: 120_000,
+    expect: withArrays('events'),
+  });
 }
 
 /** Send a GOOD file to the server, as if dropped in its inbox; its time
@@ -138,5 +151,6 @@ export async function uploadImport(file: File): Promise<InboxRun> {
       }),
     }),
     timeoutMs: 120_000,
+    expect: withArrays('events'),
   });
 }

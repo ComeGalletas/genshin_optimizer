@@ -35,13 +35,32 @@ export class RequestStopped extends ServerError {
  *  delays the client-only fallback. */
 export const PROBE_TIMEOUT_MS = 2_000;
 
+/** What a reply that isn't JSON, or isn't the shape asked for, says. */
+export const UNREADABLE_REPLY =
+  'the local server sent a reply this app can’t read';
+
+/** A JSON object: not null, not an array. */
+export const isRecord = (x: unknown): x is Record<string, unknown> =>
+  typeof x === 'object' && x !== null && !Array.isArray(x);
+
+/** An object whose named fields are arrays: the least its reader needs. */
+export const withArrays =
+  (...keys: string[]) =>
+  (x: unknown): x is Record<string, unknown> =>
+    isRecord(x) && keys.every((k) => Array.isArray(x[k]));
+
 /** Call the server and return its JSON, or throw a `ServerError`
- *  (`RequestStopped` when the caller's `signal` stopped it). */
+ *  (`RequestStopped` when the caller's `signal` stopped it). A reply that
+ *  isn't JSON, or fails `expect` (the top-level shape the caller reads),
+ *  is an error too: a view never renders a reply it can't read. */
 export async function serverJson<T>(
   path: string,
-  init: RequestInit & { timeoutMs?: number } = {},
+  init: RequestInit & {
+    timeoutMs?: number;
+    expect?: (body: unknown) => boolean;
+  } = {},
 ): Promise<T> {
-  const { timeoutMs = PROBE_TIMEOUT_MS, signal, ...rest } = init;
+  const { timeoutMs = PROBE_TIMEOUT_MS, signal, expect, ...rest } = init;
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), timeoutMs);
   const stop = () => abort.abort();
@@ -62,10 +81,12 @@ export async function serverJson<T>(
     signal?.removeEventListener('abort', stop);
   }
   let body: unknown = null;
+  let json = true;
   try {
     body = await r.json();
   } catch {
-    // not JSON: the status says enough
+    // Not JSON: on an error the status says enough; on success it's unreadable.
+    json = false;
   }
   if (!r.ok) {
     const said = (body as { message?: unknown } | null)?.message;
@@ -76,6 +97,8 @@ export async function serverJson<T>(
       r.status,
     );
   }
+  if (!json || (expect && !expect(body)))
+    throw new ServerError(UNREADABLE_REPLY, r.status);
   return body as T;
 }
 
@@ -103,7 +126,13 @@ export async function probeServer(): Promise<ServerProbe> {
     return { online: false, reason: 'the local server is not healthy' };
   let llm: LlmInfo | null = null;
   try {
-    llm = await serverJson<LlmInfo>('/llm');
+    llm = await serverJson<LlmInfo>('/llm', {
+      expect: (x) =>
+        isRecord(x) &&
+        typeof x.provider === 'string' &&
+        typeof x.model === 'string' &&
+        typeof x.ready === 'boolean',
+    });
   } catch {
     // 404: no model configured; the rest of the server still works
   }

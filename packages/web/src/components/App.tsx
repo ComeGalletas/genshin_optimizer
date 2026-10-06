@@ -32,6 +32,7 @@ import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import { useOptimizeRun } from '../hooks/useOptimizeRun';
 import { scrollToId } from '../ui/scroll';
 import { Callout } from './ui/Callout';
+import { ViewErrorBoundary } from './ErrorBoundary';
 import { cn } from './ui/cn';
 import type {
   Artifact,
@@ -379,163 +380,167 @@ export function App() {
         )}
 
         <div className="space-y-10" data-view={view}>
-          {view === 'start' && (
-            <Section
-              id="step-load"
-              help="start"
-              title="Load Data"
-              hint="Start from the demo data, your account on the local server, or a new source."
-              delay="0s"
-            >
-              <ImportPanel />
-            </Section>
-          )}
-
-          {view === 'roster' &&
-            (hasRoster ? (
+          <ViewErrorBoundary key={view}>
+            {view === 'start' && (
               <Section
-                id="step-roster"
-                help="roster"
-                title="Your Roster"
-                hint="How built each of your characters is, scored 0–100 from level, talents, weapon and artifacts, best first. Open one for its details."
+                id="step-load"
+                help="start"
+                title="Load Data"
+                hint="Start from the demo data, your account on the local server, or a new source."
                 delay="0s"
               >
-                <Suspense fallback={<PanelFallback />}>
-                  <RosterView />
-                </Suspense>
+                <ImportPanel />
               </Section>
-            ) : (
-              <NeedsData view="The roster" needs="a roster" />
-            ))}
+            )}
 
-          {view === 'teams' &&
-            (hasRoster ? (
-              <Section
-                id="step-teams"
-                help="teams"
-                title="Endgame Teams"
-                hint="Two Abyss halves that share no character, matched from your roster."
-                delay="0s"
-              >
-                <Suspense fallback={<PanelFallback />}>
-                  <TeamsView />
-                </Suspense>
-              </Section>
-            ) : (
-              <NeedsData view="Teams" needs="a roster" />
-            ))}
-
-          {view === 'plan' &&
-            (hasRoster ? (
-              <Section
-                id="step-plan"
-                help="plan"
-                title="Your Plan"
-                hint="An optimised build for all eight members of your two teams from one shared inventory, plus one list of what to farm."
-                delay="0s"
-              >
-                <Suspense fallback={<PanelFallback />}>
-                  <PlanView />
-                </Suspense>
-              </Section>
-            ) : (
-              <NeedsData view="The plan" needs="a roster" />
-            ))}
-
-          {view === 'optimise' && (
-            <Suspense fallback={<PanelFallback />}>
-              <OptimiseView
-                artifacts={artifacts}
-                artifactsById={artifactsById}
-                result={result}
-                request={request}
-                sharedArtifacts={sharedArtifacts}
-                sharedSim={sharedSim}
-                running={running}
-                optimizeError={optimizeError}
-                optimizeErrorDetail={optimizeErrorDetail}
-                runCurrent={runCurrent}
-                cancelCurrent={cancelCurrent}
-                serverOnline={serverOnline}
-              />
-            </Suspense>
-          )}
-
-          {view === 'simulate' && (
-            <>
-              {comparisonParam && (
+            {view === 'roster' &&
+              (hasRoster ? (
                 <Section
-                  id="shared-comparison"
-                  title="Shared Team Comparison"
+                  id="step-roster"
+                  help="roster"
+                  title="Your Roster"
+                  hint="How built each of your characters is, scored 0–100 from level, talents, weapon and artifacts, best first. Open one for its details."
                   delay="0s"
                 >
                   <Suspense fallback={<PanelFallback />}>
-                    <SharedComparison
-                      param={comparisonParam}
-                      onClose={() => {
-                        setComparisonParam('');
-                        history.replaceState(
-                          null,
-                          '',
-                          location.pathname +
-                            location.search +
-                            hrefOf('simulate'),
-                        );
-                        window.dispatchEvent(new HashChangeEvent('hashchange'));
-                      }}
-                    />
+                    <RosterView />
                   </Suspense>
                 </Section>
-              )}
-              {serverOnline ? (
-                <>
-                  <Section
-                    id="compare-teams"
-                    help="compare-teams"
-                    title="Compare Teams"
-                    hint="Simulate a team from the rotation library against up to five variants: a weapon, a set, a teammate, the enemy or the rotation."
-                    delay="0s"
-                  >
-                    <Suspense fallback={<PanelFallback />}>
-                      <TeamComparison />
-                    </Suspense>
-                  </Section>
-                  <Section
-                    id="rotation-library"
-                    help="rotation-library"
-                    title="Rotation Library"
-                    hint="The gcsim rotations the server can simulate: each team, where it came from, how its run compares with the published number, and its action list."
-                    delay="0s"
-                  >
-                    <Suspense fallback={<PanelFallback />}>
-                      <RotationLibrary />
-                    </Suspense>
-                  </Section>
-                </>
               ) : (
-                !comparisonParam && (
-                  <NeedsData view="Simulating" needs="the local server" />
-                )
-              )}
-            </>
-          )}
+                <NeedsData view="The roster" needs="a roster" />
+              ))}
 
-          {view === 'imports' &&
-            (serverOnline ? (
-              <Section
-                id="import-center"
-                help="imports"
-                title="Import Center"
-                hint="The local server's sources, snapshots and merges: what each import changed and how they were reconciled."
-                delay="0s"
-              >
-                <Suspense fallback={<PanelFallback />}>
-                  <ImportCenter />
-                </Suspense>
-              </Section>
-            ) : (
-              <NeedsData view="The import center" needs="the local server" />
-            ))}
+            {view === 'teams' &&
+              (hasRoster ? (
+                <Section
+                  id="step-teams"
+                  help="teams"
+                  title="Endgame Teams"
+                  hint="Two Abyss halves that share no character, matched from your roster."
+                  delay="0s"
+                >
+                  <Suspense fallback={<PanelFallback />}>
+                    <TeamsView />
+                  </Suspense>
+                </Section>
+              ) : (
+                <NeedsData view="Teams" needs="a roster" />
+              ))}
+
+            {view === 'plan' &&
+              (hasRoster ? (
+                <Section
+                  id="step-plan"
+                  help="plan"
+                  title="Your Plan"
+                  hint="An optimised build for all eight members of your two teams from one shared inventory, plus one list of what to farm."
+                  delay="0s"
+                >
+                  <Suspense fallback={<PanelFallback />}>
+                    <PlanView />
+                  </Suspense>
+                </Section>
+              ) : (
+                <NeedsData view="The plan" needs="a roster" />
+              ))}
+
+            {view === 'optimise' && (
+              <Suspense fallback={<PanelFallback />}>
+                <OptimiseView
+                  artifacts={artifacts}
+                  artifactsById={artifactsById}
+                  result={result}
+                  request={request}
+                  sharedArtifacts={sharedArtifacts}
+                  sharedSim={sharedSim}
+                  running={running}
+                  optimizeError={optimizeError}
+                  optimizeErrorDetail={optimizeErrorDetail}
+                  runCurrent={runCurrent}
+                  cancelCurrent={cancelCurrent}
+                  serverOnline={serverOnline}
+                />
+              </Suspense>
+            )}
+
+            {view === 'simulate' && (
+              <>
+                {comparisonParam && (
+                  <Section
+                    id="shared-comparison"
+                    title="Shared Team Comparison"
+                    delay="0s"
+                  >
+                    <Suspense fallback={<PanelFallback />}>
+                      <SharedComparison
+                        param={comparisonParam}
+                        onClose={() => {
+                          setComparisonParam('');
+                          history.replaceState(
+                            null,
+                            '',
+                            location.pathname +
+                              location.search +
+                              hrefOf('simulate'),
+                          );
+                          window.dispatchEvent(
+                            new HashChangeEvent('hashchange'),
+                          );
+                        }}
+                      />
+                    </Suspense>
+                  </Section>
+                )}
+                {serverOnline ? (
+                  <>
+                    <Section
+                      id="compare-teams"
+                      help="compare-teams"
+                      title="Compare Teams"
+                      hint="Simulate a team from the rotation library against up to five variants: a weapon, a set, a teammate, the enemy or the rotation."
+                      delay="0s"
+                    >
+                      <Suspense fallback={<PanelFallback />}>
+                        <TeamComparison />
+                      </Suspense>
+                    </Section>
+                    <Section
+                      id="rotation-library"
+                      help="rotation-library"
+                      title="Rotation Library"
+                      hint="The gcsim rotations the server can simulate: each team, where it came from, how its run compares with the published number, and its action list."
+                      delay="0s"
+                    >
+                      <Suspense fallback={<PanelFallback />}>
+                        <RotationLibrary />
+                      </Suspense>
+                    </Section>
+                  </>
+                ) : (
+                  !comparisonParam && (
+                    <NeedsData view="Simulating" needs="the local server" />
+                  )
+                )}
+              </>
+            )}
+
+            {view === 'imports' &&
+              (serverOnline ? (
+                <Section
+                  id="import-center"
+                  help="imports"
+                  title="Import Center"
+                  hint="The local server's sources, snapshots and merges: what each import changed and how they were reconciled."
+                  delay="0s"
+                >
+                  <Suspense fallback={<PanelFallback />}>
+                    <ImportCenter />
+                  </Suspense>
+                </Section>
+              ) : (
+                <NeedsData view="The import center" needs="the local server" />
+              ))}
+          </ViewErrorBoundary>
         </div>
       </main>
 

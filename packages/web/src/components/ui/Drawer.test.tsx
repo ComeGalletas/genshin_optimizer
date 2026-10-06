@@ -42,7 +42,7 @@ describe('AppDrawer', () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     render(
-      <AppDrawer open onClose={onClose} title="Ayaka">
+      <AppDrawer onClose={onClose} title="Ayaka">
         <p>body</p>
       </AppDrawer>,
     );
@@ -52,18 +52,9 @@ describe('AppDrawer', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('renders nothing when closed', () => {
-    render(
-      <AppDrawer open={false} onClose={() => {}} title="Ayaka">
-        <p>body</p>
-      </AppDrawer>,
-    );
-    expect(screen.queryByRole('dialog')).toBeNull();
-  });
-
-  /** Mimics RosterView: a row button opens the drawer via `onOpen`, and the
-   *  drawer's `open` prop is driven by the parent's own state (as it is in
-   *  the real app), not left permanently `open`. */
+  /** Mimics every caller (the character window, the rotation library, the
+   *  chat): a button opens the drawer by mounting it, and closing unmounts
+   *  it. */
   function Harness() {
     const [open, setOpen] = useState(false);
     return (
@@ -71,12 +62,24 @@ describe('AppDrawer', () => {
         <button type="button" onClick={() => setOpen(true)}>
           Open Ayaka
         </button>
-        <AppDrawer open={open} onClose={() => setOpen(false)} title="Ayaka">
-          <p>body</p>
-        </AppDrawer>
+        {open && (
+          <AppDrawer onClose={() => setOpen(false)} title="Ayaka">
+            <p>body</p>
+          </AppDrawer>
+        )}
       </div>
     );
   }
+
+  it('moves focus into the drawer when it opens (QA M2)', async () => {
+    const user = userEvent.setup();
+    render(<Harness />);
+    await user.click(screen.getByRole('button', { name: /open ayaka/i }));
+    const dialog = screen.getByRole('dialog');
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true);
+    });
+  });
 
   it('returns focus to the triggering row button after closing via the close control', async () => {
     const user = userEvent.setup();
@@ -122,7 +125,7 @@ describe('AppDrawer', () => {
     it('renders left-side desktop styling when matchMedia reports desktop width', () => {
       const { restore } = stubMatchMedia(true);
       render(
-        <AppDrawer open onClose={() => {}} title="Ayaka">
+        <AppDrawer onClose={() => {}} title="Ayaka">
           <p>body</p>
         </AppDrawer>,
       );
@@ -136,7 +139,7 @@ describe('AppDrawer', () => {
     it('switches direction when the media query reports a live viewport change', () => {
       const { fireChange, restore } = stubMatchMedia(false);
       render(
-        <AppDrawer open onClose={() => {}} title="Ayaka">
+        <AppDrawer onClose={() => {}} title="Ayaka">
           <p>body</p>
         </AppDrawer>,
       );

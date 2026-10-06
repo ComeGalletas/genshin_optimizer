@@ -56,7 +56,6 @@ export function CharacterWindowDrawer({
 
   return (
     <AppDrawer
-      open
       onClose={close}
       title={genshinAdapter.characterName(characterKey)}
       largeTitle
