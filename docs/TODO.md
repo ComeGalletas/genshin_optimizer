@@ -376,7 +376,9 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - Planting a bug turns them red: no circlets (brute force), moves that ignore swaps (move list), a solver that reuses pieces (all three).
 - [x] ADR: allocation v2 (it amends ADR-0019)
   - [ADR-0048](adr/0048-account-wide-allocation.md): members and the plan's score, v1's moves, v2's branch and bound instead of HiGHS, and default weights by role.
-- [ ] **Accept:** all the 7.5 properties hold
+- [x] **Accept:** all the 7.5 properties hold
+  - Accepted by the owner on 2026-10-05.
+  - Evidence: `plan/properties.test.ts` green in CI's gate (v2 equal to a brute force over every assignment on 80 small cases, v2 ≥ v1 ≥ greedy, no piece twice and every build valid on 30, the move list played with the game's swaps on 30), after its brute force found and fixed v2's missing circlets (`a0eca08`). The owner ran `POST /allocate` on a copy of their account for Mualani, Mavuika, Xilonen and Emilie (v2 by default): Mualani 100%, Mavuika 84.3% with the Obsidian Codex pieces going to Mualani, Xilonen 98.0%, Emilie 100%, and the farming list naming the +0 pieces to level. In Windows PowerShell 5.1, `curl.exe` loses a JSON body's inner quotes; `Invoke-RestMethod` sends it intact.
 
 ## Phase 8: UI
 
