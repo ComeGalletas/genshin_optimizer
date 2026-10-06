@@ -453,8 +453,12 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 10: Reorganization
 
-- [ ] 10.0 Fix the Phase 9 QA report's findings (`.claude/notes/2026-10-06-phase9-qa-report.md`)
-  - M1 to M3 (malformed server answers, the window's focus, a fully unreadable server account): another session is working on them.
+- [x] 10.0 Fix the Phase 9 QA report's findings (`.claude/notes/2026-10-06-phase9-qa-report.md`)
+  - M1 to M3, fixed in another session (PR #8, `40868f0`) and reviewed here on 2026-10-06:
+    - M1: every client call's reply shape is checked, and a view that throws stops at its own boundary. Each shape check passed against the real server's replies (imports, both changes and merges, all 6 rotations, the model) and matches the server code for the long-running calls.
+    - M2: in the browser, a character window opened from the keyboard takes focus, and Escape gives it back to the roster row.
+    - M3: an account with nothing readable is refused, and a partial one says what was left out.
+    - The merged main passes the full gate (1,314 tests).
   - Minor and cosmetic, fixed with a test each:
     - m1: a weapon at a cap in a roster saved before 9.9 is flagged in Gear and Stats, since its ascension is unknown.
     - m2: every piece in a slot shows, and two in one slot are flagged.
