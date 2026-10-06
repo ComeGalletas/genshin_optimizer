@@ -68,7 +68,12 @@ const TeamsView = lazy(() =>
 const PlanView = lazy(() =>
   import('../plan/PlanView').then((m) => ({ default: m.PlanView })),
 );
-// Server-only (TODO 6.2): never loaded client-only.
+// Server-only (TODO 6.2, 8.1): never loaded client-only.
+const ImportCenter = lazy(() =>
+  import('../import-center/ImportCenter').then((m) => ({
+    default: m.ImportCenter,
+  })),
+);
 const TeamComparison = lazy(() =>
   import('../teams/TeamComparison').then((m) => ({
     default: m.TeamComparison,
@@ -420,6 +425,21 @@ export function App() {
                 </div>
               </Disclosure>
             </Section>
+
+            {/* Unnumbered, like Compare Teams: the server's imports, not
+              this page's; its account comes in through step 01. */}
+            {serverOnline && (
+              <Section
+                id="import-center"
+                title="Import Center"
+                hint="The local server's sources, snapshots and merges: what each import changed and how they were reconciled."
+                delay="0.06s"
+              >
+                <Suspense fallback={<PanelFallback />}>
+                  <ImportCenter />
+                </Suspense>
+              </Section>
+            )}
 
             {hasRoster && (
               <Section

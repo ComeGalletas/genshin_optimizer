@@ -382,7 +382,11 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
 
 ## Phase 8: UI
 
-- [ ] 8.1 Import center: sources, snapshots, reconciliation report, diff
+- [x] 8.1 Import center: sources, snapshots, reconciliation report, diff
+  - [ADR-0049](adr/0049-import-center.md). Server: `GET /imports/:id/changes` now carries the pieces each change names (`pieces.before`/`after`, by position); `GET /imports/merges/:id` returns a merge's reconciliation reports (stored since ADR-0027, never read back) with counts and the pieces behind each mismatch, move and unpaired piece (up to 100 a kind), an account piece as first read; `POST /imports` takes a GOOD file's text from the browser (32 MB) down the inbox's path (`importText`), its time normalised to the store's ISO form, since merges order snapshots by that string (the upload test caught `…00Z` against `…00.000Z`).
+  - Web: `packages/web/src/import-center/ImportCenter.tsx`, an unnumbered lazy section after step 01, shown while the server runs: sources best first (Irminsul, OCR, other GOOD, Enka) with the snapshot each puts in the account; snapshots newest first, faulty scans marked; "What changed" per snapshot (new, gone, levelled, moved, lock, unexplained, each with its pieces as the game shows them); the current merge's reconciliation (paired by kind, misread or different pieces side by side with the lines that differ, moved, only on one side, "the first 100 of N"), older merges from a list; upload and inbox scan with each file's outcome. A new account is loaded into the page from step 01, as before.
+  - Checked in the browser on a copy of the owner's store with two crafted imports (an Irminsul export with one piece moved, one gone, one new; an OCR scan of 300 pieces with one misread): the diff and the reconciliation (299 paired, the misread plume side by side, the moved sands, 1,350 not in the scan) read as expected.
+  - Tests: 2 server routes (an upload as a snapshot, a merge and a diff with pieces; same file again, a bad one, an empty one; a two-source merge's report with exact counts and the misread pair), 5 web (sources and snapshot states; a snapshot's changes; the reconciliation and an older merge; an upload's request and outcome; an inbox scan with a refused file, and a server error).
 - [ ] 8.2 Chat panel polish, sim results and comparison view, rotation library browser, allocation plan view
 - [ ] 8.3 Share links carry sim results (ADR on size limits, extending ADR-0005)
 

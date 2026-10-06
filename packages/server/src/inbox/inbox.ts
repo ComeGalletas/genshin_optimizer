@@ -69,6 +69,15 @@ export function importFile(db: Store, path: string): InboxEvent {
   } catch (e) {
     return { file, status: 'refused', reason: (e as Error).message };
   }
+  return importText(db, { text, file, takenAt });
+}
+
+/** Import one file's text, from the inbox or an upload (TODO 8.1); never
+ *  throws for a bad file. */
+export function importText(
+  db: Store,
+  { text, file, takenAt }: { text: string; file: string; takenAt?: string },
+): InboxEvent {
   try {
     const r = importGood(db, { text, fileName: file, takenAt });
     if (!r.created)
@@ -102,6 +111,28 @@ export function processInbox(
   const events = files.map((f) => importFile(db, join(dir, f)));
   const run: InboxRun = { events };
   if (events.some((e) => e.status === 'imported'))
+    run.merge = recordMerge(db, latestUsableSnapshots(db));
+  return run;
+}
+
+/**
+ * A file uploaded from the web's import center (TODO 8.1): imported as an
+ * inbox file is, and merged the same way when it is usable and new.
+ */
+export function importUpload(
+  db: Store,
+  input: { text: string; fileName?: string; takenAt?: string },
+): InboxRun {
+  const event = importText(db, {
+    text: input.text,
+    file: input.fileName ?? 'upload.json',
+    // The store's form (`toISOString`): merges order snapshots by it.
+    ...(input.takenAt && {
+      takenAt: new Date(input.takenAt).toISOString(),
+    }),
+  });
+  const run: InboxRun = { events: [event] };
+  if (event.status === 'imported')
     run.merge = recordMerge(db, latestUsableSnapshots(db));
   return run;
 }

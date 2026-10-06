@@ -17,7 +17,7 @@ import Fastify, { type FastifyInstance, type FastifyReply } from 'fastify';
 import * as z from 'zod';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { StoreError, type Store } from '../store/store';
-import { DEFAULT_INBOX, processInbox } from '../inbox/inbox';
+import { DEFAULT_INBOX, importUpload, processInbox } from '../inbox/inbox';
 import { SearchRunner } from '../optimize/pool';
 import { createMcpServer } from '../mcp/server';
 import {
@@ -30,6 +30,8 @@ import {
   IdParam,
   OptimizeBody,
   SnapshotParam,
+  UploadBody,
+  UPLOAD_LIMIT,
 } from './schemas';
 import { ServiceError, Services } from './services';
 import { describeLlm, type LlmConfig } from '../llm/config';
@@ -292,7 +294,20 @@ export function buildApp(opts: AppOptions): FastifyInstance {
     const p = parse(SnapshotParam, req.params, reply);
     if (p) return services.changes(p.id);
   });
+  app.get('/imports/merges/:id', async (req, reply) => {
+    const p = parse(SnapshotParam, req.params, reply);
+    if (p) return services.mergeReport(p.id);
+  });
   app.post('/imports/scan', async () => processInbox(opts.db, inboxDir));
+  // A GOOD file from the web's import center (TODO 8.1): the inbox's path.
+  app.post(
+    '/imports',
+    { bodyLimit: UPLOAD_LIMIT + 4096 },
+    async (req, reply) => {
+      const body = parse(UploadBody, req.body, reply);
+      if (body) return importUpload(opts.db, body);
+    },
+  );
 
   // ---- MCP over streamable HTTP (stateless) ---------------------------------
   // One server and transport per request: no session state to keep, and the

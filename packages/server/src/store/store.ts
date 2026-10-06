@@ -31,6 +31,7 @@ import {
   scanFault,
   sourceKind,
   type MergedArtifact,
+  type Appearance,
   type MergeResult,
   type ScanFault,
   type SnapshotPiece,
@@ -512,6 +513,33 @@ export function currentRoster(db: Store): CurrentRoster {
   const best = withRoster[0];
   if (!best) return { roster: {}, weapons: [] };
   return { snapshotId: best.info.id, ...loadRoster(db, best.info.id) };
+}
+
+/** A recorded merge's reconciliation reports (ADR-0027): each snapshot
+ *  against the account as merged before it, positions as the engine gave
+ *  them (`a` an artifact of this merge by position, `b` a piece of the
+ *  snapshot). */
+export function mergeReports(
+  db: Store,
+  mergeId: number,
+): MergeResult['reports'] {
+  const row = db
+    .prepare('SELECT reports_json FROM merges WHERE id = ?')
+    .get(mergeId) as { reports_json: string } | undefined;
+  if (!row) throw new StoreError(`no merge ${mergeId}`);
+  return JSON.parse(row.reports_json) as MergeResult['reports'];
+}
+
+/** Where each artifact of a merge first came from (its first appearance),
+ *  by position: the piece a reconciliation report's `a` was read as. */
+export function mergeOrigins(db: Store, mergeId: number): Appearance[] {
+  return (
+    db
+      .prepare(
+        'SELECT seen_in_json FROM merged_artifacts WHERE merge_id = ? ORDER BY ord',
+      )
+      .all(mergeId) as { seen_in_json: string }[]
+  ).map((r) => (JSON.parse(r.seen_in_json) as Appearance[])[0]);
 }
 
 /** Every recorded merge, oldest first (the last is the current account). */

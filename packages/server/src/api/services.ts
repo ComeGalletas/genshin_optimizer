@@ -37,6 +37,9 @@ import {
   currentRoster,
   diffSincePrevious,
   listMerges,
+  loadSnapshot,
+  mergeOrigins,
+  mergeReports,
   listSnapshots,
   snapshotInfo,
   type Store,
@@ -119,6 +122,9 @@ import {
   planMoves,
   planShare,
 } from '@genshin-build-lab/engine/plan/output';
+
+/** The most pieces a merge report lists per kind (counts are whole). */
+export const MERGE_LIST_CAP = 100;
 
 export class ServiceError extends Error {
   constructor(
@@ -806,9 +812,97 @@ export class Services {
     return { snapshots: listSnapshots(this.db), merges: listMerges(this.db) };
   }
 
+  /** What a snapshot changed since the previous one of its kind, with
+   *  the pieces each change names (TODO 8.1): `pieces.before` from the
+   *  earlier snapshot, `pieces.after` from this one, by position. */
   changes(snapshotId: number) {
     snapshotInfo(this.db, snapshotId); // StoreError (404) when missing
-    return { changes: diffSincePrevious(this.db, snapshotId) ?? null };
+    const c = diffSincePrevious(this.db, snapshotId);
+    if (!c) return { changes: null };
+    const d = c.diff;
+    const pick = (snapshot: number, at: (number | undefined)[]) => {
+      const pieces = loadSnapshot(this.db, snapshot).pieces;
+      return Object.fromEntries(
+        at
+          .filter((i): i is number => i !== undefined)
+          .map((i) => [i, pieces[i].artifact]),
+      ) as Record<number, Artifact>;
+    };
+    const pairs = [...d.upgraded, ...d.moved, ...d.lockChanged];
+    return {
+      changes: {
+        ...c,
+        pieces: {
+          before: pick(c.from, [
+            ...d.removed,
+            ...pairs.map((x) => x.before),
+            ...d.unexplained.map((x) => x.before),
+          ]),
+          after: pick(c.to, [
+            ...d.added,
+            ...pairs.map((x) => x.after),
+            ...d.unexplained.map((x) => x.after),
+          ]),
+        },
+      },
+    };
+  }
+
+  /** A merge's reconciliation reports with their pieces (TODO 8.1): per
+   *  snapshot merged after the first, how its pieces paired with the
+   *  account merged before it, and the pieces behind each mismatch, move
+   *  and unpaired piece, each list up to `MERGE_LIST_CAP`. An account
+   *  piece is shown as first read. */
+  mergeReport(mergeId: number) {
+    const merge = listMerges(this.db).find((m) => m.id === mergeId);
+    if (!merge) throw notFound(`no merge ${mergeId}`);
+    const origins = mergeOrigins(this.db, mergeId);
+    const loaded = new Map<string, Artifact[]>();
+    const piece = (snapshot: string, i: number) => {
+      let pieces = loaded.get(snapshot);
+      if (!pieces) {
+        pieces = loadSnapshot(this.db, Number(snapshot)).pieces.map(
+          (p) => p.artifact,
+        );
+        loaded.set(snapshot, pieces);
+      }
+      return pieces[i];
+    };
+    const account = (a: number) => piece(origins[a].snapshot, origins[a].index);
+    const cap = <T>(xs: T[]) => xs.slice(0, MERGE_LIST_CAP);
+    return {
+      merge,
+      listCap: MERGE_LIST_CAP,
+      reports: mergeReports(this.db, mergeId).map(
+        ({ snapshot, against, report: r }) => {
+          const kinds = { exact: 0, fuzzy: 0, levelled: 0 };
+          for (const p of r.pairs) kinds[p.kind]++;
+          return {
+            snapshot: Number(snapshot),
+            against: against.map(Number),
+            counts: {
+              paired: r.pairs.length,
+              ...kinds,
+              mismatches: r.mismatches.length,
+              moved: r.moved.length,
+              onlySnapshot: r.onlyB.length,
+              onlyAccount: r.onlyA.length,
+            },
+            mismatches: cap(r.mismatches).map((m) => ({
+              account: account(m.a),
+              snapshot: piece(snapshot, m.b),
+              stats: m.stats,
+            })),
+            moved: cap(r.moved).map((m) => ({
+              account: account(m.a),
+              snapshot: piece(snapshot, m.b),
+            })),
+            onlySnapshot: cap(r.onlyB).map((b) => piece(snapshot, b)),
+            onlyAccount: cap(r.onlyA).map(account),
+          };
+        },
+      ),
+    };
   }
 
   /** The latest import at a glance: the current merge (and what it

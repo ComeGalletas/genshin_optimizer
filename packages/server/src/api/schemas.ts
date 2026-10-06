@@ -84,6 +84,20 @@ export const SnapshotParam = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+/** The largest GOOD file an upload takes: a full account is 1–2 MB. */
+export const UPLOAD_LIMIT = 32 * 1024 * 1024;
+
+/** A GOOD file uploaded from the web's import center (TODO 8.1): its
+ *  text, its name, and when it was taken (the file's time, which orders
+ *  snapshots in a merge). */
+export const UploadBody = z
+  .object({
+    text: z.string().min(1).max(UPLOAD_LIMIT),
+    fileName: z.string().trim().min(1).max(200).optional(),
+    takenAt: z.iso.datetime({ offset: true }).optional(),
+  })
+  .strict();
+
 const CharacterKey = z
   .string()
   .max(MAX_KEY)

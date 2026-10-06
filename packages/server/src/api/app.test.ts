@@ -264,6 +264,106 @@ describe('imports and later phases', () => {
   });
 });
 
+describe('the import center’s routes (TODO 8.1)', () => {
+  type Good = { source: string; artifacts: Record<string, unknown>[] };
+  const sample = () => JSON.parse(SAMPLE) as Good;
+
+  it('takes an upload as the inbox takes a file: a snapshot, a merge, and what changed, with the pieces', async () => {
+    const g = sample();
+    g.artifacts[0] = { ...g.artifacts[0], location: 'Furina' };
+    const gone = g.artifacts.pop()!;
+    g.artifacts.push({ ...gone, setKey: 'GladiatorsFinale', lock: false });
+    const text = JSON.stringify(g);
+    const r = await post('/imports', {
+      text,
+      fileName: 'later.json',
+      takenAt: '2026-10-05T12:00:00Z',
+    });
+    expect(r.statusCode).toBe(200);
+    const run = r.json();
+    expect(run.events[0]).toMatchObject({
+      file: 'later.json',
+      status: 'imported',
+      snapshot: { id: 2, kind: 'good', takenAt: '2026-10-05T12:00:00.000Z' },
+    });
+    expect(run.merge).toMatchObject({ id: 2, snapshotIds: [2] });
+
+    const { changes } = (await get('/imports/2/changes')).json();
+    expect(changes).toMatchObject({ from: 1, to: 2 });
+    expect(changes.diff.added).toHaveLength(1);
+    expect(changes.diff.removed).toHaveLength(1);
+    expect(changes.pieces.after[changes.diff.added[0]]).toMatchObject({
+      setKey: 'GladiatorsFinale',
+    });
+    expect(changes.pieces.before[changes.diff.removed[0]]).toMatchObject({
+      setKey: gone.setKey,
+    });
+    const moved = changes.diff.moved[0];
+    expect(moved).toMatchObject({ from: 'neuvillette', to: 'furina' });
+    expect(changes.pieces.after[moved.after].location).toBe('furina');
+
+    // The same file again changes nothing; a bad one says why.
+    const again = (await post('/imports', { text })).json();
+    expect(again.events[0].status).toBe('already-imported');
+    expect(again.merge).toBeUndefined();
+    const bad = (
+      await post('/imports', { text: '{', fileName: 'x.json' })
+    ).json();
+    expect(bad.events[0]).toMatchObject({ status: 'refused' });
+    expect(bad.events[0].reason).toMatch(/not JSON/);
+    expect((await post('/imports', { text: '' })).statusCode).toBe(400);
+  });
+
+  it('shows a merge’s reconciliation: how each snapshot paired with the account, with the pieces', async () => {
+    // An OCR scan of part of the account, one piece misread.
+    const g = sample();
+    const ocr = {
+      ...g,
+      source: 'genshin-agent OCR',
+      artifacts: g.artifacts.slice(0, 12).map((a, i) =>
+        i === 3
+          ? {
+              ...a,
+              substats: (a.substats as { key: string; value: number }[]).map(
+                (s, j) => (j === 0 ? { ...s, value: s.value + 9 } : s),
+              ),
+            }
+          : a,
+      ),
+    };
+    const run = (
+      await post('/imports', {
+        text: JSON.stringify(ocr),
+        fileName: 'ocr.json',
+      })
+    ).json();
+    expect(run.merge.snapshotIds).toEqual([1, 2]);
+    const r = await get(`/imports/merges/${run.merge.id}`);
+    expect(r.statusCode).toBe(200);
+    const body = r.json();
+    expect(body.merge.id).toBe(run.merge.id);
+    expect(body.reports).toHaveLength(1);
+    const [rep] = body.reports;
+    // OCR outranks a plain GOOD file (ADR-0027), so it went first and the
+    // sample was reconciled against it.
+    expect(rep).toMatchObject({ snapshot: 1, against: [2] });
+    expect(rep.counts).toMatchObject({
+      paired: 11,
+      mismatches: 1,
+      onlySnapshot: 8,
+      onlyAccount: 0,
+    });
+    // The misread piece: the same piece on both sides, one line apart.
+    expect(rep.mismatches[0].stats).toHaveLength(1);
+    expect(rep.mismatches[0].account.slot).toBe(
+      rep.mismatches[0].snapshot.slot,
+    );
+    expect(rep.onlySnapshot).toHaveLength(8);
+    expect(rep.onlySnapshot[0]).toHaveProperty('setKey');
+    expect((await get('/imports/merges/99')).statusCode).toBe(404);
+  });
+});
+
 describe('allocation (TODO 7.4)', () => {
   const spec = (character: string, over: object = {}) => ({
     spec: { version: 1, character, set: { kind: 'any' }, ...over },
