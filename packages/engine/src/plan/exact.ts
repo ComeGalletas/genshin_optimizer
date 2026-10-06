@@ -3,16 +3,20 @@
  * candidate builds, exactly.
  *
  * Each member brings their M best builds from the whole inventory (the
- * optimizer's top-K, already diversified by its anti-clone rule) plus the
- * build allocation v1 gave them, and "no build". The plan picks one option
+ * optimizer's top-K, already diversified by its anti-clone rule), on each
+ * of those builds' four-piece cores their best N circlets (N members: what
+ * the anti-clone rule would hide), the build allocation v1 gave them, and
+ * "no build". The plan picks one option
  * per member, no artifact in two picks, maximising the plan's score (each
  * member's build score over their solo best, weighted; `improve.ts`). That
  * is a weighted set packing: small here (eight members, a few dozen
  * options each), so a branch and bound solves it exactly. It is what PLAN
  * called an ILP, without the solver dependency (ADR-0048).
  *
- * Exact within the pool: a build outside every member's top-M is never
- * seen, which is why v1's build is in it, so v2 never scores below v1. Pure.
+ * Exact within the pool: a build on a core outside every member's top-M
+ * is never seen, which is why v1's build is in it, so v2 never scores below
+ * v1. With M covering every core it is exact over every assignment (TODO
+ * 7.5 checks it against a brute force). Pure.
  * @packageDocumentation
  */
 
@@ -171,6 +175,23 @@ export async function allocateV2(
     };
     if (r.status === 'ok')
       for (const b of r.builds) add(SLOTS.map((s) => b.artifactIds[s]));
+    // The optimizer keeps at most two builds per four-piece core (its
+    // anti-clone rule), so a third circlet on a core never comes back. The
+    // others can hold at most N − 1 circlets, so the member's best N on
+    // each core are all a plan can need (TODO 7.5 found the gap).
+    const circlets = inventory.filter(
+      (a) => a.slot === 'circlet' && (!m.allowed || m.allowed.has(a.id)),
+    );
+    const cores = new Set(cands.map((c) => c.ids.slice(0, 4).join('|')));
+    for (const core of cores) {
+      const head = core.split('|');
+      circlets
+        .map((a) => ({ ids: [...head, a.id], v: value([...head, a.id]) }))
+        .filter((x): x is { ids: string[]; v: number } => x.v !== null)
+        .sort((x, y) => y.v - x.v)
+        .slice(0, order.length)
+        .forEach((x) => add(x.ids));
+    }
     const own = v1.builds[i].result;
     if (own.status === 'ok')
       add(SLOTS.map((s) => own.builds[0].artifactIds[s]));

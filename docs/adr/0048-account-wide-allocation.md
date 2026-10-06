@@ -37,8 +37,9 @@ thousands, crit value to hundreds, a stat to tens.
   another's pieces in reach, the other over what is left). Every move is
   checked as a search checks a build (constraints, off-element goblets), so
   the plan is valid and never below greedy.
-- **v2** (`plan/exact.ts`): each member's top-M builds (M = 20 by default)
-  plus v1's, and "no build"; the best choice of one per member with no
+- **v2** (`plan/exact.ts`): each member's top-M builds (M = 20 by default),
+  on each of their four-piece cores the member's best N circlets (N
+  members), plus v1's, and "no build"; the best choice of one per member with no
   artifact twice, by a **branch and bound** (members with most at stake
   first, candidates best first, bounded by what each remaining member could
   still add with what is free). PLAN said ILP with HiGHS; the problem is a
@@ -77,8 +78,16 @@ thousands, crit value to hundreds, a stat to tens.
   shares is higher, which is right by the score and wrong by damage. With
   role weights it is the reverse, Mualani 100% and Mavuika 82.9%, which is
   why they are the default.
-- v2 is exact only within the candidates: a build outside every member's
-  top-M is never seen. v1's build is always in the pool, so v2 ≥ v1.
+- v2 is exact only within the candidates: a build on a core outside
+  every member's top-M is never seen. v1's build is always in the pool, so
+  v2 ≥ v1. The circlets are there because the optimizer's anti-clone rule
+  keeps at most two builds per four-piece core: with three members a
+  member's third circlet on a core can be the one left, and v2 missed the
+  best plan until TODO 7.5's brute force found it. The others hold at most
+  N − 1 circlets, so the best N on each core are enough: with M covering
+  every core, v2 is exact over every assignment. On the owner's account
+  the pools grow from about 20 to 25–153 per member, and eight members
+  take 1,231 nodes.
 - Greedy stays the fast path (`composePlan`); v1 and v2 cost a search per
   member for the solo best, and v2 a top-M search per member. The owner's
   Mualani team (four members) takes 15 s through `/allocate`.
