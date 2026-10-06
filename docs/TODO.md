@@ -473,6 +473,21 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - c3: stored roster rows outside the game's ranges are dropped.
     - c4: the drawer's header stays at the top.
     - The suspicion that one failed details load stuck for the session: the next window now retries.
+- [x] 10.0b Clean-up pass on the code and references review (`.claude/notes/2026-10-06-code-and-references-review.md`), done by two sessions on 2026-10-06 (main, and `fix/phase9-qa-majors` through PRs #9 and #10)
+  - References: the stale README, CONTRIBUTING, runbooks, FILE-MAP, CONTEXT (three new glossary entries), PLAN and code comments corrected. The Import Center's "step 01" now links to Load Data.
+  - Unused code removed: five engine and server functions only tests called, two web store actions (tests use `web/src/test-utils/stores.ts`), the Phase 0 package markers and the two unused engine exports, `react.svg`, the dead step badge, unused CSS and theme tokens, and four untargeted section ids. The server declares the `tsx` its worker loads.
+  - One definition each:
+    - display names (`weaponName`, `setName`, `DISPLAY_NAMES` in the adapter);
+    - the flat stats and the ascension caps (`game/types`);
+    - mulberry32 and round1 (`engine/src/numbers.ts`);
+    - the untrusted-JSON guards (`engine/src/json.ts`);
+    - the 95% interval helpers, MAX_VARIANTS, sha256 and the wiki prefix;
+    - one plural helper (`countOf` / `pluralWord` in labels-core);
+    - the web's subsection help heading (`HelpHeading`), a load-once resource (`hooks/lazyResource.ts`), the loading placeholder, and one way to scroll to a section in a lazily opened view.
+    - The web uses the engine's own types for the import diff and plan moves, and its TypeScript target and lib now match the engine's.
+  - Small fixes found on the way: Simulate fetches the rotation library once; the Import Center's errors say what failed; the explain client checks its reply's shape like the other calls.
+  - Left as they are, on purpose: two pairs that look alike but mean different things (EPS, loadGolden), the two different `pct` helpers, and making the engine's and server's "exported but used only in their own file" values private (optional, 2.4). A piece levelled between an Irminsul and a non-Irminsul snapshot still doesn't pair (ADR-0025).
+  - The full gate is green on main after the merge (see the commit that ticks this).
 - [ ] 10.1 Owner: the reorganization's scope, meaning what moves where and which new functions come in. The items below grow from it.
 - [ ] 10.2 More guide sources for the build and team previews, beside KQM's: [ADR](adr/) first.
   - genshin-builds.com, whose robots.txt allows crawlers and AI agents and whose pages follow one template per character. An extractor run by hand at data-build time (not in the browser, not on every load) reads each character's page into a checked schema: ranked weapons, artifact sets, main stats per slot, substat and talent priority, teams. Facts only, mapped to dataset keys, never the prose. Each record keeps its URL, fetch date and game version, and the owner reviews it before it counts, as with rotations. Polite fetching: one request at a time, cached, with an identifying user agent. Ask the site's author first.
