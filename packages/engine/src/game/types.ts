@@ -86,6 +86,17 @@ export interface Artifact {
   /** Dataset character key currently wearing this piece, from a GOOD export's
    *  `location`. Unset for hand-entered or unequipped pieces. */
   location?: string;
+  /** What the source export knows of the substats' rolls (Irminsul,
+   *  ADR-0024): each line's first roll and the piece's roll count, checked
+   *  on import. For showing the rolls only (TODO 9.10): nothing scores it. */
+  rolls?: ArtifactRolls;
+}
+
+export interface ArtifactRolls {
+  /** Each line's first roll, by stat. */
+  first?: Partial<Record<StatKey, number>>;
+  /** Rolls the piece has had, its first lines included. */
+  total?: number;
 }
 
 export type SetRequirement =

@@ -257,12 +257,31 @@ export class Services {
         'no account imported yet: drop a GOOD file in imports/inbox/ and run npm run inbox',
       );
     const { roster, weapons } = currentRoster(this.db);
+    // Each piece's unactivated line and source extras (first rolls, roll
+    // count) from the snapshot its values came from, so the web app can
+    // show the rolls (TODO 9.10).
+    const snapshots = new Map<string, ReturnType<typeof loadSnapshot>>();
+    const source = (m: (typeof merged)[number]) => {
+      const at = m.seenIn.find((s) => s.snapshot === m.valuesFrom);
+      if (!at) return undefined;
+      let snap = snapshots.get(at.snapshot);
+      if (!snap) {
+        snap = loadSnapshot(this.db, Number(at.snapshot));
+        snapshots.set(at.snapshot, snap);
+      }
+      return snap.pieces[at.index];
+    };
     return toGOODAccount(
       {
-        pieces: merged.map((m) => ({
-          artifact: m.artifact,
-          ...(m.lock !== undefined && { lock: m.lock }),
-        })),
+        pieces: merged.map((m) => {
+          const from = source(m);
+          return {
+            artifact: m.artifact,
+            ...(m.lock !== undefined && { lock: m.lock }),
+            ...(from?.unactivated && { unactivated: from.unactivated }),
+            ...(from?.extras && { extras: from.extras }),
+          };
+        }),
         roster,
         weapons,
       },

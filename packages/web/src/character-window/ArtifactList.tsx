@@ -1,61 +1,151 @@
 /**
- * The artifacts a character has on now (TODO 9.9): each slot with its
- * main stat and substats, and the set bonuses they complete.
+ * The artifacts a character has on now (TODO 9.9, 9.10): each slot's set,
+ * then its main stat (an elemental goblet with its element), then its
+ * substats with their rolls; under them, the set effects they activate.
  */
-import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import type { Artifact, StatKey } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
+import type { Details } from '@genshin-build-lab/engine/game/genshin/details';
 import { countSets } from '@genshin-build-lab/engine/optimizer/score';
-import { formatSetName, formatStat, SLOT_LABELS, statLabel } from '../labels';
+import {
+  splitRolls,
+  type LineRolls,
+  type Roll,
+} from '@genshin-build-lab/engine/game/genshin/rollSplit';
+import {
+  elementLabel,
+  formatScore,
+  formatSetName,
+  formatStat,
+  isPctStat,
+  SLOT_LABELS,
+  statLabel,
+} from '../labels';
 import { ArtifactIcon } from '../components/GameArt';
 
+/** "Electro DMG Bonus" for an elemental goblet whose element is known. */
+function mainStatLabel(a: Artifact): string {
+  return a.mainStat === 'elemental_dmg' && a.element
+    ? `${elementLabel(a.element)} DMG Bonus`
+    : statLabel(a.mainStat);
+}
+
+/** A roll's value as the game shows it, without the unit. */
+const rollValue = (key: StatKey, v: number) =>
+  formatScore(v, isPctStat(key) ? 1 : 0);
+
+const TIER_PCT = ['70%', '80%', '90%', '100%'];
+const TIER_TONE = [
+  'text-muted/70',
+  'text-muted',
+  'text-paper/85',
+  'text-accent-bright',
+];
+
+function RollList({ stat, split }: { stat: StatKey; split: LineRolls }) {
+  if (split.kind === 'unknown') return null;
+  const one = (r: Roll, i: number) => (
+    <span key={i} className={TIER_TONE[r.tier]}>
+      {i > 0 && <span className="text-muted/60"> + </span>}
+      {rollValue(stat, r.value)}
+    </span>
+  );
+  if (split.kind === 'exact') {
+    const title = `Rolls: ${split.rolls.map((r) => TIER_PCT[r.tier]).join(', ')} of the maximum${
+      split.firstKnown ? ' (the first roll first)' : ''
+    }`;
+    return (
+      <span className="font-mono text-2xs" title={title} data-testid="rolls">
+        {' ('}
+        {split.rolls.map(one)})
+      </span>
+    );
+  }
+  const others = split.first ? split.count - 1 : split.count;
+  return (
+    <span
+      className="font-mono text-2xs text-muted"
+      title={`${split.count} rolls; which sizes the others were, the value can't tell`}
+      data-testid="rolls"
+    >
+      {' ('}
+      {split.first && (
+        <>
+          {one(split.first, 0)}
+          <span className="text-muted/60"> + </span>
+        </>
+      )}
+      {split.first
+        ? `${others} ${others === 1 ? 'roll' : 'rolls'}: ${rollValue(stat, split.rest)}`
+        : `${split.count} rolls`}
+      )
+    </span>
+  );
+}
+
 export function ArtifactList({
+  details,
   artifacts,
 }: {
+  details: Details | null | 'failed';
   artifacts: readonly Artifact[];
 }) {
   const sets = Object.entries(countSets([...artifacts])).filter(
     ([, n]) => n >= 2,
   );
+  const effects = details && details !== 'failed' ? details.sets : undefined;
   return (
     <section aria-label="Artifacts" className="space-y-1.5">
       <h3 className="text-xs font-semibold uppercase text-muted">Artifacts</h3>
       <ul className="space-y-1.5">
         {SLOTS.map((s) => {
           const a = artifacts.find((x) => x.slot === s);
+          const rolls = a ? splitRolls(a) : [];
           return (
             <li key={s} className="well flex items-start gap-2 px-3 py-2">
               {a ? (
-                <ArtifactIcon setKey={a.setKey} slot={s} size={32} />
+                <ArtifactIcon setKey={a.setKey} slot={s} size={36} />
               ) : (
-                <span className="w-8 flex-none" />
+                <span className="w-9 flex-none" />
               )}
               <div className="min-w-0 flex-1">
-                <p>
-                  <span className="mr-2 text-xs uppercase text-muted">
+                <p className="flex flex-wrap items-center gap-x-2">
+                  <span className="text-xs uppercase text-muted">
                     {SLOT_LABELS[s]}
                   </span>
                   {a ? (
-                    <span>
-                      {formatSetName(a.setKey)} · {statLabel(a.mainStat)}{' '}
-                      {/* The value, then the level as its own chip — printing
-                          "+20" here read as a 20-point main stat. */}
-                      <span className="font-mono text-xs text-paper/80">
-                        {formatStat(a.mainStat, a.mainStatValue)}
-                      </span>{' '}
-                      <span className="chip px-2 py-0.5">Lv {a.level}</span>
-                    </span>
+                    <>
+                      <span className="text-paper">
+                        {formatSetName(a.setKey)}
+                      </span>
+                      <span className="chip px-2 py-0.5 text-2xs">
+                        Lv {a.level}
+                      </span>
+                    </>
                   ) : (
                     <span className="text-muted">empty</span>
                   )}
                 </p>
+                {a && (
+                  <p
+                    className="text-[17px] font-semibold leading-snug text-paper"
+                    data-testid="main-stat"
+                  >
+                    {mainStatLabel(a)}{' '}
+                    <span className="font-mono">
+                      {formatStat(a.mainStat, a.mainStatValue)}
+                    </span>
+                  </p>
+                )}
                 {a && a.subStats.length > 0 && (
-                  <ul className="mt-1 grid grid-cols-2 gap-x-3 text-xs text-muted">
-                    {a.subStats.map((sub) => (
+                  <ul className="mt-1 grid gap-0.5 text-xs text-muted">
+                    {a.subStats.map((sub, i) => (
                       <li key={sub.key}>
                         {statLabel(sub.key)}{' '}
                         <span className="font-mono text-paper/80">
                           {formatStat(sub.key, sub.value)}
                         </span>
+                        <RollList stat={sub.key} split={rolls[i]} />
                       </li>
                     ))}
                   </ul>
@@ -66,12 +156,35 @@ export function ArtifactList({
         })}
       </ul>
       {sets.length > 0 && (
-        <p className="text-xs text-muted">
-          Sets:{' '}
-          {sets
-            .map(([k, n]) => `${formatSetName(k)} ${n >= 4 ? 4 : 2}-piece`)
-            .join(', ')}
-        </p>
+        <div className="well space-y-1.5 px-3 py-2 text-xs">
+          <p className="text-muted">
+            Sets:{' '}
+            {sets
+              .map(([k, n]) => `${formatSetName(k)} ${n >= 4 ? 4 : 2}-piece`)
+              .join(', ')}
+          </p>
+          {effects && (
+            <ul className="space-y-1.5" aria-label="Active set effects">
+              {sets.flatMap(([k, n]) =>
+                (
+                  [
+                    [2, effects[k]?.two],
+                    [4, n >= 4 ? effects[k]?.four : null],
+                  ] as const
+                )
+                  .filter(([, text]) => text)
+                  .map(([pc, text]) => (
+                    <li key={`${k}-${pc}`} className="leading-relaxed">
+                      <span className="font-semibold text-paper">
+                        {formatSetName(k)} {pc}-piece:
+                      </span>{' '}
+                      <span className="text-paper/80">{text}</span>
+                    </li>
+                  )),
+              )}
+            </ul>
+          )}
+        </div>
       )}
     </section>
   );

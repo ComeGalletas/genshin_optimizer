@@ -29,8 +29,10 @@ import {
   characterStatsAt,
   weaponStatsAt,
   type CharacterDetails,
+  type CharacterTexts,
   type Details,
   type TalentKind,
+  type TalentText,
   type WeaponDetails,
 } from '@genshin-build-lab/engine/game/genshin/details';
 
@@ -602,6 +604,7 @@ function buildDetails(
   genshinDbVersion: string,
   characters: { key: string; name: string }[],
   weapons: { key: string; name: string }[],
+  sets: { key: string; name: string }[],
 ): Details {
   const usedCurves = {
     characters: new Set<string>(),
@@ -699,6 +702,61 @@ function buildDetails(
     },
     characters: chars,
     weapons: weaps,
+    // Each set's effects as the game words them (TODO 9.10).
+    sets: Object.fromEntries(
+      sets.map(({ key, name }) => {
+        const a = genshindb.artifacts(name);
+        return [
+          key,
+          {
+            two: a?.effect2Pc ? strip(a.effect2Pc) : null,
+            four: a?.effect4Pc ? strip(a.effect4Pc) : null,
+          },
+        ];
+      }),
+    ),
+  };
+}
+
+/** A character's talent and constellation texts (TODO 9.10): each combat
+ *  talent's description (no flavour text) and its value lines with every
+ *  parameter at levels 1 to 15, and C1 to C6. */
+function buildTexts(name: string): CharacterTexts | null {
+  const t = genshindb.talents(name);
+  if (!t) return null;
+  const talent = (
+    c:
+      | {
+          name: string;
+          description: string;
+          attributes?: {
+            labels: string[];
+            parameters: Record<string, number[]>;
+          };
+        }
+      | undefined,
+  ): TalentText | null =>
+    c?.attributes
+      ? {
+          name: c.name,
+          description: strip(c.description),
+          labels: c.attributes.labels,
+          params: Object.fromEntries(
+            Object.entries(c.attributes.parameters)
+              .sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))
+              .map(([p, v]) => [p, v.slice(0, 15)]),
+          ),
+        }
+      : null;
+  const c = genshindb.constellations(name);
+  return {
+    talents: [talent(t.combat1), talent(t.combat2), talent(t.combat3)],
+    constellations: c
+      ? (['c1', 'c2', 'c3', 'c4', 'c5', 'c6'] as const).map((k) => ({
+          name: c[k]?.name ?? k.toUpperCase(),
+          description: strip(c[k]?.description ?? ''),
+        }))
+      : null,
   };
 }
 
@@ -824,13 +882,31 @@ function main() {
     'utf-8',
   );
 
-  const details = buildDetails(genshinDbVersion, characters, weapons);
+  const details = buildDetails(genshinDbVersion, characters, weapons, sets);
   const checked = checkDetails(details, characters, weapons);
   const detailsPath = path.join(
     path.dirname(outPath),
     'details.generated.json',
   );
   fs.writeFileSync(detailsPath, JSON.stringify(details), 'utf-8');
+
+  // One small file per character, loaded with their window (TODO 9.10).
+  // Rewritten whole, so a character the dataset dropped leaves no file.
+  const textsDir = path.join(path.dirname(outPath), 'texts');
+  fs.rmSync(textsDir, { recursive: true, force: true });
+  fs.mkdirSync(textsDir);
+  let textCount = 0;
+  for (const { key, name } of characters) {
+    const texts = buildTexts(name);
+    if (!texts) continue;
+    fs.writeFileSync(
+      path.join(textsDir, `${key}.json`),
+      JSON.stringify(texts),
+      'utf-8',
+    );
+    textCount++;
+  }
+  console.log(`✓ Wrote ${textCount} character texts to ${textsDir}`);
   console.log(
     `✓ Wrote ${detailsPath} (${Object.keys(details.characters).length} characters, ${Object.keys(details.weapons).length} weapons; ${checked} level checks against genshin-db)`,
   );

@@ -45,6 +45,12 @@ export interface WeaponDetails {
   description: string;
 }
 
+/** An artifact set's effects as the game words them (TODO 9.10). */
+export interface SetEffects {
+  two: string | null;
+  four: string | null;
+}
+
 export interface Details {
   genshinDbVersion: string;
   curves: {
@@ -55,6 +61,7 @@ export interface Details {
   };
   characters: Record<string, CharacterDetails>;
   weapons: Record<string, WeaponDetails>;
+  sets: Record<string, SetEffects>;
 }
 
 /** The ascension phase at a level: past a phase's cap it is the next; at
@@ -135,6 +142,66 @@ export function talentBonus(
   if (c.c3 && constellation >= 3) bonus[c.c3] += 3;
   if (c.c5 && constellation >= 5) bonus[c.c5] += 3;
   return bonus;
+}
+
+/** One combat talent's words and numbers (TODO 9.10): its description
+ *  without the flavour text, and its value lines ("1-Hit DMG|{param1:F1P}")
+ *  with each parameter at levels 1 to 15. */
+export interface TalentText {
+  name: string;
+  description: string;
+  labels: string[];
+  params: Record<string, number[]>;
+}
+
+/** A character's talent and constellation texts, one small file each. */
+export interface CharacterTexts {
+  /** Normal Attack, Elemental Skill, Elemental Burst. */
+  talents: [TalentText | null, TalentText | null, TalentText | null];
+  /** C1 to C6. */
+  constellations: { name: string; description: string }[] | null;
+}
+
+/** A parameter as the game's format code shows it: F1P "48.4%", F2P
+ *  "4.25%", P "48%", F1 "12.0", F2 "1.25", I "12". */
+function formatParam(v: number, code: string): string {
+  const pct = code.endsWith('P');
+  const n = pct ? v * 100 : v;
+  const digits = /^F(\d)/.exec(code)?.[1];
+  const s =
+    digits !== undefined ? n.toFixed(Number(digits)) : String(Math.round(n));
+  return pct ? `${s}%` : s;
+}
+
+/** A talent's value lines at a level (1–15, clamped): "1-Hit DMG",
+ *  "48.4%+51.4%". */
+export function talentValues(
+  t: TalentText,
+  level: number,
+): { label: string; value: string }[] {
+  const i = Math.min(Math.max(Math.round(level), 1), 15) - 1;
+  return t.labels.map((line) => {
+    const [label, template = ''] = line.split('|');
+    const value = template.replace(
+      /\{(param\d+):([A-Z0-9]+)\}/g,
+      (_, p: string, code: string) => {
+        const v = t.params[p]?.[i];
+        return v === undefined ? '?' : formatParam(v, code);
+      },
+    );
+    return { label, value };
+  });
+}
+
+/** A character's texts, loaded on first ask; null when there are none. */
+export function loadCharacterTexts(
+  key: string,
+): Promise<CharacterTexts | null> {
+  if (!/^[a-z0-9_]+$/.test(key)) return Promise.resolve(null);
+  return import(`./texts/${key}.json`).then(
+    (m: { default?: unknown }) => (m.default ?? m) as CharacterTexts,
+    () => null,
+  );
 }
 
 /** The details file, loaded when first asked for. */

@@ -102,6 +102,46 @@ describe('account and characters', () => {
     await empty.close();
   });
 
+  // The web app shows each line's rolls (TODO 9.10): the account it gets
+  // carries the first rolls and roll count the source exported.
+  it('keeps the exported roll data on the account it hands the web app', async () => {
+    const rollDb = openStore(':memory:');
+    const piece = {
+      setKey: 'GladiatorsFinale',
+      slotKey: 'flower',
+      rarity: 5,
+      level: 4,
+      mainStatKey: 'hp',
+      location: '',
+      substats: [
+        { key: 'critDMG_', value: 14, initialValue: 7.77 },
+        { key: 'critRate_', value: 3.9, initialValue: 3.89 },
+        { key: 'atk', value: 19, initialValue: 19.45 },
+        { key: 'def', value: 23, initialValue: 23.15 },
+      ],
+      totalRolls: 5,
+    };
+    importGood(rollDb, {
+      text: JSON.stringify({
+        format: 'GOOD',
+        version: 3,
+        source: 'Irminsul',
+        artifacts: [piece],
+      }),
+    });
+    recordMerge(rollDb, [1]);
+    const rollApp = buildApp({ db: rollDb });
+    const r = await rollApp.inject({
+      method: 'GET',
+      url: '/account/good',
+      headers: H,
+    });
+    await rollApp.close();
+    const [out] = r.json().artifacts as Record<string, unknown>[];
+    expect(out.totalRolls).toBe(5);
+    expect(out.substats).toEqual(piece.substats);
+  });
+
   it('lists characters and shows one with its equipped stats', async () => {
     const list = (await get('/characters')).json() as { key: string }[];
     expect(list).toHaveLength(8);

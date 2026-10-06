@@ -92,16 +92,140 @@ describe('character window', () => {
     expect(screen.queryByTestId('character-splash')).toBeNull();
   });
 
-  it('shows talents at their level, plus the constellations’ +3', async () => {
+  it('shows talents on Stats, each opening to its words and values', async () => {
+    const user = userEvent.setup();
     furina(3);
     render(<CharacterWindow />);
     openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
     // Furina's C3 raises her burst; C5 (not reached) her skill.
     const burst = await screen.findByTestId('talent-burst', undefined, LAZY);
     expect(burst).toHaveTextContent('Let the People Rejoice');
-    expect(burst).toHaveTextContent(/10\s*\+ 3$/);
-    expect(screen.getByTestId('talent-skill')).toHaveTextContent(/10$/);
-    expect(screen.getByTestId('talent-auto')).toHaveTextContent(/1$/);
+    expect(burst).toHaveTextContent(/10\s*\+ 3/);
+    expect(screen.getByTestId('talent-skill')).toHaveTextContent(/10(?!\s*\+)/);
+    const skill = within(screen.getByTestId('talent-skill')).getByRole(
+      'button',
+    );
+    expect(skill).toHaveAttribute('aria-expanded', 'false');
+    await user.click(skill);
+    expect(skill).toHaveAttribute('aria-expanded', 'true');
+    const open = screen.getByTestId('talent-skill');
+    // The description, then the values at level 10 (no boost at C3).
+    expect(
+      await within(open).findByText(
+        /Invites the guests of the Salon/,
+        undefined,
+        LAZY,
+      ),
+    ).toBeInTheDocument();
+    expect(open).toHaveTextContent('Lv 10');
+    expect(open).toHaveTextContent(/Ousia Bubble DMG\s*14\.2% Max HP/);
+    // The burst's values are at 13: its level and the +3.
+    await user.click(within(burst).getByRole('button'));
+    expect(screen.getByTestId('talent-burst')).toHaveTextContent(
+      'Lv 13 (10 + 3)',
+    );
+  });
+
+  it('lists the activated constellations below the stats, none at C0', async () => {
+    const user = userEvent.setup();
+    furina(2);
+    const { unmount } = render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
+    expect(
+      await screen.findByTestId('constellation-2', undefined, LAZY),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-1')).toHaveTextContent('C1');
+    expect(screen.queryByTestId('constellation-3')).toBeNull();
+    unmount();
+    useCharacterWindow.getState().close();
+    furina(0);
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Stats' }, LAZY));
+    await screen.findByTestId('talent-burst', undefined, LAZY);
+    expect(screen.queryByRole('region', { name: 'Constellations' })).toBeNull();
+  });
+
+  it('keeps Optimise at the bottom of Overview, and beside the name elsewhere', async () => {
+    const user = userEvent.setup();
+    furina();
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    const dialog = await screen.findByRole('dialog', undefined, LAZY);
+    // Overview: Teams, then Recommended, then the big button.
+    const order = [
+      within(dialog).getByRole('region', { name: 'Teams' }),
+      within(dialog).getByRole('region', { name: 'Recommended' }),
+      within(dialog).getByRole('button', { name: 'Optimise This Character' }),
+    ];
+    for (let i = 1; i < order.length; i++)
+      expect(
+        order[i - 1].compareDocumentPosition(order[i]) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    expect(
+      within(dialog).queryByRole('button', { name: 'Optimize' }),
+    ).toBeNull();
+    expect(
+      within(dialog)
+        .getAllByRole('tab')
+        .map((t) => t.textContent),
+    ).toEqual(['Overview', 'Stats', 'Gear']);
+    await user.click(within(dialog).getByRole('tab', { name: 'Gear' }));
+    expect(
+      within(dialog).queryByRole('button', { name: 'Optimise This Character' }),
+    ).toBeNull();
+    expect(
+      within(dialog).getByRole('button', { name: 'Optimize' }),
+    ).toBeInTheDocument();
+  });
+
+  it('shows each piece’s main stat with its element, its rolls, and the set effects', async () => {
+    const user = userEvent.setup();
+    furina();
+    useInventory.getState().addMany([
+      {
+        id: 'g1',
+        setKey: 'GoldenTroupe',
+        slot: 'goblet',
+        rarity: 5,
+        level: 20,
+        mainStat: 'elemental_dmg',
+        mainStatValue: 46.6,
+        element: 'hydro',
+        subStats: [
+          { key: 'hp', value: 448 },
+          { key: 'crit_dmg', value: 15.5 },
+          { key: 'er_pct', value: 13.0 },
+          { key: 'hp_pct', value: 14.6 },
+        ],
+        rolls: { first: { hp: 209.13 }, total: 9 },
+        location: 'furina',
+      },
+    ]);
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    const pieces = screen.getByRole('region', { name: 'Artifacts' });
+    const mains = within(pieces).getAllByTestId('main-stat');
+    expect(mains.map((m) => m.textContent)).toEqual([
+      'HP 4780',
+      'Hydro DMG Bonus 46.6%',
+    ]);
+    // HP 448: the exported first roll, 209, then 239.
+    const rolls = within(pieces).getAllByTestId('rolls');
+    expect(rolls.some((r) => r.textContent === ' (209 + 239)')).toBe(true);
+    // Two Golden Troupe pieces: the 2-piece effect, word for word.
+    const effects = await within(pieces).findByRole(
+      'list',
+      { name: 'Active set effects' },
+      LAZY,
+    );
+    expect(effects).toHaveTextContent(
+      'Golden Troupe 2-piece: Increases Elemental Skill DMG by 20%.',
+    );
   });
 
   it('shows each stat as base + artifacts (+ the rest) = total', async () => {

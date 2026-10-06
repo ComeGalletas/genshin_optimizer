@@ -28,6 +28,8 @@ export function AppDrawer({
   title,
   children,
   background,
+  titleAction,
+  largeTitle = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -36,6 +38,11 @@ export function AppDrawer({
   /** Drawn behind the content, filling the drawer and not scrolling with
    *  it (the character window's art). */
   background?: ReactNode;
+  /** Beside the title, at least 25px from it (the character window's
+   *  Optimize). */
+  titleAction?: ReactNode;
+  /** A title about 5px larger (the character window's name). */
+  largeTitle?: boolean;
 }) {
   const desktop = useIsDesktop();
   // Vaul/Radix only restore focus to the triggering element on the escape
@@ -92,9 +99,18 @@ export function AppDrawer({
             />
           )}
           <div className="relative mb-4 flex items-center justify-between gap-3">
-            <Vaul.Title className="font-display text-lg font-bold text-paper">
-              {title}
-            </Vaul.Title>
+            <div className="flex min-w-0 items-center gap-7">
+              <Vaul.Title
+                className={
+                  largeTitle
+                    ? 'truncate font-display text-[23px] font-bold leading-tight text-paper'
+                    : 'font-display text-lg font-bold text-paper'
+                }
+              >
+                {title}
+              </Vaul.Title>
+              {titleAction}
+            </div>
             {/* A borderless icon button: .btn-ghost's chrome around a single
                 ✕ read as a second primary action. Keeps the focus ring and
                 the 44px target. */}

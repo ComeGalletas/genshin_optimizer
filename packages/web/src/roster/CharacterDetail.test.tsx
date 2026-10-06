@@ -41,8 +41,15 @@ describe('CharacterDetail', () => {
       'aria-selected',
       'true',
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
-    expect(screen.getByRole('tabpanel')).toHaveTextContent(/blizzard/i);
+    // The recipe is on Overview now (TODO 9.10).
+    expect(
+      screen.getByRole('region', { name: 'Recommended' }),
+    ).toHaveTextContent(/blizzard/i);
+    await user.click(screen.getByRole('tab', { name: /gear/i }));
+    expect(screen.getByRole('tab', { name: /gear/i })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
   });
 
   it('lists every slot on the Gear tab, marking empty ones', async () => {
@@ -60,23 +67,19 @@ describe('CharacterDetail', () => {
     expect(screen.getAllByText('empty')).toHaveLength(4);
   });
 
-  it('says so when a character has no curated recipe', async () => {
-    const user = userEvent.setup();
+  it('says so when a character has no curated recipe', () => {
     render(<CharacterDetail characterKey="amber" entry={{}} artifacts={[]} />);
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     expect(
       screen.getByText(/No curated recipe for this character yet/i),
     ).toBeInTheDocument();
   });
 
-  it('links the damage profile source only when it is a second source', async () => {
-    const user = userEvent.setup();
+  it('links the damage profile source only when it is a second source', () => {
     // Alhaitham's damage profile cites the full guide, his recipe the quick
     // guide — two genuinely different pages.
     render(
       <CharacterDetail characterKey="alhaitham" entry={entry} artifacts={[]} />,
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     const link = screen.getByRole('link', {
       name: /damage profile source\s*\(opens in new tab\)/i,
     });
@@ -85,8 +88,7 @@ describe('CharacterDetail', () => {
     expect(link).toHaveAttribute('target', '_blank');
   });
 
-  it('omits the damage profile link when it repeats the recipe source', async () => {
-    const user = userEvent.setup();
+  it('omits the damage profile link when it repeats the recipe source', () => {
     render(
       <CharacterDetail
         characterKey="kamisato_ayaka"
@@ -94,7 +96,6 @@ describe('CharacterDetail', () => {
         artifacts={[]}
       />,
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     expect(
       screen.queryByRole('link', { name: /damage profile source/i }),
     ).toBeNull();
@@ -103,8 +104,7 @@ describe('CharacterDetail', () => {
     ).toBeInTheDocument();
   });
 
-  it('states what the recipe’s 4pc bonus assumes', async () => {
-    const user = userEvent.setup();
+  it('states what the recipe’s 4pc bonus assumes', () => {
     render(
       <CharacterDetail
         characterKey="kamisato_ayaka"
@@ -112,14 +112,12 @@ describe('CharacterDetail', () => {
         artifacts={[]}
       />,
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     expect(screen.getByRole('tabpanel')).toHaveTextContent(
       /Blizzard Strayer 4pc: Assumes the target is Frozen/,
     );
   });
 
-  it('says why a 4pc is not scored when it is unmodelled', async () => {
-    const user = userEvent.setup();
+  it('says why a 4pc is not scored when it is unmodelled', () => {
     // Kazuha's recipe is 4pc Viridescent Venerer, which ADR-0020 leaves
     // deliberately unmodelled.
     render(
@@ -129,14 +127,12 @@ describe('CharacterDetail', () => {
         artifacts={[]}
       />,
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     expect(screen.getByRole('tabpanel')).toHaveTextContent(
       /4pc not scored: Swirl DMG/,
     );
   });
 
-  it('says a hit-kind 4pc is unscored when the recipe ranks by a scalar stat', async () => {
-    const user = userEvent.setup();
+  it('says a hit-kind 4pc is unscored when the recipe ranks by a scalar stat', () => {
     // Raiden's recipe is 4pc Emblem, whose only channel is Burst DMG from ER —
     // nothing a crit_value ranking can read, so quoting its uptime here would
     // imply a number that never enters the score.
@@ -147,7 +143,6 @@ describe('CharacterDetail', () => {
         artifacts={[]}
       />,
     );
-    await user.click(screen.getByRole('tab', { name: /recommended/i }));
     expect(screen.getByRole('tabpanel')).toHaveTextContent(
       /Emblem of Severed Fate 4pc: not scored on this objective/,
     );

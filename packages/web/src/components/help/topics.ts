@@ -74,7 +74,7 @@ export const HELP = {
       'How built each of your characters is, scored 0–100 from their level, talents, weapon and the artifacts they wear, best first.',
     steps: [
       'Read each row: the character, their element and weapon, their score and its band (Built, Partly built or Unbuilt).',
-      'Press a row to open the character’s window: their score and talents, their stats now (base + artifacts = total), their weapon and artifacts, their curated build, and the teams they fit.',
+      'Press a row to open the character’s window. Overview: their score, the teams they fit and their curated build. Stats: their stats now (base + artifacts = total), their talents (press one for its description and values) and their constellations. Gear: their weapon, and each artifact with its rolls and the set effects it activates.',
       'Press Optimise This Character to search for their best build in the Optimise view.',
     ],
     tips: [

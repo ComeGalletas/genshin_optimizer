@@ -1,13 +1,14 @@
 /**
- * One character's window (TODO 9.9, ADR-0055): who they are and how they
- * stand now, from any character the app shows. A character not in the
- * roster opens too, at level 90 with nothing equipped.
+ * One character's window (TODO 9.9, 9.10, ADR-0055): who they are and how
+ * they stand now, from any character the app shows. A character not in the
+ * roster opens too, at level 90 with nothing equipped. Optimise is at the
+ * bottom of Overview, and a small Optimize beside the name on the others.
  */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { groupByLocation } from '@genshin-build-lab/engine/roster/buildScore';
 import { AppDrawer } from '../components/ui/Drawer';
-import { CharacterDetail } from '../roster/CharacterDetail';
+import { CharacterDetail, type CharacterTab } from '../roster/CharacterDetail';
 import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
@@ -31,40 +32,64 @@ export function CharacterWindowDrawer({
     () => groupByLocation(artifacts)[characterKey] ?? [],
     [artifacts, characterKey],
   );
+  // Another character starts again on Overview.
+  const [tab, setTab] = useState<{ key: string; tab: CharacterTab }>({
+    key: characterKey,
+    tab: 'Overview',
+  });
+  const current = tab.key === characterKey ? tab.tab : 'Overview';
+
+  const optimise = () => {
+    const s = useOptimizeRequest.getState();
+    s.setCharacterKey(characterKey);
+    if (entry?.weaponKey) s.setWeaponKey(entry.weaponKey);
+    close();
+    // The drawer holds a body scroll lock (overflow:hidden) until it has
+    // finished animating out, so scrolling synchronously here is a no-op.
+    // ponytail: fixed delay rather than watching for the lock to lift —
+    // revisit if vaul's exit timing changes.
+    setTimeout(() => {
+      goTo('optimise');
+      scrollToId('step-optimise');
+    }, DRAWER_EXIT_MS);
+  };
+
   return (
     <AppDrawer
       open
       onClose={close}
       title={genshinAdapter.characterName(characterKey)}
+      largeTitle
+      titleAction={
+        current !== 'Overview' && (
+          <button
+            type="button"
+            className="focus-ring flex-none rounded-md bg-accent px-3 py-1 text-xs font-semibold text-surface-900 transition-opacity hover:opacity-90"
+            onClick={optimise}
+          >
+            Optimize
+          </button>
+        )
+      }
       background={<CharacterSplash characterKey={characterKey} />}
     >
-      {/* Keyed: another character starts again on the first tab. */}
       <CharacterDetail
         key={characterKey}
         characterKey={characterKey}
         entry={entry}
         artifacts={equipped}
+        tab={current}
+        onTabChange={(t) => setTab({ key: characterKey, tab: t })}
+        footer={
+          <button
+            type="button"
+            className="btn-primary w-full"
+            onClick={optimise}
+          >
+            Optimise This Character
+          </button>
+        }
       />
-      <button
-        type="button"
-        className="btn-primary mt-4 w-full"
-        onClick={() => {
-          const s = useOptimizeRequest.getState();
-          s.setCharacterKey(characterKey);
-          if (entry?.weaponKey) s.setWeaponKey(entry.weaponKey);
-          close();
-          // The drawer holds a body scroll lock (overflow:hidden) until it
-          // has finished animating out, so scrolling synchronously here is
-          // a no-op. ponytail: fixed delay rather than watching for the
-          // lock to lift — revisit if vaul's exit timing changes.
-          setTimeout(() => {
-            goTo('optimise');
-            scrollToId('step-optimise');
-          }, DRAWER_EXIT_MS);
-        }}
-      >
-        Optimise This Character
-      </button>
     </AppDrawer>
   );
 }

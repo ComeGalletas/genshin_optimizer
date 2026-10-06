@@ -1,8 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { genshinAdapter } from '../game/genshin/adapter';
 import {
+  loadCharacterTexts,
   loadDetails,
   passiveText,
+  talentValues,
   phaseAt,
   talentBonus,
   type Details,
@@ -177,5 +179,58 @@ describe('characterSheet', () => {
     expect(
       characterSheet(d, { characterKey: 'nobody', level: 90, artifacts: [] }),
     ).toBeNull();
+  });
+});
+
+describe('texts (TODO 9.10)', () => {
+  it('has every set’s effects in the details', () => {
+    const sets = genshinAdapter.sets().map((s) => s.key);
+    expect(sets.filter((k) => !d.sets[k]?.two)).toEqual([]);
+    expect(d.sets.GoldenTroupe.two).toBe(
+      'Increases Elemental Skill DMG by 20%.',
+    );
+  });
+
+  it('loads one character’s talents and constellations', async () => {
+    const t = (await loadCharacterTexts('furina'))!;
+    expect(t.talents.map((x) => x?.name)).toEqual(d.characters.furina.talents);
+    expect(t.constellations).toHaveLength(6);
+    expect(t.talents[1]!.description).not.toMatch(/<|\{/);
+    expect(await loadCharacterTexts('nobody')).toBeNull();
+    expect(await loadCharacterTexts('../details.generated')).toBeNull();
+  });
+
+  it('writes a talent’s values in the game’s formats at a level', async () => {
+    const t = (await loadCharacterTexts('furina'))!;
+    const at = (lvl: number) =>
+      Object.fromEntries(
+        talentValues(t.talents[1]!, lvl).map((v) => [v.label, v.value]),
+      );
+    expect(at(1)['Ousia Bubble DMG']).toBe('7.9% Max HP');
+    expect(at(10)['Ousia Bubble DMG']).toBe('14.2% Max HP');
+    expect(at(10)['Duration']).toBe('30.0s');
+    // Clamped to the 15 levels there are.
+    expect(at(20)).toEqual(at(15));
+    expect(
+      talentValues(
+        {
+          name: 'x',
+          description: '',
+          labels: ['A|{param9:I}', 'B|{param1:P}'],
+          params: { param1: [0.484] },
+        },
+        1,
+      ),
+    ).toEqual([
+      { label: 'A', value: '?' },
+      { label: 'B', value: '48%' },
+    ]);
+  });
+
+  it('has texts for every character', async () => {
+    const missing: string[] = [];
+    for (const c of genshinAdapter.characters())
+      if (!(await loadCharacterTexts(c.key))) missing.push(c.key);
+    expect(missing).toEqual([]);
   });
 });

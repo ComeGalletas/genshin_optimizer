@@ -16,7 +16,21 @@ export type { RosterEntry };
 export function parseGOOD(json: unknown): Artifact[] | { error: 'BAD_FORMAT' } {
   const good = normalizeGOOD(json);
   if (!good || good.artifacts === null) return { error: 'BAD_FORMAT' };
-  return good.artifacts.map((e) => e.artifact);
+  // The roll data the source exported, for showing each line's rolls.
+  return good.artifacts.map(({ artifact, extras }) => {
+    const first = extras?.initialValues
+      ? Object.fromEntries(
+          artifact.subStats
+            .filter((s) => extras.initialValues![s.key] !== undefined)
+            .map((s) => [s.key, extras.initialValues![s.key]]),
+        )
+      : undefined;
+    const rolls = {
+      ...(first && Object.keys(first).length > 0 && { first }),
+      ...(extras?.totalRolls !== undefined && { total: extras.totalRolls }),
+    };
+    return Object.keys(rolls).length ? { ...artifact, rolls } : artifact;
+  });
 }
 
 /** Owned-roster extraction: which characters the player owns, what weapon

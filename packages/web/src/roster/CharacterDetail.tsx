@@ -1,10 +1,11 @@
 /**
- * The character window's body: who they are and how they stand now (their
- * score, talents, stats at their exact level, weapon and artifacts, TODO
- * 9.9), what the meta wants, and which curated teams they slot into.
+ * The character window's body, three tabs (TODO 9.9, 9.10): Overview (their
+ * score, the curated teams they slot into, what the meta wants), Stats (the
+ * sheet at their exact level, talents, constellations) and Gear (weapon and
+ * artifacts).
  * @packageDocumentation
  */
-import { useId, useMemo, useState } from 'react';
+import { useId, useMemo, useState, type ReactNode } from 'react';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { computeBuildScore } from '@genshin-build-lab/engine/roster/buildScore';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
@@ -37,22 +38,38 @@ import { CharacterStats } from '../character-window/CharacterStats';
 import { Talents } from '../character-window/Talents';
 import { WeaponCard } from '../character-window/WeaponCard';
 import { ArtifactList } from '../character-window/ArtifactList';
+import { Constellations } from '../character-window/Constellations';
 
-const TABS = ['Overview', 'Stats', 'Gear', 'Recommended', 'Teams'] as const;
-type Tab = (typeof TABS)[number];
+const TABS = ['Overview', 'Stats', 'Gear'] as const;
+export type CharacterTab = (typeof TABS)[number];
+type Tab = CharacterTab;
 
 export function CharacterDetail({
   characterKey,
   entry,
   artifacts,
+  tab: tabProp,
+  onTabChange,
+  footer,
 }: {
   characterKey: string;
   /** Their roster entry; none for a character the account doesn't have. */
   entry: RosterEntry | undefined;
   /** The pieces this character currently has equipped. */
   artifacts: Artifact[];
+  /** The open tab, when the window holds it (its header's Optimize shows
+   *  on every tab but Overview); else the body keeps its own. */
+  tab?: Tab;
+  onTabChange?: (tab: Tab) => void;
+  /** At the bottom of Overview: the window's Optimise This Character. */
+  footer?: ReactNode;
 }) {
-  const [tab, setTab] = useState<Tab>('Overview');
+  const [ownTab, setOwnTab] = useState<Tab>('Overview');
+  const tab = tabProp ?? ownTab;
+  const setTab = (t: Tab) => {
+    setOwnTab(t);
+    onTabChange?.(t);
+  };
   const uid = useId();
   const tabId = (t: Tab) => `${uid}-tab-${t}`;
   const panelId = `${uid}-panel`;
@@ -137,135 +154,158 @@ export function CharacterDetail({
                 or artifacts.
               </p>
             )}
+            {/* Teams first, then the recipe; Optimise last (TODO 9.10). */}
+            <section aria-label="Teams" className="well space-y-2 px-3 py-2">
+              <h3 className="text-xs font-semibold uppercase text-muted">
+                Teams
+              </h3>
+              {comps.length ? (
+                <ul className="space-y-2">
+                  {comps.map((a) => (
+                    <li
+                      key={a.id}
+                      className="rounded-lg bg-white/[0.03] px-3 py-2"
+                    >
+                      <p className="font-semibold text-paper">{a.name}</p>
+                      <p className="text-xs text-muted">{a.notes}</p>
+                      <p className="mt-1 text-xs text-muted">
+                        {a.slots
+                          .map((s) => {
+                            const k = s.options[0]?.characterKey;
+                            return `${ROLE_LABELS[s.role]}: ${k ? genshinAdapter.characterName(k) : '—'}`;
+                          })
+                          .join(' · ')}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted">
+                  Not in any curated team archetype yet.
+                </p>
+              )}
+            </section>
+            <section
+              aria-label="Recommended"
+              className="well space-y-2 px-3 py-2"
+            >
+              <h3 className="text-xs font-semibold uppercase text-muted">
+                Recommended
+              </h3>
+              {meta ? (
+                <>
+                  <p>
+                    <span className="text-muted">Set:</span>{' '}
+                    {setRequirementLabel(meta.setRequirement)}
+                  </p>
+                  {Object.entries(meta.mains).map(([slot, stat]) => (
+                    <p key={slot}>
+                      <span className="text-muted">
+                        {SLOT_LABELS[slot as Slot]}:
+                      </span>{' '}
+                      {statLabel(stat)}
+                    </p>
+                  ))}
+                  {meta.erTarget && (
+                    <p>
+                      <span className="text-muted">ER floor:</span>{' '}
+                      {meta.erTarget}%
+                    </p>
+                  )}
+                  {meta.statTargets && (
+                    <p className="text-xs text-muted">
+                      Endgame targets:{' '}
+                      {Object.entries(meta.statTargets)
+                        .map(
+                          ([k, v]) =>
+                            `${statLabel(k as StatKey)} ${formatStat(k as StatKey, v)}`,
+                        )
+                        .join(', ')}
+                    </p>
+                  )}
+                  <SourceLink
+                    className="text-xs text-flux-bright underline"
+                    href={meta.source}
+                  >
+                    Source guide (KQM)
+                  </SourceLink>
+                  {/* The damage profile is usually cited from the very same KQM
+                  page as the recipe above, and two links to one page read as
+                  two sources. Only shown when it really is a second one. */}
+                  {profile && profile.source !== meta.source && (
+                    <p>
+                      <SourceLink
+                        className="text-xs text-muted underline"
+                        href={profile.source}
+                      >
+                        Damage Profile Source
+                      </SourceLink>
+                    </p>
+                  )}
+                  {/* What the 4pc number assumes (ADR-0020), or why there is no
+                  number — the unmodelled sets, the wrong weapon class and the
+                  hit-kind bonuses a scalar objective can't see all come back
+                  from the same call now. Quiet on purpose: it qualifies the
+                  figure above rather than competing with it. */}
+                  {fourPcKey &&
+                    fourPieceAssumptions(
+                      [fourPcKey],
+                      {
+                        hasDamage: meta.objective === 'avg_damage',
+                        weaponType: weaponKey
+                          ? genshinAdapter.weapon(weaponKey)?.type
+                          : undefined,
+                      },
+                      formatSetName,
+                    ).map((line) => (
+                      <p
+                        key={line}
+                        className="text-2xs leading-relaxed text-muted"
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  {!profile && (
+                    <p className="text-xs text-muted">
+                      No curated damage profile yet — builds for this character
+                      are ranked by {objectiveLabel(meta.objective)} instead of
+                      estimated damage.
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted">
+                  No curated recipe for this character yet.
+                </p>
+              )}
+            </section>
+            {footer}
+          </>
+        )}
+
+        {tab === 'Stats' && (
+          <>
+            <CharacterStats
+              details={details}
+              characterKey={characterKey}
+              entry={entry}
+              artifacts={artifacts}
+            />
             <Talents
               details={details}
               characterKey={characterKey}
               entry={entry}
             />
+            <Constellations characterKey={characterKey} entry={entry} />
           </>
-        )}
-
-        {tab === 'Stats' && (
-          <CharacterStats
-            details={details}
-            characterKey={characterKey}
-            entry={entry}
-            artifacts={artifacts}
-          />
         )}
 
         {tab === 'Gear' && (
           <>
             <WeaponCard details={details} entry={entry} />
-            <ArtifactList artifacts={artifacts} />
+            <ArtifactList details={details} artifacts={artifacts} />
           </>
         )}
-
-        {tab === 'Recommended' &&
-          (meta ? (
-            <>
-              <p>
-                <span className="text-muted">Set:</span>{' '}
-                {setRequirementLabel(meta.setRequirement)}
-              </p>
-              {Object.entries(meta.mains).map(([slot, stat]) => (
-                <p key={slot}>
-                  <span className="text-muted">
-                    {SLOT_LABELS[slot as Slot]}:
-                  </span>{' '}
-                  {statLabel(stat)}
-                </p>
-              ))}
-              {meta.erTarget && (
-                <p>
-                  <span className="text-muted">ER floor:</span> {meta.erTarget}%
-                </p>
-              )}
-              {meta.statTargets && (
-                <p className="text-xs text-muted">
-                  Endgame targets:{' '}
-                  {Object.entries(meta.statTargets)
-                    .map(
-                      ([k, v]) =>
-                        `${statLabel(k as StatKey)} ${formatStat(k as StatKey, v)}`,
-                    )
-                    .join(', ')}
-                </p>
-              )}
-              <SourceLink
-                className="text-xs text-flux-bright underline"
-                href={meta.source}
-              >
-                Source guide (KQM)
-              </SourceLink>
-              {/* The damage profile is usually cited from the very same KQM
-                  page as the recipe above, and two links to one page read as
-                  two sources. Only shown when it really is a second one. */}
-              {profile && profile.source !== meta.source && (
-                <p>
-                  <SourceLink
-                    className="text-xs text-muted underline"
-                    href={profile.source}
-                  >
-                    Damage Profile Source
-                  </SourceLink>
-                </p>
-              )}
-              {/* What the 4pc number assumes (ADR-0020), or why there is no
-                  number — the unmodelled sets, the wrong weapon class and the
-                  hit-kind bonuses a scalar objective can't see all come back
-                  from the same call now. Quiet on purpose: it qualifies the
-                  figure above rather than competing with it. */}
-              {fourPcKey &&
-                fourPieceAssumptions(
-                  [fourPcKey],
-                  {
-                    hasDamage: meta.objective === 'avg_damage',
-                    weaponType: weaponKey
-                      ? genshinAdapter.weapon(weaponKey)?.type
-                      : undefined,
-                  },
-                  formatSetName,
-                ).map((line) => (
-                  <p key={line} className="text-2xs leading-relaxed text-muted">
-                    {line}
-                  </p>
-                ))}
-              {!profile && (
-                <p className="text-xs text-muted">
-                  No curated damage profile yet — builds for this character are
-                  ranked by {objectiveLabel(meta.objective)} instead of
-                  estimated damage.
-                </p>
-              )}
-            </>
-          ) : (
-            <p className="text-muted">
-              No curated recipe for this character yet.
-            </p>
-          ))}
-
-        {tab === 'Teams' &&
-          (comps.length ? (
-            <ul className="space-y-2">
-              {comps.map((a) => (
-                <li key={a.id} className="well px-3 py-2">
-                  <p className="font-semibold text-paper">{a.name}</p>
-                  <p className="text-xs text-muted">{a.notes}</p>
-                  <p className="mt-1 text-xs text-muted">
-                    {a.slots
-                      .map((s) => {
-                        const k = s.options[0]?.characterKey;
-                        return `${ROLE_LABELS[s.role]}: ${k ? genshinAdapter.characterName(k) : '—'}`;
-                      })
-                      .join(' · ')}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted">Not in any curated team archetype yet.</p>
-          ))}
       </div>
     </div>
   );

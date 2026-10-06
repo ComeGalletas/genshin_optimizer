@@ -100,6 +100,19 @@ describe('isPersistedArtifact', () => {
     expect(isPersistedArtifact(ok)).toBe(true);
   });
 
+  // Roll data (TODO 9.10): first rolls of the piece's own lines, a count a
+  // 5★ piece can have.
+  it('checks the optional roll data', () => {
+    const rolls = (r: unknown) => isPersistedArtifact({ ...ok, rolls: r });
+    expect(rolls({ first: { crit_dmg: 7.77 }, total: 8 })).toBe(true);
+    expect(rolls({})).toBe(true);
+    expect(rolls({ first: { hp: 209.13 } })).toBe(false);
+    expect(rolls({ first: { crit_dmg: 'x' } })).toBe(false);
+    expect(rolls({ total: 12 })).toBe(false);
+    expect(rolls({ total: 2.5 })).toBe(false);
+    expect(rolls('many')).toBe(false);
+  });
+
   // An unlevelled artifact is a real artifact — the player just hasn't spent
   // on it yet, and a falsy-level guard would have thrown it away.
   it('accepts a level 0 piece', () => {

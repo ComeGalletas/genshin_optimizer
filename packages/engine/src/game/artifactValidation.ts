@@ -53,6 +53,28 @@ function isFiniteNumber(x: unknown): x is number {
   return typeof x === 'number' && Number.isFinite(x);
 }
 
+/** Optional roll data (TODO 9.10): a roll count up to the 9 a 5★ piece
+ *  can have, and first rolls only for the piece's own lines. */
+function isRolls(x: unknown, subStats: SubStat[]): boolean {
+  if (x === undefined) return true;
+  if (typeof x !== 'object' || x === null) return false;
+  const r = x as Record<string, unknown>;
+  const totalOk =
+    r.total === undefined ||
+    (Number.isInteger(r.total) &&
+      (r.total as number) >= 0 &&
+      (r.total as number) <= 9);
+  const first = r.first;
+  const firstOk =
+    first === undefined ||
+    (typeof first === 'object' &&
+      first !== null &&
+      Object.entries(first).every(
+        ([k, v]) => subStats.some((s) => s.key === k) && isFiniteNumber(v),
+      ));
+  return totalOk && firstOk;
+}
+
 function isSubStat(x: unknown): x is SubStat {
   if (typeof x !== 'object' || x === null) return false;
   const s = x as Record<string, unknown>;
@@ -89,6 +111,7 @@ export function isPersistedArtifact(x: unknown): x is Artifact {
       ((ELEMENTS as readonly string[]).includes(a.element as string) &&
         a.slot === 'goblet' &&
         a.mainStat === 'elemental_dmg')) &&
+    isRolls(a.rolls, a.subStats as SubStat[]) &&
     validateArtifactDraft({
       mainStat: a.mainStat,
       level: a.level,

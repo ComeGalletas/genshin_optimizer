@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseGOOD, parseGOODRoster } from './good';
+import type { Artifact } from '../game/types';
 
 const goodFile = {
   format: 'GOOD',
@@ -413,5 +414,33 @@ describe('parseGOOD — artifact location (v2)', () => {
       const out = withLocation(loc) as { location?: string }[];
       expect(out[0].location).toBeUndefined();
     }
+  });
+});
+
+describe('parseGOOD roll data', () => {
+  // Irminsul's first rolls and roll count ride on the piece, for showing its
+  // rolls (TODO 9.10); a file without them adds nothing.
+  it('keeps the exported first rolls and roll count', () => {
+    const piece = {
+      setKey: 'GladiatorsFinale',
+      slotKey: 'flower',
+      rarity: 5,
+      level: 4,
+      mainStatKey: 'hp',
+      substats: [
+        { key: 'critDMG_', value: 14, initialValue: 7.77 },
+        { key: 'critRate_', value: 3.9, initialValue: 3.89 },
+        { key: 'atk', value: 19, initialValue: 19.45 },
+        { key: 'def', value: 23, initialValue: 23.15 },
+      ],
+      totalRolls: 5,
+    };
+    const [a] = parseGOOD({ ...goodFile, artifacts: [piece] }) as Artifact[];
+    expect(a.rolls).toEqual({
+      first: { crit_dmg: 7.77, crit_rate: 3.89, atk: 19.45, def: 23.15 },
+      total: 5,
+    });
+    const [plain] = parseGOOD(goodFile) as Artifact[];
+    expect(plain.rolls).toBeUndefined();
   });
 });
