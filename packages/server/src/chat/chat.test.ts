@@ -12,15 +12,11 @@ import type {
   LlmClient,
   ToolCall,
 } from '../llm/client';
-import {
-  MASK,
-  maskUngrounded,
-  sourceValues,
-  ungroundedNumbers,
-} from './grounding';
+import { MASK, maskUngrounded, ungroundedNumbers } from './grounding';
 import { chatTools, runChat, CHAT_SYSTEM } from './loop';
 import { createHash } from 'node:crypto';
 import { readResult } from '../sim/result';
+import { mulberry32 } from '@genshin-build-lab/engine/numbers';
 
 const SAMPLE = readFileSync(
   new URL(
@@ -168,11 +164,11 @@ describe('grounding', () => {
   });
 
   it('leaves no ungrounded number behind, whatever the answer (200 random answers)', () => {
-    // A seeded PRNG, so a failure reproduces.
-    let seed = 7;
-    const rand = () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31;
+    // The engine's seeded PRNG, so a failure reproduces.
+    const rand = mulberry32(7);
     const pick = <T>(xs: T[]) => xs[Math.floor(rand() * xs.length)];
-    const grounded = sourceValues(sources);
+    // Numbers from the sources to mix in; the property holds for any.
+    const grounded = sources.flatMap((s) => s.match(/\d+(?:\.\d+)?/g) ?? []);
     for (let i = 0; i < 200; i++) {
       const words = Array.from({ length: 12 }, () =>
         pick([

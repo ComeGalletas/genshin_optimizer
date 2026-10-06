@@ -108,11 +108,6 @@ function readSources(sources: readonly string[]): Sources {
   };
 }
 
-/** The source values, for lookups. */
-export function sourceValues(sources: readonly string[]): number[] {
-  return readSources(sources).values;
-}
-
 const matches = (n: Written, values: readonly number[]) =>
   values.some(
     (v) =>

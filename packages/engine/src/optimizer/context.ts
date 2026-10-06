@@ -57,7 +57,7 @@ export function passiveQuery(
  *  request's own, for a concrete build resolved at its ER. */
 export function passiveNotes(req: OptimizeRequest, erFloor?: number): string[] {
   return passiveAssumptions(passiveQuery(req, erFloor), {
-    weapon: genshinAdapter.weapon(req.weaponKey)?.name ?? req.weaponKey,
+    weapon: genshinAdapter.weaponName(req.weaponKey),
     character: genshinAdapter.characterName(req.characterKey),
   });
 }

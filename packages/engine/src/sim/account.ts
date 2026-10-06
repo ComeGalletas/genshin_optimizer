@@ -6,12 +6,9 @@
  * @packageDocumentation
  */
 
-import { BUILD_LEVELS, type Artifact } from '../game/types';
+import { ASCENSION_CAPS, type Artifact } from '../game/types';
 import type { OwnedWeapon, RosterEntry } from '../good/normalize';
 import type { SimCharacter } from './configgen';
-
-/** Ascension caps: 20 at ascension 0 … 90 at 6. */
-const CAPS = BUILD_LEVELS.slice(1);
 
 export interface SimAccount {
   roster: Readonly<Record<string, RosterEntry>>;
@@ -20,7 +17,7 @@ export interface SimAccount {
 }
 
 /** The lowest cap a level fits under, for a level without its ascension. */
-const capFor = (level: number) => CAPS.find((c) => c >= level) ?? 90;
+const capFor = (level: number) => ASCENSION_CAPS.find((c) => c >= level) ?? 90;
 
 /** The character as they are in the account, or why they can't be
  *  simulated: not owned, no weapon, or talents unknown (gcsim needs them;
@@ -49,7 +46,7 @@ export function simCharacterFromAccount(
       level: weaponLevel,
       maxLevel:
         held?.ascension !== undefined
-          ? Math.max(CAPS[held.ascension] ?? 90, weaponLevel)
+          ? Math.max(ASCENSION_CAPS[held.ascension] ?? 90, weaponLevel)
           : capFor(weaponLevel),
       refinement: held?.refinement ?? entry.weaponRefinement ?? 1,
     },

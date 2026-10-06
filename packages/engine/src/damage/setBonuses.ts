@@ -36,6 +36,7 @@
 import type { StatVec, WeaponType } from '../game/types';
 import { computeHitDamage } from './formula';
 import type { DamageContext, HitKind } from './types';
+import { WIKI } from '../curation';
 
 export interface FourPieceBonus {
   /** The flat sheet stats the 4pc reduces to at full uptime. Scalar-safe. */
@@ -52,8 +53,6 @@ export interface FourPieceBonus {
   uptime: string;
   source: string;
 }
-
-const WIKI = 'https://genshin-impact.fandom.com/wiki/';
 
 export const FOUR_PIECE_BONUSES: Record<string, FourPieceBonus> = {
   // --- reduces to a flat sheet stat at full uptime -------------------------

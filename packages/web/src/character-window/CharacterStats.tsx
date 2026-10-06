@@ -3,14 +3,16 @@
  * then what the artifacts add, then what the weapon's substat and the
  * ascension stat add, and the total: "HP 15307 + 9180 = 24487".
  */
-import type { Artifact } from '@genshin-build-lab/engine/game/types';
+import {
+  ascensionOf,
+  type Artifact,
+} from '@genshin-build-lab/engine/game/types';
 import {
   weaponCapUnknown,
   type Details,
 } from '@genshin-build-lab/engine/game/genshin/details';
 import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 import {
-  ascensionOf,
   characterSheet,
   type SheetInput,
   type SheetStat,

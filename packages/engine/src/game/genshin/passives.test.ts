@@ -2,7 +2,6 @@ import { createRequire } from 'node:module';
 import { describe, it, expect } from 'vitest';
 import {
   CHARACTER_PASSIVES,
-  REFINEMENTS,
   UNMODELLED_WEAPON_PASSIVES,
   WEAPON_PASSIVES,
   hasErDerivedPassive,
@@ -47,7 +46,7 @@ describe('the curated passive tables (ADR-0042)', () => {
       const w = genshindb.weapons(genshinAdapter.weapon(key)!.name);
       expect(w, key).toBeTruthy();
       for (const g of passive.grants)
-        for (const r of REFINEMENTS) {
+        for (const r of [1, 2, 3, 4, 5] as const) {
           const values: string[] = w[`r${r}`].values;
           // "16%/32%/48%" (per stack): the first is one stack.
           const num = (i: number) => parseFloat(values[i].split('/')[0]);

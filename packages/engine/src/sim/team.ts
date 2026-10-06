@@ -16,7 +16,8 @@ import {
   StatAmounts,
   StatObjective,
 } from '../constraints/spec';
-import type { DpsSample } from './rank';
+import { diffCi95Half, type DpsSample } from './rank';
+import { round1 } from '../numbers';
 
 const Key = z.string().check(z.minLength(1), z.maxLength(MAX_KEY_LEN));
 
@@ -105,14 +106,11 @@ export interface VsBase {
   text: string;
 }
 
-const Z95 = 1.96;
-const se = (d: DpsSample) => d.sd / Math.sqrt(Math.max(1, d.iterations));
-
 /** How a variant's team DPS compares with the base's. */
 export function compareToBase(base: DpsSample, variant: DpsSample): VsBase {
   const pct = (100 * (variant.mean - base.mean)) / base.mean;
-  const ci95Pct = (100 * Z95 * Math.hypot(se(base), se(variant))) / base.mean;
-  const r1 = (x: number) => (Math.round(x * 10) / 10).toFixed(1);
+  const ci95Pct = (100 * diffCi95Half(base, variant)) / base.mean;
+  const r1 = (x: number) => round1(x).toFixed(1);
   const sign = pct > 0 ? '+' : pct < 0 ? '−' : '±';
   return {
     pct,

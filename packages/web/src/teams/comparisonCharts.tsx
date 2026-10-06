@@ -20,7 +20,7 @@ const FILL: Record<string, string> = {
   dendro: 'bg-element-dendro',
 };
 
-const charName = (k: string) => genshinAdapter.character(k)?.name ?? k;
+const charName = (k: string) => genshinAdapter.characterName(k);
 
 type Simulated = TeamRun & { dps: NonNullable<TeamRun['dps']> };
 const simulated = (runs: TeamRun[]): Simulated[] =>

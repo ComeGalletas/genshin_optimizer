@@ -11,7 +11,7 @@
  */
 
 import type { StatKey, SubStat } from '../game/types';
-import { BUILD_LEVELS } from '../game/types';
+import { ascensionOf } from '../game/types';
 import type { SnapshotPiece } from '../merge/merge';
 import {
   GOOD_STAT_KEYS,
@@ -111,11 +111,11 @@ export function toGOODAccount(
   return {
     ...toGOOD(account.pieces, source),
     characters: Object.entries(account.roster).map(([key, e]) => {
-      const ascension = e.buildLevel && BUILD_LEVELS.indexOf(e.buildLevel) - 1;
+      const ascension = ascensionOf(e.buildLevel);
       return {
         key: goodCharacterKey(key),
         ...(e.level !== undefined && { level: e.level }),
-        ...(ascension !== undefined && ascension >= 0 && { ascension }),
+        ...(ascension !== undefined && { ascension }),
         ...(e.constellation !== undefined && {
           constellation: e.constellation,
         }),

@@ -242,29 +242,6 @@ function buildLines(reference: string): string[] {
     .filter(Boolean);
 }
 
-/** Which character fills each slot, for a team (dataset keys). Every slot
- *  needs one of its characters; the team may have no one else. */
-export function assignSlots(
-  meta: RotationMeta,
-  team: readonly string[],
-):
-  | { ok: true; slots: Record<string, string> }
-  | { ok: false; missing: string[]; extra: string[] } {
-  const slots: Record<string, string> = {};
-  const left = new Set(team);
-  const missing: string[] = [];
-  for (const s of meta.slots) {
-    const who = s.characters.find((k) => left.has(k));
-    if (who) {
-      slots[s.id] = who;
-      left.delete(who);
-    } else missing.push(s.characters.join(' or '));
-  }
-  if (missing.length || left.size)
-    return { ok: false, missing, extra: [...left] };
-  return { ok: true, slots };
-}
-
 /** The template with every burst wait filled (`energyWait: "attack"`):
  *  each `{{slot}} …, burst, …;` statement is split before the burst, and
  *  the character does their filler until the burst is ready (energy and

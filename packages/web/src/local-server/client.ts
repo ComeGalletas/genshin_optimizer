@@ -7,6 +7,8 @@
  * @packageDocumentation
  */
 
+import { isRecord } from '@genshin-build-lab/engine/json';
+
 /** `npm run server` listens on 127.0.0.1:5198 (ADR-0030). An IP, not
  *  `localhost`, so the browser never tries `::1` first. Not a secret:
  *  `VITE_SERVER_URL` only moves it. */
@@ -39,9 +41,8 @@ export const PROBE_TIMEOUT_MS = 2_000;
 export const UNREADABLE_REPLY =
   'the local server sent a reply this app can’t read';
 
-/** A JSON object: not null, not an array. */
-export const isRecord = (x: unknown): x is Record<string, unknown> =>
-  typeof x === 'object' && x !== null && !Array.isArray(x);
+// The engine's object guard, re-exported for the client calls' checks.
+export { isRecord };
 
 /** An object whose named fields are arrays: the least its reader needs. */
 export const withArrays =

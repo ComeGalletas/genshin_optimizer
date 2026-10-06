@@ -1,11 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { normalizeGOOD, type NormalizedGood } from './normalize';
-import {
-  buildSidecar,
-  firstRollKey,
-  indexSidecar,
-  SidecarEntry,
-} from './sidecar';
+import { buildSidecar, firstRollKey, SidecarEntry } from './sidecar';
 import { fingerprint } from '../import/fingerprint';
 
 const good = (artifacts: unknown[]): NormalizedGood =>
@@ -182,14 +177,5 @@ describe('buildSidecar', () => {
     expect(
       firstRollKey(good([fresh()]).artifacts![0].artifact, { crit_rate: 3.9 }),
     ).toBeUndefined();
-  });
-
-  it('indexes repeated fingerprints in file order', () => {
-    const sc = buildSidecar(good([levelled(), fresh(), levelled()]));
-    const byPrint = indexSidecar(sc.entries);
-    expect(byPrint.size).toBe(2);
-    expect(byPrint.get(sc.entries[0].fingerprint)!.map((e) => e.index)).toEqual(
-      [0, 2],
-    );
   });
 });

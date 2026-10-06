@@ -8,6 +8,7 @@
  */
 
 import * as z from 'zod/mini';
+import { formatCount } from '../labels-core';
 
 const Sample = z.looseObject({
   initial_character: z.optional(z.string()),
@@ -129,7 +130,7 @@ export function summarizeSample(input: unknown): SampleSummary {
   };
 }
 
-const int = (x: number) => Math.round(x).toLocaleString('en-US');
+const int = (x: number) => formatCount(Math.round(x));
 
 /** The rows as a Markdown table. */
 export function sampleTable(summary: SampleSummary): string {

@@ -27,7 +27,7 @@ import type {
   StatKey,
   SubStat,
 } from '../game/types';
-import { BUILD_LEVELS, ELEMENTS, SLOTS } from '../game/types';
+import { ASCENSION_CAPS, ELEMENTS, SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { validateArtifactDraft } from '../game/artifactValidation';
 import {
@@ -85,10 +85,8 @@ const weaponByNorm = new Map(
   genshinAdapter.weapons().map((w) => [normalizeKey(w.key), w.key]),
 );
 
-// Ascension 0..6 → that phase's level cap. A character can't be de-levelled,
-// so the cap is where the player is heading: builds are evaluated there
-// (ADR-0015).
-const ASCENSION_CAP = BUILD_LEVELS.slice(1) as BuildLevel[];
+// A character can't be de-levelled, so their ascension's cap is where the
+// player is heading: builds are evaluated there (ADR-0015).
 
 export interface RosterEntry {
   buildLevel?: BuildLevel;
@@ -402,7 +400,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
     }
     const entry: RosterEntry = {};
     const asc = field(GoodFields.ascension, c.data.ascension);
-    if (asc !== undefined) entry.buildLevel = ASCENSION_CAP[asc];
+    if (asc !== undefined) entry.buildLevel = ASCENSION_CAPS[asc];
     const level = field(GoodFields.characterLevel, c.data.level);
     if (level !== undefined) entry.level = level;
     const cons = field(GoodFields.constellation, c.data.constellation);

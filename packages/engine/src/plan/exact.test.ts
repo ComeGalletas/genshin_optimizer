@@ -6,11 +6,10 @@ import { searchBuilds } from '../optimizer/search';
 import { buildContext } from '../optimizer/context';
 import type { Artifact, Slot, StatKey } from '../game/types';
 import { SLOTS } from '../game/types';
+import { mulberry32 } from '../numbers';
 
-/** A seeded PRNG, so a failure reproduces. */
-function prng(seed: number) {
-  return () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31;
-}
+/** The engine's seeded PRNG, so a failure reproduces. */
+const prng = mulberry32;
 
 /** Every choice of at most one candidate per member, no id twice. */
 function bruteForce(members: Candidate[][]): number {

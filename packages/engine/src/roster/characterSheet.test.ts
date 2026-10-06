@@ -10,7 +10,7 @@ import {
   type Details,
 } from '../game/genshin/details';
 import type { Artifact } from '../game/types';
-import { ascensionOf, characterSheet } from './characterSheet';
+import { characterSheet } from './characterSheet';
 
 let d: Details;
 beforeAll(async () => {
@@ -29,16 +29,6 @@ describe('phaseAt', () => {
     expect(phaseAt(CAPS, 80, 5)).toBe(5);
     expect(phaseAt(CAPS, 80, 6)).toBe(6);
     expect(phaseAt(CAPS, 90)).toBe(6);
-  });
-});
-
-describe('ascensionOf', () => {
-  it('reads the ascension from the build level the import set', () => {
-    expect(ascensionOf(20)).toBe(0);
-    expect(ascensionOf(80)).toBe(5);
-    expect(ascensionOf(90)).toBe(6);
-    expect(ascensionOf(undefined)).toBeUndefined();
-    expect(ascensionOf(1)).toBeUndefined();
   });
 });
 

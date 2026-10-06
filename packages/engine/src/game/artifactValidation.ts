@@ -7,6 +7,7 @@
 
 import type { Artifact, StatKey, SubStat } from './types';
 import { ELEMENTS, isStatKey, SLOTS } from './types';
+import { isBoundedText, isFiniteNumber } from '../json';
 
 export interface ArtifactDraft {
   mainStat: StatKey;
@@ -45,13 +46,9 @@ export function validateArtifactDraft(d: ArtifactDraft): string | null {
 // isPersistedArtifact — the structural guard for untrusted stored/shared pieces
 // ---------------------------------------------------------------------------
 
-function isShortString(x: unknown): x is string {
-  return typeof x === 'string' && x.length > 0 && x.length <= MAX_KEY_LEN;
-}
-
-function isFiniteNumber(x: unknown): x is number {
-  return typeof x === 'number' && Number.isFinite(x);
-}
+/** A dataset key or id from untrusted data: bounded by `MAX_KEY_LEN`. */
+export const isShortString = (x: unknown): x is string =>
+  isBoundedText(x, MAX_KEY_LEN);
 
 /** Optional roll data (TODO 9.10): a roll count up to the 9 a 5★ piece
  *  can have, and first rolls only for the piece's own lines. */

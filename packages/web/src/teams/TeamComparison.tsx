@@ -25,7 +25,10 @@ import { useCompareRotation } from './compareRotation';
 import { PerCharacter, TeamAsRun } from './runDetails';
 import { ShareButton } from '../components/ShareButton';
 import { encodeComparison } from '@genshin-build-lab/engine/share/comparison';
+// The server's own limit on variants, so the form can't drift from it.
+import { MAX_VARIANTS } from '@genshin-build-lab/engine/sim/team';
 import { HelpButton, HelpPanel } from '../components/help/Help';
+import { countOf } from '../labels';
 
 type Kind = 'weapon' | 'set' | 'swap' | 'enemy' | 'rotation';
 const KINDS: { kind: Kind; label: string }[] = [
@@ -51,8 +54,6 @@ interface Draft {
   level: number;
 }
 
-const MAX_VARIANTS = 5;
-
 /** gcsim's warnings, in words. */
 const WARNING: Record<string, string> = {
   insufficient_energy: 'a burst waited for energy',
@@ -65,22 +66,19 @@ const WARNING: Record<string, string> = {
 };
 const warning = (w: string) => WARNING[w] ?? w.replace(/_/g, ' ');
 const ITERATIONS = ['500', '1000', '2000'] as const;
-const name = (k: string) => genshinAdapter.character(k)?.name ?? k;
-const weaponName = (k: string) => genshinAdapter.weapon(k)?.name ?? k;
-const setName = (k: string) =>
-  genshinAdapter.sets().find((s) => s.key === k)?.name ?? k;
+const name = (k: string) => genshinAdapter.characterName(k);
 
 /** The label a variant gets unless the owner writes one. */
 function autoLabel(d: Draft, rotations: RotationSummary[]): string {
   switch (d.kind) {
     case 'weapon':
-      return `${name(d.character)}: ${weaponName(d.weapon)} R${d.refinement}`;
+      return `${name(d.character)}: ${genshinAdapter.weaponName(d.weapon)} R${d.refinement}`;
     case 'set':
-      return `${name(d.character)}: ${d.set ? `4pc ${setName(d.set)}` : 'any set'}`;
+      return `${name(d.character)}: ${d.set ? `4pc ${genshinAdapter.setName(d.set)}` : 'any set'}`;
     case 'swap':
       return `${name(d.to)} for ${name(d.character)}`;
     case 'enemy':
-      return `${d.count} target${d.count === 1 ? '' : 's'}, ${d.res}% RES, level ${d.level}`;
+      return `${countOf(d.count, 'target')}, ${d.res}% RES, level ${d.level}`;
     case 'rotation':
       return rotations.find((r) => r.id === d.rotation)?.name ?? d.rotation;
   }
@@ -571,7 +569,7 @@ function enemyText(run: TeamRun, base: TeamRun): string | null {
     e.res !== undefined && e.res !== b.res && `${e.res}% resistance`,
     e.count !== undefined &&
       e.count !== (b.count ?? 1) &&
-      `${e.count} target${e.count === 1 ? '' : 's'}`,
+      countOf(e.count, 'target'),
   ].filter(Boolean);
   return parts.length ? `enemy: ${parts.join(', ')}` : null;
 }

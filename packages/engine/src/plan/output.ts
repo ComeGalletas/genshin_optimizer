@@ -19,7 +19,13 @@
 import type { Artifact, Slot } from '../game/types';
 import { SLOTS } from '../game/types';
 import { genshinAdapter } from '../game/genshin/adapter';
-import { formatSetName, formatStat, SLOT_LABELS, statLabel } from '../labels';
+import {
+  formatSetName,
+  formatStat,
+  SLOT_LABELS,
+  statLabel,
+  pluralWord,
+} from '../labels';
 import { META_TARGETS } from '../meta/metaTargets';
 import { computeGapReport, setRequirementGap } from '../meta/gap';
 import type { AllocatedBuild, AllocationMember } from './allocate';
@@ -191,7 +197,7 @@ export function planFarming(
         if (gap)
           add(
             key,
-            `You own ${gap.have} ${formatSetName(gap.setKey)} piece${gap.have === 1 ? '' : 's'} across slots they may use; their conditions need ${gap.need}.`,
+            `You own ${gap.have} ${formatSetName(gap.setKey)} ${pluralWord(gap.have, 'piece')} across slots they may use; their conditions need ${gap.need}.`,
           );
       } else if (solo) {
         const by = takenFrom(key);

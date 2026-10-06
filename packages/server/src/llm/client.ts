@@ -10,6 +10,7 @@
  */
 
 import type { LlmConfig, LlmProvider } from './config';
+import { isRecord } from '@genshin-build-lab/engine/json';
 
 /** A tool the model may call; `parameters` is a JSON Schema object. */
 export interface ChatTool {
@@ -82,9 +83,6 @@ const THINK_BLOCK = /<think>[\s\S]*?<\/think>/g;
 const cleanText = (s: unknown) =>
   typeof s === 'string' ? s.replace(THINK_BLOCK, '').trim() : '';
 
-const isObject = (x: unknown): x is Record<string, unknown> =>
-  typeof x === 'object' && x !== null && !Array.isArray(x);
-
 /** Tool arguments arrive as an object (Ollama, Anthropic) or as a JSON
  *  string (OpenAI-compatible). Anything else is the model's mistake. */
 function parseArguments(raw: unknown, name: string): Record<string, unknown> {
@@ -99,7 +97,7 @@ function parseArguments(raw: unknown, name: string): Record<string, unknown> {
       );
     }
   }
-  if (!isObject(v))
+  if (!isRecord(v))
     throw new LlmError(
       'bad_response',
       `the model called ${name} with arguments that aren't an object`,
@@ -109,8 +107,8 @@ function parseArguments(raw: unknown, name: string): Record<string, unknown> {
 
 /** The first readable error message in an error body, shortened. */
 function upstreamMessage(body: unknown): string | undefined {
-  const e = isObject(body) ? body.error : undefined;
-  const m = typeof e === 'string' ? e : isObject(e) ? e.message : undefined;
+  const e = isRecord(body) ? body.error : undefined;
+  const m = typeof e === 'string' ? e : isRecord(e) ? e.message : undefined;
   return typeof m === 'string' && m ? m.slice(0, 300) : undefined;
 }
 
@@ -217,14 +215,14 @@ async function chatOllama(
       ...(Object.keys(options).length && { options }),
     },
   );
-  if (!isObject(body) || !isObject(body.message)) badShape(c);
+  if (!isRecord(body) || !isRecord(body.message)) badShape(c);
   const msg = body.message;
   const raw = Array.isArray(msg.tool_calls) ? msg.tool_calls : [];
   const toolCalls = raw.map((t: unknown, i): ToolCall => {
-    const fn = isObject(t) && isObject(t.function) ? t.function : undefined;
+    const fn = isRecord(t) && isRecord(t.function) ? t.function : undefined;
     if (!fn || typeof fn.name !== 'string') badShape(c);
     return {
-      id: isObject(t) && typeof t.id === 'string' ? t.id : `call_${i}`,
+      id: isRecord(t) && typeof t.id === 'string' ? t.id : `call_${i}`,
       name: fn.name,
       arguments: parseArguments(fn.arguments, fn.name),
     };
@@ -292,20 +290,20 @@ async function chatOpenAi(
     },
   );
   const choice =
-    isObject(body) && Array.isArray(body.choices) ? body.choices[0] : undefined;
-  if (!isObject(choice) || !isObject(choice.message)) badShape(c);
+    isRecord(body) && Array.isArray(body.choices) ? body.choices[0] : undefined;
+  if (!isRecord(choice) || !isRecord(choice.message)) badShape(c);
   const msg = choice.message;
   const raw = Array.isArray(msg.tool_calls) ? msg.tool_calls : [];
   const toolCalls = raw.map((t: unknown, i): ToolCall => {
-    const fn = isObject(t) && isObject(t.function) ? t.function : undefined;
+    const fn = isRecord(t) && isRecord(t.function) ? t.function : undefined;
     if (!fn || typeof fn.name !== 'string') badShape(c);
     return {
-      id: isObject(t) && typeof t.id === 'string' ? t.id : `call_${i}`,
+      id: isRecord(t) && typeof t.id === 'string' ? t.id : `call_${i}`,
       name: fn.name,
       arguments: parseArguments(fn.arguments, fn.name),
     };
   });
-  const usage = isObject(body) && isObject(body.usage) ? body.usage : {};
+  const usage = isRecord(body) && isRecord(body.usage) ? body.usage : {};
   return {
     text: cleanText(msg.content),
     toolCalls,
@@ -348,7 +346,7 @@ async function chatAnthropic(
         Array.isArray(last.content) &&
         last.content.every(
           (b) =>
-            isObject(b) && (b as { type?: unknown }).type === 'tool_result',
+            isRecord(b) && (b as { type?: unknown }).type === 'tool_result',
         )
       )
         last.content.push(block);
@@ -389,8 +387,8 @@ async function chatAnthropic(
       ...(c.temperature !== undefined && { temperature: c.temperature }),
     },
   );
-  if (!isObject(body) || !Array.isArray(body.content)) badShape(c);
-  const blocks = body.content.filter(isObject);
+  if (!isRecord(body) || !Array.isArray(body.content)) badShape(c);
+  const blocks = body.content.filter(isRecord);
   const toolCalls = blocks
     .filter((b) => b.type === 'tool_use')
     .map((b): ToolCall => {
@@ -407,7 +405,7 @@ async function chatAnthropic(
       .map((b) => b.text)
       .join(''),
   );
-  const usage = isObject(body.usage) ? body.usage : {};
+  const usage = isRecord(body.usage) ? body.usage : {};
   return {
     text,
     toolCalls,

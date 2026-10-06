@@ -83,7 +83,7 @@ export function rotationLibrary(dir: string): Rotation[] {
   return out;
 }
 
-const name = (key: string) => genshinAdapter.character(key)?.name ?? key;
+const name = (key: string) => genshinAdapter.characterName(key);
 
 const fail = (
   path: string,

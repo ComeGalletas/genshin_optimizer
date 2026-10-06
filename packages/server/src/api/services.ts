@@ -17,6 +17,7 @@ import type {
 } from '@genshin-build-lab/engine/game/types';
 import { SLOTS } from '@genshin-build-lab/engine/game/types';
 import {
+  DISPLAY_NAMES,
   GAME_VERSION,
   GENSHIN_DB_VERSION,
   genshinAdapter,
@@ -173,11 +174,6 @@ const notFound = (m: string) => new ServiceError(404, 'not_found', m);
 const badRequest = (m: string) => new ServiceError(400, 'bad_request', m);
 
 /** Display names for the "not simulated" reasons. */
-const SIM_NAMES = {
-  character: (k: string) => genshinAdapter.character(k)?.name ?? k,
-  weapon: (k: string) => genshinAdapter.weapon(k)?.name ?? k,
-  set: (k: string) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
-};
 
 const count = <K extends string>(keys: K[]) => {
   const out = {} as Record<K, number>;
@@ -370,7 +366,7 @@ export class Services {
       );
     if (genshinAdapter.weapon(weaponKey)?.type !== character.weaponType)
       throw badRequest(
-        `${character.name} can't wield ${genshinAdapter.weapon(weaponKey)?.name ?? weaponKey}`,
+        `${character.name} can't wield ${genshinAdapter.weaponName(weaponKey)}`,
       );
     const buildLevel = (body.buildLevel ??
       entry?.buildLevel ??
@@ -443,7 +439,7 @@ export class Services {
       // there is no rotation to find for them.
       notSimulated = unsimulated(
         { characters: [spec.character], weapons: [] },
-        SIM_NAMES,
+        DISPLAY_NAMES,
       );
       if (!notSimulated.length) {
         const resolved = resolveSimTeam(
@@ -461,7 +457,7 @@ export class Services {
             weapons: mates.map((c) => c.weapon.key),
             sets: mates.flatMap((c) => setsInPlay(c.artifacts)),
           },
-          SIM_NAMES,
+          DISPLAY_NAMES,
         );
         // A candidate never takes a teammate's pieces, unless asked to.
         if (spec.keepEquippedOn === undefined)
@@ -476,7 +472,7 @@ export class Services {
     if (isSim && !notSimulated.length)
       notSimulated = unsimulated(
         { characters: [], weapons: [mapped.run.request.weaponKey] },
-        SIM_NAMES,
+        DISPLAY_NAMES,
       );
     return {
       spec,
@@ -489,8 +485,8 @@ export class Services {
               rotation: simTeam
                 ? `${simTeam.rotation.meta.name}${simTeam.rotation.meta.status === 'draft' ? ' (a draft rotation)' : ''}`
                 : '',
-              teammates: Object.values(simTeam?.teammates ?? {}).map(
-                (c) => genshinAdapter.character(c.key)?.name ?? c.key,
+              teammates: Object.values(simTeam?.teammates ?? {}).map((c) =>
+                genshinAdapter.characterName(c.key),
               ),
               ...(notSimulated.length && { notSimulated }),
             }
@@ -1098,7 +1094,7 @@ export class Services {
             weapons: [],
             sets: setsInPlay(c.character.artifacts),
           },
-          SIM_NAMES,
+          DISPLAY_NAMES,
         ),
       }))
       .filter((c) => c.reasons.length);

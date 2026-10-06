@@ -38,7 +38,7 @@ import {
   sampleTable,
   summarizeSample,
 } from '@genshin-build-lab/engine/sim/sample';
-import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
+import { DISPLAY_NAMES } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { setsInPlay, unsimulated } from '@genshin-build-lab/engine/sim/support';
 import { GcsimError, gcsimPath, loadGcsimTool } from './gcsim';
 import type { SimResult } from './result';
@@ -50,6 +50,8 @@ import {
   writeMeta,
   writeRotation,
 } from './rotations';
+import { round1 } from '@genshin-build-lab/engine/numbers';
+import { formatCount } from '@genshin-build-lab/engine/labels';
 
 /** What a model sends to draft a rotation. */
 export const DraftInput = z.strictObject({
@@ -141,8 +143,6 @@ export type DraftOutcome =
     }
   | { saved: false; problems: string[] };
 
-const r1 = (x: number) => Math.round(x * 10) / 10;
-
 /** A failed run, as problems a model can act on. */
 function runProblem(e: unknown): string[] {
   if (e instanceof SimTimeout)
@@ -196,11 +196,7 @@ export async function draftRotation(
       weapons: builds.map((c) => c.weapon.key),
       sets: builds.flatMap((c) => setsInPlay(c.artifacts)),
     },
-    {
-      character: (k) => genshinAdapter.character(k)?.name ?? k,
-      weapon: (k) => genshinAdapter.weapon(k)?.name ?? k,
-      set: (k) => genshinAdapter.sets().find((s) => s.key === k)?.name ?? k,
-    },
+    DISPLAY_NAMES,
   );
   if (lacking.length)
     return {
@@ -267,7 +263,7 @@ export async function draftRotation(
     iterations: result.iterations,
     dps: Math.round(result.dps.mean),
     sd: Math.round(result.dps.sd),
-    durationSec: r1(result.durationSec),
+    durationSec: round1(result.durationSec),
     warnings: result.warnings,
   };
   writeRotation(rotation, dir);
@@ -282,13 +278,13 @@ export async function draftRotation(
     durationSec: meta.validation.durationSec,
     warnings: result.warnings,
     energyWaitSec: Object.fromEntries(
-      result.characters.map((c) => [c.name, r1(c.energyWaitSec)]),
+      result.characters.map((c) => [c.name, round1(c.energyWaitSec)]),
     ),
     next: `Saved as a draft. The owner reviews it with \`npm run rotations -- review ${input.id}\` and promotes it with \`npm run rotations -- promote ${input.id}\`; until then it stays a draft.`,
   };
 }
 
-const int = (x: number) => Math.round(x).toLocaleString('en-US');
+const int = (x: number) => formatCount(Math.round(x));
 
 /** The review the owner reads before promoting. */
 function reviewText(
@@ -383,7 +379,7 @@ export async function reviewRotation(
         iterations: result.iterations,
         dps: Math.round(result.dps.mean),
         sd: Math.round(result.dps.sd),
-        durationSec: r1(result.durationSec),
+        durationSec: round1(result.durationSec),
         warnings: result.warnings,
         ...(published && {
           offPct:

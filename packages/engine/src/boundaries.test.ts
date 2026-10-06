@@ -106,7 +106,7 @@ describe('engine import boundary', () => {
       "import type { Store } from '@genshin-build-lab/web/state/inventory';",
       "export * from '@genshin-build-lab/server';",
       "import { labels } from '../../../web/src/labels';",
-      "import { run } from '../../../server/src/index';",
+      "import { openStore } from '../../../server/src/store/store';",
       "import { z } from 'zod';",
       "import * as z from 'zod/v4';",
     ])('flags %s in source', (line) => {

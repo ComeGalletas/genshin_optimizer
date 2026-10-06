@@ -23,6 +23,7 @@ import { createRequire } from 'module';
 import {
   BUILD_LEVELS,
   ELEMENTS,
+  isFlatStat,
   WEAPON_TYPES,
 } from '@genshin-build-lab/engine/game/types';
 import {
@@ -568,10 +569,9 @@ const FILE = {
   characters: RAW.index.English.characters.names as Record<string, string>,
   weapons: RAW.index.English.weapons.names as Record<string, string>,
 };
-const FLAT = new Set(['hp', 'atk', 'def', 'em']);
 /** A stat value as the engine keeps it: percent, except flat stats. */
 const unit = (key: string | null, v: number) =>
-  key && !FLAT.has(key) ? v * 100 : v;
+  key && !isFlatStat(key) ? v * 100 : v;
 const strip = (t: string) =>
   String(t ?? '')
     .replace(/<\/?color[^>]*>/g, '')

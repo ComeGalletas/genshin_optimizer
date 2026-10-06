@@ -71,8 +71,7 @@ export function SharedBuildBanner({
   sim?: SharedSim;
 }) {
   const character = genshinAdapter.characterName(request.characterKey);
-  const weapon =
-    genshinAdapter.weapon(request.weaponKey)?.name ?? request.weaponKey;
+  const weapon = genshinAdapter.weaponName(request.weaponKey);
   return (
     <Callout
       tone="info"
