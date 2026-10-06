@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ImportPanel } from './ImportPanel';
 import { useInventory } from '../state/inventory';
@@ -533,6 +533,31 @@ describe('ImportPanel: the local server’s account (TODO 3.5)', () => {
       expect(useInventory.getState().artifacts).toHaveLength(1),
     );
     expect(useInventory.getState().artifacts[0].id).not.toBe('mine-1');
+  });
+
+  // Found loading the owner's account (2026-10-06): the confirm reset after
+  // 5 s, but its "Press Confirm replace" prompt stayed, naming a button that
+  // was gone.
+  it('takes the prompt away when the confirm times out', async () => {
+    useInventory.setState({
+      artifacts: [{ ...SAMPLE_INVENTORY[0], id: 'mine-1' }],
+    });
+    serveAccount();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      render(<ImportPanel />);
+      await userEvent.click(loadButton());
+      expect(screen.getByRole('status')).toHaveTextContent(/Confirm replace/);
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(
+        screen.queryByRole('button', { name: /Confirm Replace/ }),
+      ).toBeNull();
+      expect(screen.queryByText(/Press Confirm replace/)).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('can back out of the replace', async () => {

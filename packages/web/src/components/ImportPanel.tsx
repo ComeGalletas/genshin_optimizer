@@ -75,6 +75,10 @@ export function ImportPanel() {
     setLocalNotice(n);
     useAccount.getState().setLoaded(n?.tone === 'success' ? n.text : null);
   };
+  // A confirm that times out takes its "Press Confirm…" prompt with it: the
+  // prompt named a button that is no longer there.
+  const dropPrompt = () =>
+    setLocalNotice((n) => (n?.text.startsWith('Press Confirm') ? null : n));
   const [uid, setUid] = useState('');
   const [busy, setBusy] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
@@ -97,6 +101,7 @@ export function ImportPanel() {
     if (!confirmingClear) return;
     clearTimeoutRef.current = setTimeout(() => {
       setConfirmingClear(false);
+      dropPrompt();
     }, 5000);
     return () => {
       if (clearTimeoutRef.current) clearTimeout(clearTimeoutRef.current);
@@ -106,12 +111,18 @@ export function ImportPanel() {
   // Same idle reset as Clear's confirm.
   useEffect(() => {
     if (!confirmingReplace) return;
-    const t = setTimeout(() => setConfirmingReplace(false), 5000);
+    const t = setTimeout(() => {
+      setConfirmingReplace(false);
+      dropPrompt();
+    }, 5000);
     return () => clearTimeout(t);
   }, [confirmingReplace]);
   useEffect(() => {
     if (!confirmingDemo) return;
-    const t = setTimeout(() => setConfirmingDemo(false), 5000);
+    const t = setTimeout(() => {
+      setConfirmingDemo(false);
+      dropPrompt();
+    }, 5000);
     return () => clearTimeout(t);
   }, [confirmingDemo]);
 
