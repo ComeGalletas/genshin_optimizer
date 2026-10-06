@@ -14,11 +14,12 @@ import type {
 import { isStatKey, isObjective, BUILD_LEVELS, SLOTS } from '../game/types';
 import {
   isPersistedArtifact,
-  MAX_KEY_LEN,
+  isShortString,
   withValidRolls,
 } from '../game/artifactValidation';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { isRefinement } from '../game/genshin/passives';
+import { isFiniteNumber } from '../json';
 
 export interface BuildSnapshot {
   request: OptimizeRequest;
@@ -142,18 +143,12 @@ export async function encodeBuild(snapshot: BuildSnapshot): Promise<string> {
   return packJson(snapshot);
 }
 
-// Bound untrusted strings before they reach regex (formatSetName) / the DOM —
-// a multi-MB key would cause main-thread jank. MAX_KEY_LEN is the shared cap
-// (artifactValidation), the same one the AI proxy payload guard applies.
+// Untrusted strings are bounded (isShortString, MAX_KEY_LEN) before they
+// reach a regex (formatSetName) or the DOM: a multi-MB key would cause
+// main-thread jank.
 // A build is exactly five artifacts (ADR-0005). Cap generously so a crafted
 // ?b= link can't hand us a huge array to validate/render (client-side jank).
-const MAX_ARTIFACTS = 20;
-function isShortString(x: unknown): x is string {
-  return typeof x === 'string' && x.length > 0 && x.length <= MAX_KEY_LEN;
-}
-
-const isNum = (x: unknown): x is number =>
-  typeof x === 'number' && Number.isFinite(x);
+const MAX_LINK_ARTIFACTS = 20;
 const isCount = (x: unknown, max: number): x is number =>
   Number.isInteger(x) && (x as number) >= 1 && (x as number) <= max;
 
@@ -181,24 +176,25 @@ export function isSharedSim(x: unknown): x is SharedSim {
   if (
     typeof dps !== 'object' ||
     dps === null ||
-    !isNum(dps.mean) ||
+    !isFiniteNumber(dps.mean) ||
     !Array.isArray(dps.ci95) ||
     dps.ci95.length !== 2 ||
-    !dps.ci95.every(isNum)
+    !dps.ci95.every(isFiniteNumber)
   )
     return false;
   if (!isCount(s.iterations, 100_000) || !isCount(s.of, 100)) return false;
   if (!isCount(s.rank, s.of as number) || !isCount(s.statRank, 100))
     return false;
-  if (typeof s.tiedWithBest !== 'boolean' || !isNum(s.behindPct)) return false;
-  if (!isNum(s.fightSec)) return false;
+  if (typeof s.tiedWithBest !== 'boolean' || !isFiniteNumber(s.behindPct))
+    return false;
+  if (!isFiniteNumber(s.fightSec)) return false;
   if (s.characterDps !== undefined) {
     const c = s.characterDps as Record<string, unknown> | null;
     if (
       typeof c !== 'object' ||
       c === null ||
-      !isNum(c.mean) ||
-      !isNum(c.share)
+      !isFiniteNumber(c.mean) ||
+      !isFiniteNumber(c.share)
     )
       return false;
   }
@@ -349,7 +345,7 @@ export function parseBuildSnapshot(input: unknown): BuildSnapshot | null {
   if (sim !== undefined && !isSharedSim(sim)) return null;
   if (!isOptimizeRequest(request)) return null;
   if (!isBuildResult(build)) return null;
-  if (!Array.isArray(artifacts) || artifacts.length > MAX_ARTIFACTS)
+  if (!Array.isArray(artifacts) || artifacts.length > MAX_LINK_ARTIFACTS)
     return null;
   if (!artifacts.every(isPersistedArtifact)) return null;
   // The build's per-slot ids must resolve to a carried artifact *of that slot*,

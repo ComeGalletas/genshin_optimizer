@@ -51,6 +51,7 @@ import {
   writeRotation,
 } from './rotations';
 import { round1 } from '@genshin-build-lab/engine/numbers';
+import { formatCount } from '@genshin-build-lab/engine/labels';
 
 /** What a model sends to draft a rotation. */
 export const DraftInput = z.strictObject({
@@ -283,7 +284,7 @@ export async function draftRotation(
   };
 }
 
-const int = (x: number) => Math.round(x).toLocaleString('en-US');
+const int = (x: number) => formatCount(Math.round(x));
 
 /** The review the owner reads before promoting. */
 function reviewText(

@@ -11,7 +11,7 @@
  */
 
 import { packJson, unpackJson } from './url';
-import { isRecord } from '../json';
+import { isBoundedText, isFiniteNumber, isRecord } from '../json';
 
 export const SHARED_COMPARISON_VERSION = 1;
 
@@ -66,10 +66,8 @@ const MAX_LIST = 20;
 const MAX_TEXT = 300;
 const MAX_REACTIONS = 30;
 
-const isNum = (x: unknown): x is number =>
-  typeof x === 'number' && Number.isFinite(x);
 const isText = (x: unknown, max = MAX_TEXT): x is string =>
-  typeof x === 'string' && x.length > 0 && x.length <= max;
+  isBoundedText(x, max);
 const isTexts = (x: unknown): x is string[] =>
   Array.isArray(x) && x.length <= MAX_LIST && x.every((t) => isText(t));
 const optional = (x: unknown, ok: (x: unknown) => boolean) =>
@@ -109,9 +107,9 @@ function isRun(x: unknown): x is SharedRun {
       x.enemy,
       (e) =>
         isRecord(e) &&
-        optional(e.level, isNum) &&
-        optional(e.res, isNum) &&
-        optional(e.count, isNum),
+        optional(e.level, isFiniteNumber) &&
+        optional(e.res, isFiniteNumber) &&
+        optional(e.count, isFiniteNumber),
     ) &&
     optional(x.problems, isTexts) &&
     optional(x.notSimulated, isTexts) &&
@@ -119,16 +117,16 @@ function isRun(x: unknown): x is SharedRun {
       x.dps,
       (d) =>
         isRecord(d) &&
-        isNum(d.mean) &&
-        isNum(d.sd) &&
+        isFiniteNumber(d.mean) &&
+        isFiniteNumber(d.sd) &&
         Array.isArray(d.ci95) &&
         d.ci95.length === 2 &&
-        d.ci95.every(isNum) &&
+        d.ci95.every(isFiniteNumber) &&
         ['min', 'q1', 'median', 'q3', 'max'].every((k) =>
-          optional(d[k], isNum),
+          optional(d[k], isFiniteNumber),
         ),
     ) &&
-    optional(x.fightSec, isNum) &&
+    optional(x.fightSec, isFiniteNumber) &&
     optional(
       x.characters,
       (cs) =>
@@ -139,7 +137,7 @@ function isRun(x: unknown): x is SharedRun {
             isRecord(c) &&
             isText(c.character, 80) &&
             ['dps', 'share', 'fieldSec', 'energyWaitSec'].every((k) =>
-              isNum(c[k]),
+              isFiniteNumber(c[k]),
             ),
         ),
     ) &&
@@ -148,15 +146,15 @@ function isRun(x: unknown): x is SharedRun {
       (r) =>
         isRecord(r) &&
         Object.keys(r).length <= MAX_REACTIONS &&
-        Object.entries(r).every(([k, v]) => isText(k, 40) && isNum(v)),
+        Object.entries(r).every(([k, v]) => isText(k, 40) && isFiniteNumber(v)),
     ) &&
     optional(x.warnings, isTexts) &&
     optional(
       x.vsBase,
       (v) =>
         isRecord(v) &&
-        isNum(v.pct) &&
-        isNum(v.ci95Pct) &&
+        isFiniteNumber(v.pct) &&
+        isFiniteNumber(v.ci95Pct) &&
         typeof v.withinNoise === 'boolean' &&
         isText(v.text, 40),
     )
@@ -168,7 +166,7 @@ export function parseSharedComparison(x: unknown): SharedComparison | null {
   if (!isRecord(x) || x.v !== SHARED_COMPARISON_VERSION) return null;
   if (!Number.isInteger(x.iterations) || (x.iterations as number) < 1)
     return null;
-  if (!isText(x.burstWaits, 40) || !isNum(x.ms)) return null;
+  if (!isText(x.burstWaits, 40) || !isFiniteNumber(x.ms)) return null;
   if (
     !Array.isArray(x.runs) ||
     x.runs.length === 0 ||
