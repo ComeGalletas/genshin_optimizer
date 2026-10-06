@@ -54,7 +54,8 @@ export const SLOT_LABELS: Record<Slot, string> = {
 // could not carry it.
 
 /** Elements are lowercase dataset keys ("hydro"), never display copy. Colour is
- *  deliberately not part of this — the app has no element-hue system. */
+ *  deliberately not part of this: the web app's element hues live in
+ *  `packages/web/src/components/ui/elementTone.ts`. */
 export function elementLabel(el: string): string {
   return el ? el[0].toUpperCase() + el.slice(1) : '';
 }

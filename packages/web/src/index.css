@@ -5,8 +5,7 @@
 @layer base {
   /* Reading signal for the one live game. Values are "r g b" triplets so
      Tailwind's rgb(var(--x) / <alpha-value>) color functions can apply opacity.
-     A second game would layer a [data-game] override over these defaults —
-     src/game/registry.ts documents that seam. */
+     A second game would layer a [data-game] override over these defaults. */
   :root {
     color-scheme: dark;
     --accent: 242 182 76;
@@ -18,10 +17,10 @@
     scroll-behavior: smooth;
   }
 
-  /* The step nav is sticky at the top, so an element scrolled to by focus
+  /* The view menu is sticky at the top, so an element scrolled to by focus
      (Tab, skip link, in-page anchor) lands underneath it. `scroll-margin-top`
      on `html` does nothing for that — the margin has to be on the element the
-     browser scrolls *to*. 5rem clears the nav plus a hairline of breathing
+     browser scrolls *to*. 5rem clears the menu plus a hairline of breathing
      room. Sections set their own `scroll-mt-20`; this covers the controls. */
   a,
   button,

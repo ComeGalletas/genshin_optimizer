@@ -67,8 +67,6 @@ export function Section({
   );
 }
 
-/** Thesis-only hero: shown while the solved demo is computing, or once the user
- *  has their own gear loaded. */
 /** A shared ?b= link opens on someone else's build. Say whose, and offer the
  *  one action the page can't infer — re-running it over the reader's own bag
  *  (the request is already hydrated into the Optimise panel). */

@@ -179,8 +179,9 @@ export const genshinAdapter = {
     level: BuildLevel,
   ): StatVec {
     // Fail loud on an unresolved key rather than silently returning a
-    // wrong-but-plausible near-empty build: the meta/sample presets carry
-    // hardcoded keys that could drift from the frozen dataset.
+    // wrong-but-plausible near-empty build: the curated meta tables and the
+    // demo account carry hardcoded keys that could drift from the frozen
+    // dataset.
     const c = RAW_CHARACTER_BY_KEY.get(characterKey);
     if (!c) throw new Error(`Unknown character key: ${characterKey}`);
     const w = RAW_WEAPON_BY_KEY.get(weaponKey);

@@ -41,7 +41,9 @@ or team slot. The reverse is a bug, and a test rejects it.
    genshin-db 5.2.14 (released 2026-09-21), game version 7.1
    ```
 
-   Commit `data.generated.json` with the bump: CI rebuilds it and fails on any
+   Commit the regenerated files with the bump: `data.generated.json`,
+   `images.generated.json`, `details.generated.json` and `texts/` (all in
+   `packages/engine/src/game/genshin/`). CI rebuilds them and fails on any
    difference.
 
 2. **Read the coverage report** to see what the patch added and what the curation owes it.

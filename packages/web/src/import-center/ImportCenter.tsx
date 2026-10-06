@@ -4,9 +4,10 @@
  * what it changed, how the current merge (or an older one) reconciled its
  * snapshots, and the two ways in: upload a GOOD file, or scan the inbox.
  * Offered only while the server runs; the account it builds is loaded
- * into this page from step 01.
+ * into this page with Load Account, under Load Data on the Start view.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { hrefOf } from '../components/views';
 import {
   fetchImports,
   scanInbox,
@@ -145,8 +146,12 @@ export function ImportCenter() {
           {run.run.merge && (
             <p className="mt-1">
               New account (merge #{run.run.merge.id}):{' '}
-              {plural(run.run.merge.artifacts, 'artifact')}. Load Account in
-              step 01 to use it here.
+              {plural(run.run.merge.artifacts, 'artifact')}. Press Load Account
+              under{' '}
+              <a href={hrefOf('start')} className="underline">
+                Load Data
+              </a>{' '}
+              to use it here.
             </p>
           )}
         </Callout>

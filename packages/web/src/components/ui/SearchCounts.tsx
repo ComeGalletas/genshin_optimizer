@@ -1,8 +1,8 @@
 import { formatCount } from '../../labels';
 
 /** The two honest numbers a branch-and-bound run can report, worded the same
- *  way everywhere they appear: the hero proof line, the exact-search line
- *  above the results, and the live progress line. Sentence in the body face,
+ *  way everywhere they appear: the exact-search line above the results and
+ *  the live progress line. Sentence in the body face,
  *  numerals in mono. */
 export function SearchCounts({
   explored,

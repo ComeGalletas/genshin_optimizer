@@ -9,7 +9,7 @@ const src = (rel: string): string => readFileSync(join(here, rel), 'utf8');
 // Web-side half of the bundle-boundary tripwires; the engine half lives in
 // `packages/engine/src/labels-core.test.ts`. A static import of the game
 // adapter — or of the adapter-bound labels, which import it — drags the
-// ~320 KB `data.generated.json` snapshot into a bundle that must not carry it.
+// ~350 KB `data.generated.json` snapshot into a bundle that must not carry it.
 // The patterns match import specifiers, not bare words, so these files may
 // still *mention* the adapter in prose. (Upstream also guarded its serverless
 // explain bundle here; ADR-0021 retired that check with the proxy.)
