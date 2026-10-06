@@ -24,22 +24,34 @@ export class ServerError extends Error {
   }
 }
 
+/** The caller stopped waiting (its `signal`): not a failure to report. */
+export class RequestStopped extends ServerError {
+  constructor() {
+    super('stopped');
+  }
+}
+
 /** A running server answers `/health` in milliseconds; waiting longer only
  *  delays the client-only fallback. */
 export const PROBE_TIMEOUT_MS = 2_000;
 
-/** Call the server and return its JSON, or throw a `ServerError`. */
+/** Call the server and return its JSON, or throw a `ServerError`
+ *  (`RequestStopped` when the caller's `signal` stopped it). */
 export async function serverJson<T>(
   path: string,
   init: RequestInit & { timeoutMs?: number } = {},
 ): Promise<T> {
-  const { timeoutMs = PROBE_TIMEOUT_MS, ...rest } = init;
+  const { timeoutMs = PROBE_TIMEOUT_MS, signal, ...rest } = init;
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), timeoutMs);
+  const stop = () => abort.abort();
+  if (signal?.aborted) stop();
+  signal?.addEventListener('abort', stop);
   let r: Response;
   try {
     r = await fetch(`${SERVER_URL}${path}`, { ...rest, signal: abort.signal });
   } catch {
+    if (signal?.aborted) throw new RequestStopped();
     throw new ServerError(
       abort.signal.aborted
         ? `the local server didn't answer within ${timeoutMs / 1000} s`
@@ -47,6 +59,7 @@ export async function serverJson<T>(
     );
   } finally {
     clearTimeout(timer);
+    signal?.removeEventListener('abort', stop);
   }
   let body: unknown = null;
   try {

@@ -1,15 +1,16 @@
-import { Fragment, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { AppDrawer } from './ui/Drawer';
 import { Callout } from './ui/Callout';
+import { Disclosure } from './ui/Disclosure';
 import { selectExplainReady, useServer } from '../local-server/status';
 import { useChat, type ChatEntry } from '../local-server/chat';
 import { MASK_NOTE, renderAnswer } from './chatText';
 
 /**
- * The chat (TODO 3.6, ADR-0035): questions about the account, answered by
- * the local server's model with the same tools as MCP. Offered only while
- * the server runs with a ready model, like explain; client-only, there is
- * nothing to ask.
+ * The chat (TODO 3.6, ADR-0035; polished in 8.2): questions about the
+ * account, answered by the local server's model with the same tools as
+ * MCP. Offered only while the server runs with a ready model, like
+ * explain; client-only, there is nothing to ask.
  */
 export function ChatPanel() {
   const ready = useServer(selectExplainReady);
@@ -38,40 +39,102 @@ export function ChatPanel() {
   );
 }
 
-function Steps({
-  entry,
-}: {
-  entry: Extract<ChatEntry, { role: 'assistant' }>;
-}) {
-  if (!entry.steps.length && !entry.masked.length) return null;
+/** Questions the tools can answer, to start from (they fill the box). */
+const EXAMPLES = [
+  'What’s my best Furina build with at least 180% ER?',
+  'Share my artifacts between Mualani, Mavuika, Xilonen and Emilie.',
+  'How much does The Catch R5 change Raiden National?',
+  'What did my last import change?',
+];
+
+/** "{"character":"furina","minStats":{"er_pct":180}}", cut short. */
+const args = (a: Record<string, unknown> | undefined) => {
+  if (!a || !Object.keys(a).length) return '';
+  const s = JSON.stringify(a);
+  return s.length > 160 ? `${s.slice(0, 157)}…` : s;
+};
+
+type Answer = Extract<ChatEntry, { role: 'assistant' }>;
+
+function Steps({ entry }: { entry: Answer }) {
+  const failed = entry.steps.filter((s) => !s.ok).length;
   const seconds = entry.steps.reduce((t, s) => t + s.ms, 0) / 1000;
   return (
     <div className="mt-2 space-y-1 text-xs text-muted">
-      {entry.steps.length > 0 && (
-        <p>
-          Used{' '}
-          {entry.steps.map((s, i) => (
-            <Fragment key={i}>
-              {i > 0 && ', '}
-              <code className={s.ok ? '' : 'text-rose'} title={s.error}>
-                {s.tool}
-                {!s.ok && ' (failed)'}
-              </code>
-            </Fragment>
-          ))}{' '}
-          · tools {seconds.toFixed(1)} s
+      {entry.stop === 'step_limit' && (
+        <p className="text-amber">
+          Stopped at the most tool calls a question may use: the answer may be
+          incomplete.
         </p>
       )}
-      {entry.masked.length > 0 && <p className="text-accent">{MASK_NOTE}</p>}
+      {entry.steps.length > 0 && (
+        <Disclosure
+          label={`Used ${entry.steps.length} tool${entry.steps.length === 1 ? '' : 's'}${failed ? ` (${failed} failed)` : ''} · ${seconds.toFixed(1)} s`}
+        >
+          <ol className="mt-1 space-y-1 pl-5" data-testid="chat-steps">
+            {entry.steps.map((s, i) => (
+              <li key={i} className="list-decimal">
+                <code className={s.ok ? 'text-paper' : 'text-rose'}>
+                  {s.tool}
+                </code>{' '}
+                · {(s.ms / 1000).toFixed(1)} s
+                {!s.ok && <span className="text-rose"> · failed</span>}
+                {args(s.arguments) && (
+                  <span className="block break-all font-mono text-2xs">
+                    {args(s.arguments)}
+                  </span>
+                )}
+                {s.error && <span className="block text-rose">{s.error}</span>}
+              </li>
+            ))}
+          </ol>
+        </Disclosure>
+      )}
+      {entry.masked.length > 0 && (
+        <p className="text-accent">
+          {MASK_NOTE} Removed: {entry.masked.join(', ')}.
+        </p>
+      )}
     </div>
   );
 }
 
+function CopyAnswer({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      className="focus-ring mt-1 rounded text-2xs text-muted hover:text-paper"
+      onClick={() => {
+        void navigator.clipboard?.writeText(text).then(
+          () => setCopied(true),
+          () => setCopied(false),
+        );
+      }}
+    >
+      {copied ? 'Copied' : 'Copy answer'}
+    </button>
+  );
+}
+
+/** Seconds since `since`, ticking while it is set. */
+function useElapsed(since: number | null): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (since === null) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [since]);
+  return since === null ? 0 : Math.max(0, Math.floor((now - since) / 1000));
+}
+
 function ChatBody({ model }: { model?: string }) {
-  const { entries, pending, error, ask, clear } = useChat();
+  const { entries, pending, since, error, ask, stop, clear } = useChat();
   const [draft, setDraft] = useState('');
   const inputId = useId();
   const endRef = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLTextAreaElement>(null);
+  const elapsed = useElapsed(since);
 
   // Keep the newest message in view.
   useEffect(() => {
@@ -93,6 +156,28 @@ function ChatBody({ model }: { model?: string }) {
         is checked against what the tools returned.
       </p>
 
+      {entries.length === 0 && !pending && (
+        <div>
+          <p className="field-label">Try asking</p>
+          <ul className="flex flex-wrap gap-2">
+            {EXAMPLES.map((q) => (
+              <li key={q}>
+                <button
+                  type="button"
+                  className="focus-ring rounded-full border border-white/10 px-3 py-1 text-left text-xs text-paper/90 transition-colors hover:border-accent/60 hover:text-paper"
+                  onClick={() => {
+                    setDraft(q);
+                    box.current?.focus();
+                  }}
+                >
+                  {q}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <ol className="space-y-3" aria-label="Conversation">
         {entries.map((e, i) => (
           <li
@@ -109,7 +194,12 @@ function ChatBody({ model }: { model?: string }) {
             <div className="whitespace-pre-wrap leading-relaxed">
               {e.role === 'user' ? e.content : renderAnswer(e.content)}
             </div>
-            {e.role === 'assistant' && <Steps entry={e} />}
+            {e.role === 'assistant' && (
+              <>
+                <Steps entry={e} />
+                <CopyAnswer text={e.content} />
+              </>
+            )}
           </li>
         ))}
       </ol>
@@ -127,19 +217,34 @@ function ChatBody({ model }: { model?: string }) {
         {error ? `No answer: ${error}.` : ''}
       </p>
       {pending && (
-        <p className="text-xs text-muted">
-          Working on it… an exact search over a large account can take a minute
-          or two.
-        </p>
+        <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
+          <p data-testid="chat-working">
+            Working on it… {elapsed} s. An exact search over a large account can
+            take a minute or two.
+          </p>
+          <button type="button" className="btn-ghost text-xs" onClick={stop}>
+            Stop Waiting
+          </button>
+        </div>
       )}
       {error && (
         <Callout tone="error">
-          No answer: {error}. Your question is back in the box to try again.
+          <p>
+            No answer: {error}. Your question is back in the box to try again.
+          </p>
+          <button
+            type="button"
+            className="btn-ghost mt-2 text-xs"
+            onClick={() => void send()}
+          >
+            Try Again
+          </button>
         </Callout>
       )}
 
+      {/* Stays in view at the bottom of a long conversation. */}
       <form
-        className="space-y-2"
+        className="sticky bottom-0 -mx-2 space-y-2 rounded-xl bg-surface-700/95 px-2 py-2 backdrop-blur"
         onSubmit={(ev) => {
           ev.preventDefault();
           void send();
@@ -149,6 +254,7 @@ function ChatBody({ model }: { model?: string }) {
           Your question
         </label>
         <textarea
+          ref={box}
           id={inputId}
           className="field min-h-20"
           value={draft}

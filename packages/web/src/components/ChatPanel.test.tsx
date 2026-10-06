@@ -4,12 +4,18 @@ import userEvent from '@testing-library/user-event';
 import { ChatPanel } from './ChatPanel';
 import { useServer } from '../local-server/status';
 import { sendChat, useChat, type ChatEntry } from '../local-server/chat';
+import { renderAnswer } from './chatText';
 
 const LLM = { provider: 'ollama', model: 'qwen3:8b', ready: true };
 const REPLY = {
   answer: 'Your best build has **181%** ER and 66.1% crit rate, [?] damage.',
   steps: [
-    { tool: 'get_character', ok: true, ms: 14 },
+    {
+      tool: 'get_character',
+      arguments: { characterKey: 'furina' },
+      ok: true,
+      ms: 14,
+    },
     { tool: 'optimize_build', ok: false, error: 'timeout', ms: 120000 },
     { tool: 'optimize_build', ok: true, ms: 2848 },
   ],
@@ -37,7 +43,7 @@ beforeEach(() => useServer.setState({ status: 'online', llm: LLM }));
 afterEach(() => {
   vi.unstubAllGlobals();
   useServer.setState(initialServer, true);
-  useChat.setState({ entries: [], pending: false, error: null });
+  useChat.setState({ entries: [], pending: false, since: null, error: null });
 });
 
 async function openAndAsk(question: string) {
@@ -75,10 +81,21 @@ describe('ChatPanel', () => {
     });
     // **bold** is rendered, not shown as asterisks.
     expect(screen.getByText('181%').tagName).toBe('STRONG');
-    expect(screen.getByText(/Used/)).toHaveTextContent(
-      'Used get_character, optimize_build (failed), optimize_build · tools 122.9 s',
+    // The tools, opened on demand: each with its arguments, a failure's
+    // reason inline.
+    await userEvent.click(
+      screen.getByText('Used 3 tools (1 failed) · 122.9 s'),
     );
-    expect(screen.getByText(/Numbers no tool gave were removed/)).toBeVisible();
+    const steps = screen.getByTestId('chat-steps');
+    expect(steps).toHaveTextContent(
+      'get_character · 0.0 s{"characterKey":"furina"}',
+    );
+    expect(steps).toHaveTextContent('optimize_build · 120.0 s · failedtimeout');
+    expect(
+      screen.getByText(/Numbers no tool gave were removed/),
+    ).toHaveTextContent('Removed: 98765.');
+    // The removed number stands out where it was.
+    expect(screen.getByText('[?]').tagName).toBe('MARK');
     // The box is empty and ready for the next question.
     expect(screen.getByLabelText('Your question')).toHaveValue('');
   });
@@ -112,6 +129,86 @@ describe('ChatPanel', () => {
     );
     expect(screen.getByLabelText('Your question')).toHaveValue('Anything?');
     expect(useChat.getState().entries).toEqual([]);
+  });
+});
+
+describe('ChatPanel polish (TODO 8.2)', () => {
+  it('offers example questions that fill the box', async () => {
+    render(<ChatPanel />);
+    await userEvent.click(screen.getByRole('button', { name: 'Ask' }));
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Share my artifacts between Mualani/,
+      }),
+    );
+    expect(screen.getByLabelText('Your question')).toHaveValue(
+      'Share my artifacts between Mualani, Mavuika, Xilonen and Emilie.',
+    );
+  });
+
+  it('stops waiting on request: the question comes back, with no error', async () => {
+    // A server that never answers until the request is aborted.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise((_, reject) =>
+            init.signal!.addEventListener('abort', () =>
+              reject(new DOMException('aborted', 'AbortError')),
+            ),
+          ),
+      ),
+    );
+    await openAndAsk('Slow one?');
+    expect(await screen.findByTestId('chat-working')).toHaveTextContent(
+      /Working on it… \d+ s/,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Stop Waiting' }));
+    await waitFor(() =>
+      expect(screen.getByLabelText('Your question')).toHaveValue('Slow one?'),
+    );
+    expect(screen.getByRole('alert')).toHaveTextContent('');
+    expect(useChat.getState()).toMatchObject({ entries: [], pending: false });
+  });
+
+  it('tries again from the error, and says when the tool-call limit cut an answer short', async () => {
+    serveChat(504, { message: 'the model timed out' });
+    await openAndAsk('Anything?');
+    await screen.findByRole('button', { name: 'Try Again' });
+    const f = serveChat(200, { ...REPLY, stop: 'step_limit' });
+    await userEvent.click(screen.getByRole('button', { name: 'Try Again' }));
+    await waitFor(() => expect(f).toHaveBeenCalledTimes(1));
+    expect(
+      await screen.findByText(/Stopped at the most tool calls/),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Copy answer' })).toBeVisible();
+  });
+});
+
+describe('renderAnswer', () => {
+  it('turns - and 1. lines into lists, keeps bold and code, and the rest as text', () => {
+    render(
+      <div>
+        {renderAnswer(
+          [
+            'Two options:',
+            '- **Emblem** 4pc',
+            '- `GladiatorsFinale` 2pc',
+            'Then:',
+            '1. Level the sands',
+            '2. Farm',
+          ].join('\n'),
+        )}
+      </div>,
+    );
+    const [ul, ol] = screen.getAllByRole('list');
+    expect(ul.tagName).toBe('UL');
+    expect(ul).toHaveTextContent('Emblem 4pcGladiatorsFinale 2pc');
+    expect(screen.getByText('Emblem').tagName).toBe('STRONG');
+    expect(screen.getByText('GladiatorsFinale').tagName).toBe('CODE');
+    expect(ol.tagName).toBe('OL');
+    expect(ol.querySelectorAll('li')).toHaveLength(2);
+    expect(screen.getByText(/Two options:/)).toBeInTheDocument();
   });
 });
 

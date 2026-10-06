@@ -7,11 +7,13 @@
  */
 
 import { create } from 'zustand';
-import { serverJson } from './client';
+import { RequestStopped, serverJson } from './client';
 
 /** A tool the model called for an answer (as the server reports it). */
 export interface ChatStep {
   tool: string;
+  /** What the model asked the tool for. */
+  arguments?: Record<string, unknown>;
   ok: boolean;
   error?: string;
   ms: number;
@@ -39,7 +41,10 @@ const MAX_CHARS = 4_000;
  *  model's own turns on a local machine. */
 const CHAT_TIMEOUT_MS = 300_000;
 
-export function sendChat(entries: readonly ChatEntry[]): Promise<ChatReply> {
+export function sendChat(
+  entries: readonly ChatEntry[],
+  signal?: AbortSignal,
+): Promise<ChatReply> {
   const messages = entries
     .slice(-MAX_MESSAGES)
     .map((e) => ({ role: e.role, content: e.content.slice(0, MAX_CHARS) }));
@@ -50,23 +55,32 @@ export function sendChat(entries: readonly ChatEntry[]): Promise<ChatReply> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages }),
     timeoutMs: CHAT_TIMEOUT_MS,
+    ...(signal && { signal }),
   });
 }
 
 interface ChatState {
   entries: ChatEntry[];
   pending: boolean;
+  /** When the pending question was sent (ms since the epoch). */
+  since: number | null;
   /** Why the last question got no answer. */
   error: string | null;
   /** Asks, and says whether an answer came back (on false the question
    *  is taken back out, for the panel to put in its box again). */
   ask: (question: string) => Promise<boolean>;
+  /** Stop waiting for the pending answer: the question comes back out,
+   *  with no error. The server finishes the request on its own. */
+  stop: () => void;
   clear: () => void;
 }
+
+let inFlight: AbortController | null = null;
 
 export const useChat = create<ChatState>()((set, get) => ({
   entries: [],
   pending: false,
+  since: null,
   error: null,
   ask: async (question) => {
     const q = question.trim();
@@ -75,19 +89,26 @@ export const useChat = create<ChatState>()((set, get) => ({
       ...get().entries,
       { role: 'user', content: q },
     ];
-    set({ entries, pending: true, error: null });
+    set({ entries, pending: true, since: Date.now(), error: null });
+    const abort = new AbortController();
+    inFlight = abort;
     try {
-      const { answer, ...rest } = await sendChat(entries);
+      const { answer, ...rest } = await sendChat(entries, abort.signal);
       set({
         entries: [...entries, { role: 'assistant', content: answer, ...rest }],
       });
       return true;
     } catch (e) {
-      set({ entries: entries.slice(0, -1), error: (e as Error).message });
+      set({
+        entries: entries.slice(0, -1),
+        error: e instanceof RequestStopped ? null : (e as Error).message,
+      });
       return false;
     } finally {
-      set({ pending: false });
+      if (inFlight === abort) inFlight = null;
+      set({ pending: false, since: null });
     }
   },
+  stop: () => inFlight?.abort(),
   clear: () => set({ entries: [], error: null }),
 }));
