@@ -6,6 +6,7 @@ import { useInventory } from '../state/inventory';
 import { SAMPLE_INVENTORY } from '@genshin-build-lab/engine/sample/sampleInventory';
 import { useRoster } from '../state/roster';
 import { useServer } from '../local-server/status';
+import { useAccount } from '../state/account';
 
 const goodJson = JSON.stringify({
   format: 'GOOD',
@@ -55,10 +56,73 @@ afterEach(() => {
 });
 
 describe('ImportPanel', () => {
-  it('shows the loaded artifact count (0 initially)', () => {
+  it('offers three choices, and no count or Clear while nothing is loaded (TODO 9.4)', () => {
     render(<ImportPanel />);
-    expect(screen.getByText('0')).toBeInTheDocument();
-    expect(screen.getByText(/artifacts loaded/i)).toBeInTheDocument();
+    expect(
+      screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent),
+    ).toEqual(['Demo Data', 'Your Account', 'A New Source']);
+    expect(screen.queryByText(/artifacts loaded/i)).toBeNull();
+    // Offline, "Your Account" says how to get it rather than offering it.
+    expect(screen.getByText(/npm run server/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Load Account' })).toBeNull();
+  });
+
+  it('backs out of replacing owned gear with the demo, and opens the by-hand form on demand', async () => {
+    useInventory
+      .getState()
+      .replaceAll([{ ...SAMPLE_INVENTORY[0], id: 'owned-2' }]);
+    render(<ImportPanel />);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load Demo Data' }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(
+      screen.getByRole('button', { name: 'Load Demo Data' }),
+    ).toBeVisible();
+    expect(useInventory.getState().artifacts.map((a) => a.id)).toEqual([
+      'owned-2',
+    ]);
+    // The form isn't there until asked for.
+    expect(screen.queryByRole('button', { name: /add artifact/i })).toBeNull();
+    await userEvent.click(screen.getByText('Add Pieces by Hand'));
+    expect(
+      await screen.findByRole('button', { name: /add artifact/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('loads the demo data, says what it is, and asks before replacing owned gear', async () => {
+    render(<ImportPanel />);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load Demo Data' }),
+    );
+    expect(useRoster.getState().entries).toHaveProperty('neuvillette');
+    expect(useAccount.getState().source).toEqual({ kind: 'demo' });
+    expect(window.location.hash).toBe('#/roster');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Loaded the demo data: \d+ artifacts, 8 characters\./,
+    );
+    // The demo is replaced by the demo without asking...
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load Demo Data' }),
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Confirm Replace' }),
+    ).toBeNull();
+    // ...but owned gear is not.
+    useInventory
+      .getState()
+      .replaceAll([{ ...useInventory.getState().artifacts[0], id: 'owned-1' }]);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load Demo Data' }),
+    );
+    expect(useInventory.getState().artifacts.map((a) => a.id)).toEqual([
+      'owned-1',
+    ]);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Confirm Replace' }),
+    );
+    expect(useInventory.getState().artifacts.length).toBeGreaterThan(1);
+    window.location.hash = '';
   });
 
   it('imports a valid GOOD file and reports the count', async () => {

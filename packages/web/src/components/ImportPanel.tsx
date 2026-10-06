@@ -9,8 +9,12 @@ import { useInventory } from '../state/inventory';
 import { useRoster } from '../state/roster';
 import { useServer } from '../local-server/status';
 import { fetchServerAccount } from '../local-server/client';
-import { scrollToId } from '../ui/scroll';
 import { Callout } from './ui/Callout';
+import { Disclosure } from './ui/Disclosure';
+import { ArtifactForm } from './ArtifactForm';
+import { goTo } from './views';
+import { useAccount } from '../state/account';
+import { demoAccount } from '@genshin-build-lab/engine/sample/demoAccount';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
 
 // WCAG 3.3.1: describe what actually went wrong. fetchUidArtifacts already
@@ -48,6 +52,13 @@ function isSampleArtifact(a: Artifact): boolean {
   return a.id.startsWith('sample-');
 }
 
+/**
+ * The Start view (TODO 9.4, ADR-0053): three ways to load data, and nothing
+ * else on the page until one is used. The demo data (a made-up account),
+ * the local server's account (while it runs), or a new source: a GOOD
+ * file, a UID, or pieces by hand. A load records its source for the
+ * account bar and opens the view that has something to show.
+ */
 export function ImportPanel() {
   const artifacts = useInventory((s) => s.artifacts);
   const replaceAll = useInventory((s) => s.replaceAll);
@@ -56,7 +67,13 @@ export function ImportPanel() {
   // are fed from its tone. Previously each path had to remember to clear the
   // other piece of state, and one that forgot showed a green "Imported 1" over
   // a red parse failure.
-  const [notice, setNotice] = useState<Notice | null>(null);
+  const [notice, setLocalNotice] = useState<Notice | null>(null);
+  // A success also goes to the account store: the load opens another view,
+  // and the confirmation shows under the account bar there (TODO 9.4).
+  const setNotice = (n: Notice | null) => {
+    setLocalNotice(n);
+    useAccount.getState().setLoaded(n?.tone === 'success' ? n.text : null);
+  };
   const [uid, setUid] = useState('');
   const [busy, setBusy] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
@@ -65,6 +82,9 @@ export function ImportPanel() {
   const serverOnline = useServer((s) => s.status === 'online');
   const [serverBusy, setServerBusy] = useState(false);
   const [confirmingReplace, setConfirmingReplace] = useState(false);
+  const [confirmingDemo, setConfirmingDemo] = useState(false);
+  const [byHand, setByHand] = useState(false);
+  const setSource = useAccount((s) => s.setSource);
   const clearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputId = useId();
   const uidInputId = useId();
@@ -88,6 +108,37 @@ export function ImportPanel() {
     const t = setTimeout(() => setConfirmingReplace(false), 5000);
     return () => clearTimeout(t);
   }, [confirmingReplace]);
+  useEffect(() => {
+    if (!confirmingDemo) return;
+    const t = setTimeout(() => setConfirmingDemo(false), 5000);
+    return () => clearTimeout(t);
+  }, [confirmingDemo]);
+
+  /** Whether the inventory holds gear the player owns (not the demo's). */
+  const ownsGear = () =>
+    useInventory.getState().artifacts.some((a) => !isSampleArtifact(a));
+
+  function onDemo() {
+    // Replace, like the server's account; two presses over owned gear.
+    if (ownsGear() && !confirmingDemo) {
+      setConfirmingDemo(true);
+      setNotice({
+        tone: 'info',
+        text: 'Press Confirm replace to swap your inventory and roster in this browser for the demo data.',
+      });
+      return;
+    }
+    setConfirmingDemo(false);
+    const demo = demoAccount();
+    replaceAll(demo.artifacts);
+    useRoster.getState().setRoster(demo.roster);
+    setSource({ kind: 'demo' });
+    setNotice({
+      tone: 'success',
+      text: `Loaded the demo data: ${demo.artifacts.length} artifacts, ${Object.keys(demo.roster).length} characters.`,
+    });
+    goTo('roster');
+  }
 
   function mergeDedupe(incoming: Artifact[], suffix = '') {
     // An import replaces the demo bag rather than merging with it. The sample
@@ -152,6 +203,7 @@ export function ImportPanel() {
     setConfirmingClear(false);
     useInventory.getState().clear();
     useRoster.getState().clear();
+    useAccount.getState().clear();
     setNotice({ tone: 'info', text: 'Inventory and roster cleared.' });
   }
 
@@ -172,16 +224,16 @@ export function ImportPanel() {
       }
       const roster = parseGOODRoster(json);
       const rosterCount = Object.keys(roster).length;
-      if (rosterCount > 0) {
-        useRoster.getState().setRoster(roster);
-        // The roster section renders below the fold; without a nudge the user
-        // sees an unchanged import panel and assumes nothing happened.
-        setTimeout(() => scrollToId('step-roster'), 150);
-      }
+      if (rosterCount > 0) useRoster.getState().setRoster(roster);
       mergeDedupe(
         out,
         rosterCount > 0 ? ` Roster: ${rosterCount} characters.` : '',
       );
+      if (out.length > 0 || rosterCount > 0) {
+        setSource({ kind: 'file', name: file.name });
+        // The view with something to show: the roster, or the optimizer.
+        goTo(rosterCount > 0 ? 'roster' : 'optimise');
+      }
     } catch {
       setNotice({ tone: 'error', text: BAD_FILE });
     }
@@ -193,10 +245,7 @@ export function ImportPanel() {
     // import (ADR-0027), and deduping it against an older browser copy would
     // keep a levelled piece twice. Only owned gear needs the second press;
     // the sample bag is replaced by any import.
-    const owned = useInventory
-      .getState()
-      .artifacts.some((a) => !isSampleArtifact(a));
-    if (owned && !confirmingReplace) {
+    if (ownsGear() && !confirmingReplace) {
       setConfirmingReplace(true);
       setNotice({
         tone: 'info',
@@ -225,7 +274,8 @@ export function ImportPanel() {
         tone: 'success',
         text: `Loaded the local server’s account: ${out.length} ${plural(out.length, 'artifact')}, ${characters} ${plural(characters, 'character')}.`,
       });
-      if (characters > 0) setTimeout(() => scrollToId('step-roster'), 150);
+      setSource({ kind: 'server' });
+      goTo(characters > 0 ? 'roster' : 'optimise');
     } catch (e) {
       setNotice({
         tone: 'error',
@@ -249,6 +299,10 @@ export function ImportPanel() {
       return;
     }
     mergeDedupe(out);
+    if (out.length > 0) {
+      setSource({ kind: 'uid', uid: uid.trim() });
+      goTo('optimise');
+    }
   }
 
   const count = artifacts.length;
@@ -257,144 +311,206 @@ export function ImportPanel() {
   const uidOk = /^\d{9,10}$/.test(uid.trim());
 
   return (
-    <div className="panel panel-md space-y-5">
-      <div className="flex items-center justify-between">
-        <span className="micro-label">Inventory</span>
-        {/* Two explicit element children, not an element plus a bare text
-            node: JSX drops the newline between them, so the spacing was left
-            to .chip's flex gap and read as "70artifacts loaded". */}
-        <div className="flex items-center gap-2">
-          <span className="chip">
-            {/* Tabular digits: the count changes under the reader's eyes on
-                every import, and a proportional font shifted the word beside
-                it sideways each time. */}
-            <span className="font-mono font-bold text-accent">{count}</span>
-            <span>{plural(count, 'artifact')} loaded</span>
-          </span>
-          {count > 0 && (
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                className={confirmingClear ? 'btn-danger' : 'btn-ghost'}
-                onClick={onClear}
-              >
-                {confirmingClear ? 'Confirm Clear' : 'Clear Inventory'}
-              </button>
-              {confirmingClear && (
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  onClick={onCancelClear}
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="grid gap-5 sm:grid-cols-2">
-        {/* GOOD file upload */}
-        <div className="well rounded-xl p-4">
-          <label className="field-label" htmlFor={fileInputId}>
-            Upload GOOD Export
-          </label>
-          <p className="mb-3 text-xs text-muted">
-            Your full inventory, from Genshin Optimizer or similar.
-          </p>
-          <input
-            id={fileInputId}
-            type="file"
-            accept="application/json,.json"
-            onChange={(e) => void onFile(e)}
-            className="focus-ring touch-target block w-full cursor-pointer rounded-md text-xs text-muted file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-accent/15 file:px-3 file:py-2 file:font-semibold file:text-accent-bright hover:file:bg-accent/25"
-          />
-        </div>
-
-        {/* UID import */}
-        <div className="well rounded-xl p-4">
-          <label className="field-label" htmlFor={uidInputId}>
-            Import by UID
-          </label>
-          <p className="mb-3 text-xs text-muted">
-            Showcased characters only — not your full inventory.
-          </p>
-          {/* A real <form>, so Enter in the field submits — the row read as a
-              form and behaved like two unrelated controls. */}
-          <form
-            className="flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void onUid();
-            }}
+    <div className="space-y-5">
+      <div className="grid gap-4 md:grid-cols-3">
+        <section
+          aria-labelledby={`${fileInputId}-demo`}
+          className="panel panel-sm flex flex-col gap-3"
+        >
+          <h3
+            id={`${fileInputId}-demo`}
+            className="font-display text-base font-bold text-paper"
           >
-            <input
-              id={uidInputId}
-              className="field"
-              name="uid"
-              value={uid}
-              onChange={(e) => setUid(e.target.value)}
-              placeholder="e.g. 700000000…"
-              aria-describedby={uidOk ? undefined : 'uid-hint'}
-              inputMode="numeric"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            {/* aria-disabled, not disabled: going disabled mid-click moves
-                focus to <body> and the user loses their place. `onUid` holds
-                the matching early return. */}
-            <button
-              type="submit"
-              className="btn-primary flex-none"
-              aria-busy={busy}
-              aria-disabled={busy || !uidOk}
-            >
-              {busy ? 'Fetching…' : 'Fetch'}
-            </button>
-          </form>
-          {!uid && (
-            <p id="uid-hint" className="mt-2 text-xs text-muted">
-              Enter your UID to enable Fetch.
-            </p>
-          )}
-          {uid && !uidOk && (
-            <p id="uid-hint" className="mt-2 text-xs text-rose">
-              A UID is 9–10 digits.
-            </p>
-          )}
-        </div>
-      </div>
-
-      {serverOnline && (
-        <div className="well rounded-xl p-4">
-          <p className="field-label">From the Local Server</p>
-          <p className="mb-3 text-xs text-muted">
-            The account the server merged from your imports. Replaces what’s
-            loaded here.
+            Demo Data
+          </h3>
+          <p className="flex-1 text-xs text-muted">
+            A made-up account to see what the app does: eight characters in two
+            teams, each wearing a build, and the rest of a small artifact bag.
           </p>
           <div className="flex gap-2">
             <button
               type="button"
-              className={confirmingReplace ? 'btn-danger' : 'btn-primary'}
-              onClick={() => void onServerAccount()}
-              aria-busy={serverBusy}
-              aria-disabled={serverBusy}
+              className={confirmingDemo ? 'btn-danger' : 'btn-ghost'}
+              onClick={onDemo}
             >
-              {serverBusy
-                ? 'Loading…'
-                : confirmingReplace
-                  ? 'Confirm Replace'
-                  : 'Load Account'}
+              {confirmingDemo ? 'Confirm Replace' : 'Load Demo Data'}
             </button>
-            {confirmingReplace && (
+            {confirmingDemo && (
               <button
                 type="button"
                 className="btn-ghost"
                 onClick={() => {
-                  setConfirmingReplace(false);
+                  setConfirmingDemo(false);
                   setNotice(null);
                 }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </section>
+
+        <section
+          aria-labelledby={`${fileInputId}-server`}
+          className="panel panel-sm flex flex-col gap-3"
+        >
+          <h3
+            id={`${fileInputId}-server`}
+            className="font-display text-base font-bold text-paper"
+          >
+            Your Account
+          </h3>
+          {serverOnline ? (
+            <>
+              <p className="flex-1 text-xs text-muted">
+                The account the local server merged from your imports (Irminsul,
+                scanners). Replaces what’s loaded here.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className={confirmingReplace ? 'btn-danger' : 'btn-primary'}
+                  onClick={() => void onServerAccount()}
+                  aria-busy={serverBusy}
+                  aria-disabled={serverBusy}
+                >
+                  {serverBusy
+                    ? 'Loading…'
+                    : confirmingReplace
+                      ? 'Confirm Replace'
+                      : 'Load Account'}
+                </button>
+                {confirmingReplace && (
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    onClick={() => {
+                      setConfirmingReplace(false);
+                      setNotice(null);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="flex-1 text-xs text-muted">
+              Your full account comes from the local server, which merges your
+              Irminsul and scanner exports. Start it with{' '}
+              <code>npm run server</code> and this choice appears.
+            </p>
+          )}
+        </section>
+
+        <section
+          aria-labelledby={`${fileInputId}-new`}
+          className="panel panel-sm flex flex-col gap-3"
+        >
+          <h3
+            id={`${fileInputId}-new`}
+            className="font-display text-base font-bold text-paper"
+          >
+            A New Source
+          </h3>
+          <div>
+            <label className="field-label" htmlFor={fileInputId}>
+              Upload GOOD Export
+            </label>
+            <p className="mb-2 text-xs text-muted">
+              Your full inventory, from Genshin Optimizer or similar.
+            </p>
+            <input
+              id={fileInputId}
+              type="file"
+              accept="application/json,.json"
+              onChange={(e) => void onFile(e)}
+              className="focus-ring touch-target block w-full cursor-pointer rounded-md text-xs text-muted file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-accent/15 file:px-3 file:py-2 file:font-semibold file:text-accent-bright hover:file:bg-accent/25"
+            />
+          </div>
+          <div>
+            <label className="field-label" htmlFor={uidInputId}>
+              Import by UID
+            </label>
+            <p className="mb-2 text-xs text-muted">
+              Showcased characters only — not your full inventory.
+            </p>
+            {/* A real <form>, so Enter in the field submits. */}
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void onUid();
+              }}
+            >
+              <input
+                id={uidInputId}
+                className="field"
+                name="uid"
+                value={uid}
+                onChange={(e) => setUid(e.target.value)}
+                placeholder="e.g. 700000000…"
+                aria-describedby={uidOk ? undefined : 'uid-hint'}
+                inputMode="numeric"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              {/* aria-disabled, not disabled: going disabled mid-click moves
+                  focus to <body>. `onUid` holds the matching early return. */}
+              <button
+                type="submit"
+                className="btn-primary flex-none"
+                aria-busy={busy}
+                aria-disabled={busy || !uidOk}
+              >
+                {busy ? 'Fetching…' : 'Fetch'}
+              </button>
+            </form>
+            {!uid && (
+              <p id="uid-hint" className="mt-2 text-xs text-muted">
+                Enter your UID to enable Fetch.
+              </p>
+            )}
+            {uid && !uidOk && (
+              <p id="uid-hint" className="mt-2 text-xs text-rose">
+                A UID is 9–10 digits.
+              </p>
+            )}
+          </div>
+          {/* Mounted when first opened: the form has its own live regions,
+              which would otherwise sit beside this panel's from the start. */}
+          <Disclosure
+            size="md"
+            tone="flux"
+            label="Add Pieces by Hand"
+            onToggle={(e) => {
+              if (e.currentTarget.open) setByHand(true);
+            }}
+          >
+            <div className="mt-3">{byHand && <ArtifactForm />}</div>
+          </Disclosure>
+        </section>
+      </div>
+
+      {count > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+          <span className="chip">
+            <span className="font-mono font-bold text-accent">{count}</span>
+            <span>{plural(count, 'artifact')} loaded</span>
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className={confirmingClear ? 'btn-danger' : 'btn-ghost'}
+              onClick={onClear}
+            >
+              {confirmingClear ? 'Confirm Clear' : 'Clear Inventory'}
+            </button>
+            {confirmingClear && (
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={onCancelClear}
               >
                 Cancel
               </button>
@@ -403,11 +519,9 @@ export function ImportPanel() {
         </div>
       )}
 
-      {/* Persistent live regions. A region created in the same commit as its
-          text isn't being observed yet, so nothing is announced — these two
-          are always mounted and only their text changes. `sr-only` is
-          absolutely positioned, so they cost the panel no vertical rhythm and
-          the Callouts below stay purely visual. */}
+      {/* Persistent live regions: a region created in the same commit as its
+          text isn't observed yet, so these stay mounted and only their text
+          changes. */}
       <p className="sr-only" role="status">
         {notice && notice.tone !== 'error' ? notice.text : ''}
       </p>

@@ -10,6 +10,7 @@ import { ELEMENTS, SLOTS } from '@genshin-build-lab/engine/game/types';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { validateArtifactDraft } from '@genshin-build-lab/engine/game/artifactValidation';
 import { useInventory } from '../state/inventory';
+import { useAccount } from '../state/account';
 import { elementLabel, formatSetName, SLOT_LABELS, statLabel } from '../labels';
 import { Callout } from './ui/Callout';
 import { Combobox } from './ui/Combobox';
@@ -71,6 +72,10 @@ export function ArtifactForm() {
           : undefined,
     };
     add(a);
+    // A first piece by hand is the account's source (TODO 9.4); added to an
+    // import, the import stays the source.
+    const account = useAccount.getState();
+    if (!account.source) account.setSource({ kind: 'manual' });
     // Read the count back from the store rather than the render-time closure:
     // `add` has already committed by the time this line runs.
     const total = useInventory.getState().artifacts.length;

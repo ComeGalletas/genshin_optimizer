@@ -21,6 +21,7 @@ import { CharacterLine } from '../components/ui/CharacterLine';
 import { Badge } from '../components/ui/Badge';
 import { Meter } from '../components/ui/Meter';
 import { CharacterPortrait } from '../components/GameArt';
+import { goTo } from '../components/views';
 
 /** Artifact count (10) + artifact quality (30) in `computeBuildScore` — the two
  *  components a character with nothing equipped can never earn. */
@@ -185,7 +186,10 @@ export function RosterView() {
               // has finished animating out, so scrolling synchronously here is
               // a no-op. ponytail: fixed delay rather than watching for the
               // lock to lift — revisit if vaul's exit timing changes.
-              setTimeout(() => scrollToId('step-optimise'), DRAWER_EXIT_MS);
+              setTimeout(() => {
+                goTo('optimise');
+                scrollToId('step-optimise');
+              }, DRAWER_EXIT_MS);
             }}
           >
             Optimise This Character

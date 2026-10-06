@@ -243,8 +243,9 @@ describe('sharing a simulated build (TODO 8.3)', () => {
         name: 'Share This Build and Its Result',
       }),
     );
+    // Making the link is asynchronous (compression): wait for the copy.
     expect(
-      within(row).getByRole('button', { name: 'Link Copied' }),
+      await within(row).findByRole('button', { name: 'Link Copied' }),
     ).toBeInTheDocument();
     const url = new URL(writeText.mock.calls[0][0] as string);
     const out = await decodeBuild(url.searchParams.get('b')!);

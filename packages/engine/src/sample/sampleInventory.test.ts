@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { SAMPLE_INVENTORY } from './sampleInventory';
-import { SAMPLE_PRESETS } from './presets';
+import { DEMO_MEMBERS } from './demoAccount';
 import { SLOTS } from '../game/types';
 import { buildContext } from '../optimizer/context';
 import { searchBuilds } from '../optimizer/search';
-import type { OptimizeRequest, Slot } from '../game/types';
+import type { OptimizeRequest } from '../game/types';
 
 describe('SAMPLE_INVENTORY', () => {
   it('is non-empty, sample-prefixed, with a piece in every slot', () => {
@@ -40,14 +40,15 @@ describe('SAMPLE_INVENTORY', () => {
     );
   });
 
-  it('yields a feasible build for every preset, honouring its constraint', () => {
-    for (const p of SAMPLE_PRESETS) {
+  it('yields distinct top builds for every demo character (TODO 9.4)', () => {
+    for (const m of DEMO_MEMBERS) {
+      const p = { label: m.key };
       const req: OptimizeRequest = {
-        characterKey: p.characterKey,
-        weaponKey: p.weaponKey,
+        characterKey: m.key,
+        weaponKey: m.weaponKey,
         buildLevel: 90,
-        constraints: p.constraints,
-        objective: p.objective,
+        constraints: {},
+        objective: 'crit_value',
         topK: 10,
       };
       const ctx = buildContext(req);
@@ -67,35 +68,6 @@ describe('SAMPLE_INVENTORY', () => {
         expect(podium[i], `${p.label} rank ${i + 1}`).toBeLessThan(
           podium[i - 1],
         );
-
-      const top = res.builds[0];
-      if (p.constraints.minStats?.er_pct != null) {
-        expect(top.totals.er_pct ?? 0).toBeGreaterThanOrEqual(
-          p.constraints.minStats.er_pct,
-        );
-      }
-      if (p.constraints.minStats?.em != null) {
-        expect(top.totals.em ?? 0).toBeGreaterThanOrEqual(
-          p.constraints.minStats.em,
-        );
-      }
-      if (p.constraints.setRequirement?.kind === '4pc') {
-        const setKey = p.constraints.setRequirement.setKey;
-        const ids = Object.values(top.artifactIds);
-        const count = SAMPLE_INVENTORY.filter(
-          (a) => ids.includes(a.id) && a.setKey === setKey,
-        ).length;
-        expect(count, `${p.label} 4pc ${setKey}`).toBeGreaterThanOrEqual(4);
-      }
-      if (p.constraints.mainStatLocks) {
-        for (const [slot, locked] of Object.entries(
-          p.constraints.mainStatLocks,
-        )) {
-          const id = top.artifactIds[slot as Slot];
-          const piece = SAMPLE_INVENTORY.find((a) => a.id === id);
-          expect(piece?.mainStat, `${p.label} ${slot} lock`).toBe(locked);
-        }
-      }
     }
   });
 });

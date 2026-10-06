@@ -5,6 +5,8 @@ import { useInventory } from '../state/inventory';
 import { useOptimizeRequest } from '../state/optimizeRequest';
 import { useRoster } from '../state/roster';
 import { useServer } from '../local-server/status';
+import { useAccount } from '../state/account';
+import { useSettings } from '../state/settings';
 import type {
   Artifact,
   BuildResult,
@@ -27,6 +29,11 @@ vi.mock('../workers/optimizeClient', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../workers/optimizeClient')>()),
   optimizeRun,
 }));
+
+/** The Optimise button, once its lazy view has loaded: under the full
+ *  suite's parallel load that can take longer than the default second. */
+const findOptimise = () =>
+  screen.findByRole('button', { name: /^optimise$/i }, { timeout: 5000 });
 
 /** The shape `optimizeRun` returns: a promise plus the abort handle. */
 function handleFor(result: Promise<OptimizeResult>) {
@@ -70,15 +77,25 @@ describe('App shell', () => {
               : {},
       })),
     );
+    window.history.pushState({}, '', '/#/simulate');
     render(<App />);
     expect(
       await screen.findByRole('heading', { name: 'Compare Teams' }),
     ).toBeInTheDocument();
-    // The server stops: the section goes with it.
+    expect(screen.getByRole('link', { name: /Simulate/ })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    // The server stops: the view says what it needs, and the menu drops it.
     act(() => useServer.setState({ status: 'offline', llm: null }));
     expect(
       screen.queryByRole('heading', { name: 'Compare Teams' }),
     ).not.toBeInTheDocument();
+    expect(screen.getByTestId('needs-data')).toHaveTextContent(
+      'Simulating needs the local server.',
+    );
+    expect(screen.queryByRole('link', { name: /Simulate/ })).toBeNull();
+    window.history.pushState({}, '', '/');
     vi.unstubAllGlobals();
     useServer.setState({ status: 'checking', llm: null });
   });
@@ -150,8 +167,8 @@ describe('App — overlapping optimise runs', () => {
       .mockReturnValueOnce(handleFor(pendingB));
 
     render(<App />);
-    const optimiseBtn = screen.getByRole('button', { name: /^optimise$/i });
-    const sampleBtn = screen.getByRole('button', { name: /^furina$/i });
+    // The Optimise view is a lazy chunk (ADR-0053).
+    const optimiseBtn = await findOptimise();
 
     // Fire both triggers inside a single act() batch, before React commits
     // run A's `running=true` (and therefore before any disabled attribute
@@ -160,7 +177,7 @@ describe('App — overlapping optimise runs', () => {
     // disabled-button mitigation.
     act(() => {
       optimiseBtn.click();
-      sampleBtn.click();
+      optimiseBtn.click();
     });
     expect(optimizeRun).toHaveBeenCalledTimes(2);
 
@@ -220,8 +237,9 @@ describe('App — optimise progress and cancel', () => {
   it('shows live progress counters and a Cancel button while a run is in flight', async () => {
     pendingRun();
     render(<App />);
+    const run = await findOptimise();
     act(() => {
-      screen.getByRole('button', { name: /^optimise$/i }).click();
+      run.click();
     });
 
     // The progress line (and Cancel) appears after the ~300ms min-duration guard.
@@ -248,8 +266,9 @@ describe('App — optimise progress and cancel', () => {
   it('cancelling clears the busy state, shows no error, and announces it', async () => {
     const { cancel, result } = pendingRun();
     render(<App />);
+    const run = await findOptimise();
     act(() => {
-      screen.getByRole('button', { name: /^optimise$/i }).click();
+      run.click();
     });
     const optimiseBtn = screen.getByRole('button', { name: /searching/i });
     expect(optimiseBtn).toHaveAttribute('aria-busy', 'true');
@@ -273,7 +292,7 @@ describe('App — optimise progress and cancel', () => {
     expect(screen.getByText('Optimisation cancelled.')).toBeInTheDocument();
   });
 
-  it('starting a new run cancels the one it supersedes', () => {
+  it('starting a new run cancels the one it supersedes', async () => {
     const first = pendingRun();
     const second = pendingRun();
     optimizeRun
@@ -282,7 +301,8 @@ describe('App — optimise progress and cancel', () => {
       .mockReturnValueOnce(second);
 
     render(<App />);
-    const optimiseBtn = screen.getByRole('button', { name: /^optimise$/i });
+    // The Optimise view is a lazy chunk (ADR-0053).
+    const optimiseBtn = await findOptimise();
     // Same-tick double trigger, as in the stale-result test above: the second
     // click runs against the same render closure, before `running` has
     // reached the DOM to block it.
@@ -298,111 +318,143 @@ describe('App — optimise progress and cancel', () => {
   });
 });
 
-describe('App — step nav', () => {
+describe('App — views (TODO 9.3–9.5)', () => {
   beforeEach(() => {
     useInventory.getState().clear();
     useRoster.getState().clear();
+    useAccount.getState().clear();
+    window.history.pushState({}, '', '/');
   });
   afterEach(() => {
     useRoster.getState().clear();
-    // One test stubs IntersectionObserver; restore it here so a failure
-    // inside that test can't leak the stub into the rest of the file.
-    vi.unstubAllGlobals();
+    useAccount.getState().clear();
+    window.history.pushState({}, '', '/');
   });
 
-  it('renders a sticky step nav with anchors when a roster exists', () => {
-    useRoster.getState().setRoster({ amber: { level: 90 } });
+  it('opens empty on Start, with every view in the menu and none locked', () => {
     render(<App />);
-    const nav = screen.getByRole('navigation', { name: /steps/i });
-    ['Load', 'Roster', 'Teams', 'Plan', 'Optimise'].forEach((label) =>
-      expect(
-        within(nav).getByRole('link', { name: new RegExp(label, 'i') }),
-      ).toBeInTheDocument(),
+    expect(screen.getByRole('heading', { name: 'Load Data' })).toBeVisible();
+    expect(screen.getByTestId('account-bar')).toHaveTextContent(
+      'Nothing loaded yet.',
     );
+    // No demo or tutorial content until asked for.
+    expect(screen.queryByText(/Try a Sample Build/i)).toBeNull();
+    expect(screen.queryByText(/demo inventory/i)).toBeNull();
+    const nav = screen.getByRole('navigation', { name: 'Views' });
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((a) => [a.textContent, a.getAttribute('href')]),
+    ).toEqual([
+      ['Roster', '#/roster'],
+      ['Teams', '#/teams'],
+      ['Plan', '#/plan'],
+      ['Optimise', '#/optimise'],
+    ]);
+    expect(within(nav).queryAllByRole('button')).toEqual([]);
   });
 
-  it('shows the step nav before an import, with the roster steps locked', () => {
+  it('says what a view needs, with one way to load it', () => {
+    window.history.pushState({}, '', '/#/teams');
     render(<App />);
-    const nav = screen.getByRole('navigation', { name: /steps/i });
-    // Load and Optimise exist without a roster, so the nav has somewhere to go.
+    const needs = screen.getByTestId('needs-data');
+    expect(needs).toHaveTextContent('Teams needs a roster.');
     expect(
-      within(nav).getByRole('link', { name: /load/i }),
-    ).toBeInTheDocument();
-    expect(
-      within(nav).getByRole('link', { name: /optimise/i }),
-    ).toBeInTheDocument();
-    // Roster/Teams/Plan are real disabled buttons, not links: there is
-    // nothing to scroll to. The step name has to survive into the accessible
-    // name, and the "why" has to be exposed as a description rather than a
-    // mouse-only `title`.
-    const locked = within(nav).getAllByRole('button');
-    expect(locked).toHaveLength(3);
-    for (const chip of locked)
-      expect(chip).toHaveAttribute('aria-disabled', 'true');
-    expect(
-      within(nav).getByRole('button', { name: /roster/i }),
-    ).toHaveAccessibleDescription(/unlock this step/i);
-    expect(within(nav).queryByRole('link', { name: /roster/i })).toBeNull();
-  });
-
-  it('leaves Results out of the numbered steps', () => {
-    useRoster.getState().setRoster({ amber: { level: 90 } });
-    render(<App />);
-    const nav = screen.getByRole('navigation', { name: /steps/i });
-    expect(
-      within(nav).getByRole('link', { name: /optimise/i }),
-    ).toHaveTextContent('05');
-    // No results yet, so no Results chip at all — and when there is one it
-    // carries no number.
-    expect(within(nav).queryByText('06')).toBeNull();
-  });
-
-  it('marks the section in view with aria-current, topmost first', () => {
-    // jsdom has no IntersectionObserver, and a real browser only runs one on
-    // a visible page — so drive the callback directly.
-    type Cb = (entries: Partial<IntersectionObserverEntry>[]) => void;
-    const callbacks: Cb[] = [];
-    vi.stubGlobal(
-      'IntersectionObserver',
-      class {
-        constructor(cb: Cb) {
-          callbacks.push(cb);
-        }
-        observe() {}
-        disconnect() {}
-      },
-    );
-    // Restored in afterEach below rather than at the end of the test body: an
-    // assertion failure above would otherwise leave the stub installed for
-    // every later test in the file.
-    useRoster.getState().setRoster({ amber: { level: 90 } });
-    render(<App />);
-    const nav = screen.getByRole('navigation', { name: /steps/i });
-    const fire = (...entries: Partial<IntersectionObserverEntry>[]) =>
-      act(() => callbacks[callbacks.length - 1](entries));
-
-    fire({
-      isIntersecting: true,
-      target: document.getElementById('step-teams')!,
-    });
-    expect(within(nav).getByRole('link', { name: /teams/i })).toHaveAttribute(
+      within(needs).getByRole('link', { name: 'Load Data' }),
+    ).toHaveAttribute('href', '#/start');
+    expect(screen.getByRole('link', { name: 'Teams' })).toHaveAttribute(
       'aria-current',
-      'true',
+      'page',
     );
+  });
 
-    // Two sections straddling the band: the earlier one in page order wins,
-    // because aria-current needs exactly one answer.
-    fire({
-      isIntersecting: true,
-      target: document.getElementById('step-roster')!,
-    });
-    expect(within(nav).getByRole('link', { name: /roster/i })).toHaveAttribute(
-      'aria-current',
-      'true',
+  it('opens on the roster once one is loaded, shows the account bar, and follows the address', async () => {
+    useRoster.getState().setRoster({ amber: { level: 90 } });
+    useInventory.getState().addMany(
+      SLOTS.map((slot) => ({
+        id: `v-${slot}`,
+        setKey: 'EmblemOfSeveredFate',
+        slot,
+        rarity: 5,
+        level: 20,
+        mainStat: 'hp',
+        mainStatValue: 4780,
+        subStats: [],
+      })),
     );
+    useAccount.getState().setSource({ kind: 'file', name: 'export.json' });
+    render(<App />);
     expect(
-      within(nav).getByRole('link', { name: /teams/i }),
-    ).not.toHaveAttribute('aria-current');
+      await screen.findByRole('heading', { name: 'Your Roster' }),
+    ).toBeVisible();
+    const bar = screen.getByTestId('account-bar');
+    expect(bar).toHaveTextContent(
+      /^5 artifacts · 1 character · from export\.json, \d{4}-\d{2}-\d{2}Change$/,
+    );
+    expect(within(bar).getByRole('link', { name: 'Change' })).toHaveAttribute(
+      'href',
+      '#/start',
+    );
+    act(() => {
+      window.location.hash = '/plan';
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(
+      await screen.findByRole('heading', { name: 'Your Plan' }),
+    ).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Your Roster' })).toBeNull();
+  });
+});
+
+describe('App — the shell’s smaller parts (TODO 9.3–9.5)', () => {
+  beforeEach(() => {
+    useInventory.getState().clear();
+    useRoster.getState().clear();
+    useAccount.getState().clear();
+    window.history.pushState({}, '', '/');
+  });
+  afterEach(() => {
+    useRoster.getState().clear();
+    useAccount.getState().clear();
+    useSettings.setState({ showArt: true });
+    window.history.pushState({}, '', '/');
+  });
+
+  it('shows the last load’s confirmation on the next view, until dismissed', () => {
+    useRoster.getState().setRoster({ amber: { level: 90 } });
+    useAccount.getState().setLoaded('Loaded the demo data: 76 artifacts.');
+    render(<App />);
+    // Shown, and announced from a region that stays mounted.
+    expect(
+      screen.getAllByText('Loaded the demo data: 76 artifacts.'),
+    ).toHaveLength(2);
+    act(() => {
+      screen.getByRole('button', { name: 'Dismiss' }).click();
+    });
+    expect(
+      screen.queryAllByText('Loaded the demo data: 76 artifacts.'),
+    ).toHaveLength(0);
+  });
+
+  it('turns game art off from the footer, and skips to the content', () => {
+    render(<App />);
+    const art = screen.getByRole('checkbox', { name: /Show game art/ });
+    expect(art).toBeChecked();
+    act(() => art.click());
+    expect(useSettings.getState().showArt).toBe(false);
+    act(() => screen.getByRole('link', { name: 'Skip to Content' }).click());
+    expect(document.activeElement).toBe(document.getElementById('content'));
+    // The skip link isn't read as a view address.
+    expect(window.location.hash).toBe('');
+  });
+
+  it('says the server views need the server when it isn’t running', () => {
+    window.history.pushState({}, '', '/#/imports');
+    render(<App />);
+    expect(screen.getByTestId('needs-data')).toHaveTextContent(
+      'The import center needs the local server.',
+    );
+    expect(screen.getByText(/npm run server/)).toBeInTheDocument();
   });
 });
 
@@ -489,12 +541,15 @@ describe('App — relaxing an infeasible constraint', () => {
     optimizeRun.mockReturnValue(handleFor(Promise.resolve(infeasible)));
 
     render(<App />);
+    const run = await findOptimise();
     await act(async () => {
-      screen.getByRole('button', { name: /^optimise$/i }).click();
+      run.click();
     });
     expect(optimizeRun).toHaveBeenCalledTimes(1);
 
-    const relax = screen.getByRole('button', { name: /^relax .* to /i });
+    const relax = await screen.findByRole('button', {
+      name: /^relax .* to /i,
+    });
     await act(async () => {
       relax.click();
     });

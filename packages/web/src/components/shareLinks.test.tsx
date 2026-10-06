@@ -72,7 +72,10 @@ describe('share links with simulation results (TODO 8.3)', () => {
     });
     window.history.pushState({}, '', `/?b=${param}`);
     render(<App />);
-    expect(await screen.findByTestId('shared-sim')).toHaveTextContent(
+    // The banner is in the lazy Optimise view: allow for its load.
+    expect(
+      await screen.findByTestId('shared-sim', {}, { timeout: 5000 }),
+    ).toHaveTextContent(
       'Simulated by the sharer: 85.1k team DPS (84.9k–85.4k) in Raiden National with Xiangling, Yelan, Bennett as they had them; #2 of 20 by team DPS (tied with the best), #6 by Crit Value; Raiden Shogun 25.5k DPS, 30% of the team; 500 iterations.',
     );
   });
@@ -123,7 +126,8 @@ describe('share links with simulation results (TODO 8.3)', () => {
     expect(
       screen.queryByRole('heading', { name: 'Shared Team Comparison' }),
     ).toBeNull();
-    expect(window.location.hash).toBe('');
+    // Closing lands on the Simulate view's own address.
+    expect(window.location.hash).toBe('#/simulate');
   });
 
   it('says when a comparison link can’t be read', async () => {

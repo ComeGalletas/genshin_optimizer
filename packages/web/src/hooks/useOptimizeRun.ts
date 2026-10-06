@@ -52,7 +52,7 @@ export interface UseOptimizeRunResult {
 /**
  * Owns the optimise run lifecycle: the run token, the in-flight handle, the
  * running/error state, and the live-region announcer — everything `App`
- * needs to wire `OptimizePanel`/`SampleGear`'s Run and Cancel controls.
+ * needs to wire `OptimizePanel`'s Run and Cancel controls.
  */
 export function useOptimizeRun(
   options: UseOptimizeRunOptions,
@@ -76,7 +76,7 @@ export function useOptimizeRun(
   }
 
   // Guards against a stale run's result clobbering a newer one: OptimizePanel
-  // and SampleGear share `running` so their controls disable together, but a
+  // disables its controls while `running`, but a
   // same-tick double-trigger can still start two runs before either's
   // disable reaches the DOM — this token makes only the most recently
   // started run allowed to commit its outcome or clear `running`.

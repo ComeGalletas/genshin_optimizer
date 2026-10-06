@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComparisonResult, TeamComparison } from './TeamComparison';
 import { useCompareRotation } from './compareRotation';
@@ -339,6 +339,8 @@ describe('sharing a comparison (TODO 8.3)', () => {
     await userEvent.click(
       await screen.findByRole('button', { name: 'Share This Comparison' }),
     );
+    // Making the link is asynchronous (compression): wait for the copy.
+    await waitFor(() => expect(writeText).toHaveBeenCalled());
     const url = new URL(writeText.mock.calls[0][0] as string);
     expect(url.hash).toMatch(/^#c=/);
     const back = await decodeComparison(url.hash.slice(3));

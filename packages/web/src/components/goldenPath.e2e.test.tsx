@@ -56,12 +56,21 @@ describe('golden path: import -> optimize -> share -> decode', () => {
         { timeout: 10_000 },
       );
 
+      // The import opened the Roster view (TODO 9.4); Optimise is one click
+      // away in the menu.
+      expect(
+        await screen.findByRole('heading', { name: 'Your Roster' }),
+      ).toBeInTheDocument();
+      await user.click(screen.getByRole('link', { name: 'Optimise' }));
+
       // 2. Optimize — the app auto-selects the roster's best-built character
       // (App's `isDefaultSelection` effect) once the roster is populated, so
       // the Optimise button is already actionable.
-      const optimiseBtn = await screen.findByRole('button', {
-        name: /^optimise$/i,
-      });
+      const optimiseBtn = await screen.findByRole(
+        'button',
+        { name: /^optimise$/i },
+        { timeout: 10_000 },
+      );
       await waitFor(() =>
         expect(optimiseBtn).not.toHaveAttribute('aria-disabled', 'true'),
       );
