@@ -214,7 +214,7 @@ describe('simulateTeam (TODO 6.1)', () => {
 describe('the Services side', () => {
   it('finds gcsim installed after the server started, without a restart', async () => {
     const sample = sampleAccountServices();
-    let installed: TeamSimDeps['pool'] | undefined;
+    const machine = { gcsimInstalled: false };
     const { deps } = fakeDeps();
     const runner = {
       run: async (config: string) => (await deps.pool.run(config)).result,
@@ -226,13 +226,15 @@ describe('the Services side', () => {
     const services = new Services(sample.db, undefined, {
       deps: () => {
         looks++;
-        return installed ? { gcsim: 'v2.48.8', runner } : undefined;
+        return machine.gcsimInstalled
+          ? { gcsim: 'v2.48.8', runner }
+          : undefined;
       },
     });
     await expect(services.simulateTeam(BASE)).rejects.toMatchObject({
       status: 503,
     });
-    installed = deps.pool;
+    machine.gcsimInstalled = true;
     const r = await services.simulateTeam(BASE);
     expect(r.runs[0].dps).toBeDefined();
     // Found once, then kept.
