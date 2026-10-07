@@ -39,6 +39,19 @@ export type CheckedSlot = (typeof CHECKED_SLOTS)[number];
  *  counts, past their minimum too. */
 const ER_SCALES = new Set(['raiden_shogun']);
 
+/** What the curated targets leave out, until the build sources (TODO 10.2)
+ *  give substat priorities. Checked against the owner's account on
+ *  2026-10-06, each from the character's KQM guide: */
+const EXTRA_USABLE: Record<string, StatKey[]> = {
+  // Her skill's damage and healing scale with HP: EM > ER > HP%.
+  kuki_shinobu: ['hp_pct'],
+};
+const EXTRA_MAINS: Record<string, Partial<Record<CheckedSlot, StatKey[]>>> = {
+  // A Healing Bonus circlet when she or he is the team's healer.
+  kuki_shinobu: { circlet: ['healing'] },
+  bennett: { circlet: ['healing'] },
+};
+
 const SCALING_STATS: readonly StatKey[] = [
   'hp_pct',
   'atk_pct',
@@ -102,6 +115,7 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
   };
   addUsable(scaling);
   for (const t of targets) addUsable(TARGET_STAT[t] ?? t);
+  for (const k of EXTRA_USABLE[characterKey] ?? []) addUsable(k);
   if (crit) {
     usable.crit_rate = 1;
     usable.crit_dmg = 1;
@@ -109,6 +123,7 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
   if (m.erTarget !== undefined || erScales) usable.er_pct = 1;
 
   const element = genshinAdapter.character(characterKey)?.element;
+  const extra = EXTRA_MAINS[characterKey] ?? {};
   const recommendedSets =
     m.setRequirement.kind === '2+2'
       ? [...m.setRequirement.setKeys]
@@ -118,16 +133,18 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
     ...(m.erTarget !== undefined && { erMin: m.erTarget }),
     erScales,
     accepts: {
-      sands: unique([m.mains.sands, scaling]),
+      sands: unique([m.mains.sands, scaling, ...(extra.sands ?? [])]),
       goblet: unique<StatKey>([
         m.mains.goblet,
         element === 'physical' ? 'physical_dmg' : 'elemental_dmg',
         scaling,
+        ...(extra.goblet ?? []),
       ]),
       circlet: unique<StatKey>([
         m.mains.circlet,
         ...(crit ? (['crit_rate', 'crit_dmg'] as StatKey[]) : []),
         scaling,
+        ...(extra.circlet ?? []),
       ]),
     },
     ...(element && { element }),

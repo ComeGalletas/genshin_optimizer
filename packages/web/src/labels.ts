@@ -19,6 +19,7 @@ export const BAND_TONE: Record<Band, Tone> = {
   built: 'jade',
   partial: 'flux',
   unbuilt: 'muted',
+  no_recipe: 'muted',
 };
 
 /** Grade letter → the shared UI tone — one definition, so the same letter

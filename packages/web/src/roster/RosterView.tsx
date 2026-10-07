@@ -47,7 +47,7 @@ function Row({
   equippedCount: number;
   onOpen: (characterKey: string) => void;
 }) {
-  const b = band(total);
+  const b = band(total, quality?.total ?? null);
   return (
     <li className="card transition-colors hover:border-accent/30 hover:bg-surface-700/70">
       <button
@@ -125,7 +125,14 @@ export function RosterView() {
             quality: artifactQuality(key, entry, worn),
           };
         })
-        .sort((a, b) => b.total - a.total),
+        // Most ready first; ties (common on a levelled account) by crowns,
+        // then by name (ADR-0057).
+        .sort(
+          (a, b) =>
+            b.total - a.total ||
+            b.crowns - a.crowns ||
+            a.name.localeCompare(b.name),
+        ),
     [entries, byLocation],
   );
 

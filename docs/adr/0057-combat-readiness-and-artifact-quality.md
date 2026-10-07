@@ -41,8 +41,27 @@ A crown shows beside the score for each talent at level 10, counting the
 talent's own level and not the constellations' +3. Level 10 takes a Crown
 of Insight, so the crowns show that investment without changing the score.
 
-The Built / Partly built / Unbuilt band (70 / 40) and the team
-recommendations now read combat readiness alone.
+The team recommendations read combat readiness alone. The roster lists
+the most ready first. Ties are common on a levelled account (44 of the
+owner's 95 characters are at 100), so they break by crowns, then by name.
+Substats never enter readiness.
+
+### The band, from both scores
+
+The owner's rule (2026-10-06):
+
+- **Built:** readiness above 60 and an artifact score of 50 or more, so
+  good substats on top of the main stats.
+- **Partly built:** readiness above 60 and an artifact score of 30 or more,
+  so at least the right main stats on sands, goblet and circlet.
+- **Unbuilt:** anything else. A levelled character wearing nothing scores 0
+  for artifacts, so they're unbuilt, not built.
+- **No recipe:** a character without curated targets has no artifact score.
+  They get this neutral band rather than being called unbuilt, until
+  TODO 10.2 brings their data.
+
+On the owner's account this gives 10 built, 20 partly built, 7 unbuilt
+and 58 no recipe.
 
 ### Artifact quality: a score with no cap, for this character
 
@@ -99,8 +118,13 @@ substat priorities:
 - **Accepted main stats:** the curated one for each slot, plus the scaling
   stat. The goblet also accepts the character's own elemental DMG; the
   circlet also accepts CRIT Rate and CRIT DMG when crit is usable.
-- **Exceptions, listed in code:** Raiden's Energy Recharge scales.
-  Kokomi's crit is unused, which follows from her HP objective.
+- **Exceptions, listed in code:** Raiden's Energy Recharge scales. Kuki
+  uses HP% (her skill's damage and healing scale with HP), and she and
+  Bennett accept a Healing Bonus circlet as healers. Kokomi's crit is
+  unused, which follows from her HP objective. These came from checking the
+  lowest scores on the owner's account against each character's KQM guide.
+  The same check found Bennett scored against a support recipe while
+  geared for damage, and Xingqiu wearing two pieces: both fair.
 - **A character with no curated targets shows "no recipe yet"**, never a
   guessed score.
 

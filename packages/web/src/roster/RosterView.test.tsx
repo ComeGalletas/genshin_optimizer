@@ -20,15 +20,27 @@ import { useOptimizeRequest } from '../state/optimizeRequest';
 import type { Artifact } from '@genshin-build-lab/engine/game/types';
 import { addArtifacts, resetOptimizeRequest } from '../test-utils/stores';
 
-function equipped(id: string, location: string): Artifact {
+/** A full set for Neuvillette: main stats he accepts (an HP% sands, a Hydro
+ *  goblet, a crit circlet) and crit substats on every piece. */
+const SLOTS_FOR_NEUVILLETTE: [Artifact['slot'], Artifact['mainStat']][] = [
+  ['flower', 'hp'],
+  ['plume', 'atk'],
+  ['sands', 'hp_pct'],
+  ['goblet', 'elemental_dmg'],
+  ['circlet', 'crit_rate'],
+];
+
+function equipped(id: string, location: string, i = 0): Artifact {
+  const [slot, mainStat] = SLOTS_FOR_NEUVILLETTE[i % 5];
   return {
     id,
     setKey: 'EmblemOfSeveredFate',
-    slot: 'flower',
+    slot,
     rarity: 5,
     level: 20,
-    mainStat: 'hp',
-    mainStatValue: 4780,
+    mainStat,
+    mainStatValue: 46.6,
+    ...(slot === 'goblet' && { element: 'hydro' as const }),
     subStats: [
       { key: 'crit_rate', value: 10 },
       { key: 'crit_dmg', value: 20 },
@@ -72,14 +84,17 @@ describe('RosterView', () => {
       amber: {},
     });
     addArtifacts(
-      Array.from({ length: 5 }, (_, i) => equipped(`n${i}`, 'neuvillette')),
+      Array.from({ length: 5 }, (_, i) => equipped(`n${i}`, 'neuvillette', i)),
     );
 
     render(<RosterView />);
     expect(screen.getByText('Neuvillette')).toBeInTheDocument();
     expect(screen.getByText('Amber')).toBeInTheDocument();
+    // Neuvillette: readiness 100, three accepted main stats and about 25
+    // crit rolls, so Built. Amber has no curated build: No recipe, not
+    // Unbuilt (ADR-0057).
     expect(screen.getByText('Built')).toBeInTheDocument();
-    expect(screen.getByText('Unbuilt')).toBeInTheDocument();
+    expect(screen.getByText('No recipe')).toBeInTheDocument();
     // The score states its scale.
     expect(screen.getAllByText('/ 100').length).toBeGreaterThan(0);
     // Amber has nothing equipped — say so rather than silently capping.
@@ -117,6 +132,33 @@ describe('RosterView', () => {
     ).toHaveTextContent(
       /Main stats \d of 3 · [\d.]+ good rolls of [\d.]+ possible/,
     );
+  });
+
+  // ADR-0057: on a levelled account most readiness ties at 100; crowns
+  // break the tie, then the name.
+  it('orders by readiness, then crowns, then name', () => {
+    const full = (crowned: number) => ({
+      buildLevel: 90 as const,
+      level: 90,
+      talents: {
+        auto: crowned > 2 ? 10 : 9,
+        skill: crowned > 0 ? 10 : 9,
+        burst: crowned > 1 ? 10 : 9,
+      },
+      weaponLevel: 90,
+    });
+    useRoster.getState().setRoster({
+      xingqiu: full(0),
+      bennett: full(0),
+      furina: full(2),
+      nahida: full(1),
+      amber: { buildLevel: 40 as const },
+    });
+    render(<RosterView />);
+    const names = screen
+      .getAllByTestId('roster-name')
+      .map((n) => n.textContent);
+    expect(names).toEqual(['Furina', 'Nahida', 'Bennett', 'Xingqiu', 'Amber']);
   });
 
   it('opens the character drawer on row click', async () => {

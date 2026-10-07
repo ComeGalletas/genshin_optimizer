@@ -39,6 +39,7 @@ export const BAND_LABELS: Record<Band, string> = {
   built: 'Built',
   partial: 'Partly built',
   unbuilt: 'Unbuilt',
+  no_recipe: 'No recipe',
 };
 
 export function bandLabel(b: Band): string {

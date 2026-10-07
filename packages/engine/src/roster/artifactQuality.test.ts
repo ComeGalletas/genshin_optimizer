@@ -59,6 +59,16 @@ describe('qualityProfile', () => {
     expect(qualityProfile('nahida')!.usable.em).toBe(1);
   });
 
+  // Checked on the owner's account (2026-10-06): what the curated targets
+  // leave out, until TODO 10.2 gives substat priorities.
+  it('adds Kuki’s HP and her and Bennett’s Healing Bonus circlet', () => {
+    const kuki = qualityProfile('kuki_shinobu')!;
+    expect(kuki.usable).toMatchObject({ em: 1, hp_pct: 1, hp: FLAT_FACTOR });
+    expect(kuki.accepts.circlet).toContain('healing');
+    expect(qualityProfile('bennett')!.accepts.circlet).toContain('healing');
+    expect(qualityProfile('xingqiu')!.accepts.circlet).not.toContain('healing');
+  });
+
   it('has no profile, and so no score, without curated targets', () => {
     expect(qualityProfile('eula')).toBeNull();
     expect(artifactQuality('eula', undefined, [])).toBeNull();

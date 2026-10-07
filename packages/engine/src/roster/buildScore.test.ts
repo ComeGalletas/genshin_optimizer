@@ -79,7 +79,6 @@ describe('computeReadiness', () => {
     expect(points['Artifact count']).toBeCloseTo((14 * 4) / 5, 6);
     expect(points['Artifact quality']).toBeUndefined();
     expect(s.total).toBeCloseTo(32 + 25.78 + 21 + 11.2, 1);
-    expect(band(s.total)).toBe('built');
   });
 
   it('caps each component rather than overflowing past 100', () => {
@@ -128,11 +127,24 @@ describe('computeReadiness', () => {
 });
 
 describe('band', () => {
-  it('splits at 70 and 40', () => {
-    expect(band(70)).toBe('built');
-    expect(band(69.9)).toBe('partial');
-    expect(band(40)).toBe('partial');
-    expect(band(39.9)).toBe('unbuilt');
+  // ADR-0057: readiness above 60, then artifacts 30 (main stats) or 50
+  // (good substats too).
+  it('needs readiness above 60, then splits artifacts at 30 and 50', () => {
+    expect(band(100, 50)).toBe('built');
+    expect(band(100, 49.9)).toBe('partial');
+    expect(band(100, 30)).toBe('partial');
+    expect(band(100, 29.9)).toBe('unbuilt');
+    expect(band(60, 80)).toBe('unbuilt');
+    expect(band(60.1, 80)).toBe('built');
+  });
+
+  it('calls a levelled character wearing nothing unbuilt', () => {
+    expect(band(86, 0)).toBe('unbuilt');
+  });
+
+  it('has its own band for a character with no recipe', () => {
+    expect(band(100, null)).toBe('no_recipe');
+    expect(band(10, null)).toBe('no_recipe');
   });
 });
 

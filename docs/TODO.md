@@ -518,7 +518,10 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - Engine: `roster/buildScore.ts` (`computeReadiness`, `rosterReadiness`) and `roster/artifactQuality.ts` (`qualityProfile`, `artifactQuality`, `isRecommendedSet`). Tests cover Kokomi's, Furina's and Raiden's profiles, a worked score, the elemental goblet check, Energy Recharge capped and scaling, the possible maximum, and 200 random sets that never score above it.
     - Web: `roster/ScoreValues.tsx` on the rows, `character-window/ScoreCards.tsx` on Overview, crown and star glyphs.
     - On the owner's account (95 characters), most characters are 100 / 100 readiness, and their artifact scores range from about 20 to 55.
-  - Open, for the owner: readiness saturates on a well-built account, so most rows tie at 100 and keep the export's order. A level-90 character wearing nothing also reads "Built" (86 / 100).
+  - The owner's follow-up (2026-10-06):
+    - **Bands read both scores:** Built is readiness above 60 with artifacts 50 or more; Partly built, artifacts 30 or more; Unbuilt otherwise (so a levelled character wearing nothing); No recipe without an artifact score. On the owner's account: 10 built, 20 partly built, 7 unbuilt, 58 no recipe.
+    - **Ties** on readiness break by crowns, then name.
+    - **Lowest scores checked against KQM:** Kuki gains HP% and a Healing Bonus circlet; Bennett gains the Healing Bonus circlet. Bennett is geared for damage against a support recipe, and Xingqiu wears two pieces; both are scored fairly.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog

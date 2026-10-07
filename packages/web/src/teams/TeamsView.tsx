@@ -67,7 +67,10 @@ function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
       {arch && <p className="mt-1 text-xs text-muted">{arch.notes}</p>}
       <ul className="mt-3 space-y-2">
         {team.members.map((m) => {
-          const b = band(m.readiness);
+          const b = band(
+            m.readiness,
+            scores[m.characterKey]?.quality?.total ?? null,
+          );
           return (
             <li
               key={m.characterKey}
