@@ -37,15 +37,18 @@ export interface Readiness {
 
 /** How built a character is, from both scores (ADR-0057); `no_recipe` when
  *  they have no artifact score to judge by. */
-export type Band = 'built' | 'partial' | 'unbuilt' | 'no_recipe';
+export type Band = 'well_built' | 'built' | 'partial' | 'unbuilt' | 'no_recipe';
 
-/** The band thresholds (ADR-0057): readiness must be above 60; artifacts
- *  30 or more (the right main stats) is partly built, 50 or more (good
- *  substats too) built. */
+/** The band thresholds (ADR-0057, set by the owner on 2026-10-07 with 7
+ *  points a main stat, ADR-0058): readiness must be above 60; artifacts 21
+ *  or more (the three right main stats) is partly built, 30 or more built,
+ *  over 35 well built. */
 export const BAND_THRESHOLDS = {
   readiness: 60,
-  partial: 30,
-  built: 50,
+  partial: 21,
+  built: 30,
+  /** Strictly over. */
+  wellBuilt: 35,
 } as const;
 
 /** The four parts' points: the old build score's level 25, talents 20, weapon
@@ -97,6 +100,7 @@ export function band(readiness: number, artifacts: number | null): Band {
   if (artifacts === null) return 'no_recipe';
   const T = BAND_THRESHOLDS;
   if (readiness <= T.readiness) return 'unbuilt';
+  if (artifacts > T.wellBuilt) return 'well_built';
   if (artifacts >= T.built) return 'built';
   if (artifacts >= T.partial) return 'partial';
   return 'unbuilt';

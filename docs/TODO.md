@@ -523,6 +523,13 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - **Ties** on readiness break by crowns, then name.
     - **Several recommended sets** (`otherSets` in the curated targets, read only by the artifact score). **Chiori added**, checked against KQM, genshin-builds and Game8: the three agree on crit, DEF% and ATK%. Golden Troupe is first in all three, Husk second in two.
     - **Lowest scores checked against KQM:** Kuki gains HP% and a Healing Bonus circlet; Bennett gains the Healing Bonus circlet. Bennett is geared for damage against a support recipe, and Xingqiu wears two pieces; both are scored fairly.
+  - The owner's second follow-up (2026-10-07, [ADR-0058](adr/0058-guide-profiles-and-stats-for-everyone.md)):
+    - **Guide profiles** for the 67 characters without curated targets, from KQM's quick guides and genshin-builds (`meta/guideProfiles.ts`): KQM's first build, main stats either guide names, KQM's substats. Where the guides build a character for different roles (8), KQM's alone, with the other kept as text. Read by the artifact score only, never as optimizer defaults.
+    - **CRIT and Energy Recharge count for everyone**, all of it; the minimum is shown, never a limit. Exceptions by hand, with the reason shown: Kokomi's crit, Mavuika's and Skirk's Energy Recharge.
+    - **One order for the stats:** CRIT Rate, CRIT DMG, HP, ATK, DEF, Elemental Mastery, Energy Recharge.
+    - **Kokomi rechecked** against KQM and genshin-builds: an Energy Recharge sands is accepted, and Tenacity, Scroll, Song of Days Past, Deepwood and Silken Moon's Serenade are recommended beside Ocean-Hued Clam. The owner's Kokomi wears a Bloom build, which needs several builds per character (next).
+    - **Main stats at 7** (up to 21), and **four bands**: with readiness above 60, Well built over 35, Built 30 or more, Partly built 21 or more.
+    - On the owner's account: 49 well built, 7 built, 8 partly built, 31 unbuilt (26 of them wearing nothing), none without a recipe.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog

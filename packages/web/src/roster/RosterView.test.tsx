@@ -91,10 +91,10 @@ describe('RosterView', () => {
     expect(screen.getByText('Neuvillette')).toBeInTheDocument();
     expect(screen.getByText('Amber')).toBeInTheDocument();
     // Neuvillette: readiness 100, three accepted main stats and about 25
-    // crit rolls, so Built. Amber has no curated build: No recipe, not
-    // Unbuilt (ADR-0057).
-    expect(screen.getByText('Built')).toBeInTheDocument();
-    expect(screen.getByText('No recipe')).toBeInTheDocument();
+    // crit rolls, so Well built. Amber, unlevelled and wearing nothing, is
+    // Unbuilt (ADR-0057; her profile comes from the guides, ADR-0058).
+    expect(screen.getByText('Well built')).toBeInTheDocument();
+    expect(screen.getByText('Unbuilt')).toBeInTheDocument();
     // The score states its scale.
     expect(screen.getAllByText('/ 100').length).toBeGreaterThan(0);
     // Amber has nothing equipped — say so rather than silently capping.
@@ -104,11 +104,11 @@ describe('RosterView', () => {
       ),
     ).toBeInTheDocument();
     // Each row also gives artifact quality (ADR-0057): a score for
-    // Neuvillette, "no recipe" for Amber, who has no curated build.
+    // Neuvillette, 0 for Amber, who wears nothing.
     const quality = screen.getAllByTestId('quality');
     expect(quality).toHaveLength(2);
     expect(quality[0]).toHaveTextContent(/^Artifacts \d+(\.\d)?$/);
-    expect(quality[1]).toHaveTextContent('Artifacts no recipe');
+    expect(quality[1]).toHaveTextContent('Artifacts 0');
 
     // Built characters sort first. Rows carry no heading: an <h3> inside a
     // <button> loses its heading role anyway.

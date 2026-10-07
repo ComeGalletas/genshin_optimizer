@@ -1,19 +1,21 @@
 /**
- * Artifact quality (ADR-0057): how good a character's equipped artifacts are
- * for them, as a score with no cap.
+ * Artifact quality (ADR-0057, ADR-0058): how good a character's equipped
+ * artifacts are for them, as a score with no cap.
  *
- * - **Main stats, up to 30:** 10 for each of sands, goblet and circlet whose
+ * - **Main stats, up to 21:** 7 for each of sands, goblet and circlet whose
  *   main stat the character accepts (a slot can accept several).
  * - **Good rolls:** each substat the character uses counts its value ÷ that
  *   stat's largest single 5★ roll (a perfect roll is 1, the lowest tier 0.7).
- *   Flat HP, ATK and DEF count at 0.4. Energy Recharge counts only up to the
- *   character's minimum, or all of it for one whose damage scales with it.
+ *   Flat HP, ATK and DEF count at 0.4. CRIT Rate, CRIT DMG and Energy
+ *   Recharge count for everyone, all of it, apart from the stats a kit makes
+ *   useless (`UNUSED_STATS`). The Energy Recharge minimum is shown, never a
+ *   limit.
  *
  * The score compares artifacts for one character. The most good rolls their
  * pieces could hold is given beside it, which is how two characters are read
- * together. Which stats a character uses comes from the curated targets until
- * the build sources (TODO 10.2) give substat priorities; a character without
- * targets has no profile, and no score is guessed. Pure.
+ * together. Which stats a character uses comes from the curated targets, or
+ * from the build guides (`GUIDE_PROFILES`) for a character without them; a
+ * character with neither has no profile, and no score is guessed. Pure.
  * @packageDocumentation
  */
 
@@ -24,24 +26,59 @@ import {
   SUBSTAT_TIERS_5,
   type SubStatKey,
 } from '../game/genshin/substatRolls';
+import { GUIDE_PROFILES } from '../meta/guideProfiles';
 import { META_TARGETS } from '../meta/metaTargets';
 import { countSets } from '../optimizer/score';
 
 /** Points for each checked slot whose main stat the character accepts. */
-export const MAIN_STAT_POINTS = 10;
+export const MAIN_STAT_POINTS = 7;
 /** What one roll of a flat stat counts for, against its percent version. */
 export const FLAT_FACTOR = 0.4;
 /** Pieces whose main stat varies, and so is checked. */
 export const CHECKED_SLOTS = ['sands', 'goblet', 'circlet'] as const;
 export type CheckedSlot = (typeof CHECKED_SLOTS)[number];
 
-/** Characters whose damage grows with Energy Recharge: every roll of it
- *  counts, past their minimum too. */
-const ER_SCALES = new Set(['raiden_shogun']);
+/** The order the score lists its stats in, everywhere. */
+export const QUALITY_STAT_ORDER: readonly SubStatKey[] = [
+  'crit_rate',
+  'crit_dmg',
+  'hp_pct',
+  'hp',
+  'atk_pct',
+  'atk',
+  'def_pct',
+  'def',
+  'em',
+  'er_pct',
+];
 
-/** What the curated targets leave out, until the build sources (TODO 10.2)
- *  give substat priorities. Checked against the owner's account on
- *  2026-10-06, each from the character's KQM guide: */
+/** Stats that count for every character: */
+const EVERYONE: readonly SubStatKey[] = ['crit_rate', 'crit_dmg', 'er_pct'];
+
+/**
+ * ...except where the character's kit makes them useless. Added by hand from
+ * the kit: there's no automatic check of a kit against stats yet.
+ */
+export const UNUSED_STATS: Record<
+  string,
+  { stats: SubStatKey[]; reason: string }
+> = {
+  sangonomiya_kokomi: {
+    stats: ['crit_rate', 'crit_dmg'],
+    reason: 'her passive lowers her CRIT Rate by 100%, so crit does nothing',
+  },
+  mavuika: {
+    stats: ['er_pct'],
+    reason: 'her burst runs on Fighting Spirit, not energy',
+  },
+  skirk: {
+    stats: ['er_pct'],
+    reason: 'her burst runs on Serpent’s Subtlety, not energy',
+  },
+};
+
+/** What the curated targets leave out. Checked against the owner's account
+ *  on 2026-10-06, each from the character's KQM guide: */
 const EXTRA_USABLE: Record<string, StatKey[]> = {
   // Her skill's damage and healing scale with HP: EM > ER > HP%.
   kuki_shinobu: ['hp_pct'],
@@ -54,6 +91,9 @@ const EXTRA_MAINS: Record<string, Partial<Record<CheckedSlot, StatKey[]>>> = {
   bennett: { circlet: ['healing'] },
   // Game8 also lists an ATK% sands.
   chiori: { sands: ['atk_pct'] },
+  // KQM and genshin-builds both take an HP% or Energy Recharge sands
+  // (checked 2026-10-07).
+  sangonomiya_kokomi: { sands: ['er_pct'] },
 };
 
 const SCALING_STATS: readonly StatKey[] = [
@@ -67,6 +107,8 @@ const FLAT_OF: Partial<Record<StatKey, SubStatKey>> = {
   atk_pct: 'atk',
   def_pct: 'def',
 };
+/** Flat HP, ATK and DEF, which count at 0.4. */
+const FLATS = new Set<StatKey>(Object.values(FLAT_OF));
 /** A stat a target names, as the percent stat it asks for (a target on total
  *  HP is met mostly by HP% rolls). */
 const TARGET_STAT: Partial<Record<StatKey, StatKey>> = {
@@ -79,24 +121,70 @@ const TARGET_STAT: Partial<Record<StatKey, StatKey>> = {
 export interface QualityProfile {
   /** Each usable substat and what one of its rolls counts for. */
   usable: Partial<Record<SubStatKey, number>>;
-  /** Their Energy Recharge minimum, including the base 100%. */
+  /** Their Energy Recharge minimum, including the base 100% (shown only). */
   erMin?: number;
-  /** Whether every Energy Recharge roll counts (their damage scales with it). */
-  erScales: boolean;
   accepts: Record<CheckedSlot, StatKey[]>;
   element?: Element | 'physical';
-  /** The sets their build recommends (one 4-piece, a 2-piece, or 2+2). */
+  /** The sets their build recommends. */
   recommendedSets: string[];
+  /** Stats their kit makes useless, and why. */
+  unused?: { stats: SubStatKey[]; reason: string };
+  /** Where the profile comes from. */
+  from: 'curated' | 'guides';
 }
 
 const unique = <T>(xs: (T | undefined)[]): T[] => [
   ...new Set(xs.filter((x): x is T => x !== undefined)),
 ];
 
-/** A character's profile from the curated targets, or null without them. */
+/** The usable stats, each with what one roll counts for: the given ones and
+ *  their flat versions at 0.4, then crit and Energy Recharge, less the
+ *  character's exceptions. */
+function usableFrom(
+  characterKey: string,
+  stats: StatKey[],
+): Partial<Record<SubStatKey, number>> {
+  const usable: Partial<Record<SubStatKey, number>> = {};
+  const add = (k: StatKey, f: number) => {
+    if (isSubStatKey(k)) usable[k] = Math.max(usable[k] ?? 0, f);
+  };
+  for (const k of [...stats, ...EVERYONE]) {
+    add(k, FLATS.has(k) ? FLAT_FACTOR : 1);
+    const flat = FLAT_OF[k];
+    if (flat) add(flat, FLAT_FACTOR);
+  }
+  for (const k of UNUSED_STATS[characterKey]?.stats ?? []) delete usable[k];
+  return usable;
+}
+
+/** A character's profile from the curated targets, else from the guides, or
+ *  null with neither. */
 export function qualityProfile(characterKey: string): QualityProfile | null {
+  const element = genshinAdapter.character(characterKey)?.element;
+  const unused = UNUSED_STATS[characterKey];
+  const common = {
+    ...(element && { element }),
+    ...(unused && { unused }),
+  };
+
   const m = META_TARGETS[characterKey];
-  if (!m) return null;
+  if (!m) {
+    const g = GUIDE_PROFILES[characterKey];
+    if (!g) return null;
+    return {
+      usable: usableFrom(characterKey, g.substats),
+      ...(g.erMin !== undefined && { erMin: g.erMin }),
+      accepts: {
+        sands: [...g.accepts.sands],
+        goblet: [...g.accepts.goblet],
+        circlet: [...g.accepts.circlet],
+      },
+      recommendedSets: [...g.sets],
+      from: 'guides',
+      ...common,
+    };
+  }
+
   const objective = m.objective as StatKey | string;
   const scaling: StatKey = SCALING_STATS.includes(objective as StatKey)
     ? (objective as StatKey)
@@ -104,40 +192,21 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
       ? m.mains.sands
       : 'atk_pct';
   const targets = Object.keys(m.statTargets ?? {}) as StatKey[];
-  const crit =
+  // Crit is usable for everyone now; whether it's the build's aim still
+  // decides whether a crit circlet is an accepted main stat.
+  const critBuild =
     objective === 'crit_value' ||
     objective === 'avg_damage' ||
     targets.some((t) => t === 'crit_rate' || t === 'crit_dmg');
-  const erScales = ER_SCALES.has(characterKey);
 
-  const usable: Partial<Record<SubStatKey, number>> = {};
-  const addUsable = (k: StatKey) => {
-    if (!isSubStatKey(k)) return;
-    usable[k] = Math.max(usable[k] ?? 0, 1);
-    const flat = FLAT_OF[k];
-    if (flat) usable[flat] = Math.max(usable[flat] ?? 0, FLAT_FACTOR);
-  };
-  addUsable(scaling);
-  for (const t of targets) addUsable(TARGET_STAT[t] ?? t);
-  for (const k of EXTRA_USABLE[characterKey] ?? []) addUsable(k);
-  if (crit) {
-    usable.crit_rate = 1;
-    usable.crit_dmg = 1;
-  }
-  if (m.erTarget !== undefined || erScales) usable.er_pct = 1;
-
-  const element = genshinAdapter.character(characterKey)?.element;
   const extra = EXTRA_MAINS[characterKey] ?? {};
-  const recommendedSets = unique([
-    ...(m.setRequirement.kind === '2+2'
-      ? m.setRequirement.setKeys
-      : [m.setRequirement.setKey]),
-    ...(m.otherSets ?? []),
-  ]);
   return {
-    usable,
+    usable: usableFrom(characterKey, [
+      scaling,
+      ...targets.map((t) => TARGET_STAT[t] ?? t),
+      ...(EXTRA_USABLE[characterKey] ?? []),
+    ]),
     ...(m.erTarget !== undefined && { erMin: m.erTarget }),
-    erScales,
     accepts: {
       sands: unique([m.mains.sands, scaling, ...(extra.sands ?? [])]),
       goblet: unique<StatKey>([
@@ -148,13 +217,19 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
       ]),
       circlet: unique<StatKey>([
         m.mains.circlet,
-        ...(crit ? (['crit_rate', 'crit_dmg'] as StatKey[]) : []),
+        ...(critBuild ? (['crit_rate', 'crit_dmg'] as StatKey[]) : []),
         scaling,
         ...(extra.circlet ?? []),
       ]),
     },
-    ...(element && { element }),
-    recommendedSets,
+    recommendedSets: unique([
+      ...(m.setRequirement.kind === '2+2'
+        ? m.setRequirement.setKeys
+        : [m.setRequirement.setKey]),
+      ...(m.otherSets ?? []),
+    ]),
+    from: 'curated',
+    ...common,
   };
 }
 
@@ -170,10 +245,12 @@ export interface ArtifactQuality {
   rolls: number;
   /** The most good rolls the worn pieces could hold. */
   possible: number;
-  /** Good rolls by stat. */
+  /** Good rolls by stat, in `QUALITY_STAT_ORDER`. */
   byStat: Partial<Record<SubStatKey, number>>;
-  /** Energy Recharge against the minimum, when the character has one. */
-  er?: { min?: number; total: number; short: number; scales: boolean };
+  /** Energy Recharge against the minimum, when it counts for them. */
+  er?: { min?: number; total: number; short: number };
+  /** Stats their kit makes useless, and why. */
+  unused?: { stats: SubStatKey[]; reason: string };
 }
 
 /** The largest single 5★ roll of a substat. */
@@ -250,34 +327,27 @@ export function artifactQuality(
   });
   const mainPoints = slots.filter((s) => s.ok).length * MAIN_STAT_POINTS;
 
-  const byStat: Partial<Record<SubStatKey, number>> = {};
+  const sums: Partial<Record<SubStatKey, number>> = {};
   let erSubs = 0;
   for (const a of pieces)
     for (const s of a.subStats) {
       if (!isSubStatKey(s.key)) continue;
-      if (s.key === 'er_pct') {
-        erSubs += s.value;
-        continue;
-      }
+      if (s.key === 'er_pct') erSubs += s.value;
       const f = p.usable[s.key];
       if (!f) continue;
-      byStat[s.key] = (byStat[s.key] ?? 0) + (s.value / maxRoll(s.key)) * f;
+      sums[s.key] = (sums[s.key] ?? 0) + (s.value / maxRoll(s.key)) * f;
     }
+  const byStat: Partial<Record<SubStatKey, number>> = {};
+  for (const k of QUALITY_STAT_ORDER)
+    if (sums[k] !== undefined) byStat[k] = sums[k];
 
-  // Energy Recharge: up to the minimum, or all of it when it scales.
   let er: ArtifactQuality['er'];
   if (p.usable.er_pct) {
-    const before = erBeforeSubstats(characterKey, entry, pieces);
-    const counted = p.erScales
-      ? erSubs
-      : Math.min(erSubs, Math.max(0, (p.erMin ?? 0) - before));
-    if (counted > 0) byStat.er_pct = counted / maxRoll('er_pct');
-    const total = before + erSubs;
+    const total = erBeforeSubstats(characterKey, entry, pieces) + erSubs;
     er = {
       ...(p.erMin !== undefined && { min: p.erMin }),
       total,
       short: p.erMin !== undefined ? Math.max(0, p.erMin - total) : 0,
-      scales: p.erScales,
     };
   }
 
@@ -289,6 +359,7 @@ export function artifactQuality(
     possible: pieces.reduce((s, a) => s + possibleFor(p, a), 0),
     byStat,
     ...(er && { er }),
+    ...(p.unused && { unused: p.unused }),
   };
 }
 

@@ -7,9 +7,9 @@ import type { Readiness } from '@genshin-build-lab/engine/roster/buildScore';
 import {
   FLAT_FACTOR,
   MAIN_STAT_POINTS,
+  QUALITY_STAT_ORDER,
   type ArtifactQuality,
 } from '@genshin-build-lab/engine/roster/artifactQuality';
-import type { StatKey } from '@genshin-build-lab/engine/game/types';
 import { formatScore, formatStat, SLOT_LABELS, statLabel } from '../labels';
 import { Crowns } from '../roster/ScoreValues';
 
@@ -63,9 +63,12 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
       </section>
     );
   const ok = quality.main.slots.filter((s) => s.ok).length;
-  const stats = Object.entries(quality.byStat).filter(
-    ([, v]) => (v ?? 0) > 0,
-  ) as [StatKey, number][];
+  // Always in one order: CRIT Rate, CRIT DMG, HP, ATK, DEF, EM, ER.
+  const stats = QUALITY_STAT_ORDER.flatMap((k) => {
+    const v = quality.byStat[k] ?? 0;
+    return v > 0 ? [[k, v] as const] : [];
+  });
+  const unused = quality.unused;
   return (
     <section aria-label="Artifact quality" className="well space-y-2 px-3 py-2">
       <h3 className="text-xs font-semibold uppercase text-muted">
@@ -96,16 +99,20 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
             <dd className="font-mono text-paper">{formatScore(v, 1)}</dd>
           </div>
         ))}
-        {quality.er && quality.er.min !== undefined && (
+        {quality.er && (
           <div className="flex justify-between gap-4">
-            <dt className="text-muted">Energy Recharge vs minimum</dt>
+            <dt className="text-muted">
+              Energy Recharge
+              {quality.er.min !== undefined && ' vs guide minimum'}
+            </dt>
             <dd
               className={
                 quality.er.short > 0 ? 'font-mono text-amber' : 'font-mono'
               }
             >
-              {formatStat('er_pct', quality.er.total)} /{' '}
-              {formatStat('er_pct', quality.er.min)}
+              {formatStat('er_pct', quality.er.total)}
+              {quality.er.min !== undefined &&
+                ` / ${formatStat('er_pct', quality.er.min)}`}
               {quality.er.short > 0 &&
                 ` (${formatStat('er_pct', quality.er.short)} short)`}
             </dd>
@@ -116,14 +123,18 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
         How good their pieces are for them: {MAIN_STAT_POINTS} points for each
         sands, goblet and circlet with a main stat they use, plus every roll on
         a stat they use, counted as a share of that stat&rsquo;s largest roll (a
-        perfect roll is 1). Flat HP, ATK and DEF count {FLAT_FACTOR}. Energy
-        Recharge counts until they reach their minimum
-        {quality.er?.scales
-          ? ', and past it too: their damage grows with it'
-          : ''}
-        . The score compares artifacts for this character; &ldquo;of
-        possible&rdquo; is the most their pieces could hold.
+        perfect roll is 1). Flat HP, ATK and DEF count {FLAT_FACTOR}. CRIT and
+        Energy Recharge count for everyone, all of it; the guide&rsquo;s minimum
+        is shown, not a limit. The score compares artifacts for this character;
+        &ldquo;of possible&rdquo; is the most their pieces could hold.
       </p>
+      {unused && (
+        <p className="text-xs leading-relaxed text-muted" data-testid="unused">
+          {unused.stats.map((k) => statLabel(k)).join(' and ')}{' '}
+          {unused.stats.length > 1 ? "don't" : "doesn't"} count for them:{' '}
+          {unused.reason}.
+        </p>
+      )}
     </section>
   );
 }

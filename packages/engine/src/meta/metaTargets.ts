@@ -576,6 +576,14 @@ export const META_TARGETS: Record<string, MetaTarget> = {
   sangonomiya_kokomi: {
     characterKey: 'sangonomiya_kokomi',
     setRequirement: { kind: '4pc', setKey: 'OceanHuedClam' },
+    // KQM's on-field and off-field builds and genshin-builds (2026-10-07).
+    otherSets: [
+      'TenacityOfTheMillelith',
+      'ScrollOfTheHeroOfCinderCity',
+      'SongOfDaysPast',
+      'DeepwoodMemories',
+      'SilkenMoonsSerenade',
+    ],
     mains: { sands: 'hp_pct', goblet: 'elemental_dmg', circlet: 'healing' },
     erTarget: 220,
     objective: 'hp_pct',

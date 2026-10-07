@@ -12,6 +12,18 @@ import { setImageNamesForTests } from '../components/imageNames';
 import { TeamsView } from '../teams/TeamsView';
 import { addArtifacts } from '../test-utils/stores';
 
+// Every character the dataset knows has a profile now (ADR-0058): hide
+// Eula's guide profile, as for a character the guides haven't reached yet.
+vi.mock('@genshin-build-lab/engine/meta/guideProfiles', async (original) => {
+  const m =
+    await original<
+      typeof import('@genshin-build-lab/engine/meta/guideProfiles')
+    >();
+  const rest = { ...m.GUIDE_PROFILES };
+  delete rest.eula;
+  return { ...m, GUIDE_PROFILES: rest };
+});
+
 /** The window and its details file load lazily: a cold first import can
  *  outlast findBy's default second. */
 const LAZY = { timeout: 10_000 };

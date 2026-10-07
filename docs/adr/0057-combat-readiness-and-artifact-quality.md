@@ -1,6 +1,7 @@
 # 0057. Combat readiness and artifact quality, two scores
 
-- Status: Accepted
+- Status: Accepted, amended by [0058](0058-guide-profiles-and-stats-for-everyone.md)
+  (guide profiles; crit and Energy Recharge count for everyone)
 - Date: 2026-10-06
 
 ## Context

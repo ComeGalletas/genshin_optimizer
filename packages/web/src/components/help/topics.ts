@@ -74,7 +74,7 @@ export const HELP = {
     intro:
       'Each of your characters with two scores: combat readiness (0–100, from their level, talents, weapon and how many artifacts they wear) and artifact quality (how good those pieces are for them), most ready first.',
     steps: [
-      'Read each row: the character, their element and weapon, their combat readiness with a crown for each talent at level 10, their artifact score, and their band. Built needs readiness above 60 and artifacts 50 or more; Partly built, artifacts 30 or more (the right main stats); No recipe means there is no curated build for them yet.',
+      'Read each row: the character, their element and weapon, their combat readiness with a crown for each talent at level 10, their artifact score, and their band. Every band but Unbuilt needs readiness above 60: Well built, artifacts over 35; Built, 30 or more; Partly built, 21 or more (the three right main stats); No recipe means neither a curated build nor the guides cover them yet.',
       'Press a row to open the character’s window. Overview: both scores and how each is worked out, the teams they fit and their curated build. Stats: their stats now (base + artifacts = total), their talents (press one for its description and values) and their constellations. Gear: their weapon, and each artifact with its rolls and the set effects it activates; a star marks a set their build recommends.',
       'Press Optimise This Character to search for their best build in the Optimise view.',
     ],

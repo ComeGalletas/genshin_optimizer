@@ -16,6 +16,7 @@ export * from '@genshin-build-lab/engine/labels';
 /** Band → the shared UI tone — one definition, used by every view that shows
  *  a band. The classes themselves live in `components/ui/tone.ts`. */
 export const BAND_TONE: Record<Band, Tone> = {
+  well_built: 'accent',
   built: 'jade',
   partial: 'flux',
   unbuilt: 'muted',

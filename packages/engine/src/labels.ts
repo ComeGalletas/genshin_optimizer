@@ -36,6 +36,7 @@ export const ROLE_LABELS: Record<Role, string> = {
 /** Band → its user-visible label. The union's members are lowercase keys, not
  *  copy: rendering `b` directly printed "partial" mid-sentence. */
 export const BAND_LABELS: Record<Band, string> = {
+  well_built: 'Well built',
   built: 'Built',
   partial: 'Partly built',
   unbuilt: 'Unbuilt',

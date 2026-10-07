@@ -127,15 +127,17 @@ describe('computeReadiness', () => {
 });
 
 describe('band', () => {
-  // ADR-0057: readiness above 60, then artifacts 30 (main stats) or 50
-  // (good substats too).
-  it('needs readiness above 60, then splits artifacts at 30 and 50', () => {
-    expect(band(100, 50)).toBe('built');
-    expect(band(100, 49.9)).toBe('partial');
-    expect(band(100, 30)).toBe('partial');
-    expect(band(100, 29.9)).toBe('unbuilt');
+  // ADR-0057, with the owner's lines of 2026-10-07: readiness above 60,
+  // then artifacts 21, 30, and over 35.
+  it('needs readiness above 60, then splits artifacts at 21, 30 and 35', () => {
+    expect(band(100, 35.1)).toBe('well_built');
+    expect(band(100, 35)).toBe('built');
+    expect(band(100, 30)).toBe('built');
+    expect(band(100, 29.9)).toBe('partial');
+    expect(band(100, 21)).toBe('partial');
+    expect(band(100, 20.9)).toBe('unbuilt');
     expect(band(60, 80)).toBe('unbuilt');
-    expect(band(60.1, 80)).toBe('built');
+    expect(band(60.1, 80)).toBe('well_built');
   });
 
   it('calls a levelled character wearing nothing unbuilt', () => {
