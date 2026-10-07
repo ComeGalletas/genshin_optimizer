@@ -1,7 +1,7 @@
 # Vercel deploy plan (parked)
 
 Status: parked on 2026-10-06, for later. Nothing here is decided until the
-owner confirms the three decisions below. The work then gets an ADR (0057)
+owner confirms the three decisions below. The work then gets an ADR (the next free number)
 and a TODO item (10.6).
 
 ## What can deploy

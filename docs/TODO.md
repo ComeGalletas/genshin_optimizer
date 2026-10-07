@@ -509,6 +509,16 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - **Per character**: total RV, and the rolls spent on stats they don't use.
   - **Enka's exact rolls** for showcased characters: its API lists each substat's rolls (`appendPropIdList`). It makes those pieces exact and checks the roll split against real data.
   - **Akasha**: a link per character to your profile and the character's leaderboard, using your UID if you give it. Links only: Akasha has no public API.
+- [x] 10.7 Combat readiness and artifact quality, two scores instead of the build score ([ADR-0057](adr/0057-combat-readiness-and-artifact-quality.md)), as the owner set it on 2026-10-06
+  - Combat readiness (0–100): level 36, talents 29 (9/9/9 full), weapon level 21, artifact count 14, each measured as before. A crown per talent at level 10. The bands and team recommendations read it alone.
+  - Artifact quality (no cap): 10 per sands, goblet and circlet whose main stat the character accepts, plus good rolls in roll-equivalents (value ÷ the stat's largest roll) on the stats they use. Flat stats count at 0.4. Energy Recharge counts up to the character's minimum, or all of it when it scales (Raiden). Shown as "main stats 3 of 3 · 28.4 good rolls of 38 possible".
+  - Usable stats and accepted main stats come from the curated targets (52 characters) until 10.2. The rest show "no recipe yet".
+  - Shown on the Roster, Teams and Plan rows. The character window explains both, and the Gear tab marks the recommended set.
+  - Done 2026-10-06:
+    - Engine: `roster/buildScore.ts` (`computeReadiness`, `rosterReadiness`) and `roster/artifactQuality.ts` (`qualityProfile`, `artifactQuality`, `isRecommendedSet`). Tests cover Kokomi's, Furina's and Raiden's profiles, a worked score, the elemental goblet check, Energy Recharge capped and scaling, the possible maximum, and 200 random sets that never score above it.
+    - Web: `roster/ScoreValues.tsx` on the rows, `character-window/ScoreCards.tsx` on Overview, crown and star glyphs.
+    - On the owner's account (95 characters), most characters are 100 / 100 readiness, and their artifact scores range from about 20 to 55.
+  - Open, for the owner: readiness saturates on a well-built account, so most rows tie at 100 and keep the export's order. A level-90 character wearing nothing also reads "Built" (86 / 100).
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog

@@ -84,8 +84,16 @@ describe('RosterView', () => {
     expect(screen.getAllByText('/ 100').length).toBeGreaterThan(0);
     // Amber has nothing equipped — say so rather than silently capping.
     expect(
-      screen.getByText(/No equipped gear found — 40 pts unscored/i),
+      screen.getByText(
+        /No equipped artifacts found — 14 readiness points unscored/i,
+      ),
     ).toBeInTheDocument();
+    // Each row also gives artifact quality (ADR-0057): a score for
+    // Neuvillette, "no recipe" for Amber, who has no curated build.
+    const quality = screen.getAllByTestId('quality');
+    expect(quality).toHaveLength(2);
+    expect(quality[0]).toHaveTextContent(/^Artifacts \d+(\.\d)?$/);
+    expect(quality[1]).toHaveTextContent('Artifacts no recipe');
 
     // Built characters sort first. Rows carry no heading: an <h3> inside a
     // <button> loses its heading role anyway.
@@ -100,9 +108,15 @@ describe('RosterView', () => {
     expect(screen.queryByText('Artifact quality')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Neuvillette/ }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
-    // The score's talents line, and the talent levels below it.
-    expect(screen.getAllByText('Talents').length).toBeGreaterThan(0);
-    expect(screen.getByText('Artifact quality')).toBeInTheDocument();
+    // Both scores, each with how it's worked out.
+    expect(
+      screen.getByRole('region', { name: 'Combat readiness' }),
+    ).toHaveTextContent('Talents');
+    expect(
+      screen.getByRole('region', { name: 'Artifact quality' }),
+    ).toHaveTextContent(
+      /Main stats \d of 3 · [\d.]+ good rolls of [\d.]+ possible/,
+    );
   });
 
   it('opens the character drawer on row click', async () => {

@@ -410,7 +410,7 @@ export function normalizeGOOD(json: unknown): NormalizedGood | null {
       const auto = field(GoodFields.talentLevel, t.auto);
       const skill = field(GoodFields.talentLevel, t.skill);
       const burst = field(GoodFields.talentLevel, t.burst);
-      // All three or none: a partial triple would understate the build score
+      // All three or none: a partial triple would understate combat readiness
       // rather than admit the export was incomplete.
       if (auto !== undefined && skill !== undefined && burst !== undefined)
         entry.talents = { auto, skill, burst };

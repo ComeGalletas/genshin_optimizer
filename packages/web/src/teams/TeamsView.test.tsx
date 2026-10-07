@@ -45,6 +45,9 @@ describe('TeamsView', () => {
     expect(teams).toHaveLength(2);
     for (const t of teams) {
       expect(t.querySelectorAll('[data-testid="team-member"]')).toHaveLength(4);
+      // Both scores on every member (ADR-0057).
+      expect(t.querySelectorAll('[data-testid="readiness"]')).toHaveLength(4);
+      expect(t.querySelectorAll('[data-testid="quality"]')).toHaveLength(4);
     }
     // Roles are shown alongside names.
     expect(screen.getAllByText('On-field DPS').length).toBeGreaterThan(0);

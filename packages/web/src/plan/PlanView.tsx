@@ -18,10 +18,16 @@ import { useRoster } from '../state/roster';
 import { useInventory } from '../state/inventory';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import {
-  rosterBuildScores,
-  groupByLocation,
+  computeReadiness,
   equippedGrade,
+  groupByLocation,
+  rosterReadiness,
 } from '@genshin-build-lab/engine/roster/buildScore';
+import {
+  artifactQuality,
+  type ArtifactQuality,
+} from '@genshin-build-lab/engine/roster/artifactQuality';
+import { QualityValue, ReadinessValue } from '../roster/ScoreValues';
 import { recommendAbyss } from '@genshin-build-lab/engine/teams/recommend';
 import { archetypeName } from '@genshin-build-lab/engine/teams/comps';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
@@ -75,9 +81,16 @@ function memberGrade(b: Plan['builds'][number]): Grade | null {
 function SummaryRow({
   build,
   currentGrade,
+  current,
   children,
 }: {
   build: Plan['builds'][number];
+  /** The member as they stand now: their two scores (ADR-0057). */
+  current: {
+    readiness: number;
+    crowns: number;
+    quality: ArtifactQuality | null;
+  };
   /** What's currently equipped on this member, graded the same way — null
    *  when there's nothing to compare (no recipe, or nothing equipped). */
   currentGrade: Grade | null;
@@ -110,6 +123,14 @@ function SummaryRow({
           </CharacterButton>
           <span className="min-w-0 flex-1 truncate text-sm text-paper">
             {name}
+            <span className="block">
+              <ReadinessValue
+                total={current.readiness}
+                crowns={current.crowns}
+                className="text-2xs"
+              />{' '}
+              <QualityValue quality={current.quality} className="text-2xs" />
+            </span>
           </span>
           {value !== null ? (
             <span className="font-mono text-sm tabular-nums text-accent-bright">
@@ -230,9 +251,20 @@ export function PlanView({
   }, [artifacts]);
 
   const equippedByChar = useMemo(() => groupByLocation(artifacts), [artifacts]);
+  /** A member's two scores as they stand now (ADR-0057). */
+  const currentOf = (key: string) => {
+    const entry = entries[key] ?? {};
+    const worn = equippedByChar[key] ?? [];
+    const r = computeReadiness(entry, worn);
+    return {
+      readiness: r.total,
+      crowns: r.crowns,
+      quality: artifactQuality(key, entry, worn),
+    };
+  };
 
   const { teams, advice } = useMemo(() => {
-    const scores = rosterBuildScores(entries, artifacts);
+    const scores = rosterReadiness(entries, artifacts);
     const rec = recommendAbyss(scores);
     return {
       teams: rec.teams,
@@ -378,6 +410,7 @@ export function PlanView({
                       <SummaryRow
                         key={b.characterKey}
                         build={b}
+                        current={currentOf(b.characterKey)}
                         currentGrade={
                           entries[b.characterKey]?.weaponKey
                             ? equippedGrade(

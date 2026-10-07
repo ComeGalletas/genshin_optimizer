@@ -59,7 +59,7 @@ const member = (
 ) => ({
   characterKey,
   role,
-  buildScore: 90,
+  readiness: 90,
 });
 
 const teams: [TeamInstance, TeamInstance] = [

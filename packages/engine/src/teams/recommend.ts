@@ -7,7 +7,7 @@ import type { CompArchetype, Role } from './types';
 
 export interface TeamInstance {
   archetypeId: string;
-  members: { characterKey: string; role: Role; buildScore: number }[]; // length 4, distinct
+  members: { characterKey: string; role: Role; readiness: number }[]; // length 4, distinct
   score: number;
 }
 
@@ -28,7 +28,7 @@ const TIER_WEIGHT: Record<CompArchetype['tier'], number> = {
 
 function teamScore(
   arch: CompArchetype,
-  contributions: number[], // option weight × buildScore per slot
+  contributions: number[], // option weight × readiness per slot
 ): number {
   const mean = contributions.reduce((a, b) => a + b, 0) / contributions.length;
   return TIER_WEIGHT[arch.tier] * mean;
@@ -36,7 +36,7 @@ function teamScore(
 
 /**
  * Fill each slot with the owned, non-excluded option maximizing
- * `option weight × buildScore`, never reusing a character.
+ * `option weight × combat readiness` (ADR-0057), never reusing a character.
  *
  * // ponytail: greedy slot fill in listed order — swap for an exact 4-slot
  * // assignment if curation ever makes greedy visibly wrong.
@@ -46,7 +46,7 @@ function teamScore(
  */
 export function instantiate(
   arch: CompArchetype,
-  scores: Record<string, number>, // characterKey -> buildScore (present = owned)
+  scores: Record<string, number>, // characterKey -> combat readiness (present = owned)
   exclude: ReadonlySet<string>,
 ): TeamInstance | { missing: ArchetypeGap } | null {
   const used = new Set<string>();
@@ -78,7 +78,7 @@ export function instantiate(
     members.push({
       characterKey: best.characterKey,
       role: slot.role,
-      buildScore: best.score,
+      readiness: best.score,
     });
     contributions.push(best.weight * best.score);
   }

@@ -3,7 +3,7 @@ import { instantiate, recommendAbyss, type TeamInstance } from './recommend';
 import { COMP_ARCHETYPES } from './comps';
 import { loadSampleGOOD } from '../test-fixtures/sampleAccount';
 import { parseGOOD, parseGOODRoster } from '../import/good';
-import { computeBuildScore } from '../roster/buildScore';
+import { computeReadiness } from '../roster/buildScore';
 import type { Artifact } from '../game/types';
 import type { CompArchetype } from './types';
 
@@ -167,7 +167,7 @@ describe('recommendAbyss on the sample account fixture', () => {
       if (a.location) (byLocation[a.location] ??= []).push(a);
     const scores: Record<string, number> = {};
     for (const [key, entry] of Object.entries(roster))
-      scores[key] = computeBuildScore(entry, byLocation[key] ?? []).total;
+      scores[key] = computeReadiness(entry, byLocation[key] ?? []).total;
     return scores;
   }
 
@@ -176,10 +176,14 @@ describe('recommendAbyss on the sample account fixture', () => {
     expect(Object.keys(scores)).toHaveLength(8);
     expect(Object.values(scores).every((s) => s > 0)).toBe(true);
     // Neuvillette wears a full five-piece set; Xingqiu wears none, so the
-    // artifact components separate them even though both are level 90.
+    // artifact count separates them even though both are level 90. Combat
+    // readiness counts pieces, not their quality (ADR-0057): Xingqiu loses
+    // exactly the count's 14 points.
     expect(scores['neuvillette']).toBeGreaterThan(scores['xingqiu']);
     expect(scores['neuvillette']).toBeGreaterThan(70); // "built" band
-    expect(scores['xingqiu']).toBeLessThan(70);
+    expect(scores['neuvillette'] - scores['xingqiu']).toBeGreaterThanOrEqual(
+      14 - 1e-9,
+    );
   });
 
   it('fields two disjoint teams from the imported roster', () => {

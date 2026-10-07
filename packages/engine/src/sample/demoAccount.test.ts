@@ -3,7 +3,7 @@ import { demoAccount, DEMO_MEMBERS } from './demoAccount';
 import { SAMPLE_INVENTORY } from './sampleInventory';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { SLOTS } from '../game/types';
-import { rosterBuildScores } from '../roster/buildScore';
+import { rosterReadiness } from '../roster/buildScore';
 import { recommendAbyss } from '../teams/recommend';
 
 describe('the demo account (TODO 9.4)', () => {
@@ -32,7 +32,7 @@ describe('the demo account (TODO 9.4)', () => {
 
   it('gives the Teams view two halves to recommend, and is the same every time', () => {
     const { artifacts, roster } = demoAccount();
-    const rec = recommendAbyss(rosterBuildScores(roster, artifacts));
+    const rec = recommendAbyss(rosterReadiness(roster, artifacts));
     expect(rec.teams).not.toBeNull();
     expect(demoAccount()).toEqual(demoAccount());
   });

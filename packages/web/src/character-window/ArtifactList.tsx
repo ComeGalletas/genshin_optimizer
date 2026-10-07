@@ -28,6 +28,8 @@ import {
   statLabel,
 } from '../labels';
 import { ArtifactIcon } from '../components/GameArt';
+import { StarGlyph } from '../components/ui/Glyphs';
+import { isRecommendedSet } from '@genshin-build-lab/engine/roster/artifactQuality';
 
 /** "Electro DMG Bonus" for an elemental goblet whose element is known. */
 function mainStatLabel(a: Artifact): string {
@@ -118,10 +120,33 @@ function RollList({ line, split }: { line: SubStat; split: LineRolls }) {
   );
 }
 
+/** A star beside a set the character's build recommends (ADR-0057). */
+function Recommended({
+  characterKey,
+  setKey,
+}: {
+  characterKey: string;
+  setKey: string;
+}) {
+  if (!isRecommendedSet(characterKey, setKey)) return null;
+  return (
+    <span
+      className="inline-flex text-accent-bright"
+      title="A set their build recommends"
+      data-testid="recommended-set"
+    >
+      <StarGlyph />
+      <span className="sr-only">(recommended set)</span>
+    </span>
+  );
+}
+
 export function ArtifactList({
+  characterKey,
   details,
   artifacts,
 }: {
+  characterKey: string;
   details: Details | null | 'failed';
   artifacts: readonly Artifact[];
 }) {
@@ -159,7 +184,11 @@ export function ArtifactList({
                     {a ? (
                       <>
                         <span className="text-paper">
-                          {formatSetName(a.setKey)}
+                          {formatSetName(a.setKey)}{' '}
+                          <Recommended
+                            characterKey={characterKey}
+                            setKey={a.setKey}
+                          />
                         </span>
                         <span className="chip px-2 py-0.5 text-2xs">
                           Lv {a.level}
@@ -212,9 +241,13 @@ export function ArtifactList({
         <div className="well space-y-1.5 px-3 py-2 text-xs">
           <p className="text-muted">
             Sets:{' '}
-            {sets
-              .map(([k, n]) => `${formatSetName(k)} ${n >= 4 ? 4 : 2}-piece`)
-              .join(', ')}
+            {sets.map(([k, n], i) => (
+              <span key={k}>
+                {i > 0 && ', '}
+                {formatSetName(k)} {n >= 4 ? 4 : 2}-piece{' '}
+                <Recommended characterKey={characterKey} setKey={k} />
+              </span>
+            ))}
           </p>
           {effects && (
             <ul className="space-y-1.5" aria-label="Active set effects">

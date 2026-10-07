@@ -72,23 +72,23 @@ export const HELP = {
   roster: {
     title: 'Your roster',
     intro:
-      'How built each of your characters is, scored 0–100 from their level, talents, weapon and the artifacts they wear, best first.',
+      'Each of your characters with two scores: combat readiness (0–100, from their level, talents, weapon and how many artifacts they wear) and artifact quality (how good those pieces are for them), most ready first.',
     steps: [
-      'Read each row: the character, their element and weapon, their score and its band (Built, Partly built or Unbuilt).',
-      'Press a row to open the character’s window. Overview: their score, the teams they fit and their curated build. Stats: their stats now (base + artifacts = total), their talents (press one for its description and values) and their constellations. Gear: their weapon, and each artifact with its rolls and the set effects it activates.',
+      'Read each row: the character, their element and weapon, their combat readiness with its band (Built, Partly built or Unbuilt) and a crown for each talent at level 10, and their artifact score ("no recipe" when there is no curated build for them yet).',
+      'Press a row to open the character’s window. Overview: both scores and how each is worked out, the teams they fit and their curated build. Stats: their stats now (base + artifacts = total), their talents (press one for its description and values) and their constellations. Gear: their weapon, and each artifact with its rolls and the set effects it activates; a star marks a set their build recommends.',
       'Press Optimise This Character to search for their best build in the Optimise view.',
     ],
     tips: [
-      'A character with no equipped artifacts scores low on gear: equip something in the game and re-import.',
+      'Artifact quality compares pieces for one character: read two characters by their “good rolls of possible”, not by the totals.',
       'Any character the app shows (a team member, a Plan row, a rotation’s portraits) opens the same window.',
     ],
   },
   teams: {
     title: 'Endgame teams',
     intro:
-      'Two teams for the two halves of the Spiral Abyss, sharing no character, matched from curated team archetypes and how built your characters are.',
+      'Two teams for the two halves of the Spiral Abyss, sharing no character, matched from curated team archetypes and your characters’ combat readiness.',
     steps: [
-      'Read each team: its archetype, each member’s role and build score.',
+      'Read each team: its archetype, each member’s role, combat readiness and artifact score.',
       'Look at the gaps below: roles your roster can’t fill well, and what to build or pull next.',
       'Open the Plan view to build all eight members at once.',
     ],

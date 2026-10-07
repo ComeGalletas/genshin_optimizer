@@ -433,6 +433,53 @@ describe('character window', () => {
     expect(close.parentElement).toHaveClass('sticky');
   });
 
+  // ADR-0057: two scores on Overview, each explained; crowns for level 10
+  // talents; the recommended set starred on Gear.
+  it('shows combat readiness with crowns, and artifact quality, on Overview', async () => {
+    furina();
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    const readiness = await screen.findByRole(
+      'region',
+      { name: 'Combat readiness' },
+      LAZY,
+    );
+    // Talents 1/10/10: two crowns.
+    expect(within(readiness).getByTestId('crowns')).toHaveTextContent(
+      '2 talents at level 10',
+    );
+    expect(readiness).toHaveTextContent('Crown of Insight');
+    const quality = screen.getByRole('region', { name: 'Artifact quality' });
+    // One flower: no sands, goblet or circlet to check.
+    expect(quality).toHaveTextContent(/Main stats 0 of 3/);
+    expect(quality).toHaveTextContent('HP% rolls');
+    expect(quality).toHaveTextContent('Flat HP, ATK and DEF count 0.4');
+  });
+
+  it('says there is no recipe rather than guessing a score', async () => {
+    useRoster.getState().setRoster({
+      eula: { buildLevel: 90, level: 90 },
+    });
+    render(<CharacterWindow />);
+    openCharacter('eula');
+    expect(
+      await screen.findByRole('region', { name: 'Artifact quality' }, LAZY),
+    ).toHaveTextContent(/No recipe yet/);
+  });
+
+  it('stars the set the build recommends', async () => {
+    const user = userEvent.setup();
+    furina();
+    render(<CharacterWindow />);
+    openCharacter('furina');
+    await user.click(await screen.findByRole('tab', { name: 'Gear' }, LAZY));
+    const pieces = screen.getByRole('region', { name: 'Artifacts' });
+    // Golden Troupe is Furina's recommended 4-piece.
+    expect(
+      within(pieces).getAllByTestId('recommended-set')[0],
+    ).toHaveTextContent('(recommended set)');
+  });
+
   it('opens for a character not in the roster, at level 90', async () => {
     const user = userEvent.setup();
     render(<CharacterWindow />);

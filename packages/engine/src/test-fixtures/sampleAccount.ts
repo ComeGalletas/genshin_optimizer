@@ -9,7 +9,7 @@ import sampleAccount from '../import/__fixtures__/sample-account.good.json';
 /**
  * A small synthetic GOOD export: 8 characters with levels/talents/
  * constellations, 8 weapons equipped on them, and 20 five-star artifacts
- * across all five slots (17 of them equipped, so build scores compute).
+ * across all five slots (17 of them equipped, so both character scores compute).
  * Typed `unknown` on purpose — the importers take untrusted JSON, and the
  * fixture must exercise that contract rather than a pre-narrowed shape.
  */

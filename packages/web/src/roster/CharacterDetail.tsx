@@ -7,13 +7,14 @@
  */
 import { useId, useMemo, useState, type ReactNode } from 'react';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
-import { computeBuildScore } from '@genshin-build-lab/engine/roster/buildScore';
+import { computeReadiness } from '@genshin-build-lab/engine/roster/buildScore';
+import { artifactQuality } from '@genshin-build-lab/engine/roster/artifactQuality';
+import { QualityCard, ReadinessCard } from '../character-window/ScoreCards';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { archetypesFor } from '@genshin-build-lab/engine/teams/comps';
 import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
 import { fourPieceAssumptions } from '@genshin-build-lab/engine/damage/setBonuses';
 import {
-  formatScore,
   formatSetName,
   formatStat,
   statLabel,
@@ -79,9 +80,13 @@ export function CharacterDetail({
   const weaponName = weaponKey
     ? genshinAdapter.weapon(weaponKey)?.name
     : undefined;
-  const score = useMemo(
-    () => (entry ? computeBuildScore(entry, artifacts) : null),
+  const readiness = useMemo(
+    () => (entry ? computeReadiness(entry, artifacts) : null),
     [entry, artifacts],
+  );
+  const quality = useMemo(
+    () => (entry ? artifactQuality(characterKey, entry, artifacts) : null),
+    [characterKey, entry, artifacts],
   );
   const meta = META_TARGETS[characterKey];
   const profile = getDamageProfile(characterKey);
@@ -128,26 +133,14 @@ export function CharacterDetail({
               {entry?.constellation != null && ` · C${entry.constellation}`}
             </p>
             {/* On wells: the window's art shows through everything else. */}
-            {score ? (
-              <div className="well space-y-2 px-3 py-2">
-                <p className="font-mono text-3xl font-bold text-accent-bright">
-                  {formatScore(score.total, 0)}
-                  <span className="text-base text-muted"> / 100</span>
-                </p>
-                <dl className="grid gap-1 text-xs">
-                  {score.components.map((c) => (
-                    <div key={c.label} className="flex justify-between gap-4">
-                      <dt className="text-muted">{c.label}</dt>
-                      <dd className="font-mono text-paper">
-                        {formatScore(c.points, 1)} / {c.max}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+            {readiness ? (
+              <>
+                <ReadinessCard readiness={readiness} />
+                <QualityCard quality={quality} />
                 <p className="text-xs text-muted">
                   {objectiveHint(meta?.objective ?? 'crit_value')}
                 </p>
-              </div>
+              </>
             ) : (
               <p className="well px-3 py-2 text-muted">
                 Not in your roster: their stats show at level 90, with no weapon
@@ -303,7 +296,11 @@ export function CharacterDetail({
         {tab === 'Gear' && (
           <>
             <WeaponCard details={details} entry={entry} />
-            <ArtifactList details={details} artifacts={artifacts} />
+            <ArtifactList
+              characterKey={characterKey}
+              details={details}
+              artifacts={artifacts}
+            />
           </>
         )}
       </div>

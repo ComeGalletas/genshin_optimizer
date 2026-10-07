@@ -11,8 +11,12 @@ import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { CURATION_PATCH } from '@genshin-build-lab/engine/curation';
 import {
   band,
-  rosterBuildScores,
+  computeReadiness,
+  groupByLocation,
+  rosterReadiness,
 } from '@genshin-build-lab/engine/roster/buildScore';
+import { artifactQuality } from '@genshin-build-lab/engine/roster/artifactQuality';
+import { QualityValue, ReadinessValue } from '../roster/ScoreValues';
 import {
   getArchetype,
   archetypeName,
@@ -22,7 +26,7 @@ import {
   type TeamInstance,
   type ArchetypeGap,
 } from '@genshin-build-lab/engine/teams/recommend';
-import { BAND_TONE, bandLabel, formatScore, ROLE_LABELS } from '../labels';
+import { BAND_TONE, bandLabel, ROLE_LABELS } from '../labels';
 import { Badge } from '../components/ui/Badge';
 import { CharacterPortrait } from '../components/GameArt';
 import { CharacterButton } from '../character-window/CharacterButton';
@@ -34,6 +38,26 @@ const COMING_SOON: string[] = ['Imaginarium Theater', 'Stygian Onslaught'];
 
 function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
   const arch = getArchetype(team.archetypeId);
+  const entries = useRoster((s) => s.entries);
+  const artifacts = useInventory((s) => s.artifacts);
+  // Each member's crowns and artifact score, beside the readiness the team
+  // was picked by (ADR-0057).
+  const scores = useMemo(() => {
+    const worn = groupByLocation(artifacts);
+    return Object.fromEntries(
+      team.members.map((m) => {
+        const pieces = worn[m.characterKey] ?? [];
+        const entry = entries[m.characterKey] ?? {};
+        return [
+          m.characterKey,
+          {
+            crowns: computeReadiness(entry, pieces).crowns,
+            quality: artifactQuality(m.characterKey, entry, pieces),
+          },
+        ];
+      }),
+    );
+  }, [team, entries, artifacts]);
   return (
     <div data-testid="team-card" className="card p-4">
       <p className="micro-label">{title}</p>
@@ -43,7 +67,7 @@ function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
       {arch && <p className="mt-1 text-xs text-muted">{arch.notes}</p>}
       <ul className="mt-3 space-y-2">
         {team.members.map((m) => {
-          const b = band(m.buildScore);
+          const b = band(m.readiness);
           return (
             <li
               key={m.characterKey}
@@ -60,8 +84,16 @@ function TeamCard({ title, team }: { title: string; team: TeamInstance }) {
                 </span>
               </CharacterButton>
               <span className="text-xs text-muted">{ROLE_LABELS[m.role]}</span>
-              <span className="font-mono text-xs text-muted">
-                {formatScore(m.buildScore, 0)}
+              <span className="flex flex-none flex-col items-end">
+                <ReadinessValue
+                  total={m.readiness}
+                  crowns={scores[m.characterKey]?.crowns ?? 0}
+                  className="text-xs"
+                />
+                <QualityValue
+                  quality={scores[m.characterKey]?.quality ?? null}
+                  className="text-2xs"
+                />
               </span>
               <Badge tone={BAND_TONE[b]}>{bandLabel(b)}</Badge>
             </li>
@@ -100,7 +132,7 @@ export function TeamsView() {
   const artifacts = useInventory((s) => s.artifacts);
 
   const rec = useMemo(
-    () => recommendAbyss(rosterBuildScores(entries, artifacts)),
+    () => recommendAbyss(rosterReadiness(entries, artifacts)),
     [entries, artifacts],
   );
 

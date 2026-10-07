@@ -393,7 +393,7 @@ export function App() {
                 <Section
                   help="roster"
                   title="Your Roster"
-                  hint="How built each of your characters is, scored 0–100 from level, talents, weapon and artifacts, best first. Open one for its details."
+                  hint="Your characters, most combat-ready first: readiness out of 100 from level, talents, weapon and artifacts worn, and a score for how good those artifacts are for them. Open one for the details."
                   delay="0s"
                 >
                   <Suspense fallback={<PanelFallback />}>

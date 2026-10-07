@@ -97,3 +97,22 @@ export function ExternalLinkGlyph({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** A three-pointed crown: a talent at level 10, which takes a Crown of
+ *  Insight (ADR-0057). */
+export function CrownGlyph({ className }: { className?: string }) {
+  return (
+    <GlyphSvg className={className}>
+      <path d="M3 7.5 L7.5 11.5 L12 4.5 L16.5 11.5 L21 7.5 L19.2 18 H4.8 Z M4.8 19.5 H19.2 V21 H4.8 Z" />
+    </GlyphSvg>
+  );
+}
+
+/** A five-pointed star: the set the character's build recommends. */
+export function StarGlyph({ className }: { className?: string }) {
+  return (
+    <GlyphSvg className={className}>
+      <path d="M12 2.8 L14.8 8.9 L21.4 9.6 L16.5 14.1 L17.8 20.7 L12 17.4 L6.2 20.7 L7.5 14.1 L2.6 9.6 L9.2 8.9 Z" />
+    </GlyphSvg>
+  );
+}
