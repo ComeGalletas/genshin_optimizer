@@ -1,3 +1,5 @@
+import containerQueries from '@tailwindcss/container-queries';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   // The engine moved out of the app in TODO 0.3, but Tailwind extracts
@@ -104,5 +106,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  // Size containers: the character window lays out by its own width.
+  plugins: [containerQueries],
 };

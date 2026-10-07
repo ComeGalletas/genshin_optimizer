@@ -552,6 +552,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - On the owner's account: 56 well built, 3 built, 5 partly built, 31 unbuilt. Kokomi is Well built on her Bloom build (41.2).
     - **Bands moved** (owner, 2026-10-07): Built from 40 and Well built from 45; Partly built stays at 21. Bands compare the scores as shown (artifacts to one decimal, readiness whole), so Nefer's 44.99, shown as 45.0, is Well built. On the owner's account: 30 well built, 16 built, 18 partly built, 31 unbuilt; Kokomi (41.2) is Built.
 - [ ] 10.9 Refresh the curated targets (the optimizer's defaults: set requirement, main-stat locks, Energy Recharge floor) from the KQM quick guides, character by character with the owner. 39 of the 53 differ in a set, main stats or Energy Recharge (ADR-0059), and several were transcribed from guides that are years old. Their `source` links move to the quick guides.
+- [x] 10.10 The character window opens from the left over 75% of the screen (95% on a phone, where the 5% left on the right closes it; the 75% is `WIDE_DRAWER_WIDTH` in `components/ui/Drawer.tsx`, to tweak), with the splash art held still in a frame while the content scrolls, and the tabs laid out by the window's own width (Tailwind container queries): score cards, teams and recipe, stats and talents, weapon and artifacts side by side when there's room. Owner, 2026-10-07.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog

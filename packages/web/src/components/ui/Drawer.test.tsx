@@ -38,6 +38,31 @@ function stubMatchMedia(matches: boolean) {
 }
 
 describe('AppDrawer', () => {
+  it('opens a wide drawer from the left even on a phone, with the art held still', () => {
+    // The test setup reports a mobile screen: a plain drawer would come
+    // from the bottom with its grab handle.
+    render(
+      <AppDrawer
+        onClose={() => {}}
+        title="Ayaka"
+        wide
+        background={<img alt="" data-testid="art" />}
+      >
+        <p>body</p>
+      </AppDrawer>,
+    );
+    const frame = screen.getByTestId('wide-drawer');
+    expect(frame).toHaveClass('left-0', 'w-[95vw]', 'overflow-hidden');
+    expect(frame.className).toContain('sm:w-[var(--wide-drawer)]');
+    expect(frame.style.getPropertyValue('--wide-drawer')).toBe('75vw');
+    // The art sits in the frame, outside the part that scrolls.
+    const scroll = screen.getByTestId('drawer-scroll');
+    expect(scroll).toHaveClass('overflow-y-auto', '@container');
+    expect(scroll).toContainElement(screen.getByText('body'));
+    expect(scroll).not.toContainElement(screen.getByTestId('art'));
+    expect(frame).toContainElement(screen.getByTestId('art'));
+  });
+
   it('renders children in a dialog when open and closes via the close button', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

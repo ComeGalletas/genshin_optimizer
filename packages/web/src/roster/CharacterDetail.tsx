@@ -163,17 +163,21 @@ export function CharacterDetail({
             {/* On wells: the window's art shows through everything else. */}
             {readiness ? (
               <>
-                <ReadinessCard readiness={readiness} />
-                <QualityCard
-                  characterKey={characterKey}
-                  qualities={qualities}
-                  build={build}
-                  onBuildChange={(b) =>
-                    setPicked({ key: characterKey, build: b })
-                  }
-                  unscored={unscoredBuilds(characterKey)}
-                  weapon={weapon}
-                />
+                {/* Side by side once the window is wide (a size container:
+                    the drawer's width, not the screen's). */}
+                <div className="grid items-start gap-3 @2xl:grid-cols-2">
+                  <ReadinessCard readiness={readiness} />
+                  <QualityCard
+                    characterKey={characterKey}
+                    qualities={qualities}
+                    build={build}
+                    onBuildChange={(b) =>
+                      setPicked({ key: characterKey, build: b })
+                    }
+                    unscored={unscoredBuilds(characterKey)}
+                    weapon={weapon}
+                  />
+                </div>
                 <p className="text-xs text-muted">
                   {objectiveHint(meta?.objective ?? 'crit_value')}
                 </p>
@@ -185,153 +189,157 @@ export function CharacterDetail({
               </p>
             )}
             {/* Teams first, then the recipe; Optimise last (TODO 9.10). */}
-            <section aria-label="Teams" className="well space-y-2 px-3 py-2">
-              <h3 className="text-xs font-semibold uppercase text-muted">
-                Teams
-              </h3>
-              {comps.length ? (
-                <ul className="space-y-2">
-                  {comps.map((a) => (
-                    <li
-                      key={a.id}
-                      className="rounded-lg bg-white/[0.03] px-3 py-2"
-                    >
-                      <p className="font-semibold text-paper">{a.name}</p>
-                      <p className="text-xs text-muted">{a.notes}</p>
-                      <p className="mt-1 text-xs text-muted">
-                        {a.slots
-                          .map((s) => {
-                            const k = s.options[0]?.characterKey;
-                            return `${ROLE_LABELS[s.role]}: ${k ? genshinAdapter.characterName(k) : '—'}`;
-                          })
-                          .join(' · ')}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-muted">
-                  Not in any curated team archetype yet.
-                </p>
-              )}
-            </section>
-            <section
-              aria-label="Recommended"
-              className="well space-y-2 px-3 py-2"
-            >
-              <h3 className="text-xs font-semibold uppercase text-muted">
-                Recommended
-              </h3>
-              {meta ? (
-                <>
-                  <p>
-                    <span className="text-muted">Set:</span>{' '}
-                    {setRequirementLabel(meta.setRequirement)}
+            <div className="grid items-start gap-3 @2xl:grid-cols-2">
+              <section aria-label="Teams" className="well space-y-2 px-3 py-2">
+                <h3 className="text-xs font-semibold uppercase text-muted">
+                  Teams
+                </h3>
+                {comps.length ? (
+                  <ul className="space-y-2">
+                    {comps.map((a) => (
+                      <li
+                        key={a.id}
+                        className="rounded-lg bg-white/[0.03] px-3 py-2"
+                      >
+                        <p className="font-semibold text-paper">{a.name}</p>
+                        <p className="text-xs text-muted">{a.notes}</p>
+                        <p className="mt-1 text-xs text-muted">
+                          {a.slots
+                            .map((s) => {
+                              const k = s.options[0]?.characterKey;
+                              return `${ROLE_LABELS[s.role]}: ${k ? genshinAdapter.characterName(k) : '—'}`;
+                            })
+                            .join(' · ')}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-muted">
+                    Not in any curated team archetype yet.
                   </p>
-                  {Object.entries(meta.mains).map(([slot, stat]) => (
-                    <p key={slot}>
-                      <span className="text-muted">
-                        {SLOT_LABELS[slot as Slot]}:
-                      </span>{' '}
-                      {statLabel(stat)}
-                    </p>
-                  ))}
-                  {meta.erTarget && (
+                )}
+              </section>
+              <section
+                aria-label="Recommended"
+                className="well space-y-2 px-3 py-2"
+              >
+                <h3 className="text-xs font-semibold uppercase text-muted">
+                  Recommended
+                </h3>
+                {meta ? (
+                  <>
                     <p>
-                      <span className="text-muted">ER floor:</span>{' '}
-                      {meta.erTarget}%
+                      <span className="text-muted">Set:</span>{' '}
+                      {setRequirementLabel(meta.setRequirement)}
                     </p>
-                  )}
-                  {meta.statTargets && (
-                    <p className="text-xs text-muted">
-                      Endgame targets:{' '}
-                      {Object.entries(meta.statTargets)
-                        .map(
-                          ([k, v]) =>
-                            `${statLabel(k as StatKey)} ${formatStat(k as StatKey, v)}`,
-                        )
-                        .join(', ')}
-                    </p>
-                  )}
-                  <SourceLink
-                    className="text-xs text-flux-bright underline"
-                    href={meta.source}
-                  >
-                    Source guide (KQM)
-                  </SourceLink>
-                  {/* The damage profile is usually cited from the very same KQM
+                    {Object.entries(meta.mains).map(([slot, stat]) => (
+                      <p key={slot}>
+                        <span className="text-muted">
+                          {SLOT_LABELS[slot as Slot]}:
+                        </span>{' '}
+                        {statLabel(stat)}
+                      </p>
+                    ))}
+                    {meta.erTarget && (
+                      <p>
+                        <span className="text-muted">ER floor:</span>{' '}
+                        {meta.erTarget}%
+                      </p>
+                    )}
+                    {meta.statTargets && (
+                      <p className="text-xs text-muted">
+                        Endgame targets:{' '}
+                        {Object.entries(meta.statTargets)
+                          .map(
+                            ([k, v]) =>
+                              `${statLabel(k as StatKey)} ${formatStat(k as StatKey, v)}`,
+                          )
+                          .join(', ')}
+                      </p>
+                    )}
+                    <SourceLink
+                      className="text-xs text-flux-bright underline"
+                      href={meta.source}
+                    >
+                      Source guide (KQM)
+                    </SourceLink>
+                    {/* The damage profile is usually cited from the very same KQM
                   page as the recipe above, and two links to one page read as
                   two sources. Only shown when it really is a second one. */}
-                  {profile && profile.source !== meta.source && (
-                    <p>
-                      <SourceLink
-                        className="text-xs text-muted underline"
-                        href={profile.source}
-                      >
-                        Damage Profile Source
-                      </SourceLink>
-                    </p>
-                  )}
-                  {/* What the 4pc number assumes (ADR-0020), or why there is no
+                    {profile && profile.source !== meta.source && (
+                      <p>
+                        <SourceLink
+                          className="text-xs text-muted underline"
+                          href={profile.source}
+                        >
+                          Damage Profile Source
+                        </SourceLink>
+                      </p>
+                    )}
+                    {/* What the 4pc number assumes (ADR-0020), or why there is no
                   number — the unmodelled sets, the wrong weapon class and the
                   hit-kind bonuses a scalar objective can't see all come back
                   from the same call now. Quiet on purpose: it qualifies the
                   figure above rather than competing with it. */}
-                  {fourPcKey &&
-                    fourPieceAssumptions(
-                      [fourPcKey],
-                      {
-                        hasDamage: meta.objective === 'avg_damage',
-                        weaponType: weaponKey
-                          ? genshinAdapter.weapon(weaponKey)?.type
-                          : undefined,
-                      },
-                      formatSetName,
-                    ).map((line) => (
-                      <p
-                        key={line}
-                        className="text-2xs leading-relaxed text-muted"
-                      >
-                        {line}
+                    {fourPcKey &&
+                      fourPieceAssumptions(
+                        [fourPcKey],
+                        {
+                          hasDamage: meta.objective === 'avg_damage',
+                          weaponType: weaponKey
+                            ? genshinAdapter.weapon(weaponKey)?.type
+                            : undefined,
+                        },
+                        formatSetName,
+                      ).map((line) => (
+                        <p
+                          key={line}
+                          className="text-2xs leading-relaxed text-muted"
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    {!profile && (
+                      <p className="text-xs text-muted">
+                        No curated damage profile yet — builds for this
+                        character are ranked by {objectiveLabel(meta.objective)}{' '}
+                        instead of estimated damage.
                       </p>
-                    ))}
-                  {!profile && (
-                    <p className="text-xs text-muted">
-                      No curated damage profile yet — builds for this character
-                      are ranked by {objectiveLabel(meta.objective)} instead of
-                      estimated damage.
-                    </p>
-                  )}
-                </>
-              ) : (
-                <p className="text-muted">
-                  No curated recipe for this character yet.
-                </p>
-              )}
-            </section>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-muted">
+                    No curated recipe for this character yet.
+                  </p>
+                )}
+              </section>
+            </div>
             {footer}
           </>
         )}
 
         {tab === 'Stats' && (
-          <>
+          <div className="grid items-start gap-3 @2xl:grid-cols-2">
             <CharacterStats
               details={details}
               characterKey={characterKey}
               entry={entry}
               artifacts={artifacts}
             />
-            <Talents
-              details={details}
-              characterKey={characterKey}
-              entry={entry}
-            />
-            <Constellations characterKey={characterKey} entry={entry} />
-          </>
+            <div className="space-y-3">
+              <Talents
+                details={details}
+                characterKey={characterKey}
+                entry={entry}
+              />
+              <Constellations characterKey={characterKey} entry={entry} />
+            </div>
+          </div>
         )}
 
         {tab === 'Gear' && (
-          <>
+          <div className="grid items-start gap-3 @2xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <WeaponCard details={details} entry={entry} />
             <ArtifactList
               characterKey={characterKey}
@@ -339,7 +347,7 @@ export function CharacterDetail({
               details={details}
               artifacts={artifacts}
             />
-          </>
+          </div>
         )}
       </div>
     </div>

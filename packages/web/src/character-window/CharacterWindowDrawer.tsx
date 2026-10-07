@@ -65,6 +65,7 @@ export function CharacterWindowDrawer({
         )
       }
       background={<CharacterSplash characterKey={characterKey} />}
+      wide
     >
       <CharacterDetail
         key={characterKey}

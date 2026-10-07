@@ -160,9 +160,9 @@ export function ArtifactList({
   );
   const effects = details && details !== 'failed' ? details.sets : undefined;
   return (
-    <section aria-label="Artifacts" className="space-y-1.5">
+    <section aria-label="Artifacts" className="space-y-1.5 @container">
       <h3 className="text-xs font-semibold uppercase text-muted">Artifacts</h3>
-      <ul className="space-y-1.5">
+      <ul className="grid gap-1.5 @xl:grid-cols-2 @4xl:grid-cols-3">
         {SLOTS.flatMap((s) => {
           // Every piece the account puts in the slot: two means the data
           // holds two copies (often one piece before and after levelling
