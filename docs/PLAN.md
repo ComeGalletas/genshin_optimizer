@@ -147,7 +147,11 @@ Each phase ends with acceptance criteria. Don't start the next phase until the o
 
 ## Phase 10: Reorganization
 
-Moving elements and functions around, and adding new ones, to the owner's scope (still to be written down: TODO 10.1).
+Moving elements and functions around, and adding new ones, to the owner's scope (TODO 10.1, still growing).
+
+- Teams and rotations linked: a recommended team shows its rotations, and Simulate starts from the owner's teams.
+- Teams come from the same sources as the character builds (10.2). They load with character data (an optimization, the character window), asynchronously and with loading indicators, rather than up front.
+- Rotations become the owner's own data, persisted locally for now, with a rotation builder: by hand, or designed by the language model under the existing draft and review rules (ADR-0043).
 
 - More guide sources for the build and team previews, beside KQM's. genshin-builds.com is extracted at data-build time into a checked schema: facts only, each with its URL and date, reviewed by the owner before use. Game8 is linked, never extracted, because its terms forbid reproduction and unauthorized software. The previews compare the sources and name them. ADR.
 - On the side: a hover window for weapons only (its passive at its refinement, its stats at its level).
