@@ -1,9 +1,9 @@
 /**
  * Guide builds (ADR-0059): every artifact build the guides list for each
- * character, for the artifact score. Generated on 2026-10-07 from a read of
- * the KQM guides (the quick guide wherever one exists) and genshin-builds.com
- * (Game8 is links only), then checked against the dataset's keys. Not
- * optimizer defaults: `META_TARGETS` stays the only source of those.
+ * character, for the artifact score. Written by `npm run data:guides` from
+ * `data/sources/` (ADR-0061): edit the sources or re-read them
+ * (`npm run sources`), never this file. Not optimizer defaults:
+ * `META_TARGETS` stays the only source of those.
  *
  * - Builds from the two guides with the same role (and constellation) are
  *   one build: the main stats either names, the sets either names, KQM's
@@ -14,7 +14,7 @@
  *   score.
  * - `unscored` lists builds the guide leaves a main stat or the substats
  *   out of, and why, so the window can say so.
- * - Builds their own guide marks not recommended or out of date were left
+ * - Builds their own guide marks not recommended or out of date are left
  *   out (owner, 2026-10-07).
  * - Varka's KQM goblet is a Pyro, Hydro, Electro or Cryo DMG one over his
  *   own Anemo; only an Anemo one is accepted until a goblet can name an

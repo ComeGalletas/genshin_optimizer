@@ -1,7 +1,8 @@
 /**
  * genshin.gg's build for each character (ADR-0060): a cross-check shown
  * beside the guide builds, never scored. One build a character, read by
- * `npm run guides:genshin-gg` into `genshinGg.generated.json`.
+ * `npm run sources -- genshin-gg` and written to `genshinGg.generated.json` by
+ * `npm run data:guides` (ADR-0061).
  * @packageDocumentation
  */
 import type { StatKey } from '../game/types';

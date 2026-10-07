@@ -1,0 +1,8664 @@
+{
+ "source": "kqm",
+ "site": "https://keqingmains.com",
+ "readBy": "agents",
+ "characters": {
+  "aino": {
+   "url": "https://keqingmains.com/q/aino-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "em",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 190,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Greatsword",
+       "min": 155
+      },
+      {
+       "weapon": "Flame-Forged Insight",
+       "min": 100
+      }
+     ],
+     "notes": "Page says GD/FoPL only serve her own damage and are not recommended."
+    }
+   ]
+  },
+  "albedo": {
+   "url": "https://keqingmains.com/q/albedo-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "def_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "ER figures apply only if he Bursts every rotation; page says ER can otherwise be ignored."
+    }
+   ]
+  },
+  "alhaitham": {
+   "url": "https://keqingmains.com/q/alhaitham-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "DeepwoodMemories",
+       "GoldenTroupe"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "DeepwoodMemories"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "GoldenTroupe"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 105,
+     "notes": "Stat priority puts 200-300 EM ahead of CRIT, then more EM after CRIT; 4pc DM is listed for when no teammate holds it."
+    }
+   ]
+  },
+  "aloy": {
+   "url": "https://keqingmains.com/q/aloy-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Reverse Melt DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Lavawalker"
+      ]
+     ],
+     "erMin": 140
+    },
+    {
+     "name": "Freeze and Mono Cryo",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 140
+    }
+   ]
+  },
+  "alyosha": {
+   "url": "https://keqingmains.com/q/alyosha-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "healing",
+       "atk_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "atk_pct",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 235,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance",
+       "min": 195
+      }
+     ]
+    }
+   ]
+  },
+  "amber": {
+   "url": "https://keqingmains.com/q/amber-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Melt",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER table is for C4+ Melt (C0 Melt does not Burst); a no-CRIT-Rate weak-spot variant is also mentioned."
+    },
+    {
+     "name": "Burgeon",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "Page says she has no ER requirement in Burgeon since she does not Burst."
+    },
+    {
+     "name": "Burst Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "Instructor"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erWeapons": [
+      {
+       "weapon": "Elegy for the End",
+       "min": 225
+      },
+      {
+       "weapon": "Favonius Warbow",
+       "min": 165
+      }
+     ],
+     "notes": "Both ER scenarios are weapon-specific, so there is no default erMin."
+    }
+   ]
+  },
+  "arataki_itto": {
+   "url": "https://keqingmains.com/q/itto-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "LongNightsOath"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "erMin is Double Geo with Xilonen (2 Skills); MH matches Husk only in Furina teams and LNO is for Xianyun Plunge teams."
+    }
+   ]
+  },
+  "arlecchino": {
+   "url": "https://keqingmains.com/q/arlecchino-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "FragmentOfHarmonicWhimsy"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "ER table (150%+ solo Pyro) is only for Bursting every rotation, which the page advises against; otherwise she builds no ER."
+    }
+   ]
+  },
+  "baizhu": {
+   "url": "https://keqingmains.com/q/baizhu-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "SongOfDaysPast"
+      ]
+     ],
+     "erMin": 320,
+     "erWeapons": [
+      {
+       "weapon": "Jadefall’s Splendor R1",
+       "min": 210
+      },
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 250
+      },
+      {
+       "weapon": "Favonius Codex R5",
+       "min": 250
+      }
+     ],
+     "notes": "Page says its 4pc sets are team-niche and hard to rank; erMin is the \"Other Weapons\" Solo Dendro 1-Skill figure."
+    }
+   ]
+  },
+  "barbara": {
+   "url": "https://keqingmains.com/q/barbara-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Pure Healer/4OHC (Electro-Charged)",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "MaidenBeloved",
+       "OceanHuedClam"
+      ],
+      [
+       "MaidenBeloved",
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "OceanHuedClam",
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Page calls 4MB BiS for healing but says not to farm it; 4OHC is also its Electro-Charged driver set."
+    },
+    {
+     "name": "Vaporize",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "hp_pct",
+      "atk",
+      "hp"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "HeartOfDepth",
+       "ShimenawasReminiscence"
+      ],
+      [
+       "HeartOfDepth",
+       "GladiatorsFinale"
+      ]
+     ],
+     "erMin": 100
+    }
+   ]
+  },
+  "beidou": {
+   "url": "https://keqingmains.com/q/beidou-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ],
+     "erMin": 185,
+     "notes": "erMin is Solo Electro with 1 perfect counter + 1 tap Skill; 2 tap Skills needs 220%+."
+    }
+   ]
+  },
+  "bennett": {
+   "url": "https://keqingmains.com/q/bennett-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Healing Support",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "atk_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TheExile"
+      ],
+      [
+       "MaidenBeloved"
+      ]
+     ],
+     "erMin": 195,
+     "notes": "Maiden Beloved is \"generally not recommended\" except to overcap healing in Furina teams."
+    },
+    {
+     "name": "Invested Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 195,
+     "notes": "Page gives one \"Invested Support or DPS\" stat block; split here by each set’s stated use."
+    },
+    {
+     "name": "On-field DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "LongNightsOath"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Page gives one \"Invested Support or DPS\" stat block; split here by each set’s stated use; erMin is the \"On-field (with 4+ Skill uses)\" figure."
+    },
+    {
+     "name": "Burgeon / Overloaded Trigger",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin uses the on-field (4+ Skill uses) figure since he is the on-field trigger; GD/FoPL are listed for on-field Burgeon only."
+    }
+   ]
+  },
+  "candace": {
+   "url": "https://keqingmains.com/q/candace-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 260,
+     "notes": "erMin is the Solo Hydro 1-Skill row; the page strongly recommends 2 Skills (230-260%)."
+    },
+    {
+     "name": "Bloom DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 260,
+     "notes": "The page shares one ER table across both builds."
+    }
+   ]
+  },
+  "charlotte": {
+   "url": "https://keqingmains.com/q/charlotte-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "healing",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MaidenBeloved"
+      ]
+     ],
+     "erMin": 230,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 185
+      }
+     ]
+    }
+   ]
+  },
+  "chasca": {
+   "url": "https://keqingmains.com/q/chasca-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Page says not to build ER for Burst every rotation (165-195%); erMin is the Burst-every-other-rotation figure."
+    }
+   ]
+  },
+  "chevreuse": {
+   "url": "https://keqingmains.com/q/chevreuse-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Page gives one set list for both builds (split here by each set’s stated purpose); 4pc NO needs Burst every rotation (175-205%)."
+    },
+    {
+     "name": "Quickswap DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "GT and CW are listed for C4+ only; this build wants Burst every rotation (175-205%)."
+    }
+   ]
+  },
+  "chiori": {
+   "url": "https://keqingmains.com/q/chiori-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "def_pct"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "GoldenTroupe",
+       "HuskOfOpulentDreams"
+      ]
+     ],
+     "notes": "Page says ER is not worth building (Burst when available); its ER table is only for Bursting every rotation."
+    }
+   ]
+  },
+  "chongyun": {
+   "url": "https://keqingmains.com/q/chongyun-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "NoblesseOblige",
+       "BlizzardStrayer"
+      ],
+      [
+       "Lavawalker"
+      ]
+     ],
+     "erMin": 150
+    }
+   ]
+  },
+  "citlali": {
+   "url": "https://keqingmains.com/q/citlali-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 170,
+     "notes": "Page says with Favonius Codex her requirement is under 160%, so she needs no ER build."
+    }
+   ]
+  },
+  "clorinde": {
+   "url": "https://keqingmains.com/q/clorinde-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "FragmentOfHarmonicWhimsy"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "erMin is Solo Electro Burst-every-Skill-combo; Burst every other combo is 110-130%."
+    }
+   ]
+  },
+  "collei": {
+   "url": "https://keqingmains.com/q/collei-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General Build",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 200,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Warbow",
+       "min": 170
+      },
+      {
+       "weapon": "Sacrificial Bow",
+       "min": 160
+      }
+     ],
+     "notes": "Page gives one shared set list for both stat builds."
+    },
+    {
+     "name": "Pure Bloom Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "em"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 200,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Warbow",
+       "min": 170
+      },
+      {
+       "weapon": "Sacrificial Bow",
+       "min": 160
+      }
+     ],
+     "notes": "Page gives one shared set list for both stat builds."
+    }
+   ]
+  },
+  "columbina": {
+   "url": "https://keqingmains.com/q/columbina-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "em",
+      "hp"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "AubadeOfMorningstarAndMoon"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 235,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber / Nocturne’s Curtain Call",
+       "min": 165
+      },
+      {
+       "weapon": "Favonius Codex",
+       "min": 190
+      }
+     ],
+     "notes": "erMin is Off-Field Solo Hydro Burst every rotation; page says Bursting every other rotation halves it."
+    }
+   ]
+  },
+  "cyno": {
+   "url": "https://keqingmains.com/q/cyno-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "erMin assumes 4pc Thundering Fury; with other sets the Solo Electro figure is 180-200%."
+    }
+   ]
+  },
+  "dahlia": {
+   "url": "https://keqingmains.com/q/dahlia-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 240
+    }
+   ]
+  },
+  "dehya": {
+   "url": "https://keqingmains.com/q/dehya-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-Field Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "hp_pct"
+      ],
+      "goblet": [
+       "em",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "em",
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "em",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "notes": "Page says she does not use her Burst here, so she has no ER requirement."
+    },
+    {
+     "name": "Burgeon",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ],
+     "notes": "Page says she does not use her Burst here, so she has no ER requirement."
+    },
+    {
+     "name": "On-Field DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em",
+       "atk_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "VourukashasGlow"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "LongNightsOath"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "HP% Sands is listed for C1 only; ER requirements drop about 40% at C4."
+    }
+   ]
+  },
+  "diluc": {
+   "url": "https://keqingmains.com/q/diluc-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Vaporize / Melt",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "erMin": 120
+    },
+    {
+     "name": "Mono Pyro",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "Lavawalker"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "erMin": 115
+    },
+    {
+     "name": "Burgeon",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 120
+    }
+   ]
+  },
+  "diona": {
+   "url": "https://keqingmains.com/q/diona-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 180,
+     "erWeapons": [
+      {
+       "weapon": "Sacrificial Bow",
+       "min": 145
+      },
+      {
+       "weapon": "Favonius Warbow",
+       "min": 160
+      }
+     ],
+     "notes": "erMin is the general Double Cryo C0 \"Other Bow\" figure; C1-C6 figures are lower (145-175%)."
+    }
+   ]
+  },
+  "dori": {
+   "url": "https://keqingmains.com/q/dori-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Aggravate",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Favonius (w/ Favonius column)",
+       "min": 180
+      }
+     ],
+     "notes": "erMin is \"Other - Solo Electro\" without Favonius (the C6-driver rows are lower); the page does not say whose Favonius the other column means."
+    },
+    {
+     "name": "Hyperbloom",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Favonius (w/ Favonius column)",
+       "min": 180
+      }
+     ],
+     "notes": "erMin is \"Other - Solo Electro\" without Favonius (the C6-driver rows are lower); the page does not say whose Favonius the other column means."
+    },
+    {
+     "name": "Pure Healer (Not Recommended)",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Favonius (w/ Favonius column)",
+       "min": 180
+      }
+     ],
+     "excluded": "the guide marks it not recommended",
+     "notes": "Page says this build is almost never recommended; its sets are the ones tagged [Flexible]."
+    }
+   ]
+  },
+  "durin": {
+   "url": "https://keqingmains.com/q/durin-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Support Sets",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "CelestialGift"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "Page gives one stat block for both; sets come from its separate Support and DPS set sections."
+    },
+    {
+     "name": "DPS Sets",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NoblesseOblige",
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "Page gives one stat block for both; sets come from its separate Support and DPS set sections."
+    }
+   ]
+  },
+  "emilie": {
+   "url": "https://keqingmains.com/q/emilie-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 180,
+     "erWeapons": [
+      {
+       "weapon": "Lumidouce Elegy",
+       "min": 135
+      }
+     ],
+     "notes": "erMin is Burst every rotation; the page says Bursting every other rotation (100-120%) is usually better."
+    }
+   ]
+  },
+  "escoffier": {
+   "url": "https://keqingmains.com/q/escoffier-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Escoffier",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 120
+    }
+   ]
+  },
+  "eula": {
+   "url": "https://keqingmains.com/q/eula-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Eula",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "erMin": 140
+    }
+   ]
+  },
+  "faruzan": {
+   "url": "https://keqingmains.com/q/faruzan-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Pre-C6",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct"
+      ],
+      "goblet": [],
+      "circlet": [
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "TheExile"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "TheExile"
+      ]
+     ],
+     "erMin": 220,
+     "notes": "Goblet 'Anything with ER', circlet 'Anything with ER / CRIT Rate (Favonius)'; TotM and GT are C6-only per the page, and ER comes before set bonuses."
+    },
+    {
+     "name": "C6",
+     "role": "support",
+     "roleFrom": "review",
+     "constellation": "C6",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "TheExile"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "TheExile"
+      ]
+     ],
+     "erMin": 175
+    }
+   ]
+  },
+  "fischl": {
+   "url": "https://keqingmains.com/q/fischl-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-field DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "EM Sands only in Aggravate teams (ATK% is similar or better there). Quick guide is 'Updated for Version 4.0'."
+    },
+    {
+     "name": "On-field DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "PaleFlame"
+      ]
+     ],
+     "erMin": 110,
+     "notes": "Split out from the shared table: Physical goblet is 'if on-field' (C1-focused), 4pc Pale Flame is 'for on-field DPS builds only'."
+    }
+   ]
+  },
+  "flins": {
+   "url": "https://keqingmains.com/q/flins-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Flins",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 100
+    }
+   ]
+  },
+  "freminet": {
+   "url": "https://keqingmains.com/q/freminet-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Cryo Skill DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "PaleFlame"
+      ]
+     ],
+     "erMin": 150
+    },
+    {
+     "name": "Physical Skill DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "physical_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ],
+     "erMin": 150
+    },
+    {
+     "name": "Plunging Attack DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "physical_dmg",
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "LongNightsOath"
+      ],
+      [
+       "PaleFlame"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "Page says this playstyle doesn't Burst so it builds no ER; goblet is Physical or Elemental DMG (Cryo/Pyro) by team."
+    }
+   ]
+  },
+  "furina": {
+   "url": "https://keqingmains.com/q/furina-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Furina",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "Base ER is 'Solo Hydro 200%+'; Scroll and SMS share one row; 4pc MH is for C6."
+    }
+   ]
+  },
+  "gaming": {
+   "url": "https://keqingmains.com/q/gaming-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Gaming",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "LongNightsOath"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "VermillionHereafter"
+      ]
+     ],
+     "erMin": 150
+    }
+   ]
+  },
+  "ganyu": {
+   "url": "https://keqingmains.com/q/ganyu-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Freeze",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 110,
+     "notes": "MH is her best set with Furina; ATK% circlet with CRIT DMG bows."
+    },
+    {
+     "name": "Melt",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "UnfinishedReverie"
+      ]
+     ],
+     "notes": "Page: Ganyu does not build ER in Melt teams; Unfinished Reverie is for Burnmelt."
+    },
+    {
+     "name": "Support",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "erMin": 105,
+     "notes": "Uses the shared main-stat table and the 'Freeze / Support' substat line; erMin is the first off-field row (high particle generation, Triple Cryo)."
+    }
+   ]
+  },
+  "gorou": {
+   "url": "https://keqingmains.com/q/gorou-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Gorou",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct"
+      ],
+      "goblet": [],
+      "circlet": [
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TheExile"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "notes": "Goblet is 'Any'; ER is given only as ceilings ('up to 220%' with Favonius Warbow, 'up to 250%' without, <=140% when bursting every other rotation); Husk/EoSF come from the 'Other Sets' row."
+    }
+   ]
+  },
+  "hu_tao": {
+   "url": "https://keqingmains.com/q/hu-tao-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Hu Tao",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "atk_pct",
+      "hp",
+      "atk",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "No ER target: she shouldn't build ER to Burst every rotation, though ~110% helps. Quick guide is 'Updated for Version 3.3'."
+    }
+   ]
+  },
+  "iansan": {
+   "url": "https://keqingmains.com/q/iansan-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Iansan",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 220,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance",
+       "min": 180
+      }
+     ]
+    }
+   ]
+  },
+  "ifa": {
+   "url": "https://keqingmains.com/q/ifa-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Healer / On-Field Swirl DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 160,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber",
+       "min": 105
+      }
+     ],
+     "notes": "Prototype Amber figure is for Furina teams (105-130% at C0)."
+    },
+    {
+     "name": "Anemo DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ]
+     ],
+     "erMin": 160,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber",
+       "min": 105
+      }
+     ],
+     "notes": "Page lists 4pc VV first but calls 4pc Obsidian Codex the unquestioned BiS for personal damage."
+    }
+   ]
+  },
+  "illuga": {
+   "url": "https://keqingmains.com/q/illuga-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Illuga",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "def"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TheExile"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 165
+    }
+   ]
+  },
+  "ineffa": {
+   "url": "https://keqingmains.com/q/ineffa-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Ineffa",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "AubadeOfMorningstarAndMoon"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin is the baseline (Burst every other rotation) column; bursting every rotation needs 140-160% (Double Electro), and she only builds ER when needs are below ~140%."
+    }
+   ]
+  },
+  "jahoda": {
+   "url": "https://keqingmains.com/q/jahoda-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Jahoda",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "healing",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 225,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Warbow",
+       "min": 190
+      }
+     ],
+     "notes": "Circlet cell reads 'CRIT Rate | Healing Bonus > ATK%'; CRIT Rate is for Favonius Warbow."
+    }
+   ]
+  },
+  "jean": {
+   "url": "https://keqingmains.com/q/jean-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Support",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 160
+    },
+    {
+     "name": "Sunfire",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "The page's single set table names 4pc VV as Sunfire's BiS; the other rows are for when VV is redundant."
+    }
+   ]
+  },
+  "kachina": {
+   "url": "https://keqingmains.com/q/kachina-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kachina",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "def_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ObsidianCodex"
+      ]
+     ],
+     "erMin": 280,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance",
+       "min": 210
+      }
+     ],
+     "notes": "Base figure is '280%+' (Solo Geo, 20s rotation, C0); the 'with Fav' column doesn't say who holds the Favonius weapon. NO and TotM share one row."
+    }
+   ]
+  },
+  "kaedehara_kazuha": {
+   "url": "https://keqingmains.com/q/kazuha-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kazuha",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ThunderingFury"
+      ]
+     ],
+     "erMin": 190,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Sword",
+       "min": 160
+      }
+     ]
+    }
+   ]
+  },
+  "kaeya": {
+   "url": "https://keqingmains.com/q/kaeya-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "UnfinishedReverie"
+      ]
+     ],
+     "erMin": 230
+    },
+    {
+     "name": "Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 230,
+     "notes": "Page has one main-stat table; for support it only says to prioritise as much ER and CRIT Rate (Favonius Sword) as possible."
+    }
+   ]
+  },
+  "kamisato_ayaka": {
+   "url": "https://keqingmains.com/q/ayaka-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kamisato Ayaka",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 130,
+     "notes": "Page calls 4pc BS best on paper but unreliable, and 4pc MH the recommended set for most content with Furina."
+    }
+   ]
+  },
+  "kamisato_ayato": {
+   "url": "https://keqingmains.com/q/ayato-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kamisato Ayato",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "NymphsDream"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "erMin": 130,
+     "notes": "Page says the four recommended 4pc sets perform similarly; the last six are niche sets. ER Sands only as an off-field Burst DPS."
+    }
+   ]
+  },
+  "kaveh": {
+   "url": "https://keqingmains.com/q/kaveh-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kaveh",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "em",
+      "atk_pct",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Greatsword",
+       "min": 160
+      }
+     ],
+     "notes": "Substat line: ER > CRIT Rate (if Favonius Greatsword) > EM >= ATK% >= CRIT."
+    }
+   ]
+  },
+  "keqing": {
+   "url": "https://keqingmains.com/q/keqing-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Dendro",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "ThunderingFury",
+       "MarechausseeHunter"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "notes": "Covers Aggravate and Quickbloom (EM far better than ATK% in Quickbloom); UR is Quickburn-only, MH needs Furina. ER needs near-nonexistent (up to ~140-150% in rare teams)."
+    },
+    {
+     "name": "Overload",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury",
+       "MarechausseeHunter"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "FragmentOfHarmonicWhimsy"
+      ]
+     ],
+     "notes": "Page says 4pc TF is not recommended in Overload; 4pc Whimsy needs Finale of the Deep and a healer."
+    },
+    {
+     "name": "Lunar-Charged",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FragmentOfHarmonicWhimsy"
+      ]
+     ],
+     "notes": "MH with Furina, NotSU with Aino (two Nod-Krai units)."
+    }
+   ]
+  },
+  "kinich": {
+   "url": "https://keqingmains.com/q/kinich-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kinich",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin is the Burst-every-other-rotation column; Bursting every rotation needs 200-245% (Solo Dendro)."
+    }
+   ]
+  },
+  "kirara": {
+   "url": "https://keqingmains.com/q/kirara-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kirara",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 160
+    }
+   ]
+  },
+  "klee": {
+   "url": "https://keqingmains.com/q/klee-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Klee",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "FragmentOfHarmonicWhimsy"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "erMin is 'Klee + 1 Pyro, No Favonius'; a 'Support Set' row (Instructor) for support Klee has no stats of its own."
+    }
+   ]
+  },
+  "kujou_sara": {
+   "url": "https://keqingmains.com/q/sara-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Kujou Sara",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "Quick guide is 'Updated for Version 3.2'."
+    }
+   ]
+  },
+  "kuki_shinobu": {
+   "url": "https://keqingmains.com/q/shinobu-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Hyperbloom",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 135
+    },
+    {
+     "name": "Quicken",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "Page lists support sets first for team value; 4pc Golden Troupe is her BiS for personal damage."
+    },
+    {
+     "name": "Pure Healer",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "em"
+      ],
+      "goblet": [
+       "hp_pct",
+       "em"
+      ],
+      "circlet": [
+       "healing",
+       "hp_pct",
+       "em"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "em",
+      "er_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "lan_yan": {
+   "url": "https://keqingmains.com/q/lan-yan-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-Field Shield Support",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 215,
+     "notes": "Substat line is 'for damage'; page says to put ATK% over CRIT for shield strength and that she usually doesn't Burst every rotation."
+    },
+    {
+     "name": "On-Field-Reaction Driver",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 215,
+     "notes": "Set table is shared with the shield build; ER table is shared too (Solo Anemo, 1 Skill)."
+    }
+   ]
+  },
+  "lauma": {
+   "url": "https://keqingmains.com/q/lauma-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ]
+     ],
+     "erMin": 170
+    }
+   ]
+  },
+  "layla": {
+   "url": "https://keqingmains.com/q/layla-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 220
+    }
+   ]
+  },
+  "linnea": {
+   "url": "https://keqingmains.com/q/linnea-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "def_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "AubadeOfMorningstarAndMoon"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "notes": "KQM gives 170–185% ER only for bursting every rotation and says this is generally not recommended (100% when bursting as available)."
+    }
+   ]
+  },
+  "lisa": {
+   "url": "https://keqingmains.com/q/lisa-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "On-Field Electro DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "er_pct",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER table is shared between builds; erMin uses its first on-field row (Electro Resonance On-field, 100–130%)."
+    },
+    {
+     "name": "Off-Field Electro DPS / Support",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 170,
+     "notes": "ER table is shared between builds; erMin uses its first off-field row (Solo Electro Off-field, 170–200%)."
+    }
+   ]
+  },
+  "lohen": {
+   "url": "https://keqingmains.com/q/lohen-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ],
+     "notes": "KQM says his Burst does not justify building ER; the optional burst-every-rotation table starts at 190–230% (Solo Cryo). Unfinished Reverie is for Burnmelt, MH/Blizzard for Freeze."
+    }
+   ]
+  },
+  "lynette": {
+   "url": "https://keqingmains.com/q/lynette-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General Support / Damage Dealer",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 140,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Sword",
+       "min": 115
+      }
+     ],
+     "notes": "ER from Off-Field Solo Anemo 2 Skills (other weapons ~140–175%, Favonius Sword ~115–160%); the 1-Skill row (~240%+, Fav ~180%) is called impractical without Favonius."
+    },
+    {
+     "name": "Transformative Reaction–Focused",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "constellation": "C6",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 140,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Sword",
+       "min": 115
+      }
+     ],
+     "notes": "Sets section labels this the C6 Transformative Reaction playstyle; the ER table is shared and not specific to it."
+    }
+   ]
+  },
+  "lyney": {
+   "url": "https://keqingmains.com/q/lyney-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "VermillionHereafter"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "With 4pc Marechaussee Hunter KQM says the circlet should be CRIT DMG."
+    }
+   ]
+  },
+  "mavuika": {
+   "url": "https://keqingmains.com/q/mavuika-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "On-Field",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ]
+    },
+    {
+     "name": "Off-Field",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "notes": "Artifact stats are shared with the on-field build; only the set list differs."
+    }
+   ]
+  },
+  "mika": {
+   "url": "https://keqingmains.com/q/mika-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "healing",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 190,
+     "erWeapons": [
+      {
+       "weapon": "Dialogues of the Desert Sages R5",
+       "min": 105
+      },
+      {
+       "weapon": "Rightful Reward R3",
+       "min": 160
+      },
+      {
+       "weapon": "Favonius Lance",
+       "min": 175
+      }
+     ],
+     "notes": "Pre-C4 figures; CRIT Rate circlet only when using Favonius."
+    }
+   ]
+  },
+  "mona": {
+   "url": "https://keqingmains.com/q/mona-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Support Mona",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "CelestialGift"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 260,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Codex",
+       "min": 210
+      },
+      {
+       "weapon": "Prototype Amber",
+       "min": 150
+      }
+     ],
+     "notes": "The quick guide only covers Support Mona; no DPS build is given."
+    }
+   ]
+  },
+  "mualani": {
+   "url": "https://keqingmains.com/q/mualani-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "HeartOfDepth"
+      ]
+     ]
+    }
+   ]
+  },
+  "nahida": {
+   "url": "https://keqingmains.com/q/nahida-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-Field",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "One main-stat table with three stat priorities (Off-Field, On-Field, Nilou Bloom); erMin is the Double Electro row."
+    },
+    {
+     "name": "On-Field",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 100
+    },
+    {
+     "name": "Nilou Bloom",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "erMin from the 'Nilou Bloom (Solo Dendro)' on-field row (120–140%); the off-field column has no value."
+    }
+   ]
+  },
+  "navia": {
+   "url": "https://keqingmains.com/q/navia-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NighttimeWhispersInTheEchoingWoods"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin is the C0 row with Xilonen / Geo Traveler / Ningguang C2+ (100–130%)."
+    }
+   ]
+  },
+  "nefer": {
+   "url": "https://keqingmains.com/q/nefer-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "KQM says a CRIT DMG circlet is typically better than CRIT Rate; ER figures are for bursting every other rotation."
+    }
+   ]
+  },
+  "neuvillette": {
+   "url": "https://keqingmains.com/q/neuvillette-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "NymphsDream"
+      ]
+     ],
+     "erMin": 100,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 100
+      },
+      {
+       "weapon": "Tome of the Eternal Flow R1",
+       "min": 100
+      }
+     ],
+     "notes": "Substats are CRIT = HP% after ER; erMin is Teams With Furina, other weapons (100–130%)."
+    }
+   ]
+  },
+  "nicole": {
+   "url": "https://keqingmains.com/q/nicole-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "CelestialGift"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "notes": "ER table's first row shows a placeholder 'XXX–YYY%' for other weapons (page error); Solo Pyro needs 200–230% (signature 160–180%), and KQM says ER can be skipped when not bursting every rotation."
+    }
+   ]
+  },
+  "nilou": {
+   "url": "https://keqingmains.com/q/nilou-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Bountiful Bloom",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "em",
+      "hp",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "notes": "KQM says Nilou does not need to build ER; burst-every-other-rotation table starts at 100%."
+    },
+    {
+     "name": "Lunar-Bloom",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "em",
+      "hp",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "notes": "Stats are shared with Bountiful Bloom, but KQM says her stats barely matter in Lunar-Bloom teams; only the set matters."
+    }
+   ]
+  },
+  "ningguang": {
+   "url": "https://keqingmains.com/q/ningguang-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NighttimeWhispersInTheEchoingWoods"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 110
+    }
+   ]
+  },
+  "noelle": {
+   "url": "https://keqingmains.com/q/noelle-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "C0–C5 and Burst Talent Level 9",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "erMin is the 'No Geo Teammate/Albedo/Chiori' row (200%+); Archaic Petra is only for driver/healer Noelle."
+    },
+    {
+     "name": "C6 or Burst Talent Level 10+",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "constellation": "C6",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "def_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "Also applies below C6 with Burst Talent Level 10+."
+    }
+   ]
+  },
+  "odette": {
+   "url": "https://keqingmains.com/q/odette-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "notes": "KQM generally advises not bursting (no ER in stat priority); optional table starts at 175–195% (Solo Cryo, no Fav), 100–105% with signature Whitelake Frostfeather."
+    }
+   ]
+  },
+  "ororon": {
+   "url": "https://keqingmains.com/q/ororon-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "KQM also mentions a full-EM build for Overloaded teams in prose, without a separate table."
+    }
+   ]
+  },
+  "prune": {
+   "url": "https://keqingmains.com/q/prune-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "CelestialGift"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 185,
+     "notes": "erMin is C0 Double Anemo; R5 Oathsworn Eye (-30–35%) and Favonius Codex (-30–50%) are given only as reductions."
+    }
+   ]
+  },
+  "qiqi": {
+   "url": "https://keqingmains.com/q/qiqi-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "atk_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "atk"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ]
+     ],
+     "notes": "KQM says Qiqi can forgo ER except at C6 in Stellar-Conduct teams; its table only covers Sandrone teams (C0 240–285%). CRIT Rate only with Favonius."
+    }
+   ]
+  },
+  "raiden_shogun": {
+   "url": "https://keqingmains.com/q/raiden-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "On-Field DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "erMin is Solo Electro (200–220%); EM sands/substats only matter in Quicken or Quickbloom teams."
+    },
+    {
+     "name": "Hyperbloom / Overloaded Trigger",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "razor": {
+   "url": "https://keqingmains.com/q/razor-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Physical",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "physical_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Set list is shared with Aggravate; KQM says EM sets only for Aggravate. erMin is the Double Electro with Fischl row."
+    },
+    {
+     "name": "Aggravate",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 100
+    },
+    {
+     "name": "Transformative Reaction",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "CRIT Rate circlet/substats only when using Favonius Greatsword."
+    }
+   ]
+  },
+  "rosaria": {
+   "url": "https://keqingmains.com/q/rosaria-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Reverse Melt",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "erMin is Solo Cryo, 2 Skills, no C4 (200–210%); the 1-Skill row (>240%) is marked not recommended."
+    },
+    {
+     "name": "Freeze / Mono Cryo",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 195,
+     "notes": "Without 4pc Blizzard Strayer KQM says to prioritize CRIT Rate over CRIT DMG."
+    },
+    {
+     "name": "Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "notes": "ER requirements are said to depend heavily on the team, with no table."
+    }
+   ]
+  },
+  "sandrone": {
+   "url": "https://keqingmains.com/q/sandrone-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 130,
+     "notes": "KQM says that if her requirement exceeds 140% she should skip ER and burst when available."
+    }
+   ]
+  },
+  "sangonomiya_kokomi": {
+   "url": "https://keqingmains.com/q/kokomi-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "On-Field Healer / Enabler",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ],
+     "erMin": 195,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber R1",
+       "min": 160
+      },
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 145
+      }
+     ]
+    },
+    {
+     "name": "Off-Field Support",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 260,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber R1",
+       "min": 215
+      },
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 195
+      }
+     ],
+     "notes": "KQM says off-field Kokomi is often played Skill-only and can then forgo ER entirely."
+    },
+    {
+     "name": "Bloom DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "em",
+       "hp_pct"
+      ],
+      "circlet": [
+       "em",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "notes": "No Bloom-specific ER row; the shared on-field table starts at 195–245% (Solo Hydro)."
+    }
+   ]
+  },
+  "sayu": {
+   "url": "https://keqingmains.com/q/sayu-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-Field Burst Support",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "healing",
+       "atk_pct",
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "CRIT Rate circlet only with Favonius; erMin is 'Burst Every Rotation >200%'."
+    },
+    {
+     "name": "On-Field Driver (ADC)",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "The On-Field Driver table lists ATK%/EM, Anemo/EM, CRIT/EM and says it is two builds: ADC or triple EM."
+    },
+    {
+     "name": "On-Field Driver (triple EM)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "Substat order (CRIT > EM = ATK%) is the page's single on-field priority, shared with the ADC variant."
+    }
+   ]
+  },
+  "sethos": {
+   "url": "https://keqingmains.com/q/sethos-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "General",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER table is split by Normal Attack and Charged Shot playstyles; erMin is its first row (Normal Attack, Double Electro with Fischl, 100%)."
+    }
+   ]
+  },
+  "shenhe": {
+   "url": "https://keqingmains.com/q/shenhe-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Shenhe",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "atk"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ],
+     "erMin": 180,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance",
+       "min": 165
+      }
+     ],
+     "notes": "erMin is the Double Cryo \"Other\" weapon column; CRIT Rate substat only matters with Favonius Lance."
+    }
+   ]
+  },
+  "shikanoin_heizou": {
+   "url": "https://keqingmains.com/q/heizou-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "ADC Build",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "KQM URL given as none; heizou-quickguide slug worked. erMin from Quickswap Support C0-3, 1 Skill (ER sands only for off-field TTDS support)."
+    },
+    {
+     "name": "EM Build",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ],
+     "erMin": 170,
+     "notes": "Sets section is shared by both builds; erMin from the On-Field Driver C0-3, 1 Skill row."
+    }
+   ]
+  },
+  "sigewinne": {
+   "url": "https://keqingmains.com/q/sigewinne-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Sigewinne",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "FragmentOfHarmonicWhimsy"
+      ]
+     ],
+     "erMin": 115,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Bow (1 proc, funneled)",
+       "min": 105
+      }
+     ],
+     "notes": "erMin from Triple Hydro, particles caught by Sigewinne, no energy weapon."
+    }
+   ]
+  },
+  "skirk": {
+   "url": "https://keqingmains.com/q/skirk-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Skirk",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "FinaleOfTheDeepGalleries"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "notes": "No ER: her Burst does not use Energy. Marechaussee is BiS only on-field with Furina; Galleries is the generalist pick."
+    }
+   ]
+  },
+  "sucrose": {
+   "url": "https://keqingmains.com/q/sucrose-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Sucrose",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ]
+    }
+   ]
+  },
+  "tartaglia": {
+   "url": "https://keqingmains.com/q/tartaglia-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Tartaglia",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NymphsDream"
+      ],
+      [
+       "HeartOfDepth"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER from the note \"usually wants 100-130% ER with Ranged Burst\"; ER said to be most important until Ranged Burst is up every rotation, though listed last in substats."
+    }
+   ]
+  },
+  "thoma": {
+   "url": "https://keqingmains.com/q/thoma-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Burgeon Thoma (EM)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "erMin": 240,
+     "erWeapons": [
+      {
+       "weapon": "Kitain Cross Spear R3",
+       "min": 240
+      }
+     ],
+     "notes": "Every ER figure assumes R3 Kitain Cross Spear (C0-C3, one Skill = ~240%)."
+    },
+    {
+     "name": "Burgeon Thoma (HP%)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "erMin": 240,
+     "erWeapons": [
+      {
+       "weapon": "Kitain Cross Spear R3",
+       "min": 240
+      }
+     ],
+     "notes": "Second main-stat row of the Burgeon table, for Thoma as the sole defensive unit; sets and substats stated to be the same as the triple EM build."
+    },
+    {
+     "name": "Shield Support Thoma",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance R3",
+       "min": 210
+      },
+      {
+       "weapon": "Kitain Cross Spear R3",
+       "min": 220
+      }
+     ],
+     "notes": "ER table (Double Pyro, C0-C3) only has weapon columns; erMin uses the first (R3 Favonius Lance). Also allows any HP%/Emblem/rainbow mix."
+    }
+   ]
+  },
+  "tighnari": {
+   "url": "https://keqingmains.com/q/tighnari-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Tighnari",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin = 2 Skills per Burst row (assumes 1 Favonius proc). Page says to hold 4pc Deepwood only if no teammate does."
+    }
+   ]
+  },
+  "varesa": {
+   "url": "https://keqingmains.com/q/varesa-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Varesa",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "LongNightsOath"
+      ],
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "erMin = Double Electro (Ororon/Iansan), 2 sQ; page says ER is not a strict requirement."
+    }
+   ]
+  },
+  "varka": {
+   "url": "https://keqingmains.com/q/varka-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Varka",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "ScarletProof"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "NymphsDream"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "notes": "Goblet reads \"PHEC DMG% | ATK% > Anemo DMG%\" (Pyro/Hydro/Electro/Cryo DMG first, Anemo last); Blizzard/HoD/Nymph/Lava/Thundersoother are one niche entry. No ER built."
+    }
+   ]
+  },
+  "venti": {
+   "url": "https://keqingmains.com/q/venti-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Off-Field Support (EM Build)",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 175,
+     "notes": "Off-Field Support has one combined stat table (EM/ATK%/ER, EM/Anemo/ATK%, EM/CRIT) with three stat priorities; split here per the text. erMin = Solo Anemo, 1 Skill."
+    },
+    {
+     "name": "Off-Field Support (CRIT Build)",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 175
+    },
+    {
+     "name": "Off-Field Support (Lunar-Charged)",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "erMin": 175
+    },
+    {
+     "name": "On-Field DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 135,
+     "notes": "4pc Desert Pavilion explicitly NOT recommended (omitted). erMin = On-Field DPS, Solo Anemo."
+    },
+    {
+     "name": "On-Field Driver",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "CRIT circlet for Lunar-Charged teams. erMin = On-Field Driver, 2 Skills."
+    }
+   ]
+  },
+  "vodyanitsa": {
+   "url": "https://keqingmains.com/q/vodyanitsa-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Vodyanitsa",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ]
+     ],
+     "erMin": 210,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber",
+       "min": 145
+      }
+     ],
+     "notes": "ER only matters when she Bursts every rotation (Hydro teams); erMin = Double Hydro, Other Weapons."
+    }
+   ]
+  },
+  "wanderer": {
+   "url": "https://keqingmains.com/q/wanderer-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Wanderer (DPS)",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 105,
+     "notes": "No ER needed at C0-C1; erMin = Solo Anemo, Burst every other rotation (210-230% to Burst every rotation at C2+). 4pc Echoes omitted (page says to avoid it except at C6)."
+    },
+    {
+     "name": "Driver Build",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 105,
+     "notes": "EM driver playstyle the page calls lackluster; ER table is shared with the DPS build."
+    }
+   ]
+  },
+  "wriothesley": {
+   "url": "https://keqingmains.com/q/wriothesley-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Stellar-Conduct DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ],
+     "notes": "No Cryo DMG goblet; never two EM main stats; Burst skipped so no ER."
+    },
+    {
+     "name": "Non-Stellar-Conduct DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "EM sands for Reverse Melt; erMin = Solo Cryo, Burst every other rotation (recommended)."
+    }
+   ]
+  },
+  "xiangling": {
+   "url": "https://keqingmains.com/q/xiangling-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Xiangling",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "erMin": 220,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Lance",
+       "min": 200
+      },
+      {
+       "weapon": "Kitain Cross Spear R5",
+       "min": 185
+      }
+     ],
+     "notes": "erMin = 1 Xiangling Skill, 2 Bennett Skills, 20-21s, Most Weapons (team-dependent table). Flower of Paradise Lost is Burgeon-only."
+    }
+   ]
+  },
+  "xianyun": {
+   "url": "https://keqingmains.com/q/xianyun-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Xianyun",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "atk",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "erMin": 220,
+     "erWeapons": [
+      {
+       "weapon": "Crane's Echoing Call R1 (5 Plunge procs)",
+       "min": 190
+      },
+      {
+       "weapon": "Crane's Echoing Call R1 (8 Plunge procs)",
+       "min": 165
+      }
+     ],
+     "notes": "CRIT Rate circlet only with Favonius Codex; 4pc Maiden Beloved listed but called not worth using (omitted). erMin = Solo Anemo, Other Weapons."
+    }
+   ]
+  },
+  "xiao": {
+   "url": "https://keqingmains.com/q/xiao-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Xiao",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "VermillionHereafter"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER table is team-dependent; erMin = first row (Sucrose / C1+ Xianyun with C6 Faruzan), 130-140% with no Faruzan. Quick guide does not list Long Night's Oath."
+    }
+   ]
+  },
+  "xilonen": {
+   "url": "https://keqingmains.com/q/xilonen-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Xilonen",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "def_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "def_pct",
+       "crit_rate",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "def_pct",
+      "def"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 170,
+     "notes": "CRIT Rate only with Favonius; erMin = Solo Geo, 1 Skill, Caught Skill."
+    }
+   ]
+  },
+  "xingqiu": {
+   "url": "https://keqingmains.com/q/xingqiu-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Xingqiu",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 220,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Sword",
+       "min": 190
+      },
+      {
+       "weapon": "Sacrificial Sword (R3+)",
+       "min": 150
+      },
+      {
+       "weapon": "Amenoma Kageuchi (R3)",
+       "min": 190
+      }
+     ],
+     "notes": "erMin = Off-Field DPS, C0-C5, Other Weapons; on-field needs ~10-20% less. Marechaussee only when on-field with Furina; last four are support sets."
+    }
+   ]
+  },
+  "xinyan": {
+   "url": "https://keqingmains.com/xinyan/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Physical DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "def_pct",
+      "atk",
+      "def",
+      "em"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "PaleFlame",
+       "BloodstainedChivalry"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "PaleFlame"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "BloodstainedChivalry"
+      ],
+      [
+       "PaleFlame",
+       "NoblesseOblige"
+      ],
+      [
+       "BloodstainedChivalry",
+       "NoblesseOblige"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "PaleFlame"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "BloodstainedChivalry"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "BloodstainedChivalry"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "Full guide (v3.3). \"PF/BSC\" entries expanded into both pairs. One ER table for both builds; erMin = Solo Pyro (set calcs assume 160%)."
+    },
+    {
+     "name": "Pyro DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "def_pct",
+      "atk",
+      "def",
+      "em"
+     ],
+     "sets": [
+      [
+       "Lavawalker"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "Shared ER table, first row Solo Pyro; the Pyro set calcs assume a 129% ER requirement."
+    }
+   ]
+  },
+  "yae_miko": {
+   "url": "https://keqingmains.com/q/yae-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Stellar-Conduct DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "HeartOfTheFurnace"
+      ]
+     ],
+     "notes": "Burst generally not used, so no ER; 4pc Golden Troupe explicitly to avoid (omitted)."
+    },
+    {
+     "name": "Non Stellar-Conduct DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "atk"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "erMin = Raiden team, C0."
+    }
+   ]
+  },
+  "yanfei": {
+   "url": "https://keqingmains.com/q/yanfei-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Pyro DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "Lavawalker"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "erMin = Solo Pyro, Burst every 2 rotations; Marechaussee only with Furina."
+    },
+    {
+     "name": "Reaction DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "notes": "Page says not to build ER for this playstyle."
+    },
+    {
+     "name": "Shield Support (C4+)",
+     "role": "shield",
+     "roleFrom": "review",
+     "constellation": "C4",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 250,
+     "erWeapons": [
+      {
+       "weapon": "Prototype Amber R5",
+       "min": 250
+      }
+     ],
+     "notes": "ER table says \">250%\" for Double Pyro with other weapons; CRIT Rate only with Favonius Codex."
+    }
+   ]
+  },
+  "yaoyao": {
+   "url": "https://keqingmains.com/q/yaoyao-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Pure Healer",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 260,
+     "notes": "ER table (Solo Dendro, under C2) assumes Burst every rotation as sole healer; text says she usually Bursts every other rotation and needs at most 150%."
+    },
+    {
+     "name": "Reaction-Focused (Nilou Bloom)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 260,
+     "notes": "One Reaction-Focused stat table with two stat priorities (Nilou Bloom, Spread); split here. Same shared ER table."
+    },
+    {
+     "name": "Reaction-Focused (Spread)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "er_pct",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "erMin": 260
+    }
+   ]
+  },
+  "yelan": {
+   "url": "https://keqingmains.com/q/yelan-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Yelan",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NymphsDream"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "erMin": 265,
+     "erWeapons": [
+      {
+       "weapon": "Favonius Warbow",
+       "min": 215
+      }
+     ],
+     "notes": "erMin = Other Weapons, Solo Hydro, 1 Skill. Priority is ER > HP% (to 30,000 HP) > CRIT > HP%; HP% goblet or circlet, not both. Marechaussee only on-field with Furina."
+    }
+   ]
+  },
+  "yoimiya": {
+   "url": "https://keqingmains.com/q/yoimiya-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Yoimiya",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "No ER needed (Burst only when available). Marechaussee only with Furina; 4pc Retracing Bolide explicitly not recommended (omitted)."
+    }
+   ]
+  },
+  "yumemizuki_mizuki": {
+   "url": "https://keqingmains.com/q/mizuki-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Mizuki (Stellar Swirl)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "ScarletProof"
+      ],
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "KQM URL given as none; mizuki-quickguide slug worked. erMin = Burst every other rotation."
+    },
+    {
+     "name": "Mizuki (outside Stellar Swirl)",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "Taken from the text: triple EM outside SSW (Swirl cannot CRIT), ER sands viable, 4pc VV the default set."
+    }
+   ]
+  },
+  "yun_jin": {
+   "url": "https://keqingmains.com/yunjin/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Yun Jin",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "def_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "def_pct",
+      "crit_rate",
+      "def"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "Full guide (v3.1). erMin from the first row (with Albedo); Solo Geo needs 200-270%. CRIT Rate only with Favonius Lance."
+    }
+   ]
+  },
+  "zhongli": {
+   "url": "https://keqingmains.com/q/zhongli-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Shielder",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "notes": "Shielder does not Burst; the ER table (100-110% every other rotation) is only for a Burst support build that has no stats here. DPS sets are deferred to the extended guide."
+    }
+   ]
+  },
+  "zibai": {
+   "url": "https://keqingmains.com/q/zibai-quickguide/",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Zibai",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "erMin = Burst when available."
+    }
+   ]
+  }
+ }
+}

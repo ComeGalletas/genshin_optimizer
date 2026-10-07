@@ -1,6 +1,7 @@
 # 0060. genshin.gg as a cross-check
 
-- Status: Accepted
+- Status: Accepted, amended by [0061](0061-offline-guide-data-pipeline.md)
+  (the extraction is now `npm run sources -- genshin-gg`)
 - Date: 2026-10-07
 
 ## Context

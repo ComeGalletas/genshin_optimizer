@@ -1,0 +1,6989 @@
+{
+ "source": "genshinBuilds",
+ "site": "https://genshin-builds.com",
+ "readBy": "agents",
+ "characters": {
+  "aino": {
+   "url": "https://genshin-builds.com/en/character/aino",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REACTION SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "albedo": {
+   "url": "https://genshin-builds.com/en/character/albedo",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "er_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "ArchaicPetra"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "GoldenTroupe"
+      ],
+      [
+       "ArchaicPetra",
+       "GoldenTroupe"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "alhaitham": {
+   "url": "https://genshin-builds.com/en/character/alhaitham",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SPREAD DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "aloy": {
+   "url": "https://genshin-builds.com/en/character/aloy",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BURST SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "NoblesseOblige",
+       "BlizzardStrayer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "alyosha": {
+   "url": "https://genshin-builds.com/en/character/alyosha",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Stellar-Conduct Support",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "atk",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 180,
+     "notes": "Near-duplicate of the page’s second Alyosha build (only Sands order differs); ER goal 180-230% from its build notes."
+    },
+    {
+     "name": "Stellar-Conduct Support Build",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "atk",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 180,
+     "notes": "Near-duplicate of the first build; ER goal 180-230% from its build notes."
+    }
+   ]
+  },
+  "amber": {
+   "url": "https://genshin-builds.com/en/character/amber",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "MELT DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    },
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TheExile"
+      ]
+     ],
+     "notes": "Its Scroll note talks about \"Nicole\" and Dendro, apparently copied from another character."
+    }
+   ]
+  },
+  "arataki_itto": {
+   "url": "https://genshin-builds.com/en/character/arataki_itto",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "ArchaicPetra"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ArchaicPetra",
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "notes": "Desert Pavilion Chronicle is ranked #2 although its own note says it does nothing for Geo DPS."
+    }
+   ]
+  },
+  "arlecchino": {
+   "url": "https://genshin-builds.com/en/character/arlecchino",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "FragmentOfHarmonicWhimsy"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ]
+     ]
+    }
+   ]
+  },
+  "baizhu": {
+   "url": "https://genshin-builds.com/en/character/baizhu",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "VourukashasGlow",
+       "EmblemOfSeveredFate"
+      ]
+     ]
+    }
+   ]
+  },
+  "barbara": {
+   "url": "https://genshin-builds.com/en/character/barbara",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    },
+    {
+     "name": "BLOOM DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ]
+    }
+   ]
+  },
+  "beidou": {
+   "url": "https://genshin-builds.com/en/character/beidou",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD AGGRAVATE DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ]
+    }
+   ]
+  },
+  "bennett": {
+   "url": "https://genshin-builds.com/en/character/bennett",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "atk_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    },
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "candace": {
+   "url": "https://genshin-builds.com/en/character/candace",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    }
+   ]
+  },
+  "charlotte": {
+   "url": "https://genshin-builds.com/en/character/charlotte",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "healing",
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "atk",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ]
+    }
+   ]
+  },
+  "chasca": {
+   "url": "https://genshin-builds.com/en/character/chasca",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "chevreuse": {
+   "url": "https://genshin-builds.com/en/character/chevreuse",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp",
+      "em"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "MaidenBeloved"
+      ]
+     ]
+    },
+    {
+     "name": "BUFF SUPPORT & DAMAGE",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ]
+    }
+   ]
+  },
+  "chiori": {
+   "url": "https://genshin-builds.com/en/character/chiori",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "GoldenTroupe",
+       "ArchaicPetra"
+      ],
+      [
+       "GoldenTroupe",
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "ArchaicPetra",
+       "HuskOfOpulentDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "chongyun": {
+   "url": "https://genshin-builds.com/en/character/chongyun",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BURST NUKE",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige",
+       "BlizzardStrayer"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    },
+    {
+     "name": "INFUSION SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    }
+   ]
+  },
+  "citlali": {
+   "url": "https://genshin-builds.com/en/character/citlali",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    }
+   ]
+  },
+  "clorinde": {
+   "url": "https://genshin-builds.com/en/character/clorinde",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "FragmentOfHarmonicWhimsy"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "ThunderingFury"
+      ]
+     ]
+    }
+   ]
+  },
+  "collei": {
+   "url": "https://genshin-builds.com/en/character/collei",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REACTION SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "columbina": {
+   "url": "https://genshin-builds.com/en/character/columbina",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HIGH ENERGY REQUIREMENT - OFF-FIELD DPS & BUFF SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "AubadeOfMorningstarAndMoon"
+      ]
+     ],
+     "erMin": 200,
+     "notes": "ER ~200% comes from the build description in the page data, which is not shown in the rendered build panel."
+    },
+    {
+     "name": "LOW ENERGY REQUIREMENT - OFF-FIELD DPS & BUFF SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "AubadeOfMorningstarAndMoon"
+      ]
+     ],
+     "notes": "Its set notes misdescribe the SMS (party ATK%) and Aubade (Melt/Vaporize) effects."
+    }
+   ]
+  },
+  "cyno": {
+   "url": "https://genshin-builds.com/en/character/cyno",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "QUICKBLOOM / HYPERBLOOM DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    },
+    {
+     "name": "AGGRAVATE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ]
+    }
+   ]
+  },
+  "dahlia": {
+   "url": "https://genshin-builds.com/en/character/dahlia",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "dehya": {
+   "url": "https://genshin-builds.com/en/character/dehya",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "ON FIELD DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "VourukashasGlow"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 120,
+     "notes": "ER 120-140% comes from the build description in the page data, which is not shown in the rendered build panel."
+    },
+    {
+     "name": "SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    },
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "diluc": {
+   "url": "https://genshin-builds.com/en/character/diluc",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "ER ~140% comes from the build description in the page data, which is not shown in the rendered build panel."
+    }
+   ]
+  },
+  "diona": {
+   "url": "https://genshin-builds.com/en/character/diona",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL & SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "dori": {
+   "url": "https://genshin-builds.com/en/character/dori",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct",
+       "em"
+      ],
+      "goblet": [
+       "hp_pct",
+       "em"
+      ],
+      "circlet": [
+       "healing",
+       "hp_pct",
+       "em"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "er_pct",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TheExile"
+      ]
+     ]
+    }
+   ]
+  },
+  "durin": {
+   "url": "https://genshin-builds.com/en/character/durin",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "VAPORIZE / MELT OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ]
+    },
+    {
+     "name": "BUFF SUPPORT & OFF-FIELD DPS",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "CelestialGift"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "emilie": {
+   "url": "https://genshin-builds.com/en/character/emilie",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GoldenTroupe"
+      ]
+     ]
+    }
+   ]
+  },
+  "escoffier": {
+   "url": "https://genshin-builds.com/en/character/escoffier",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HIGH ENERGY REQUIREMENT (OFF-FIELD DPS)",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "erMin": 180,
+     "notes": "Page data also lists a 15% Cryo DMG 2pc in the 'Choose 2' group that the page doesn't render."
+    }
+   ]
+  },
+  "eula": {
+   "url": "https://genshin-builds.com/en/character/eula",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "er_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "PaleFlame",
+       "BloodstainedChivalry"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ],
+     "notes": "Page error: the build description calls the character 'Lohen'."
+    }
+   ]
+  },
+  "faruzan": {
+   "url": "https://genshin-builds.com/en/character/faruzan",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "fischl": {
+   "url": "https://genshin-builds.com/en/character/fischl",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "GoldenTroupe",
+       "ThunderingFury"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 130
+    },
+    {
+     "name": "OFF-FIELD AGGRAVATE DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ]
+    }
+   ]
+  },
+  "flins": {
+   "url": "https://genshin-builds.com/en/character/flins",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "freminet": {
+   "url": "https://genshin-builds.com/en/character/freminet",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "PHYSICAL DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "PaleFlame"
+      ],
+      [
+       "PaleFlame",
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "Page data has an odd 'and5_physical_dmg_set' id in the 'Choose 2' group that the page doesn't render."
+    },
+    {
+     "name": "CRYO DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "furina": {
+   "url": "https://genshin-builds.com/en/character/furina",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS & BUFF SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "gaming": {
+   "url": "https://genshin-builds.com/en/character/gaming",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "LongNightsOath"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "Page error: the build description calls the character 'Nicole' (and 'her')."
+    }
+   ]
+  },
+  "ganyu": {
+   "url": "https://genshin-builds.com/en/character/ganyu",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "MELT DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "UnfinishedReverie"
+      ]
+     ]
+    },
+    {
+     "name": "FREEZE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    },
+    {
+     "name": "MONO CRYO DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ]
+     ]
+    }
+   ]
+  },
+  "gorou": {
+   "url": "https://genshin-builds.com/en/character/gorou",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "def_pct",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "def_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "TheExile"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ]
+    }
+   ]
+  },
+  "hu_tao": {
+   "url": "https://genshin-builds.com/en/character/hu_tao",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "hp_pct",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "iansan": {
+   "url": "https://genshin-builds.com/en/character/iansan",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ]
+    }
+   ]
+  },
+  "ifa": {
+   "url": "https://genshin-builds.com/en/character/ifa",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page error: the build description calls the character 'Varka'; the page doesn't mark this build as recommended."
+    },
+    {
+     "name": "ANEMO DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "notes": "Page error: the build description calls the character 'Varka'."
+    }
+   ]
+  },
+  "illuga": {
+   "url": "https://genshin-builds.com/en/character/illuga",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ]
+     ]
+    }
+   ]
+  },
+  "ineffa": {
+   "url": "https://genshin-builds.com/en/character/ineffa",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS & BUFF & SHIELD SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "AubadeOfMorningstarAndMoon"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "erMin": 140,
+     "notes": "Page gives ~140% ER as a ceiling: build ER for every-rotation Burst only up to ~140%, else Burst every other rotation and skip ER."
+    }
+   ]
+  },
+  "jahoda": {
+   "url": "https://genshin-builds.com/en/character/jahoda",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD REACTION DPS & HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "healing",
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "jean": {
+   "url": "https://genshin-builds.com/en/character/jean",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT & DAMAGE",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "notes": "Page error: the build description calls the character 'Varka'."
+    },
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page error: the build description calls the character 'Varka'; the page doesn't mark this build as recommended."
+    }
+   ]
+  },
+  "kachina": {
+   "url": "https://genshin-builds.com/en/character/kachina",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF & REACTION SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "kaedehara_kazuha": {
+   "url": "https://genshin-builds.com/en/character/kaedehara_kazuha",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REACTION DPS & BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ThunderingFury"
+      ]
+     ]
+    }
+   ]
+  },
+  "kaeya": {
+   "url": "https://genshin-builds.com/en/character/kaeya",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "FREEZE / MONO CRYO",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    },
+    {
+     "name": "REVERSE MELT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "notes": "Page data also lists a 15% Cryo DMG 2pc in the 'Choose 2' group that the page doesn't render."
+    }
+   ]
+  },
+  "kamisato_ayaka": {
+   "url": "https://genshin-builds.com/en/character/kamisato_ayaka",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "BlizzardStrayer",
+       "NoblesseOblige"
+      ]
+     ]
+    }
+   ]
+  },
+  "kamisato_ayato": {
+   "url": "https://genshin-builds.com/en/character/kamisato_ayato",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "hp_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "NymphsDream"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "erMin": 110,
+     "notes": "ER: ~110-120% with a battery, 160%+ solo."
+    }
+   ]
+  },
+  "kaveh": {
+   "url": "https://genshin-builds.com/en/character/kaveh",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BLOOM / BURGEON DRIVER",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "keqing": {
+   "url": "https://genshin-builds.com/en/character/keqing",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "AGGRAVATE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    },
+    {
+     "name": "QUICKBLOOM DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "kinich": {
+   "url": "https://genshin-builds.com/en/character/kinich",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "UnfinishedReverie"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "Page error: the build description names 'Nefer' and talks about Xiangling's Pyronado."
+    }
+   ]
+  },
+  "kirara": {
+   "url": "https://genshin-builds.com/en/character/kirara",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ]
+     ]
+    }
+   ]
+  },
+  "klee": {
+   "url": "https://genshin-builds.com/en/character/klee",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "FragmentOfHarmonicWhimsy"
+      ]
+     ]
+    }
+   ]
+  },
+  "kujou_sara": {
+   "url": "https://genshin-builds.com/en/character/kujou_sara",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT & DAMAGE",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "erMin": 200
+    }
+   ]
+  },
+  "kuki_shinobu": {
+   "url": "https://genshin-builds.com/en/character/kuki_shinobu",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HYPERBLOOM",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "hp_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ]
+     ],
+     "notes": "Page error: the build description calls the character 'Flins'."
+    },
+    {
+     "name": "AGGRAVATE OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "hp_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "The page doesn't mark this build as recommended."
+    },
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing",
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "crit_rate",
+      "em",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor",
+       "TheExile"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page error: the build description calls the character 'flins'; the page doesn't mark this build as recommended."
+    }
+   ]
+  },
+  "lan_yan": {
+   "url": "https://genshin-builds.com/en/character/lan_yan",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD & BUFF SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ]
+    }
+   ]
+  },
+  "lauma": {
+   "url": "https://genshin-builds.com/en/character/lauma",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT (HIGH-ENERGY REQUIREMENT)",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "SilkenMoonsSerenade"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "Only one build tab; its notes also describe a LOW-ENERGY REQUIREMENT variant (different weapons only, no separate stats)."
+    }
+   ]
+  },
+  "layla": {
+   "url": "https://genshin-builds.com/en/character/layla",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "VourukashasGlow",
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "notes": "Build description refers to 'lohen' instead of this character (apparent template error)."
+    },
+    {
+     "name": "SHIELD SUPPORT AND DAMAGE",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "atk_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ]
+    }
+   ]
+  },
+  "linnea": {
+   "url": "https://genshin-builds.com/en/character/linnea",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS & BUFF AND HEAL SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "AubadeOfMorningstarAndMoon"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "lisa": {
+   "url": "https://genshin-builds.com/en/character/lisa",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "AGGRAVATE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ]
+    },
+    {
+     "name": "OFF-FIELD DPS & SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ]
+     ]
+    },
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page data marks this build as not recommended."
+    }
+   ]
+  },
+  "lohen": {
+   "url": "https://genshin-builds.com/en/character/lohen",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "lynette": {
+   "url": "https://genshin-builds.com/en/character/lynette",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ]
+    }
+   ]
+  },
+  "lyney": {
+   "url": "https://genshin-builds.com/en/character/lyney",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "Lavawalker"
+      ],
+      [
+       "VermillionHereafter"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "WanderersTroupe"
+      ]
+     ],
+     "notes": "Build description refers to 'nicole' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "mavuika": {
+   "url": "https://genshin-builds.com/en/character/mavuika",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS & BUFF SUPPORT",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "mika": {
+   "url": "https://genshin-builds.com/en/character/mika",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL & BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TheExile"
+      ]
+     ]
+    }
+   ]
+  },
+  "mona": {
+   "url": "https://genshin-builds.com/en/character/mona",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS (OUT OF DATE)",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "WanderersTroupe"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page labels this build OUT OF DATE. Page data marks this build as not recommended."
+    },
+    {
+     "name": "BURST NUKE (OUT OF DATE)",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "er_pct",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Single-target Burst nuke setup; role is approximate. Page labels this build OUT OF DATE."
+    },
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "mualani": {
+   "url": "https://genshin-builds.com/en/character/mualani",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "VAPORIZE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct",
+       "em"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "nahida": {
+   "url": "https://genshin-builds.com/en/character/nahida",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT & DAMAGE",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ]
+     ],
+     "notes": "Build description refers to 'Nefer' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "navia": {
+   "url": "https://genshin-builds.com/en/character/navia",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NighttimeWhispersInTheEchoingWoods"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "nefer": {
+   "url": "https://genshin-builds.com/en/character/nefer",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ]
+     ]
+    }
+   ]
+  },
+  "neuvillette": {
+   "url": "https://genshin-builds.com/en/character/neuvillette",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "NymphsDream"
+      ]
+     ],
+     "notes": "Build description refers to 'Columbina' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "nicole": {
+   "url": "https://genshin-builds.com/en/character/nicole",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD & BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "CelestialGift"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ]
+    }
+   ]
+  },
+  "nilou": {
+   "url": "https://genshin-builds.com/en/character/nilou",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BLOOM SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp",
+      "em"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ]
+     ],
+     "notes": "Build description refers to 'Columbina' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "ningguang": {
+   "url": "https://genshin-builds.com/en/character/ningguang",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NighttimeWhispersInTheEchoingWoods"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "Lavawalker"
+      ]
+     ]
+    }
+   ]
+  },
+  "noelle": {
+   "url": "https://genshin-builds.com/en/character/noelle",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "er_pct",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    },
+    {
+     "name": "DRIVER",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "def_pct"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "er_pct",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "ArchaicPetra"
+      ]
+     ],
+     "notes": "Driver build that spams Burst with 4pc Archaic Petra for team buffs."
+    }
+   ]
+  },
+  "odette": {
+   "url": "https://genshin-builds.com/en/character/odette",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Stellar Support / Enabler",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ]
+    },
+    {
+     "name": "Stellar Support / Off-Field Cryo Sub-DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "HeartOfTheFurnace"
+      ],
+      [
+       "DisenchantmentInDeepShadow"
+      ]
+     ]
+    }
+   ]
+  },
+  "ororon": {
+   "url": "https://genshin-builds.com/en/character/ororon",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "notes": "Build description refers to 'flins' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "prune": {
+   "url": "https://genshin-builds.com/en/character/prune",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "CelestialGift"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "notes": "Build description refers to 'Varka' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "qiqi": {
+   "url": "https://genshin-builds.com/en/character/qiqi",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "healing",
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "atk_pct",
+      "er_pct",
+      "atk",
+      "crit_rate",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ]
+     ],
+     "notes": "Build description refers to 'Lohen' instead of this character (apparent template error). Description says to prioritize HP% while the listed stats are ATK-based."
+    }
+   ]
+  },
+  "raiden_shogun": {
+   "url": "https://genshin-builds.com/en/character/raiden_shogun",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HYPERBLOOM",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page data marks this build as not recommended."
+    },
+    {
+     "name": "DPS & ENERGY SUPPORT",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "notes": "Build description refers to 'Flins' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "razor": {
+   "url": "https://genshin-builds.com/en/character/razor",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "Build description refers to 'Flins' instead of this character (apparent template error)."
+    },
+    {
+     "name": "HYPERBLOOM / REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "ThunderingFury"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page data marks this build as not recommended."
+    }
+   ]
+  },
+  "rosaria": {
+   "url": "https://genshin-builds.com/en/character/rosaria",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REVERSE MELT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ]
+    },
+    {
+     "name": "FREEZE",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ]
+    },
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    }
+   ]
+  },
+  "sandrone": {
+   "url": "https://genshin-builds.com/en/character/sandrone",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS Build",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "All three tabs are labelled 'Main DPS' with near-identical content; erMin from the notes' 125–145% ER target."
+    },
+    {
+     "name": "Sandrone DPS Build",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk",
+      "em"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "All three tabs are labelled 'Main DPS' with near-identical content; erMin from the notes' 125–145% ER target."
+    },
+    {
+     "name": "Stellar-Conduct Build",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "atk_pct",
+       "em"
+      ],
+      "circlet": [
+       "crit_dmg",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "DisenchantmentInDeepShadow"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 125,
+     "notes": "All three tabs are labelled 'Main DPS' with near-identical content; erMin from the notes' 125–145% ER target."
+    }
+   ]
+  },
+  "sangonomiya_kokomi": {
+   "url": "https://genshin-builds.com/en/character/sangonomiya_kokomi",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "atk_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "MaidenBeloved"
+      ]
+     ]
+    },
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "er_pct",
+      "atk_pct",
+      "hp",
+      "em"
+     ],
+     "sets": [
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Page data marks this build as not recommended."
+    },
+    {
+     "name": "BLOOM DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "excluded": "the page marks it not recommended or out of date",
+     "notes": "Build description refers to 'Columbina' instead of this character (apparent template error). Page data marks this build as not recommended."
+    }
+   ]
+  },
+  "sayu": {
+   "url": "https://genshin-builds.com/en/character/sayu",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em",
+       "atk_pct"
+      ],
+      "circlet": [
+       "healing",
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "atk_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ]
+     ],
+     "notes": "Build description refers to 'Varka' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "sethos": {
+   "url": "https://genshin-builds.com/en/character/sethos",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "NORMAL ATTACK DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ],
+     "notes": "Build description refers to 'Flins' instead of this character (apparent template error)."
+    }
+   ]
+  },
+  "shenhe": {
+   "url": "https://genshin-builds.com/en/character/shenhe",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ]
+    }
+   ]
+  },
+  "shikanoin_heizou": {
+   "url": "https://genshin-builds.com/en/character/shikanoin_heizou",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "ANEMO DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "notes": "Artifact notes refer to \"Varka\" (text apparently copied from another character)."
+    },
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "atk_pct",
+      "er_pct",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ]
+     ],
+     "notes": "Description refers to \"Varka\" (apparent copy error)."
+    }
+   ]
+  },
+  "sigewinne": {
+   "url": "https://genshin-builds.com/en/character/sigewinne",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "skirk": {
+   "url": "https://genshin-builds.com/en/character/skirk",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "FinaleOfTheDeepGalleries"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "The Choose-2 group includes a Cryo DMG +15% 2pc in the data that the page does not render."
+    }
+   ]
+  },
+  "sucrose": {
+   "url": "https://genshin-builds.com/en/character/sucrose",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "EM SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "em",
+      "er_pct",
+      "atk_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "Instructor"
+      ]
+     ],
+     "erMin": 160,
+     "notes": "ER 160-200% from the description, which also calls her \"Varka\" (apparent copy error)."
+    }
+   ]
+  },
+  "tartaglia": {
+   "url": "https://genshin-builds.com/en/character/tartaglia",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "NymphsDream"
+      ],
+      [
+       "HeartOfDepth"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ]
+     ],
+     "notes": "Only ER figure (170-190%) is for sustaining Melee Burst, which the page advises against by default."
+    }
+   ]
+  },
+  "thoma": {
+   "url": "https://genshin-builds.com/en/character/thoma",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BURGEON",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "hp_pct",
+      "hp",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ]
+     ],
+     "notes": "Description calls him \"Nicole\" (apparent copy error)."
+    },
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "tighnari": {
+   "url": "https://genshin-builds.com/en/character/tighnari",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "QUICK SWAP DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "varesa": {
+   "url": "https://genshin-builds.com/en/character/varesa",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "LongNightsOath"
+      ],
+      [
+       "ObsidianCodex"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    }
+   ]
+  },
+  "varka": {
+   "url": "https://genshin-builds.com/en/character/varka",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "GladiatorsFinale"
+      ]
+     ]
+    }
+   ]
+  },
+  "venti": {
+   "url": "https://genshin-builds.com/en/character/venti",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ]
+     ],
+     "notes": "Description refers to \"Varka\" (apparent copy error)."
+    },
+    {
+     "name": "ON-FIELD DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": []
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "notes": "Page lists no circlet main stat for this build."
+    }
+   ]
+  },
+  "vesna": {
+   "url": "https://genshin-builds.com/en/character/vesna",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Best Stellar-Swirl DPS Build",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_dmg",
+      "crit_rate",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "ScarletProof"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "GladiatorsFinale",
+       "ADayCarvedFromRisingWinds"
+      ]
+     ],
+     "erMin": 100,
+     "notes": "ER ~100-135% from build notes; Anemo DMG goblet explicitly not recommended."
+    }
+   ]
+  },
+  "vodyanitsa": {
+   "url": "https://genshin-builds.com/en/character/vodyanitsa",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "Hydro Support Build",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "TenacityOfTheMillelith",
+       "VourukashasGlow"
+      ],
+      [
+       "SongOfDaysPast"
+      ]
+     ]
+    }
+   ]
+  },
+  "wanderer": {
+   "url": "https://genshin-builds.com/en/character/wanderer",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "atk",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "Lavawalker"
+      ]
+     ],
+     "notes": "Description refers to \"Varka\" (apparent copy error)."
+    }
+   ]
+  },
+  "wriothesley": {
+   "url": "https://genshin-builds.com/en/character/wriothesley",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "MELT DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ]
+     ],
+     "notes": "Described as a Pyro Melt build \"for Lohen\" with Cryo goblet; text appears copied from another character."
+    },
+    {
+     "name": "MONO CRYO / FREEZE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "BlizzardStrayer"
+      ],
+      [
+       "ShimenawasReminiscence"
+      ]
+     ]
+    }
+   ]
+  },
+  "xiangling": {
+   "url": "https://genshin-builds.com/en/character/xiangling",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD VAPORIZE DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "DeepwoodMemories"
+      ]
+     ]
+    }
+   ]
+  },
+  "xianyun": {
+   "url": "https://genshin-builds.com/en/character/xianyun",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HIGH ENERGY REQUIREMENT BUFF & HEAL SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "atk_pct"
+      ],
+      "circlet": [
+       "atk_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "atk"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "notes": "Description refers to \"Varka\" (apparent copy error)."
+    }
+   ]
+  },
+  "xiao": {
+   "url": "https://genshin-builds.com/en/character/xiao",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "atk_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct"
+     ],
+     "sets": [
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "VermillionHereafter"
+      ],
+      [
+       "LongNightsOath"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ]
+     ],
+     "notes": "The Choose-2 group includes an Anemo DMG +15% 2pc in the data that the page does not render."
+    }
+   ]
+  },
+  "xilonen": {
+   "url": "https://genshin-builds.com/en/character/xilonen",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF & HEAL SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "def_pct",
+       "healing",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "def_pct",
+      "def",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "Instructor"
+      ]
+     ]
+    }
+   ]
+  },
+  "xingqiu": {
+   "url": "https://genshin-builds.com/en/character/xingqiu",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HIGH ENERGY REQUIREMENT (OFF-FIELD DPS)",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "NymphsDream"
+      ],
+      [
+       "ADayCarvedFromRisingWinds"
+      ],
+      [
+       "BlizzardStrayer"
+      ]
+     ]
+    }
+   ]
+  },
+  "xinyan": {
+   "url": "https://genshin-builds.com/en/character/xinyan",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "PHYSICAL DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "physical_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "PaleFlame",
+       "BloodstainedChivalry"
+      ],
+      [
+       "PaleFlame"
+      ]
+     ]
+    },
+    {
+     "name": "PYRO DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "def_pct"
+     ],
+     "sets": [
+      [
+       "Lavawalker"
+      ],
+      [
+       "EmblemOfSeveredFate",
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "RetracingBolide"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "CrimsonWitchOfFlames"
+      ]
+     ]
+    },
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "def_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "atk_pct",
+      "def_pct",
+      "crit_rate",
+      "crit_dmg"
+     ],
+     "sets": [
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "yae_miko": {
+   "url": "https://genshin-builds.com/en/character/yae_miko",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "OFF-FIELD DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    },
+    {
+     "name": "OFF-FIELD AGGRAVATE DPS",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "em",
+       "atk_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "em",
+      "atk_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "GildedDreams"
+      ],
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ]
+    }
+   ]
+  },
+  "yanfei": {
+   "url": "https://genshin-builds.com/en/character/yanfei",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "VAPORIZE DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "WanderersTroupe"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ]
+    },
+    {
+     "name": "SHIELD SUPPORT [C4+ REQUIRED]",
+     "role": "shield",
+     "roleFrom": "review",
+     "constellation": "C4",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate",
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "notes": "Description calls her \"Nicole\" (apparent copy error)."
+    }
+   ]
+  },
+  "yaoyao": {
+   "url": "https://genshin-builds.com/en/character/yaoyao",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HEAL SUPPORT",
+     "role": "healer",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "hp"
+     ],
+     "sets": [
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "FlowerOfParadiseLost"
+      ],
+      [
+       "GildedDreams"
+      ]
+     ]
+    }
+   ]
+  },
+  "yelan": {
+   "url": "https://genshin-builds.com/en/character/yelan",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "HIGH ENERGY REQUIREMENT (OFF-FIELD DPS)",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "er_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg",
+       "hp_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg",
+       "hp_pct"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "hp_pct",
+      "crit_rate",
+      "crit_dmg",
+      "hp"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "MarechausseeHunter"
+      ]
+     ],
+     "notes": "Description refers to \"Columbina\" (apparent copy error)."
+    }
+   ]
+  },
+  "yoimiya": {
+   "url": "https://genshin-builds.com/en/character/yoimiya",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "em"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "em",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ShimenawasReminiscence"
+      ],
+      [
+       "CrimsonWitchOfFlames"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "EchoesOfAnOffering"
+      ]
+     ]
+    }
+   ]
+  },
+  "yumemizuki_mizuki": {
+   "url": "https://genshin-builds.com/en/character/yumemizuki_mizuki",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "REACTION DPS",
+     "role": "reaction_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "em",
+       "er_pct"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "em",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "notes": "Description refers to \"Varka\" (apparent copy error)."
+    }
+   ]
+  },
+  "yun_jin": {
+   "url": "https://genshin-builds.com/en/character/yun_jin",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "BUFF SUPPORT",
+     "role": "support",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct",
+       "er_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "def_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "def_pct",
+      "er_pct",
+      "def",
+      "crit_rate"
+     ],
+     "sets": [
+      [
+       "HuskOfOpulentDreams"
+      ],
+      [
+       "HuskOfOpulentDreams",
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ]
+     ],
+     "notes": "Description refers to \"Linnea\" (apparent copy error)."
+    }
+   ]
+  },
+  "zhongli": {
+   "url": "https://genshin-builds.com/en/character/zhongli",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "SHIELD SUPPORT",
+     "role": "shield",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "hp_pct",
+       "crit_rate"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "ArchaicPetra"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
+       "DeepwoodMemories"
+      ],
+      [
+       "Instructor"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ],
+      [
+       "VourukashasGlow",
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "notes": "Description refers to \"Linnea\" (apparent copy error)."
+    },
+    {
+     "name": "BURST SUPPORT",
+     "role": "off_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "atk_pct",
+       "hp_pct"
+      ],
+      "goblet": [
+       "elemental_dmg"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "atk_pct",
+      "hp_pct",
+      "er_pct"
+     ],
+     "sets": [
+      [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige",
+       "ArchaicPetra"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "TenacityOfTheMillelith"
+      ]
+     ],
+     "notes": "Named a support but built for damage (ATK%/HP%, Geo DMG, CRIT); description refers to \"Linnea\"."
+    }
+   ]
+  },
+  "zibai": {
+   "url": "https://genshin-builds.com/en/character/zibai",
+   "fetched": "2026-10-07",
+   "builds": [
+    {
+     "name": "DPS",
+     "role": "on_field_dps",
+     "roleFrom": "review",
+     "mains": {
+      "sands": [
+       "def_pct"
+      ],
+      "goblet": [
+       "def_pct"
+      ],
+      "circlet": [
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "crit_rate",
+      "crit_dmg",
+      "def_pct",
+      "er_pct",
+      "em"
+     ],
+     "sets": [
+      [
+       "NightOfTheSkysUnveiling"
+      ],
+      [
+       "HuskOfOpulentDreams"
+      ]
+     ],
+     "notes": "Third option is DEF +30% 2pc + EM +80 2pc in the data, but the page renders it as a single \"Elemental Mastery +80 set\" 4pc (rendering bug)."
+    }
+   ]
+  }
+ }
+}
