@@ -39,16 +39,16 @@ export interface Readiness {
  *  they have no artifact score to judge by. */
 export type Band = 'well_built' | 'built' | 'partial' | 'unbuilt' | 'no_recipe';
 
-/** The band thresholds (ADR-0057, set by the owner on 2026-10-07 with 7
- *  points a main stat, ADR-0058): readiness must be above 60; artifacts 21
- *  or more (the three right main stats) is partly built, 30 or more built,
- *  over 35 well built. */
+/** The band thresholds (ADR-0057; the owner's lines of 2026-10-07, with 7
+ *  points a main stat and the best of a character's builds, ADR-0058 and
+ *  ADR-0059): readiness must be above 60; artifacts 21 or more (the three
+ *  right main stats) is partly built, 40 or more built, 45 or more well
+ *  built. */
 export const BAND_THRESHOLDS = {
   readiness: 60,
   partial: 21,
-  built: 30,
-  /** Strictly over. */
-  wellBuilt: 35,
+  built: 40,
+  wellBuilt: 45,
 } as const;
 
 /** The four parts' points: the old build score's level 25, talents 20, weapon
@@ -93,16 +93,23 @@ export function computeReadiness(
   };
 }
 
+/** A score as the app shows it, rounded to `digits` decimals. */
+const asShown = (n: number, digits: number) =>
+  Math.round(n * 10 ** digits) / 10 ** digits;
+
 /** A character's band from their combat readiness and artifact score (null
  *  without a recipe). No artifacts score 0, so a levelled character wearing
- *  nothing is unbuilt. */
+ *  nothing is unbuilt. Both scores are compared as the app shows them
+ *  (readiness whole, artifacts to one decimal), so a 44.99 shown as 45.0
+ *  is in the band 45 opens. */
 export function band(readiness: number, artifacts: number | null): Band {
   if (artifacts === null) return 'no_recipe';
   const T = BAND_THRESHOLDS;
-  if (readiness <= T.readiness) return 'unbuilt';
-  if (artifacts > T.wellBuilt) return 'well_built';
-  if (artifacts >= T.built) return 'built';
-  if (artifacts >= T.partial) return 'partial';
+  const a = asShown(artifacts, 1);
+  if (asShown(readiness, 0) <= T.readiness) return 'unbuilt';
+  if (a >= T.wellBuilt) return 'well_built';
+  if (a >= T.built) return 'built';
+  if (a >= T.partial) return 'partial';
   return 'unbuilt';
 }
 

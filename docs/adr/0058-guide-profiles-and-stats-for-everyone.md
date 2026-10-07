@@ -110,6 +110,10 @@ the score on 2026-10-07:
 
   Partly built starts where the three right main stats alone reach.
 
+  Later the same day, with each character scored by their best build
+  (ADR-0059), the owner moved Built to 40 or more and Well built to 45 or
+  more; Partly built stays at 21.
+
 ## Consequences
 
 - On the owner's account, across 95 characters:

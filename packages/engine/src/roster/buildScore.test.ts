@@ -128,16 +128,28 @@ describe('computeReadiness', () => {
 
 describe('band', () => {
   // ADR-0057, with the owner's lines of 2026-10-07: readiness above 60,
-  // then artifacts 21, 30, and over 35.
-  it('needs readiness above 60, then splits artifacts at 21, 30 and 35', () => {
-    expect(band(100, 35.1)).toBe('well_built');
-    expect(band(100, 35)).toBe('built');
-    expect(band(100, 30)).toBe('built');
-    expect(band(100, 29.9)).toBe('partial');
+  // ADR-0057, with the owner's lines of 2026-10-07: readiness above 60,
+  // then artifacts 21, 40 and 45.
+  it('needs readiness above 60, then splits artifacts at 21, 40 and 45', () => {
+    expect(band(100, 45)).toBe('well_built');
+    expect(band(100, 44.9)).toBe('built');
+    expect(band(100, 40)).toBe('built');
+    expect(band(100, 39.9)).toBe('partial');
     expect(band(100, 21)).toBe('partial');
     expect(band(100, 20.9)).toBe('unbuilt');
     expect(band(60, 80)).toBe('unbuilt');
-    expect(band(60.1, 80)).toBe('well_built');
+    expect(band(61, 80)).toBe('well_built');
+  });
+
+  it('compares the scores as they are shown', () => {
+    // Nefer's 44.988 shows as 45.0: Well built, as the number says.
+    expect(band(100, 44.988)).toBe('well_built');
+    expect(band(100, 44.94)).toBe('built');
+    expect(band(100, 39.96)).toBe('built');
+    expect(band(100, 20.96)).toBe('partial');
+    // Readiness 60.4 shows as 60, which is not above 60; 60.6 shows as 61.
+    expect(band(60.4, 80)).toBe('unbuilt');
+    expect(band(60.6, 80)).toBe('well_built');
   });
 
   it('calls a levelled character wearing nothing unbuilt', () => {
