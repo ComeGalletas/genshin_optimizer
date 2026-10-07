@@ -12,16 +12,16 @@ import { setImageNamesForTests } from '../components/imageNames';
 import { TeamsView } from '../teams/TeamsView';
 import { addArtifacts } from '../test-utils/stores';
 
-// Every character the dataset knows has a profile now (ADR-0058): hide
-// Eula's guide profile, as for a character the guides haven't reached yet.
-vi.mock('@genshin-build-lab/engine/meta/guideProfiles', async (original) => {
+// Every character the dataset knows has builds now (ADR-0059): hide
+// Eula's, as for a character the guides haven't reached yet.
+vi.mock('@genshin-build-lab/engine/meta/guideBuilds', async (original) => {
   const m =
     await original<
-      typeof import('@genshin-build-lab/engine/meta/guideProfiles')
+      typeof import('@genshin-build-lab/engine/meta/guideBuilds')
     >();
-  const rest = { ...m.GUIDE_PROFILES };
+  const rest = { ...m.GUIDE_BUILDS };
   delete rest.eula;
-  return { ...m, GUIDE_PROFILES: rest };
+  return { ...m, GUIDE_BUILDS: rest };
 });
 
 /** The window and its details file load lazily: a cold first import can
@@ -477,6 +477,86 @@ describe('character window', () => {
     expect(
       await screen.findByRole('region', { name: 'Artifact quality' }, LAZY),
     ).toHaveTextContent(/No recipe yet/);
+  });
+
+  it('scores each build, shows the best fit, and lets the reader pick another', async () => {
+    const user = userEvent.setup();
+    useRoster.getState().setRoster({
+      sangonomiya_kokomi: { buildLevel: 90, level: 90 },
+    });
+    const kokomi = (
+      id: string,
+      slot: Artifact['slot'],
+      mainStat: Artifact['mainStat'],
+    ): Artifact => ({
+      id,
+      setKey: 'FlowerOfParadiseLost',
+      slot,
+      rarity: 5,
+      level: 20,
+      mainStat,
+      mainStatValue: 187,
+      subStats: [{ key: 'em', value: 40 }],
+      location: 'sangonomiya_kokomi',
+    });
+    addArtifacts([
+      kokomi('k1', 'sands', 'em'),
+      kokomi('k2', 'goblet', 'em'),
+      kokomi('k3', 'circlet', 'healing'),
+    ]);
+    render(<CharacterWindow />);
+    openCharacter('sangonomiya_kokomi');
+    const quality = await screen.findByRole(
+      'region',
+      { name: 'Artifact quality' },
+      LAZY,
+    );
+    // Her Bloom build fits an EM sands and goblet: it is shown first.
+    const picker = within(quality).getByTestId(
+      'build-picker',
+    ) as HTMLSelectElement;
+    expect(picker.selectedOptions[0]).toHaveTextContent(/best fit/);
+    expect(quality).toHaveTextContent(/Main stats 3 of 3/);
+    expect(quality).toHaveTextContent('Elemental Mastery rolls');
+    // Her healer build takes only the Healing Bonus circlet.
+    await user.selectOptions(picker, '0');
+    expect(quality).toHaveTextContent(/Main stats 1 of 3/);
+    expect(within(quality).getByTestId('build-sources')).toHaveTextContent(
+      /their best fit is/,
+    );
+  });
+
+  it('says which builds the guides leave stats out of, and why', async () => {
+    useRoster.getState().setRoster({
+      faruzan: { buildLevel: 90, level: 90 },
+    });
+    render(<CharacterWindow />);
+    openCharacter('faruzan');
+    const quality = await screen.findByRole(
+      'region',
+      { name: 'Artifact quality' },
+      LAZY,
+    );
+    expect(within(quality).getByTestId('unscored')).toHaveTextContent(
+      'Not scored: Pre-C6 (KQM), because the guide gives no goblet main stat.',
+    );
+  });
+
+  it('tags the Energy Recharge a weapon gives, and the guide’s figure for it', async () => {
+    useRoster.getState().setRoster({
+      columbina: {
+        buildLevel: 90,
+        level: 90,
+        weaponKey: 'favonius_codex',
+        weaponLevel: 90,
+        weaponAscension: 6,
+      },
+    });
+    render(<CharacterWindow />);
+    openCharacter('columbina');
+    // The substat shows once the weapon details have loaded.
+    const tag = await screen.findByText(/^Favonius Codex gives \+\d/, {}, LAZY);
+    expect(tag).toHaveTextContent('the guide asks 190% with Favonius Codex');
   });
 
   it('stars the set the build recommends', async () => {

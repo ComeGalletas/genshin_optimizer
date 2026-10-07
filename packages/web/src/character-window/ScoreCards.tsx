@@ -1,15 +1,20 @@
 /**
  * The character window's two scores, with how each is worked out (ADR-0057):
  * combat readiness (how far they're levelled, out of 100) and artifact
- * quality (how good their pieces are for them, with no cap).
+ * quality (how good their pieces are for them, with no cap), against each of
+ * their builds (ADR-0059).
  */
 import type { Readiness } from '@genshin-build-lab/engine/roster/buildScore';
+import { useId } from 'react';
 import {
+  bestOf,
   FLAT_FACTOR,
+  guideErForWeapon,
   MAIN_STAT_POINTS,
   QUALITY_STAT_ORDER,
   type ArtifactQuality,
 } from '@genshin-build-lab/engine/roster/artifactQuality';
+import type { GuideSource } from '@genshin-build-lab/engine/meta/guideBuilds';
 import { formatScore, formatStat, SLOT_LABELS, statLabel } from '../labels';
 import { Crowns } from '../roster/ScoreValues';
 
@@ -46,8 +51,50 @@ export function ReadinessCard({ readiness }: { readiness: Readiness }) {
   );
 }
 
-export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
-  if (!quality)
+/** The guides a build comes from, in words. */
+const SOURCE_NAMES: Record<GuideSource, string> = {
+  kqm: 'KQM',
+  genshinBuilds: 'genshin-builds',
+};
+const sourcesText = (sources: readonly GuideSource[]) =>
+  sources.length
+    ? `From ${sources.map((s) => SOURCE_NAMES[s]).join(' and ')}`
+    : 'From the curated target';
+const buildName = (q: ArtifactQuality) =>
+  q.profile.constellation
+    ? `${q.profile.name} (${q.profile.constellation})`
+    : q.profile.name;
+
+export function QualityCard({
+  qualities,
+  build,
+  onBuildChange,
+  unscored = [],
+  weapon,
+}: {
+  /** The pieces scored against each of the character's builds. */
+  qualities: readonly ArtifactQuality[];
+  /** The build shown (defaults to the best fit). */
+  build?: number;
+  onBuildChange?: (build: number) => void;
+  /** Builds the guides list but leave stats out of, and why. */
+  unscored?: readonly { name: string; source: GuideSource; reason: string }[];
+  /** The weapon held, and the Energy Recharge its substat gives. */
+  weapon?: { name: string; er?: number };
+}) {
+  const uid = useId();
+  const best = bestOf(qualities);
+  const quality = (build !== undefined && qualities[build]) || best;
+  const notScored = unscored.length > 0 && (
+    <p className="text-xs leading-relaxed text-muted" data-testid="unscored">
+      {unscored.map((u) => (
+        <span key={`${u.source}-${u.name}`} className="block">
+          Not scored: {u.name} ({SOURCE_NAMES[u.source]}), because {u.reason}.
+        </span>
+      ))}
+    </p>
+  );
+  if (!quality || !best)
     return (
       <section
         aria-label="Artifact quality"
@@ -57,9 +104,10 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
           Artifact quality
         </h3>
         <p className="text-sm text-muted">
-          No recipe yet: there&rsquo;s no curated build for this character, so
-          their artifacts aren&rsquo;t scored rather than guessed at.
+          No recipe yet: there&rsquo;s no build for this character, so their
+          artifacts aren&rsquo;t scored rather than guessed at.
         </p>
+        {notScored}
       </section>
     );
   const ok = quality.main.slots.filter((s) => s.ok).length;
@@ -69,6 +117,7 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
     return v > 0 ? [[k, v] as const] : [];
   });
   const unused = quality.unused;
+  const forWeapon = weapon && guideErForWeapon(quality.profile, weapon.name);
   return (
     <section aria-label="Artifact quality" className="well space-y-2 px-3 py-2">
       <h3 className="text-xs font-semibold uppercase text-muted">
@@ -76,6 +125,34 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
       </h3>
       <p className="font-mono text-3xl font-bold text-paper">
         {formatScore(quality.total, 1)}
+      </p>
+      {qualities.length > 1 ? (
+        <label className="block text-xs" htmlFor={`${uid}-build`}>
+          <span className="text-muted">Build </span>
+          <select
+            id={`${uid}-build`}
+            className="field mt-1 py-1 text-sm"
+            value={quality.build}
+            onChange={(e) => onBuildChange?.(Number(e.target.value))}
+            data-testid="build-picker"
+          >
+            {qualities.map((q) => (
+              <option key={q.build} value={q.build}>
+                {buildName(q)} · {formatScore(q.total, 1)}
+                {q.build === best.build ? ' · best fit' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : (
+        <p className="text-xs text-muted">
+          Build: <span className="text-paper">{buildName(quality)}</span>
+        </p>
+      )}
+      <p className="text-xs text-muted" data-testid="build-sources">
+        {sourcesText(quality.profile.sources)}
+        {quality.build !== best.build &&
+          ` · their best fit is ${buildName(best)} (${formatScore(best.total, 1)})`}
       </p>
       <p className="text-sm text-paper/90" data-testid="quality-summary">
         Main stats {ok} of 3 · {formatScore(quality.rolls, 1)} good rolls of{' '}
@@ -100,10 +177,10 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
           </div>
         ))}
         {quality.er && (
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-wrap justify-between gap-x-4">
             <dt className="text-muted">
               Energy Recharge
-              {quality.er.min !== undefined && ' vs guide minimum'}
+              {quality.er.min !== undefined && ' vs the build’s minimum'}
             </dt>
             <dd
               className={
@@ -116,17 +193,29 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
               {quality.er.short > 0 &&
                 ` (${formatStat('er_pct', quality.er.short)} short)`}
             </dd>
+            {weapon && (weapon.er || forWeapon) && (
+              <dd className="w-full text-muted" data-testid="er-weapon">
+                {weapon.er
+                  ? `${weapon.name} gives +${formatStat('er_pct', weapon.er)}`
+                  : weapon.name}
+                {forWeapon &&
+                  `; the guide asks ${forWeapon.min}% with ${forWeapon.weapon}`}
+                .
+              </dd>
+            )}
           </div>
         )}
       </dl>
       <p className="text-xs leading-relaxed text-muted">
-        How good their pieces are for them: {MAIN_STAT_POINTS} points for each
-        sands, goblet and circlet with a main stat they use, plus every roll on
-        a stat they use, counted as a share of that stat&rsquo;s largest roll (a
-        perfect roll is 1). Flat HP, ATK and DEF count {FLAT_FACTOR}. CRIT and
-        Energy Recharge count for everyone, all of it; the guide&rsquo;s minimum
-        is shown, not a limit. The score compares artifacts for this character;
-        &ldquo;of possible&rdquo; is the most their pieces could hold.
+        How good their pieces are for a build: {MAIN_STAT_POINTS} points for
+        each sands, goblet and circlet with a main stat it takes, plus every
+        roll on a stat it uses, counted as a share of that stat&rsquo;s largest
+        roll (a perfect roll is 1). Flat HP, ATK and DEF count {FLAT_FACTOR}.
+        CRIT and Energy Recharge count for everyone, all of it; the
+        build&rsquo;s minimum is shown, not a limit. Each build is scored, and
+        the one that fits their pieces best counts. The score compares artifacts
+        for this character; &ldquo;of possible&rdquo; is the most their pieces
+        could hold.
       </p>
       {unused && (
         <p className="text-xs leading-relaxed text-muted" data-testid="unused">
@@ -135,6 +224,7 @@ export function QualityCard({ quality }: { quality: ArtifactQuality | null }) {
           {unused.reason}.
         </p>
       )}
+      {notScored}
     </section>
   );
 }

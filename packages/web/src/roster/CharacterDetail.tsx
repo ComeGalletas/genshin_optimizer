@@ -8,7 +8,12 @@
 import { useId, useMemo, useState, type ReactNode } from 'react';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { computeReadiness } from '@genshin-build-lab/engine/roster/buildScore';
-import { artifactQuality } from '@genshin-build-lab/engine/roster/artifactQuality';
+import {
+  artifactQualities,
+  bestOf,
+  unscoredBuilds,
+} from '@genshin-build-lab/engine/roster/artifactQuality';
+import { characterSheet } from '@genshin-build-lab/engine/roster/characterSheet';
 import { QualityCard, ReadinessCard } from '../character-window/ScoreCards';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { archetypesFor } from '@genshin-build-lab/engine/teams/comps';
@@ -35,7 +40,7 @@ import type {
 } from '@genshin-build-lab/engine/game/types';
 import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
 import { useDetails } from '../character-window/details';
-import { CharacterStats } from '../character-window/CharacterStats';
+import { CharacterStats, sheetInput } from '../character-window/CharacterStats';
 import { Talents } from '../character-window/Talents';
 import { WeaponCard } from '../character-window/WeaponCard';
 import { ArtifactList } from '../character-window/ArtifactList';
@@ -84,10 +89,30 @@ export function CharacterDetail({
     () => (entry ? computeReadiness(entry, artifacts) : null),
     [entry, artifacts],
   );
-  const quality = useMemo(
-    () => (entry ? artifactQuality(characterKey, entry, artifacts) : null),
+  const qualities = useMemo(
+    () => (entry ? artifactQualities(characterKey, entry, artifacts) : []),
     [characterKey, entry, artifacts],
   );
+  // The build shown: the best fit, until the reader picks another (for this
+  // character only).
+  const [picked, setPicked] = useState<{ key: string; build: number } | null>(
+    null,
+  );
+  const build =
+    picked?.key === characterKey
+      ? picked.build
+      : (bestOf(qualities)?.build ?? 0);
+  // The weapon held, and the Energy Recharge its substat gives at its level.
+  const sheet =
+    details && details !== 'failed' && entry?.weaponKey
+      ? characterSheet(details, sheetInput(characterKey, entry, artifacts))
+      : null;
+  const weapon = weaponName
+    ? {
+        name: weaponName,
+        ...(sheet?.weapon?.subStat === 'er_pct' && { er: sheet.weapon.sub }),
+      }
+    : undefined;
   const meta = META_TARGETS[characterKey];
   const profile = getDamageProfile(characterKey);
   const comps = archetypesFor(characterKey);
@@ -136,7 +161,15 @@ export function CharacterDetail({
             {readiness ? (
               <>
                 <ReadinessCard readiness={readiness} />
-                <QualityCard quality={quality} />
+                <QualityCard
+                  qualities={qualities}
+                  build={build}
+                  onBuildChange={(b) =>
+                    setPicked({ key: characterKey, build: b })
+                  }
+                  unscored={unscoredBuilds(characterKey)}
+                  weapon={weapon}
+                />
                 <p className="text-xs text-muted">
                   {objectiveHint(meta?.objective ?? 'crit_value')}
                 </p>
@@ -298,6 +331,7 @@ export function CharacterDetail({
             <WeaponCard details={details} entry={entry} />
             <ArtifactList
               characterKey={characterKey}
+              build={build}
               details={details}
               artifacts={artifacts}
             />

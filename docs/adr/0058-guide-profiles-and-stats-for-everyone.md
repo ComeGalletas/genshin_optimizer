@@ -1,6 +1,7 @@
 # 0058. Guide profiles, and crit and Energy Recharge for everyone
 
-- Status: Accepted
+- Status: Accepted, amended by [0059](0059-several-builds-per-character.md)
+  (several builds per character; the guide profiles become guide builds)
 - Date: 2026-10-07
 - Amends: [0057](0057-combat-readiness-and-artifact-quality.md)
 

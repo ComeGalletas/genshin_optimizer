@@ -595,3 +595,41 @@ describe('OptimizePanel objective coverage', () => {
     expect(minER).not.toHaveAttribute('aria-invalid');
   });
 });
+
+describe('OptimizePanel Energy Recharge from a build (ADR-0059)', () => {
+  beforeEach(() => {
+    useInventory.getState().clear();
+    resetOptimizeRequest();
+  });
+
+  it('fills only the Energy Recharge floor from the build picked', async () => {
+    useOptimizeRequest.getState().setCharacterKey('sangonomiya_kokomi');
+    render(
+      <OptimizePanel onRun={() => {}} running={false} onCancel={vi.fn()} />,
+    );
+    const before = currentRequest(useOptimizeRequest.getState()).constraints;
+    const picker = screen.getByRole('combobox', {
+      name: /Energy Recharge from a build/,
+    });
+    // Her on-field healer build asks 195%, her off-field one 260%.
+    await userEvent.selectOptions(
+      picker,
+      screen.getByRole('option', { name: /Off-Field Support: 260%/ }),
+    );
+    const after = currentRequest(useOptimizeRequest.getState()).constraints;
+    expect(after.minStats?.er_pct).toBe(260);
+    expect(after.setRequirement).toEqual(before.setRequirement);
+    expect(after.mainStatLocks).toEqual(before.mainStatLocks);
+    expect(screen.getByLabelText(/Minimum Energy Recharge/)).toHaveValue(260);
+  });
+
+  it('offers no picker when no build gives a figure', () => {
+    useOptimizeRequest.getState().setCharacterKey('zzz_not_meta');
+    render(
+      <OptimizePanel onRun={() => {}} running={false} onCancel={vi.fn()} />,
+    );
+    expect(
+      screen.queryByRole('combobox', { name: /Energy Recharge from a build/ }),
+    ).toBeNull();
+  });
+});

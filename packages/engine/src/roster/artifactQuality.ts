@@ -1,21 +1,24 @@
 /**
- * Artifact quality (ADR-0057, ADR-0058): how good a character's equipped
- * artifacts are for them, as a score with no cap.
+ * Artifact quality (ADR-0057, ADR-0058, ADR-0059): how good a character's
+ * equipped artifacts are for them, as a score with no cap.
  *
  * - **Main stats, up to 21:** 7 for each of sands, goblet and circlet whose
- *   main stat the character accepts (a slot can accept several).
- * - **Good rolls:** each substat the character uses counts its value ÷ that
+ *   main stat the build accepts (a slot can accept several).
+ * - **Good rolls:** each substat the build uses counts its value ÷ that
  *   stat's largest single 5★ roll (a perfect roll is 1, the lowest tier 0.7).
  *   Flat HP, ATK and DEF count at 0.4. CRIT Rate, CRIT DMG and Energy
  *   Recharge count for everyone, all of it, apart from the stats a kit makes
  *   useless (`UNUSED_STATS`). The Energy Recharge minimum is shown, never a
  *   limit.
  *
+ * A character can have several builds (`GUIDE_BUILDS`): each is scored on
+ * its own and the best one counts, the first on a tie. A character the
+ * guides don't cover is scored against their curated target, and one with
+ * neither has no build, and no score is guessed.
+ *
  * The score compares artifacts for one character. The most good rolls their
  * pieces could hold is given beside it, which is how two characters are read
- * together. Which stats a character uses comes from the curated targets, or
- * from the build guides (`GUIDE_PROFILES`) for a character without them; a
- * character with neither has no profile, and no score is guessed. Pure.
+ * together. Pure.
  * @packageDocumentation
  */
 
@@ -26,11 +29,15 @@ import {
   SUBSTAT_TIERS_5,
   type SubStatKey,
 } from '../game/genshin/substatRolls';
-import { GUIDE_PROFILES } from '../meta/guideProfiles';
+import {
+  GUIDE_BUILDS,
+  type BuildRole,
+  type GuideSource,
+} from '../meta/guideBuilds';
 import { META_TARGETS } from '../meta/metaTargets';
 import { countSets } from '../optimizer/score';
 
-/** Points for each checked slot whose main stat the character accepts. */
+/** Points for each checked slot whose main stat the build accepts. */
 export const MAIN_STAT_POINTS = 7;
 /** What one roll of a flat stat counts for, against its percent version. */
 export const FLAT_FACTOR = 0.4;
@@ -77,25 +84,6 @@ export const UNUSED_STATS: Record<
   },
 };
 
-/** What the curated targets leave out. Checked against the owner's account
- *  on 2026-10-06, each from the character's KQM guide: */
-const EXTRA_USABLE: Record<string, StatKey[]> = {
-  // Her skill's damage and healing scale with HP: EM > ER > HP%.
-  kuki_shinobu: ['hp_pct'],
-  // CRIT > DEF% > ATK% in all three guides: she scales on both.
-  chiori: ['atk_pct'],
-};
-const EXTRA_MAINS: Record<string, Partial<Record<CheckedSlot, StatKey[]>>> = {
-  // A Healing Bonus circlet when she or he is the team's healer.
-  kuki_shinobu: { circlet: ['healing'] },
-  bennett: { circlet: ['healing'] },
-  // Game8 also lists an ATK% sands.
-  chiori: { sands: ['atk_pct'] },
-  // KQM and genshin-builds both take an HP% or Energy Recharge sands
-  // (checked 2026-10-07).
-  sangonomiya_kokomi: { sands: ['er_pct'] },
-};
-
 const SCALING_STATS: readonly StatKey[] = [
   'hp_pct',
   'atk_pct',
@@ -117,20 +105,29 @@ const TARGET_STAT: Partial<Record<StatKey, StatKey>> = {
   def: 'def_pct',
 };
 
-/** What a character uses, and the main stats they accept. */
+/** One build: what it uses, and the main stats it accepts. */
 export interface QualityProfile {
+  /** As the guide names it. */
+  name: string;
+  role?: BuildRole;
+  /** The constellation the build needs, such as "C6". */
+  constellation?: string;
+  /** The guides it comes from; empty for a curated target. */
+  sources: GuideSource[];
   /** Each usable substat and what one of its rolls counts for. */
   usable: Partial<Record<SubStatKey, number>>;
-  /** Their Energy Recharge minimum, including the base 100% (shown only). */
+  /** The build's Energy Recharge minimum, including the base 100% (shown
+   *  only). */
   erMin?: number;
+  /** The guide's figures for particular weapons (shown only). */
+  erWeapons?: { weapon: string; min: number }[];
   accepts: Record<CheckedSlot, StatKey[]>;
   element?: Element | 'physical';
-  /** The sets their build recommends. */
+  /** The sets the build recommends. */
   recommendedSets: string[];
   /** Stats their kit makes useless, and why. */
   unused?: { stats: SubStatKey[]; reason: string };
-  /** Where the profile comes from. */
-  from: 'curated' | 'guides';
+  from: 'guides' | 'curated';
 }
 
 const unique = <T>(xs: (T | undefined)[]): T[] => [
@@ -157,34 +154,13 @@ function usableFrom(
   return usable;
 }
 
-/** A character's profile from the curated targets, else from the guides, or
- *  null with neither. */
-export function qualityProfile(characterKey: string): QualityProfile | null {
-  const element = genshinAdapter.character(characterKey)?.element;
-  const unused = UNUSED_STATS[characterKey];
-  const common = {
-    ...(element && { element }),
-    ...(unused && { unused }),
-  };
-
+/** A curated target as one build, for a character the guides don't cover. */
+function curatedProfile(
+  characterKey: string,
+): Omit<QualityProfile, 'element' | 'unused'> | null {
   const m = META_TARGETS[characterKey];
-  if (!m) {
-    const g = GUIDE_PROFILES[characterKey];
-    if (!g) return null;
-    return {
-      usable: usableFrom(characterKey, g.substats),
-      ...(g.erMin !== undefined && { erMin: g.erMin }),
-      accepts: {
-        sands: [...g.accepts.sands],
-        goblet: [...g.accepts.goblet],
-        circlet: [...g.accepts.circlet],
-      },
-      recommendedSets: [...g.sets],
-      from: 'guides',
-      ...common,
-    };
-  }
-
+  if (!m) return null;
+  const element = genshinAdapter.character(characterKey)?.element;
   const objective = m.objective as StatKey | string;
   const scaling: StatKey = SCALING_STATS.includes(objective as StatKey)
     ? (objective as StatKey)
@@ -192,34 +168,29 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
       ? m.mains.sands
       : 'atk_pct';
   const targets = Object.keys(m.statTargets ?? {}) as StatKey[];
-  // Crit is usable for everyone now; whether it's the build's aim still
-  // decides whether a crit circlet is an accepted main stat.
   const critBuild =
     objective === 'crit_value' ||
     objective === 'avg_damage' ||
     targets.some((t) => t === 'crit_rate' || t === 'crit_dmg');
-
-  const extra = EXTRA_MAINS[characterKey] ?? {};
   return {
+    name: 'Curated build',
+    sources: [],
     usable: usableFrom(characterKey, [
       scaling,
       ...targets.map((t) => TARGET_STAT[t] ?? t),
-      ...(EXTRA_USABLE[characterKey] ?? []),
     ]),
     ...(m.erTarget !== undefined && { erMin: m.erTarget }),
     accepts: {
-      sands: unique([m.mains.sands, scaling, ...(extra.sands ?? [])]),
+      sands: unique([m.mains.sands, scaling]),
       goblet: unique<StatKey>([
         m.mains.goblet,
         element === 'physical' ? 'physical_dmg' : 'elemental_dmg',
         scaling,
-        ...(extra.goblet ?? []),
       ]),
       circlet: unique<StatKey>([
         m.mains.circlet,
         ...(critBuild ? (['crit_rate', 'crit_dmg'] as StatKey[]) : []),
         scaling,
-        ...(extra.circlet ?? []),
       ]),
     },
     recommendedSets: unique([
@@ -229,13 +200,58 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
       ...(m.otherSets ?? []),
     ]),
     from: 'curated',
-    ...common,
   };
+}
+
+/** A character's builds, in the guides' order: from the guides, else their
+ *  curated target, else none. */
+export function qualityProfiles(characterKey: string): QualityProfile[] {
+  const element = genshinAdapter.character(characterKey)?.element;
+  const unused = UNUSED_STATS[characterKey];
+  const common = {
+    ...(element && { element }),
+    ...(unused && { unused }),
+  };
+  const guides = GUIDE_BUILDS[characterKey]?.builds ?? [];
+  if (guides.length > 0)
+    return guides.map((g) => ({
+      name: g.name,
+      role: g.role,
+      ...(g.constellation && { constellation: g.constellation }),
+      sources: [...g.sources],
+      usable: usableFrom(characterKey, g.substats),
+      ...(g.erMin !== undefined && { erMin: g.erMin }),
+      ...(g.erWeapons && { erWeapons: g.erWeapons }),
+      accepts: {
+        sands: [...g.accepts.sands],
+        goblet: [...g.accepts.goblet],
+        circlet: [...g.accepts.circlet],
+      },
+      recommendedSets: [...g.sets],
+      from: 'guides' as const,
+      ...common,
+    }));
+  const curated = curatedProfile(characterKey);
+  return curated ? [{ ...curated, ...common }] : [];
+}
+
+/** A character's first build, or null without one. */
+export function qualityProfile(characterKey: string): QualityProfile | null {
+  return qualityProfiles(characterKey)[0] ?? null;
+}
+
+/** The builds a guide lists but leaves a main stat or the substats out of,
+ *  so they can't be scored, and why. */
+export function unscoredBuilds(characterKey: string) {
+  return GUIDE_BUILDS[characterKey]?.unscored ?? [];
 }
 
 export interface ArtifactQuality {
   /** Main stat points plus good rolls. */
   total: number;
+  /** Which build this is (an index into `qualityProfiles`), and the build. */
+  build: number;
+  profile: QualityProfile;
   main: {
     points: number;
     /** The checked slots, worn or not. */
@@ -247,7 +263,7 @@ export interface ArtifactQuality {
   possible: number;
   /** Good rolls by stat, in `QUALITY_STAT_ORDER`. */
   byStat: Partial<Record<SubStatKey, number>>;
-  /** Energy Recharge against the minimum, when it counts for them. */
+  /** Energy Recharge against the build's minimum, when it counts for them. */
   er?: { min?: number; total: number; short: number };
   /** Stats their kit makes useless, and why. */
   unused?: { stats: SubStatKey[]; reason: string };
@@ -256,7 +272,7 @@ export interface ArtifactQuality {
 /** The largest single 5★ roll of a substat. */
 const maxRoll = (k: SubStatKey) => SUBSTAT_TIERS_5[k][3];
 
-/** Whether a piece's main stat is one the character accepts in its slot; an
+/** Whether a piece's main stat is one the build accepts in its slot; an
  *  elemental goblet only of their own element (or one the source didn't
  *  name). */
 function accepted(p: QualityProfile, a: Artifact): boolean {
@@ -310,15 +326,13 @@ function erBeforeSubstats(
   return er;
 }
 
-/** A character's artifact quality, or null when they have no profile. */
-export function artifactQuality(
-  characterKey: string,
-  entry: { buildLevel?: number; weaponKey?: string } | undefined,
+/** The pieces scored against one build. */
+function scoreBuild(
+  p: QualityProfile,
+  build: number,
+  erBefore: () => number,
   pieces: readonly Artifact[],
-): ArtifactQuality | null {
-  const p = qualityProfile(characterKey);
-  if (!p) return null;
-
+): ArtifactQuality {
   const slots = CHECKED_SLOTS.map((slot) => {
     const a = pieces.find((x) => x.slot === slot);
     return a
@@ -343,7 +357,7 @@ export function artifactQuality(
 
   let er: ArtifactQuality['er'];
   if (p.usable.er_pct) {
-    const total = erBeforeSubstats(characterKey, entry, pieces) + erSubs;
+    const total = erBefore() + erSubs;
     er = {
       ...(p.erMin !== undefined && { min: p.erMin }),
       total,
@@ -354,6 +368,8 @@ export function artifactQuality(
   const rolls = Object.values(byStat).reduce((s, v) => s + (v ?? 0), 0);
   return {
     total: mainPoints + rolls,
+    build,
+    profile: p,
     main: { points: mainPoints, slots },
     rolls,
     possible: pieces.reduce((s, a) => s + possibleFor(p, a), 0),
@@ -363,10 +379,75 @@ export function artifactQuality(
   };
 }
 
-/** Whether a set is one the character's build recommends. */
-export function isRecommendedSet(characterKey: string, setKey: string) {
+/** The pieces scored against each of the character's builds, in order. */
+export function artifactQualities(
+  characterKey: string,
+  entry: { buildLevel?: number; weaponKey?: string } | undefined,
+  pieces: readonly Artifact[],
+): ArtifactQuality[] {
+  let before: number | undefined;
+  const erBefore = () =>
+    (before ??= erBeforeSubstats(characterKey, entry, pieces));
+  return qualityProfiles(characterKey).map((p, i) =>
+    scoreBuild(p, i, erBefore, pieces),
+  );
+}
+
+/** A character's artifact quality: against the given build, or the build
+ *  that fits their pieces best (the first on a tie). Null without a build. */
+export function artifactQuality(
+  characterKey: string,
+  entry: { buildLevel?: number; weaponKey?: string } | undefined,
+  pieces: readonly Artifact[],
+  build?: number,
+): ArtifactQuality | null {
+  const all = artifactQualities(characterKey, entry, pieces);
+  if (build !== undefined && all[build]) return all[build];
+  return bestOf(all);
+}
+
+/** The best-scoring of several, the first on a tie; null for none. */
+export function bestOf(all: readonly ArtifactQuality[]) {
+  let best: ArtifactQuality | null = null;
+  for (const q of all) if (!best || q.total > best.total + 1e-9) best = q;
+  return best;
+}
+
+/** Whether a set is one a character's build recommends (their first build
+ *  unless one is given). */
+export function isRecommendedSet(
+  characterKey: string,
+  setKey: string,
+  build = 0,
+) {
   return (
-    qualityProfile(characterKey)?.recommendedSets.includes(setKey) ?? false
+    qualityProfiles(characterKey)[build]?.recommendedSets.includes(setKey) ??
+    false
+  );
+}
+
+/** A name compared loosely: lower case, one kind of apostrophe, no
+ *  refinement ("R5"). */
+const norm = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+r\d\b.*$/, '')
+    .trim();
+
+/** The guide's Energy Recharge figure for the weapon a character holds, when
+ *  the build gives one ("Favonius Codex" for a Favonius Codex; a generic
+ *  "Favonius" for any of them). */
+export function guideErForWeapon(
+  profile: QualityProfile,
+  weaponName: string,
+): { weapon: string; min: number } | undefined {
+  const name = norm(weaponName);
+  return profile.erWeapons?.find((w) =>
+    w.weapon
+      .split('/')
+      .map(norm)
+      .some((part) => part.includes(name) || name.startsWith(part)),
   );
 }
 

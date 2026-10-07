@@ -22,7 +22,7 @@ import { elementLabel, formatStat, statLabel } from '../labels';
 
 /** The sheet's inputs from a roster entry; level 90 and nothing equipped
  *  for a character the account doesn't have. */
-function sheetInput(
+export function sheetInput(
   characterKey: string,
   entry: RosterEntry | undefined,
   artifacts: readonly Artifact[],

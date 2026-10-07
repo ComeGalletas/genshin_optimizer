@@ -41,6 +41,7 @@ import {
   type DerivedTeammate,
 } from '@genshin-build-lab/engine/teams/comps';
 import { getDamageProfile } from '@genshin-build-lab/engine/damage/profiles';
+import { qualityProfiles } from '@genshin-build-lab/engine/roster/artifactQuality';
 import { CharacterPortrait, WeaponIcon } from './GameArt';
 import { CharacterButton } from '../character-window/CharacterButton';
 import { HelpButton, HelpPanel } from './help/Help';
@@ -315,6 +316,11 @@ export function OptimizePanel({
       ? 'Pick a character to start.'
       : null;
   const meta = META_TARGETS[characterKey];
+  // The character's builds that give an Energy Recharge figure (ADR-0059):
+  // picking one fills the floor above, nothing else.
+  const erBuilds = qualityProfiles(characterKey).filter(
+    (b) => b.erMin !== undefined,
+  );
   // `avg_damage` needs a curated profile, so it is offered per character. If the
   // user switches to a character without one, drop the selection — otherwise
   // buildContext would throw on the next run.
@@ -488,6 +494,37 @@ export function OptimizePanel({
                 : ''}
             </p>
           </label>
+          {erBuilds.length > 0 && (
+            <label className="block">
+              <span className="field-label">Energy Recharge from a build</span>
+              <select
+                className="field"
+                value=""
+                onChange={(e) => {
+                  const b = erBuilds[Number(e.target.value)];
+                  if (!b) return;
+                  setMinERInput(String(b.erMin));
+                  setMinER(String(b.erMin));
+                }}
+                aria-describedby={`${uid}-er-build-hint`}
+              >
+                <option value="">Pick a build…</option>
+                {erBuilds.map((b, i) => (
+                  <option key={i} value={i}>
+                    {b.name}
+                    {b.constellation ? ` (${b.constellation})` : ''}: {b.erMin}%
+                  </option>
+                ))}
+              </select>
+              <p
+                id={`${uid}-er-build-hint`}
+                className="mt-1.5 text-xs text-muted"
+              >
+                Sets only the Energy Recharge floor, from that build&rsquo;s
+                guide; the sets and main stats stay as they are.
+              </p>
+            </label>
+          )}
         </div>
       </div>
 

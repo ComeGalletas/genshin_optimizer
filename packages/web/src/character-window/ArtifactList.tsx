@@ -120,15 +120,17 @@ function RollList({ line, split }: { line: SubStat; split: LineRolls }) {
   );
 }
 
-/** A star beside a set the character's build recommends (ADR-0057). */
+/** A star beside a set the build shown recommends (ADR-0057, ADR-0059). */
 function Recommended({
   characterKey,
+  build,
   setKey,
 }: {
   characterKey: string;
+  build: number;
   setKey: string;
 }) {
-  if (!isRecommendedSet(characterKey, setKey)) return null;
+  if (!isRecommendedSet(characterKey, setKey, build)) return null;
   return (
     <span
       className="inline-flex text-accent-bright"
@@ -143,10 +145,13 @@ function Recommended({
 
 export function ArtifactList({
   characterKey,
+  build = 0,
   details,
   artifacts,
 }: {
   characterKey: string;
+  /** The build whose recommended sets are starred. */
+  build?: number;
   details: Details | null | 'failed';
   artifacts: readonly Artifact[];
 }) {
@@ -187,6 +192,7 @@ export function ArtifactList({
                           {formatSetName(a.setKey)}{' '}
                           <Recommended
                             characterKey={characterKey}
+                            build={build}
                             setKey={a.setKey}
                           />
                         </span>
@@ -245,7 +251,11 @@ export function ArtifactList({
               <span key={k}>
                 {i > 0 && ', '}
                 {formatSetName(k)} {n >= 4 ? 4 : 2}-piece{' '}
-                <Recommended characterKey={characterKey} setKey={k} />
+                <Recommended
+                  characterKey={characterKey}
+                  build={build}
+                  setKey={k}
+                />
               </span>
             ))}
           </p>

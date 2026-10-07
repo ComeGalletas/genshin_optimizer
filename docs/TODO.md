@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 10 (reorganization). Phases 0 to 9 are accepted (Phases 2, 8 and 9 on 2026-10-06).
-**Next item:** 10.8, several builds per character (its data pass, then ADR-0059); 10.1, the owner's scope for the reorganization, stays open beside it
+**Next item:** 10.9, refreshing the curated targets from the quick guides with the owner; 10.1, the owner's scope for the reorganization, stays open beside it
 
 ## Housekeeping (done 2026-09-24)
 
@@ -531,7 +531,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - **Kokomi rechecked** against KQM and genshin-builds: an Energy Recharge sands is accepted, and Tenacity, Scroll, Song of Days Past, Deepwood and Silken Moon's Serenade are recommended beside Ocean-Hued Clam. The owner's Kokomi wears a Bloom build, which needs several builds per character (next).
     - **Main stats at 7** (up to 21), and **four bands**: with readiness above 60, Well built over 35, Built 30 or more, Partly built 21 or more.
     - On the owner's account: 49 well built, 7 built, 8 partly built, 31 unbuilt (26 of them wearing nothing), none without a recipe.
-- [ ] 10.8 Several builds per character ([ADR](adr/) first: ADR-0059), as the owner set it on 2026-10-07. The owner's Kokomi wears KQM's Bloom build and scores as a healer until then.
+- [x] 10.8 Several builds per character ([ADR-0059](adr/0059-several-builds-per-character.md)), as the owner set it on 2026-10-07. The owner's Kokomi wears KQM's Bloom build and scores as a healer until then.
   - **A build** has a name and role, its accepted main stats, substats, recommended sets and Energy Recharge minimum, all from that one guide build. The data pass settles each character's builds first; only then is anything scored.
   - **Scoring:** each build is scored on its own and the best one counts (on a tie, the first). Builds are never merged. The character window's quality card shows which build it used, with a picker for the others; the score, "of possible", the set stars and the Energy Recharge minimum follow the build shown.
   - **Energy Recharge is the only threshold that changes per build**, and each build uses its own guide's value: Kokomi's healer build takes what that build recommends. A curated character's meta target stays build 1 and the optimizer default.
@@ -541,6 +541,12 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - **Builds left out:** generic 2-piece mixes and builds whose stats the guide doesn't give are not scored, and the window says so and why.
   - **The bands stay** at 21, 30 and over 35.
   - **Data:** a new pass over all 120 characters reading KQM and genshin-builds only, with each build's role from one fixed list; same-role builds from the two sources merged as in ADR-0058. The owner reviews the summary before it goes into the data.
+  - Done 2026-10-07:
+    - **Data:** `meta/guideBuilds.ts`, 200 builds for all 120 characters (51 with several), read from the KQM quick guides (25 curated characters had linked old full guides) and genshin-builds, checked against the dataset's keys. Same-role builds merged. Left out at the owner's word: the 11 genshin-builds builds marked not recommended or out of date, and KQM's Dori "Pure Healer". Not scored, with the reason shown: Faruzan pre-C6, Gorou, Venti's genshin-builds on-field build. The review is `.claude/notes/2026-10-07-build-pass.md`.
+    - **Engine:** `qualityProfiles`, `artifactQualities`, best-fit `artifactQuality`, `unscoredBuilds`, `guideErForWeapon`. Guide builds replace curated targets for scoring; a curated target is the fallback build. The hand overrides went into the guide data.
+    - **Web:** the quality card's build picker, sources, weapon tag and not-scored list; Gear-tab stars follow the build shown; the optimizer's "Energy Recharge from a build" picker.
+    - On the owner's account: 56 well built, 3 built, 5 partly built, 31 unbuilt. Kokomi is Well built on her Bloom build (41.2).
+- [ ] 10.9 Refresh the curated targets (the optimizer's defaults: set requirement, main-stat locks, Energy Recharge floor) from the KQM quick guides, character by character with the owner. 39 of the 53 differ in a set, main stats or Energy Recharge (ADR-0059), and several were transcribed from guides that are years old. Their `source` links move to the quick guides.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog

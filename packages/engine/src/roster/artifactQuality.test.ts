@@ -1,16 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import type { Artifact, Slot, StatKey, SubStat } from '../game/types';
 import {
+  artifactQualities,
   artifactQuality,
   FLAT_FACTOR,
+  guideErForWeapon,
   isRecommendedSet,
   MAIN_STAT_POINTS,
   QUALITY_STAT_ORDER,
   qualityProfile,
+  qualityProfiles,
+  unscoredBuilds,
   UNUSED_STATS,
 } from './artifactQuality';
-import { GUIDE_PROFILES } from '../meta/guideProfiles';
-import { META_TARGETS } from '../meta/metaTargets';
+import { GUIDE_BUILDS } from '../meta/guideBuilds';
 import { genshinAdapter } from '../game/genshin/adapter';
 import { SUBSTAT_TIERS_5 } from '../game/genshin/substatRolls';
 import { mulberry32 } from '../numbers';
@@ -35,22 +38,37 @@ const piece = (
 
 const MAX = (k: keyof typeof SUBSTAT_TIERS_5) => SUBSTAT_TIERS_5[k][3];
 
-describe('qualityProfile', () => {
-  it('reads Kokomi: HP and Energy Recharge, no crit, a healing circlet', () => {
-    const p = qualityProfile('sangonomiya_kokomi')!;
-    expect(p.usable).toEqual({ hp_pct: 1, hp: FLAT_FACTOR, er_pct: 1 });
-    expect(p.erMin).toBe(220);
-    expect(p.unused?.stats).toEqual(['crit_rate', 'crit_dmg']);
-    expect(p.accepts.circlet).toEqual(['healing', 'hp_pct']);
-    expect(p.accepts.goblet).toEqual(['elemental_dmg', 'hp_pct']);
-    // An HP% or Energy Recharge sands, and five sets beside Ocean-Hued Clam
-    // (KQM and genshin-builds, 2026-10-07).
-    expect(p.accepts.sands).toEqual(['hp_pct', 'er_pct']);
-    expect(p.recommendedSets).toHaveLength(6);
-    expect(p.recommendedSets[0]).toBe('OceanHuedClam');
+describe('qualityProfiles', () => {
+  it('reads Kokomi’s three builds: two healers and Bloom', () => {
+    const builds = qualityProfiles('sangonomiya_kokomi');
+    expect(builds.map((b) => b.role)).toEqual([
+      'healer',
+      'healer',
+      'reaction_dps',
+    ]);
+    const [onField, offField, bloom] = builds;
+    // HP and Energy Recharge, no crit (her passive), a healing circlet.
+    expect(onField.usable).toEqual({ hp_pct: 1, hp: FLAT_FACTOR, er_pct: 1 });
+    expect(onField.unused?.stats).toEqual(['crit_rate', 'crit_dmg']);
+    expect(onField.accepts).toEqual({
+      sands: ['hp_pct', 'er_pct'],
+      goblet: ['elemental_dmg', 'hp_pct'],
+      circlet: ['healing', 'hp_pct'],
+    });
+    expect(onField.sources).toEqual(['kqm', 'genshinBuilds']);
+    expect(onField.recommendedSets[0]).toBe('OceanHuedClam');
+    // Each build has its own Energy Recharge minimum.
+    expect([onField.erMin, offField.erMin, bloom.erMin]).toEqual([
+      195,
+      260,
+      undefined,
+    ]);
+    expect(bloom.usable.em).toBe(1);
+    expect(bloom.accepts.goblet).toContain('em');
+    expect(bloom.recommendedSets[0]).toBe('FlowerOfParadiseLost');
   });
 
-  it('reads Furina: HP and crit, an HP sands, a crit or HP circlet', () => {
+  it('reads Furina: HP and crit, an HP or Energy Recharge sands', () => {
     const p = qualityProfile('furina')!;
     expect(p.usable).toMatchObject({
       hp_pct: 1,
@@ -59,12 +77,12 @@ describe('qualityProfile', () => {
       crit_dmg: 1,
       er_pct: 1,
     });
-    expect(p.accepts.sands).toEqual(['hp_pct']);
-    expect(p.accepts.circlet).toEqual(['crit_rate', 'crit_dmg', 'hp_pct']);
+    expect(p.accepts.sands).toEqual(['hp_pct', 'er_pct']);
+    expect(p.accepts.circlet).toEqual(['crit_rate', 'crit_dmg']);
   });
 
   it('counts crit and Energy Recharge for everyone but the exceptions', () => {
-    // Nahida's build aims at EM; crit and ER still count.
+    // Nahida's builds aim at EM; crit and ER still count.
     expect(qualityProfile('nahida')!.usable).toMatchObject({
       em: 1,
       crit_rate: 1,
@@ -83,17 +101,26 @@ describe('qualityProfile', () => {
     }
   });
 
-  // Checked on the owner's account (2026-10-06): what the curated targets
-  // leave out, until TODO 10.2 gives substat priorities.
-  it('adds Kuki’s HP and her and Bennett’s Healing Bonus circlet', () => {
-    const kuki = qualityProfile('kuki_shinobu')!;
-    expect(kuki.usable).toMatchObject({ em: 1, hp_pct: 1, hp: FLAT_FACTOR });
-    expect(kuki.accepts.circlet).toContain('healing');
-    expect(qualityProfile('bennett')!.accepts.circlet).toContain('healing');
-    expect(qualityProfile('xingqiu')!.accepts.circlet).not.toContain('healing');
+  it('gives Kuki and Bennett a healing build with a Healing Bonus circlet', () => {
+    const heals = (k: string) =>
+      qualityProfiles(k).some((b) => b.accepts.circlet.includes('healing'));
+    expect(heals('kuki_shinobu')).toBe(true);
+    expect(heals('bennett')).toBe(true);
+    expect(qualityProfile('kuki_shinobu')!.usable.hp_pct).toBe(1);
   });
 
-  it('has no profile, and so no score, without targets or a guide', () => {
+  it('lists the builds a guide leaves stats out of, and why', () => {
+    expect(unscoredBuilds('faruzan')).toEqual([
+      expect.objectContaining({
+        source: 'kqm',
+        reason: 'the guide gives no goblet main stat',
+      }),
+    ]);
+    expect(unscoredBuilds('furina')).toEqual([]);
+  });
+
+  it('has no build, and so no score, for a character it doesn’t know', () => {
+    expect(qualityProfiles('nobody')).toEqual([]);
     expect(qualityProfile('nobody')).toBeNull();
     expect(artifactQuality('nobody', undefined, [])).toBeNull();
   });
@@ -114,24 +141,49 @@ describe('artifactQuality', () => {
 
   it('adds 7 per accepted main stat to the good rolls on usable stats', () => {
     const q = artifactQuality('sangonomiya_kokomi', undefined, kokomi)!;
+    // Her on-field healer build fits these pieces best.
+    expect(q.build).toBe(0);
+    expect(q.profile.name).toBe(qualityProfiles('sangonomiya_kokomi')[0].name);
     expect(q.main.points).toBe(3 * MAIN_STAT_POINTS);
     expect(q.main.slots.map((s) => s.ok)).toEqual([true, true, true]);
     // Crit and flat ATK are no use to her; flat HP counts at 0.4; all her
-    // Energy Recharge counts, being under her 220% minimum.
+    // Energy Recharge counts.
     expect(q.byStat.hp_pct).toBeCloseTo((11.7 + 5.8) / MAX('hp_pct'), 6);
     expect(q.byStat.hp).toBeCloseTo((299 / MAX('hp')) * FLAT_FACTOR, 6);
     expect(q.byStat.er_pct).toBeCloseTo(19.5 / MAX('er_pct'), 6);
     expect(q.byStat.crit_rate).toBeUndefined();
-    expect(q.rolls).toBeCloseTo(
-      (11.7 + 5.8) / MAX('hp_pct') +
-        (299 / MAX('hp')) * FLAT_FACTOR +
-        19.5 / MAX('er_pct'),
-      6,
-    );
     expect(MAIN_STAT_POINTS).toBe(7);
     expect(q.total).toBeCloseTo(21 + q.rolls, 6);
-    expect(q.er).toMatchObject({ min: 220, total: 119.5 });
-    expect(q.er!.short).toBeCloseTo(100.5, 6);
+    // The build's own minimum: 195%.
+    expect(q.er).toMatchObject({ min: 195, total: 119.5 });
+    expect(q.er!.short).toBeCloseTo(75.5, 6);
+  });
+
+  it('scores every build and counts the one that fits best', () => {
+    const bloom = [
+      piece('sands', 'em', [['em', 40]]),
+      piece('goblet', 'em', [['hp_pct', 5.8]]),
+      piece('circlet', 'healing', [['em', 21]]),
+    ];
+    const all = artifactQualities('sangonomiya_kokomi', undefined, bloom);
+    expect(all).toHaveLength(3);
+    // The healer builds accept only her Healing Bonus circlet here; Bloom
+    // accepts all three, and counts her EM.
+    expect(all.map((q) => q.main.points)).toEqual([7, 7, 21]);
+    expect(all[2].byStat.em).toBeCloseTo(61 / MAX('em'), 6);
+    const best = artifactQuality('sangonomiya_kokomi', undefined, bloom)!;
+    expect(best.build).toBe(2);
+    expect(best.total).toBe(Math.max(...all.map((q) => q.total)));
+    // A build can be asked for by its index.
+    expect(
+      artifactQuality('sangonomiya_kokomi', undefined, bloom, 0)!.build,
+    ).toBe(0);
+  });
+
+  it('takes the first build on a tie', () => {
+    const q = artifactQuality('sangonomiya_kokomi', undefined, [])!;
+    expect(q.total).toBe(0);
+    expect(q.build).toBe(0);
   });
 
   it('checks an elemental goblet’s element, and counts a missing slot as unmet', () => {
@@ -142,6 +194,7 @@ describe('artifactQuality', () => {
       'sangonomiya_kokomi',
       undefined,
       pyro.filter((a) => a.slot !== 'circlet'),
+      0,
     )!;
     expect(q.main.slots).toEqual([
       { slot: 'sands', mainStat: 'hp_pct', ok: true },
@@ -153,18 +206,21 @@ describe('artifactQuality', () => {
 
   it('counts all Energy Recharge, past the minimum or without one', () => {
     const lots = [piece('flower', 'hp', [['er_pct', 50]])];
-    // Furina (130% minimum, Splendor carries no ER): all 50 count, past it.
+    // Furina (200% minimum, Splendor carries no ER): all 50 count.
     const furina = artifactQuality(
       'furina',
       { buildLevel: 90, weaponKey: 'splendor_of_tranquil_waters' },
       lots,
     )!;
     expect(furina.byStat.er_pct).toBeCloseTo(50 / MAX('er_pct'), 6);
-    expect(furina.er).toMatchObject({ min: 130, total: 150, short: 0 });
-    // Columbina's guides give no minimum: still all of it.
-    const columbina = artifactQuality('columbina', undefined, lots)!;
+    expect(furina.er).toMatchObject({ min: 200, total: 150, short: 50 });
+    // Columbina's second build gives no minimum: still all of it.
+    const columbina = artifactQuality('columbina', undefined, lots, 1)!;
+    expect(columbina.profile.erMin).toBeUndefined();
     expect(columbina.byStat.er_pct).toBeCloseTo(50 / MAX('er_pct'), 6);
     expect(columbina.er).toEqual({ total: 150, short: 0 });
+    // Her first build carries the guide's weapon figures too.
+    expect(qualityProfile('columbina')!.erWeapons?.length).toBeGreaterThan(0);
     // Mavuika's kit makes it useless: none of it.
     const mavuika = artifactQuality('mavuika', undefined, lots)!;
     expect(mavuika.byStat.er_pct).toBeUndefined();
@@ -209,8 +265,8 @@ describe('artifactQuality', () => {
       piece('sands', 'er_pct', [], { mainStatValue: 51.8 }),
       piece('flower', 'hp', [['er_pct', 80]]),
     ];
-    const q = artifactQuality('sangonomiya_kokomi', undefined, withSands)!;
-    // 100 base + 51.8 from the sands + 80 from the flower, past her 220%:
+    const q = artifactQuality('sangonomiya_kokomi', undefined, withSands, 0)!;
+    // 100 base + 51.8 from the sands + 80 from the flower, past her 195%:
     // the 80 count as rolls; the sands counts as a main stat she accepts.
     expect(q.byStat.er_pct).toBeCloseTo(80 / MAX('er_pct'), 6);
     expect(q.er!.total).toBeCloseTo(231.8, 6);
@@ -225,14 +281,20 @@ describe('artifactQuality', () => {
   it('gives the most good rolls each piece could hold', () => {
     // Kokomi's flower can't roll flat HP (its main stat): HP% and ER lines,
     // and five upgrades into a full-weight one.
-    const flower = artifactQuality('sangonomiya_kokomi', undefined, [
-      piece('flower', 'hp', []),
-    ])!;
+    const flower = artifactQuality(
+      'sangonomiya_kokomi',
+      undefined,
+      [piece('flower', 'hp', [])],
+      0,
+    )!;
     expect(flower.possible).toBeCloseTo(2 + 5, 6);
     // Her HP% sands: flat HP (0.4) and ER (1) lines, upgrades into ER.
-    const sands = artifactQuality('sangonomiya_kokomi', undefined, [
-      piece('sands', 'hp_pct', []),
-    ])!;
+    const sands = artifactQuality(
+      'sangonomiya_kokomi',
+      undefined,
+      [piece('sands', 'hp_pct', [])],
+      0,
+    )!;
     expect(sands.possible).toBeCloseTo(1.4 + 5, 6);
   });
 
@@ -262,16 +324,15 @@ describe('artifactQuality', () => {
         }));
         return { ...piece(slot, main, []), subStats: subs };
       });
-      for (const c of ['furina', 'sangonomiya_kokomi', 'raiden_shogun']) {
-        const q = artifactQuality(c, undefined, pieces)!;
-        expect(q.rolls).toBeLessThanOrEqual(q.possible + 1e-9);
-      }
+      for (const c of ['furina', 'sangonomiya_kokomi', 'raiden_shogun'])
+        for (const q of artifactQualities(c, undefined, pieces))
+          expect(q.rolls).toBeLessThanOrEqual(q.possible + 1e-9);
     }
   });
 });
 
-describe('Chiori, checked against three guides (2026-10-06)', () => {
-  it('uses crit, DEF% and ATK%, and recommends two sets', () => {
+describe('Chiori', () => {
+  it('uses crit, DEF% and ATK%, and recommends Golden Troupe first', () => {
     const p = qualityProfile('chiori')!;
     expect(p.usable).toMatchObject({
       crit_rate: 1,
@@ -280,50 +341,81 @@ describe('Chiori, checked against three guides (2026-10-06)', () => {
       def: FLAT_FACTOR,
       atk_pct: 1,
       atk: FLAT_FACTOR,
+      er_pct: 1,
     });
-    // Energy Recharge counts for everyone; no guide gives her a minimum.
-    expect(p.usable.er_pct).toBe(1);
     expect(p.erMin).toBeUndefined();
-    expect(p.accepts.sands).toEqual(['def_pct', 'atk_pct']);
-    expect(p.recommendedSets).toEqual(['GoldenTroupe', 'HuskOfOpulentDreams']);
-    expect(isRecommendedSet('chiori', 'HuskOfOpulentDreams')).toBe(true);
+    expect(p.accepts.sands).toEqual(['def_pct']);
+    expect(p.recommendedSets.slice(0, 2)).toEqual([
+      'GoldenTroupe',
+      'HuskOfOpulentDreams',
+    ]);
   });
 });
 
 describe('isRecommendedSet', () => {
-  it('marks the set the build recommends', () => {
+  it('marks the sets the build recommends', () => {
     expect(isRecommendedSet('sangonomiya_kokomi', 'OceanHuedClam')).toBe(true);
     expect(isRecommendedSet('sangonomiya_kokomi', 'GladiatorsFinale')).toBe(
       false,
     );
+    // Flower of Paradise Lost is her Bloom build's, not her healer's.
+    expect(isRecommendedSet('sangonomiya_kokomi', 'FlowerOfParadiseLost')).toBe(
+      false,
+    );
+    expect(
+      isRecommendedSet('sangonomiya_kokomi', 'FlowerOfParadiseLost', 2),
+    ).toBe(true);
     expect(isRecommendedSet('eula', 'PaleFlame')).toBe(true);
     expect(isRecommendedSet('nobody', 'PaleFlame')).toBe(false);
   });
 });
 
-describe('guide profiles (checked 2026-10-07)', () => {
+describe('guide builds (checked 2026-10-07)', () => {
   const sets = new Set(genshinAdapter.sets().map((x) => x.key));
   const stats = new Set<string>(genshinAdapter.statKeys);
+  const roles = [
+    'on_field_dps',
+    'off_field_dps',
+    'support',
+    'healer',
+    'shield',
+    'reaction_dps',
+  ];
 
-  it('name real characters, sets and stats, and only uncurated characters', () => {
-    for (const [k, g] of Object.entries(GUIDE_PROFILES)) {
+  it('cover every character, with real sets, stats and roles', () => {
+    for (const c of genshinAdapter.characters())
+      expect(GUIDE_BUILDS[c.key]?.builds.length, c.key).toBeGreaterThan(0);
+    for (const [k, g] of Object.entries(GUIDE_BUILDS)) {
       expect(genshinAdapter.character(k), k).toBeDefined();
-      expect(META_TARGETS[k], k).toBeUndefined();
-      for (const x of g.sets) expect(sets.has(x), `${k} ${x}`).toBe(true);
-      for (const x of [...g.substats, ...Object.values(g.accepts).flat()])
-        expect(stats.has(x), `${k} ${x}`).toBe(true);
-      expect(g.sources.length, k).toBeGreaterThan(0);
+      expect(g.kqm ?? g.genshinBuilds, k).toBeTruthy();
+      for (const b of g.builds) {
+        expect(roles, `${k} ${b.name}`).toContain(b.role);
+        expect(b.sources.length, `${k} ${b.name}`).toBeGreaterThan(0);
+        for (const x of b.sets) expect(sets.has(x), `${k} ${x}`).toBe(true);
+        for (const x of [...b.substats, ...Object.values(b.accepts).flat()])
+          expect(stats.has(x), `${k} ${x}`).toBe(true);
+        for (const slot of ['sands', 'goblet', 'circlet'] as const)
+          expect(
+            b.accepts[slot].length,
+            `${k} ${b.name} ${slot}`,
+          ).toBeGreaterThan(0);
+        expect(b.substats.length, `${k} ${b.name}`).toBeGreaterThan(0);
+      }
+      for (const u of g.unscored ?? [])
+        expect(u.reason, k).toMatch(/^the guide gives no /);
     }
   });
+});
 
-  it('read Jean from her guides, and Dehya from KQM’s build only', () => {
-    const jean = qualityProfile('jean')!;
-    expect(jean.from).toBe('guides');
-    expect(jean.accepts.sands).toEqual(['atk_pct', 'er_pct']);
-    expect(jean.erMin).toBe(160);
-    expect(jean.recommendedSets[0]).toBe('ViridescentVenerer');
-    const dehya = qualityProfile('dehya')!;
-    expect(dehya.accepts.goblet).toEqual(['em', 'hp_pct']);
-    expect(GUIDE_PROFILES.dehya.alternative).toMatch(/genshin-builds/);
+describe('guideErForWeapon', () => {
+  it('finds the guide’s figure for the weapon held', () => {
+    const p = qualityProfile('columbina')!;
+    expect(guideErForWeapon(p, 'Favonius Codex')?.min).toBe(190);
+    expect(guideErForWeapon(p, 'Prototype Amber')?.min).toBe(165);
+    expect(guideErForWeapon(p, 'Nocturne’s Curtain Call')?.min).toBe(165);
+    expect(guideErForWeapon(p, 'Skyward Atlas')).toBeUndefined();
+    expect(
+      guideErForWeapon(qualityProfile('furina')!, 'Favonius Sword'),
+    ).toBeUndefined();
   });
 });
