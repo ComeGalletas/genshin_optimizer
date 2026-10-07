@@ -8,7 +8,13 @@
  * @packageDocumentation
  */
 
-import type { Artifact, StatKey, StatVec } from '../game/types';
+import {
+  ascensionOf,
+  type Artifact,
+  type StatKey,
+  type StatVec,
+} from '../game/types';
+import type { RosterEntry } from '../import/good';
 import { genshinAdapter } from '../game/genshin/adapter';
 import {
   characterStatsAt,
@@ -56,6 +62,25 @@ export interface SheetInput {
   weaponLevel?: number;
   weaponAscension?: number;
   artifacts: readonly Artifact[];
+}
+
+/** The sheet's inputs from a roster entry; level 90 and nothing equipped
+ *  for a character the account doesn't have. */
+export function sheetInput(
+  characterKey: string,
+  entry: RosterEntry | undefined,
+  artifacts: readonly Artifact[],
+): SheetInput {
+  if (!entry) return { characterKey, level: 90, ascension: 6, artifacts: [] };
+  return {
+    characterKey,
+    level: entry.level ?? entry.buildLevel ?? 1,
+    ascension: ascensionOf(entry.buildLevel),
+    weaponKey: entry.weaponKey,
+    weaponLevel: entry.weaponLevel,
+    weaponAscension: entry.weaponAscension,
+    artifacts,
+  };
 }
 
 export interface CharacterSheet {

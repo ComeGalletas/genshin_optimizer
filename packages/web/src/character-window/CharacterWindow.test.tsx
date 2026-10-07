@@ -559,6 +559,23 @@ describe('character window', () => {
     expect(tag).toHaveTextContent('the guide asks 190% with Favonius Codex');
   });
 
+  it('cross-checks the build shown against genshin.gg, with a link', async () => {
+    useRoster.getState().setRoster({
+      sangonomiya_kokomi: { buildLevel: 90, level: 90 },
+    });
+    render(<CharacterWindow />);
+    openCharacter('sangonomiya_kokomi');
+    const line = await screen.findByTestId('cross-check', {}, LAZY);
+    // Her healer build is shown (nothing worn: the first build).
+    expect(line).toHaveTextContent(
+      'Cross-check: genshin.gg (opens in new tab) (Support) differs: it also lists ATK% substats.',
+    );
+    expect(within(line).getByRole('link')).toHaveAttribute(
+      'href',
+      'https://genshin.gg/characters/kokomi/',
+    );
+  });
+
   it('stars the set the build recommends', async () => {
     const user = userEvent.setup();
     furina();

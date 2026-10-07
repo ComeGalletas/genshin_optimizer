@@ -13,7 +13,10 @@ import {
   bestOf,
   unscoredBuilds,
 } from '@genshin-build-lab/engine/roster/artifactQuality';
-import { characterSheet } from '@genshin-build-lab/engine/roster/characterSheet';
+import {
+  characterSheet,
+  sheetInput,
+} from '@genshin-build-lab/engine/roster/characterSheet';
 import { QualityCard, ReadinessCard } from '../character-window/ScoreCards';
 import { META_TARGETS } from '@genshin-build-lab/engine/meta/metaTargets';
 import { archetypesFor } from '@genshin-build-lab/engine/teams/comps';
@@ -40,7 +43,7 @@ import type {
 } from '@genshin-build-lab/engine/game/types';
 import { CharacterPortrait, WeaponIcon } from '../components/GameArt';
 import { useDetails } from '../character-window/details';
-import { CharacterStats, sheetInput } from '../character-window/CharacterStats';
+import { CharacterStats } from '../character-window/CharacterStats';
 import { Talents } from '../character-window/Talents';
 import { WeaponCard } from '../character-window/WeaponCard';
 import { ArtifactList } from '../character-window/ArtifactList';
@@ -162,6 +165,7 @@ export function CharacterDetail({
               <>
                 <ReadinessCard readiness={readiness} />
                 <QualityCard
+                  characterKey={characterKey}
                   qualities={qualities}
                   build={build}
                   onBuildChange={(b) =>

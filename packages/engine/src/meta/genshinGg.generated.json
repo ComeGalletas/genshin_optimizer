@@ -1,0 +1,4633 @@
+{
+ "source": "https://genshin.gg",
+ "fetched": "2026-10-07",
+ "builds": {
+  "aino": {
+   "url": "https://genshin.gg/characters/aino/",
+   "role": "Support",
+   "sets": [
+    [
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "Instructor"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "crit_rate"
+   ]
+  },
+  "albedo": {
+   "url": "https://genshin.gg/characters/albedo/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "ArchaicPetra",
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "GoldenTroupe",
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "ArchaicPetra",
+     "GoldenTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "def_pct",
+    "er_pct"
+   ]
+  },
+  "alhaitham": {
+   "url": "https://genshin.gg/characters/alhaitham/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "GildedDreams"
+    ],
+    [
+     "DeepwoodMemories",
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "DeepwoodMemories",
+     "GildedDreams"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "GildedDreams"
+    ],
+    [
+     "DeepwoodMemories"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "em"
+   ]
+  },
+  "aloy": {
+   "url": "https://genshin.gg/characters/aloy/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "BlizzardStrayer",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "BlizzardStrayer",
+     "GildedDreams"
+    ],
+    [
+     "GildedDreams",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "alyosha": {
+   "url": "https://genshin.gg/characters/alyosha/",
+   "role": "Support",
+   "sets": [
+    [
+     "HeartOfTheFurnace"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HeartOfTheFurnace"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "amber": {
+   "url": "https://genshin.gg/characters/amber/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "arataki_itto": {
+   "url": "https://genshin.gg/characters/itto/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "RetracingBolide"
+    ],
+    [
+     "ArchaicPetra",
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HuskOfOpulentDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "def_pct",
+    "er_pct"
+   ]
+  },
+  "arlecchino": {
+   "url": "https://genshin.gg/characters/arlecchino/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "FragmentOfHarmonicWhimsy"
+    ],
+    [
+     "GladiatorsFinale"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "FragmentOfHarmonicWhimsy"
+    ],
+    [
+     "FragmentOfHarmonicWhimsy",
+     "GladiatorsFinale"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "atk"
+   ]
+  },
+  "baizhu": {
+   "url": "https://genshin.gg/characters/baizhu/",
+   "role": "Support",
+   "sets": [
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "barbara": {
+   "url": "https://genshin.gg/characters/barbara/",
+   "role": "Support",
+   "sets": [
+    [
+     "MaidenBeloved"
+    ],
+    [
+     "MaidenBeloved",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "MaidenBeloved",
+     "OceanHuedClam"
+    ],
+    [
+     "OceanHuedClam",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "Instructor"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "healing"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "hp",
+    "er_pct"
+   ]
+  },
+  "beidou": {
+   "url": "https://genshin.gg/characters/beidou/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ThunderingFury"
+    ],
+    [
+     "NoblesseOblige",
+     "ThunderingFury"
+    ],
+    [
+     "Thundersoother"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "bennett": {
+   "url": "https://genshin.gg/characters/bennett/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "candace": {
+   "url": "https://genshin.gg/characters/candace/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "charlotte": {
+   "url": "https://genshin.gg/characters/charlotte/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "OceanHuedClam"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "healing",
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "chasca": {
+   "url": "https://genshin.gg/characters/chasca/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "WanderersTroupe"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "MarechausseeHunter"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "chevreuse": {
+   "url": "https://genshin.gg/characters/chevreuse/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "SongOfDaysPast"
+    ],
+    [
+     "TenacityOfTheMillelith",
+     "VourukashasGlow"
+    ],
+    [
+     "OceanHuedClam",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "chiori": {
+   "url": "https://genshin.gg/characters/chiori/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "ArchaicPetra",
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "ArchaicPetra",
+     "GoldenTroupe"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "def_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg",
+     "def_pct"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "def_pct",
+    "atk_pct"
+   ]
+  },
+  "chongyun": {
+   "url": "https://genshin.gg/characters/chongyun/",
+   "role": "Support",
+   "sets": [
+    [
+     "BlizzardStrayer",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "BlizzardStrayer",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "NoblesseOblige",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "BlizzardStrayer",
+     "EmblemOfSeveredFate"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "citlali": {
+   "url": "https://genshin.gg/characters/citlali/",
+   "role": "Support",
+   "sets": [
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "Instructor"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "er_pct"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em"
+   ]
+  },
+  "clorinde": {
+   "url": "https://genshin.gg/characters/clorinde/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "FragmentOfHarmonicWhimsy"
+    ],
+    [
+     "ThunderingFury"
+    ],
+    [
+     "EchoesOfAnOffering"
+    ],
+    [
+     "GladiatorsFinale"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "collei": {
+   "url": "https://genshin.gg/characters/collei/",
+   "role": "Support",
+   "sets": [
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "columbina": {
+   "url": "https://genshin.gg/characters/columbina/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "hp_pct"
+   ]
+  },
+  "cyno": {
+   "url": "https://genshin.gg/characters/cyno/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "ThunderingFury"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ThunderingFury"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "dahlia": {
+   "url": "https://genshin.gg/characters/dahlia/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "TenacityOfTheMillelith",
+     "VourukashasGlow"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "dehya": {
+   "url": "https://genshin.gg/characters/dehya/",
+   "role": "Support",
+   "sets": [
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "TenacityOfTheMillelith",
+     "VourukashasGlow"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "MaidenBeloved"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "hp",
+    "atk_pct"
+   ]
+  },
+  "diluc": {
+   "url": "https://genshin.gg/characters/diluc/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "GildedDreams",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "diona": {
+   "url": "https://genshin.gg/characters/diona/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "MaidenBeloved",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "MaidenBeloved"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "MaidenBeloved"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct",
+     "healing"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "er_pct",
+    "hp"
+   ]
+  },
+  "dori": {
+   "url": "https://genshin.gg/characters/dori/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "TheExile"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct",
+     "em"
+    ],
+    "goblet": [
+     "hp_pct",
+     "em"
+    ],
+    "circlet": [
+     "healing",
+     "hp_pct",
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "em"
+   ]
+  },
+  "durin": {
+   "url": "https://genshin.gg/characters/durin/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "ADayCarvedFromRisingWinds",
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "emilie": {
+   "url": "https://genshin.gg/characters/emilie/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "UnfinishedReverie"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "DeepwoodMemories",
+     "GoldenTroupe"
+    ],
+    [
+     "DeepwoodMemories",
+     "GladiatorsFinale"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "escoffier": {
+   "url": "https://genshin.gg/characters/escoffier/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "BlizzardStrayer"
+    ],
+    [
+     "BlizzardStrayer",
+     "GoldenTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "eula": {
+   "url": "https://genshin.gg/characters/eula/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "PaleFlame"
+    ],
+    [
+     "BloodstainedChivalry",
+     "PaleFlame"
+    ],
+    [
+     "GladiatorsFinale",
+     "PaleFlame"
+    ],
+    [
+     "BloodstainedChivalry",
+     "GladiatorsFinale"
+    ],
+    [
+     "GladiatorsFinale"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "physical_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "er_pct",
+    "atk_pct"
+   ]
+  },
+  "faruzan": {
+   "url": "https://genshin.gg/characters/faruzan/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "fischl": {
+   "url": "https://genshin.gg/characters/fischl/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "GoldenTroupe",
+     "ThunderingFury"
+    ],
+    [
+     "GoldenTroupe",
+     "Thundersoother"
+    ],
+    [
+     "ADayCarvedFromRisingWinds",
+     "GoldenTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "flins": {
+   "url": "https://genshin.gg/characters/flins/",
+   "role": "DPS",
+   "sets": [
+    [
+     "NightOfTheSkysUnveiling"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "GildedDreams",
+     "NightOfTheSkysUnveiling"
+    ],
+    [
+     "NightOfTheSkysUnveiling",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "GildedDreams",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "freminet": {
+   "url": "https://genshin.gg/characters/freminet/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "PaleFlame"
+    ],
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "DisenchantmentInDeepShadow",
+     "PaleFlame"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "PaleFlame"
+    ],
+    [
+     "GoldenTroupe",
+     "PaleFlame"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "physical_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "furina": {
+   "url": "https://genshin.gg/characters/furina/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "GoldenTroupe",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "GoldenTroupe",
+     "HeartOfDepth"
+    ],
+    [
+     "HeartOfDepth",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "hp_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "hp_pct"
+   ]
+  },
+  "gaming": {
+   "url": "https://genshin.gg/characters/gaming/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "MarechausseeHunter"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "em"
+   ]
+  },
+  "ganyu": {
+   "url": "https://genshin.gg/characters/ganyu/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "WanderersTroupe"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "WanderersTroupe"
+    ],
+    [
+     "BlizzardStrayer",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "BlizzardStrayer",
+     "WanderersTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "atk_pct"
+   ]
+  },
+  "gorou": {
+   "url": "https://genshin.gg/characters/gorou/",
+   "role": "Support",
+   "sets": [
+    [
+     "TheExile"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ],
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HuskOfOpulentDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "def_pct",
+    "crit_rate"
+   ]
+  },
+  "hu_tao": {
+   "url": "https://genshin.gg/characters/hutao/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "hp_pct"
+   ]
+  },
+  "iansan": {
+   "url": "https://genshin.gg/characters/iansan/",
+   "role": "Support",
+   "sets": [
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "er_pct"
+    ],
+    "circlet": [
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct"
+   ]
+  },
+  "ifa": {
+   "url": "https://genshin.gg/characters/ifa/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "ScarletProof",
+     "ViridescentVenerer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "illuga": {
+   "url": "https://genshin.gg/characters/illuga/",
+   "role": "Support",
+   "sets": [
+    [
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "FlowerOfParadiseLost"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "er_pct"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "crit_rate"
+   ]
+  },
+  "ineffa": {
+   "url": "https://genshin.gg/characters/ineffa/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "AubadeOfMorningstarAndMoon"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "GildedDreams"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "SilkenMoonsSerenade"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "jahoda": {
+   "url": "https://genshin.gg/characters/jahoda/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "SilkenMoonsSerenade"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct",
+     "healing"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "jean": {
+   "url": "https://genshin.gg/characters/jean/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "ViridescentVenerer"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "kachina": {
+   "url": "https://genshin.gg/characters/kachina/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "def_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "def_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "def_pct"
+   ]
+  },
+  "kaedehara_kazuha": {
+   "url": "https://genshin.gg/characters/kazuha/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "ThunderingFury"
+    ],
+    [
+     "GildedDreams",
+     "WanderersTroupe"
+    ],
+    [
+     "GildedDreams",
+     "ViridescentVenerer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "em",
+    "er_pct",
+    "atk_pct"
+   ]
+  },
+  "kaeya": {
+   "url": "https://genshin.gg/characters/kaeya/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "BlizzardStrayer",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "Instructor"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "kamisato_ayaka": {
+   "url": "https://genshin.gg/characters/ayaka/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "BlizzardStrayer"
+    ],
+    [
+     "BlizzardStrayer",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "GladiatorsFinale",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "EchoesOfAnOffering",
+     "VermillionHereafter"
+    ],
+    [
+     "BlizzardStrayer",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_dmg",
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "kamisato_ayato": {
+   "url": "https://genshin.gg/characters/ayato/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "HeartOfDepth"
+    ],
+    [
+     "GladiatorsFinale"
+    ],
+    [
+     "NymphsDream"
+    ],
+    [
+     "GladiatorsFinale",
+     "HeartOfDepth"
+    ],
+    [
+     "BlizzardStrayer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "kaveh": {
+   "url": "https://genshin.gg/characters/kaveh/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "FlowerOfParadiseLost"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "crit_rate"
+   ]
+  },
+  "keqing": {
+   "url": "https://genshin.gg/characters/keqing/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ThunderingFury"
+    ],
+    [
+     "Thundersoother"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "GildedDreams",
+     "ThunderingFury"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "ThunderingFury"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "kinich": {
+   "url": "https://genshin.gg/characters/kinich/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "UnfinishedReverie"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "UnfinishedReverie"
+    ],
+    [
+     "DeepwoodMemories",
+     "GoldenTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "kirara": {
+   "url": "https://genshin.gg/characters/kirara/",
+   "role": "Support",
+   "sets": [
+    [
+     "TenacityOfTheMillelith",
+     "VourukashasGlow"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "klee": {
+   "url": "https://genshin.gg/characters/klee/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "Lavawalker"
+    ],
+    [
+     "EchoesOfAnOffering"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "ADayCarvedFromRisingWinds",
+     "CrimsonWitchOfFlames"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "kujou_sara": {
+   "url": "https://genshin.gg/characters/sara/",
+   "role": "Support",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "NoblesseOblige",
+     "ThunderingFury"
+    ],
+    [
+     "NoblesseOblige",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "ThunderingFury"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "kuki_shinobu": {
+   "url": "https://genshin.gg/characters/kukishinobu/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "FlowerOfParadiseLost"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "FlowerOfParadiseLost",
+     "GildedDreams"
+    ],
+    [
+     "ThunderingFury"
+    ],
+    [
+     "Instructor"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "em",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "lan_yan": {
+   "url": "https://genshin.gg/characters/lanyan/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "lauma": {
+   "url": "https://genshin.gg/characters/lauma/",
+   "role": "Support",
+   "sets": [
+    [
+     "SilkenMoonsSerenade"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "NightOfTheSkysUnveiling"
+    ],
+    [
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "crit_rate",
+    "crit_dmg"
+   ]
+  },
+  "layla": {
+   "url": "https://genshin.gg/characters/layla/",
+   "role": "Support",
+   "sets": [
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "BlizzardStrayer",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "BlizzardStrayer",
+     "EmblemOfSeveredFate"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "er_pct",
+    "crit_rate",
+    "crit_dmg"
+   ]
+  },
+  "linnea": {
+   "url": "https://genshin.gg/characters/linnea/",
+   "role": "Support",
+   "sets": [
+    [
+     "AubadeOfMorningstarAndMoon"
+    ],
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "AubadeOfMorningstarAndMoon",
+     "HuskOfOpulentDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct"
+    ],
+    "goblet": [
+     "def_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "def_pct",
+    "em"
+   ]
+  },
+  "lisa": {
+   "url": "https://genshin.gg/characters/lisa/",
+   "role": "Support",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "Thundersoother"
+    ],
+    [
+     "GildedDreams",
+     "ThunderingFury"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "atk_pct"
+   ]
+  },
+  "lohen": {
+   "url": "https://genshin.gg/characters/lohen/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "BlizzardStrayer"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "ADayCarvedFromRisingWinds",
+     "BlizzardStrayer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "atk"
+   ]
+  },
+  "lynette": {
+   "url": "https://genshin.gg/characters/lynette/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "GildedDreams",
+     "ViridescentVenerer"
+    ],
+    [
+     "GildedDreams",
+     "WanderersTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "lyney": {
+   "url": "https://genshin.gg/characters/lyney/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "MarechausseeHunter"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "VermillionHereafter"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "MarechausseeHunter"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "mavuika": {
+   "url": "https://genshin.gg/characters/mavuika/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "MarechausseeHunter"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "mika": {
+   "url": "https://genshin.gg/characters/mika/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "MaidenBeloved"
+    ],
+    [
+     "MaidenBeloved",
+     "OceanHuedClam"
+    ],
+    [
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "healing",
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "er_pct",
+    "hp"
+   ]
+  },
+  "mona": {
+   "url": "https://genshin.gg/characters/mona/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "Scholar"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "Scholar"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "atk_pct"
+   ]
+  },
+  "mualani": {
+   "url": "https://genshin.gg/characters/mualani/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "HeartOfDepth"
+    ],
+    [
+     "HeartOfDepth",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "HeartOfDepth",
+     "NymphsDream"
+    ],
+    [
+     "GildedDreams",
+     "HeartOfDepth"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "hp_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "hp_pct"
+   ]
+  },
+  "nahida": {
+   "url": "https://genshin.gg/characters/nahida/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "FlowerOfParadiseLost",
+     "GildedDreams"
+    ],
+    [
+     "GildedDreams",
+     "WanderersTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "crit_rate",
+    "crit_dmg"
+   ]
+  },
+  "navia": {
+   "url": "https://genshin.gg/characters/navia/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "NighttimeWhispersInTheEchoingWoods"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "ArchaicPetra",
+     "NighttimeWhispersInTheEchoingWoods"
+    ],
+    [
+     "ArchaicPetra",
+     "GoldenTroupe"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "nefer": {
+   "url": "https://genshin.gg/characters/nefer/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "NightOfTheSkysUnveiling"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "er_pct"
+   ]
+  },
+  "neuvillette": {
+   "url": "https://genshin.gg/characters/neuvillette/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "MarechausseeHunter"
+    ],
+    [
+     "HeartOfDepth"
+    ],
+    [
+     "HeartOfDepth",
+     "MarechausseeHunter"
+    ],
+    [
+     "MarechausseeHunter",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "HeartOfDepth",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "hp_pct"
+   ]
+  },
+  "nicole": {
+   "url": "https://genshin.gg/characters/nicole/",
+   "role": "Support",
+   "sets": [
+    [
+     "CelestialGift"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct",
+     "crit_rate"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "nilou": {
+   "url": "https://genshin.gg/characters/nilou/",
+   "role": "Support",
+   "sets": [
+    [
+     "HeartOfDepth",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "NoblesseOblige",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "GildedDreams",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "hp",
+    "er_pct"
+   ]
+  },
+  "ningguang": {
+   "url": "https://genshin.gg/characters/ningguang/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ArchaicPetra",
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "ArchaicPetra",
+     "NoblesseOblige"
+    ],
+    [
+     "ArchaicPetra",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "ArchaicPetra"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "noelle": {
+   "url": "https://genshin.gg/characters/noelle/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "NighttimeWhispersInTheEchoingWoods"
+    ],
+    [
+     "RetracingBolide"
+    ],
+    [
+     "GladiatorsFinale"
+    ],
+    [
+     "ArchaicPetra",
+     "HuskOfOpulentDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "def_pct"
+   ]
+  },
+  "odette": {
+   "url": "https://genshin.gg/characters/odette/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "HeartOfTheFurnace"
+    ],
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "BlizzardStrayer"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "ororon": {
+   "url": "https://genshin.gg/characters/ororon/",
+   "role": "Support",
+   "sets": [
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "atk_pct"
+   ]
+  },
+  "prune": {
+   "url": "https://genshin.gg/characters/prune/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "CelestialGift"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct",
+     "crit_rate"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "qiqi": {
+   "url": "https://genshin.gg/characters/qiqi/",
+   "role": "Support",
+   "sets": [
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "SongOfDaysPast"
+    ],
+    [
+     "OceanHuedClam",
+     "SongOfDaysPast"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct",
+     "healing"
+    ]
+   },
+   "substats": [
+    "atk_pct",
+    "er_pct",
+    "atk"
+   ]
+  },
+  "raiden_shogun": {
+   "url": "https://genshin.gg/characters/raiden/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ThunderingFury"
+    ],
+    [
+     "NoblesseOblige",
+     "ThunderingFury"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "razor": {
+   "url": "https://genshin.gg/characters/razor/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "EchoesOfAnOffering"
+    ],
+    [
+     "GladiatorsFinale"
+    ],
+    [
+     "ThunderingFury"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "rosaria": {
+   "url": "https://genshin.gg/characters/rosaria/",
+   "role": "Support",
+   "sets": [
+    [
+     "BlizzardStrayer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "BlizzardStrayer",
+     "NoblesseOblige"
+    ],
+    [
+     "BlizzardStrayer",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "NoblesseOblige",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "sandrone": {
+   "url": "https://genshin.gg/characters/sandrone/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "DisenchantmentInDeepShadow",
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "sangonomiya_kokomi": {
+   "url": "https://genshin.gg/characters/kokomi/",
+   "role": "Support",
+   "sets": [
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "MaidenBeloved"
+    ],
+    [
+     "OceanHuedClam",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "MaidenBeloved",
+     "OceanHuedClam"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct",
+     "healing"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "atk_pct"
+   ]
+  },
+  "sayu": {
+   "url": "https://genshin.gg/characters/sayu/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "MaidenBeloved"
+    ],
+    [
+     "MaidenBeloved",
+     "OceanHuedClam"
+    ],
+    [
+     "MaidenBeloved"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "em"
+    ],
+    "goblet": [
+     "atk_pct",
+     "em"
+    ],
+    "circlet": [
+     "healing",
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "atk_pct"
+   ]
+  },
+  "sethos": {
+   "url": "https://genshin.gg/characters/sethos/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "WanderersTroupe"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "GildedDreams",
+     "ThunderingFury"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ThunderingFury"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "em"
+   ]
+  },
+  "shenhe": {
+   "url": "https://genshin.gg/characters/shenhe/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "GladiatorsFinale",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ],
+    [
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "atk_pct",
+    "er_pct",
+    "crit_rate",
+    "crit_dmg"
+   ]
+  },
+  "shikanoin_heizou": {
+   "url": "https://genshin.gg/characters/heizou/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "GildedDreams",
+     "WanderersTroupe"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "em",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "sigewinne": {
+   "url": "https://genshin.gg/characters/sigewinne/",
+   "role": "Support",
+   "sets": [
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "SongOfDaysPast"
+    ],
+    [
+     "TenacityOfTheMillelith",
+     "VourukashasGlow"
+    ],
+    [
+     "OceanHuedClam",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "OceanHuedClam",
+     "SongOfDaysPast"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "hp",
+    "er_pct"
+   ]
+  },
+  "skirk": {
+   "url": "https://genshin.gg/characters/skirk/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "FinaleOfTheDeepGalleries"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "GladiatorsFinale"
+    ],
+    [
+     "FinaleOfTheDeepGalleries",
+     "GladiatorsFinale"
+    ],
+    [
+     "FinaleOfTheDeepGalleries",
+     "MarechausseeHunter"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg",
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "sucrose": {
+   "url": "https://genshin.gg/characters/sucrose/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "GildedDreams",
+     "WanderersTroupe"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "GildedDreams",
+     "ViridescentVenerer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "em",
+    "er_pct",
+    "atk_pct"
+   ]
+  },
+  "tartaglia": {
+   "url": "https://genshin.gg/characters/childe/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "HeartOfDepth"
+    ],
+    [
+     "HeartOfDepth",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "HeartOfDepth",
+     "NoblesseOblige"
+    ],
+    [
+     "NoblesseOblige",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "thoma": {
+   "url": "https://genshin.gg/characters/thoma/",
+   "role": "Support",
+   "sets": [
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "hp"
+   ]
+  },
+  "tighnari": {
+   "url": "https://genshin.gg/characters/tighnari/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "WanderersTroupe"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "DeepwoodMemories",
+     "WanderersTroupe"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "WanderersTroupe"
+    ],
+    [
+     "DeepwoodMemories"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "em",
+    "atk_pct"
+   ]
+  },
+  "varesa": {
+   "url": "https://genshin.gg/characters/varesa/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "LongNightsOath"
+    ],
+    [
+     "ObsidianCodex"
+    ],
+    [
+     "LongNightsOath",
+     "ThunderingFury"
+    ],
+    [
+     "DisenchantmentInDeepShadow",
+     "LongNightsOath"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "varka": {
+   "url": "https://genshin.gg/characters/varka/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "GladiatorsFinale"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "venti": {
+   "url": "https://genshin.gg/characters/venti/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "wanderer": {
+   "url": "https://genshin.gg/characters/wanderer/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "EchoesOfAnOffering"
+    ],
+    [
+     "DesertPavilionChronicle",
+     "ViridescentVenerer"
+    ],
+    [
+     "DesertPavilionChronicle",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "atk"
+   ]
+  },
+  "wriothesley": {
+   "url": "https://genshin.gg/characters/wriothesley/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "MarechausseeHunter"
+    ],
+    [
+     "ADayCarvedFromRisingWinds"
+    ],
+    [
+     "ADayCarvedFromRisingWinds",
+     "DisenchantmentInDeepShadow"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "xiangling": {
+   "url": "https://genshin.gg/characters/xiangling/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "xianyun": {
+   "url": "https://genshin.gg/characters/xianyun/",
+   "role": "Support",
+   "sets": [
+    [
+     "ViridescentVenerer"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "SongOfDaysPast"
+    ],
+    [
+     "OceanHuedClam"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct",
+     "atk_pct"
+    ],
+    "goblet": [
+     "atk_pct"
+    ],
+    "circlet": [
+     "healing",
+     "atk_pct"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "atk_pct",
+    "crit_rate"
+   ]
+  },
+  "xiao": {
+   "url": "https://genshin.gg/characters/xiao/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "VermillionHereafter"
+    ],
+    [
+     "DesertPavilionChronicle"
+    ],
+    [
+     "DesertPavilionChronicle",
+     "VermillionHereafter"
+    ],
+    [
+     "ShimenawasReminiscence",
+     "VermillionHereafter"
+    ],
+    [
+     "DesertPavilionChronicle",
+     "ViridescentVenerer"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "xilonen": {
+   "url": "https://genshin.gg/characters/xilonen/",
+   "role": "Support",
+   "sets": [
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "ArchaicPetra"
+    ],
+    [
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "def_pct"
+    ],
+    "circlet": [
+     "def_pct",
+     "healing"
+    ]
+   },
+   "substats": [
+    "def_pct",
+    "er_pct",
+    "def"
+   ]
+  },
+  "xingqiu": {
+   "url": "https://genshin.gg/characters/xingqiu/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HeartOfDepth"
+    ],
+    [
+     "HeartOfDepth",
+     "NoblesseOblige"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct"
+   ]
+  },
+  "xinyan": {
+   "url": "https://genshin.gg/characters/xinyan/",
+   "role": "Support",
+   "sets": [
+    [
+     "BloodstainedChivalry",
+     "PaleFlame"
+    ],
+    [
+     "PaleFlame"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "PaleFlame"
+    ],
+    [
+     "PaleFlame",
+     "ShimenawasReminiscence"
+    ],
+    [
+     "NoblesseOblige",
+     "PaleFlame"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "physical_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "yae_miko": {
+   "url": "https://genshin.gg/characters/yaemiko/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "DisenchantmentInDeepShadow"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "GoldenTroupe"
+    ],
+    [
+     "DisenchantmentInDeepShadow",
+     "GildedDreams"
+    ],
+    [
+     "DisenchantmentInDeepShadow",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "atk_pct",
+     "em"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "yanfei": {
+   "url": "https://genshin.gg/characters/yanfei/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "GildedDreams"
+    ],
+    [
+     "WanderersTroupe"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "GildedDreams"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "er_pct"
+   ]
+  },
+  "yaoyao": {
+   "url": "https://genshin.gg/characters/yaoyao/",
+   "role": "Support",
+   "sets": [
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "MaidenBeloved",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "healing"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "er_pct",
+    "hp"
+   ]
+  },
+  "yelan": {
+   "url": "https://genshin.gg/characters/yelan/",
+   "role": "Sub DPS",
+   "sets": [
+    [
+     "EmblemOfSeveredFate"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TenacityOfTheMillelith"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HeartOfDepth"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "NoblesseOblige"
+    ],
+    [
+     "HeartOfDepth",
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "er_pct"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "hp_pct",
+    "crit_rate",
+    "crit_dmg"
+   ]
+  },
+  "yoimiya": {
+   "url": "https://genshin.gg/characters/yoimiya/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "ShimenawasReminiscence"
+    ],
+    [
+     "CrimsonWitchOfFlames"
+    ],
+    [
+     "EchoesOfAnOffering"
+    ],
+    [
+     "RetracingBolide"
+    ],
+    [
+     "CrimsonWitchOfFlames",
+     "ShimenawasReminiscence"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "atk_pct",
+     "em"
+    ],
+    "goblet": [
+     "elemental_dmg"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "atk_pct",
+    "em"
+   ]
+  },
+  "yumemizuki_mizuki": {
+   "url": "https://genshin.gg/characters/yumemizukimizuki/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "GildedDreams"
+    ],
+    [
+     "ScarletProof"
+    ],
+    [
+     "FlowerOfParadiseLost",
+     "GildedDreams"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "em",
+     "er_pct"
+    ],
+    "goblet": [
+     "em"
+    ],
+    "circlet": [
+     "em"
+    ]
+   },
+   "substats": [
+    "er_pct",
+    "em",
+    "atk_pct"
+   ]
+  },
+  "yun_jin": {
+   "url": "https://genshin.gg/characters/yunjin/",
+   "role": "Support",
+   "sets": [
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "NoblesseOblige"
+    ],
+    [
+     "EmblemOfSeveredFate",
+     "TheExile"
+    ],
+    [
+     "TheExile"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct",
+     "er_pct"
+    ],
+    "goblet": [
+     "def_pct"
+    ],
+    "circlet": [
+     "def_pct"
+    ]
+   },
+   "substats": [
+    "def_pct",
+    "er_pct",
+    "def"
+   ]
+  },
+  "zhongli": {
+   "url": "https://genshin.gg/characters/zhongli/",
+   "role": "Support",
+   "sets": [
+    [
+     "ArchaicPetra"
+    ],
+    [
+     "ScrollOfTheHeroOfCinderCity"
+    ],
+    [
+     "DeepwoodMemories"
+    ],
+    [
+     "Instructor"
+    ],
+    [
+     "TenacityOfTheMillelith"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "hp_pct"
+    ],
+    "goblet": [
+     "hp_pct"
+    ],
+    "circlet": [
+     "hp_pct"
+    ]
+   },
+   "substats": [
+    "hp_pct",
+    "hp",
+    "er_pct"
+   ]
+  },
+  "zibai": {
+   "url": "https://genshin.gg/characters/zibai/",
+   "role": "Main DPS",
+   "sets": [
+    [
+     "NightOfTheSkysUnveiling"
+    ],
+    [
+     "HuskOfOpulentDreams"
+    ],
+    [
+     "HuskOfOpulentDreams",
+     "NightOfTheSkysUnveiling"
+    ]
+   ],
+   "mains": {
+    "sands": [
+     "def_pct"
+    ],
+    "goblet": [
+     "def_pct"
+    ],
+    "circlet": [
+     "crit_rate",
+     "crit_dmg"
+    ]
+   },
+   "substats": [
+    "crit_rate",
+    "crit_dmg",
+    "def_pct",
+    "er_pct"
+   ]
+  }
+ }
+}

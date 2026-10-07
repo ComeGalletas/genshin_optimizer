@@ -37,6 +37,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc -b && tsc --noEmit -p tsconfig.scripts.json",
     "build:data": "tsx scripts/build-dataset.ts",
+    "guides:genshin-gg": "tsx scripts/extract-genshin-gg.ts",
     "data:coverage": "tsx scripts/data-coverage.ts",
     "prospects": "tsx scripts/prospects.ts",
     "server": "tsx packages/server/src/cli/serve.ts",

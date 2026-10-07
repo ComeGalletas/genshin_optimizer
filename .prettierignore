@@ -3,6 +3,8 @@ packages/engine/src/game/genshin/data.generated.json
 packages/engine/src/game/genshin/images.generated.json
 packages/engine/src/game/genshin/details.generated.json
 packages/engine/src/game/genshin/texts/
+# genshin.gg's builds (built by scripts/extract-genshin-gg.ts, ADR-0060)
+packages/engine/src/meta/genshinGg.generated.json
 
 # Real roll data from the owner's export, one line (ADR-0024)
 packages/engine/src/prospects/__fixtures__/plus20-rolls.json

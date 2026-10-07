@@ -3,10 +3,7 @@
  * then what the artifacts add, then what the weapon's substat and the
  * ascension stat add, and the total: "HP 15307 + 9180 = 24487".
  */
-import {
-  ascensionOf,
-  type Artifact,
-} from '@genshin-build-lab/engine/game/types';
+import type { Artifact } from '@genshin-build-lab/engine/game/types';
 import {
   weaponCapUnknown,
   type Details,
@@ -14,30 +11,11 @@ import {
 import type { RosterEntry } from '@genshin-build-lab/engine/import/good';
 import {
   characterSheet,
-  type SheetInput,
+  sheetInput,
   type SheetStat,
 } from '@genshin-build-lab/engine/roster/characterSheet';
 import { genshinAdapter } from '@genshin-build-lab/engine/game/genshin/adapter';
 import { elementLabel, formatStat, statLabel } from '../labels';
-
-/** The sheet's inputs from a roster entry; level 90 and nothing equipped
- *  for a character the account doesn't have. */
-export function sheetInput(
-  characterKey: string,
-  entry: RosterEntry | undefined,
-  artifacts: readonly Artifact[],
-): SheetInput {
-  if (!entry) return { characterKey, level: 90, ascension: 6, artifacts: [] };
-  return {
-    characterKey,
-    level: entry.level ?? entry.buildLevel ?? 1,
-    ascension: ascensionOf(entry.buildLevel),
-    weaponKey: entry.weaponKey,
-    weaponLevel: entry.weaponLevel,
-    weaponAscension: entry.weaponAscension,
-    artifacts,
-  };
-}
 
 function label(stat: SheetStat, element: string | undefined) {
   return stat === 'elemental_dmg' && element && element !== 'physical'

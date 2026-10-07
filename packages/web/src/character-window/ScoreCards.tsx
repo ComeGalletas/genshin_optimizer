@@ -15,7 +15,18 @@ import {
   type ArtifactQuality,
 } from '@genshin-build-lab/engine/roster/artifactQuality';
 import type { GuideSource } from '@genshin-build-lab/engine/meta/guideBuilds';
-import { formatScore, formatStat, SLOT_LABELS, statLabel } from '../labels';
+import {
+  crossCheck,
+  type CrossCheck,
+} from '@genshin-build-lab/engine/roster/crossCheck';
+import { SourceLink } from '../components/ui/SourceLink';
+import {
+  formatScore,
+  formatSetName,
+  formatStat,
+  SLOT_LABELS,
+  statLabel,
+} from '../labels';
 import { Crowns } from '../roster/ScoreValues';
 
 export function ReadinessCard({ readiness }: { readiness: Readiness }) {
@@ -65,13 +76,44 @@ const buildName = (q: ArtifactQuality) =>
     ? `${q.profile.name} (${q.profile.constellation})`
     : q.profile.name;
 
+/** genshin.gg's build against the one shown (ADR-0060): a cross-check,
+ *  not part of the score. */
+function CrossCheckLine({ check }: { check: CrossCheck }) {
+  const differences = [
+    !check.topSetAgrees &&
+      check.topSet.length > 0 &&
+      `its top set is ${check.topSet.map(formatSetName).join(' + ')}`,
+    ...check.extraMains.map(
+      (m) =>
+        `it also takes ${m.stats.map(statLabel).join(' or ')} on the ${SLOT_LABELS[m.slot].toLowerCase()}`,
+    ),
+    check.extraSubstats.length > 0 &&
+      `it also lists ${check.extraSubstats.map(statLabel).join(', ')} substats`,
+  ].filter(Boolean);
+  return (
+    <p className="text-xs leading-relaxed text-muted" data-testid="cross-check">
+      Cross-check:{' '}
+      <SourceLink href={check.url} className="text-accent hover:underline">
+        genshin.gg
+      </SourceLink>{' '}
+      ({check.role}){' '}
+      {check.agrees
+        ? 'agrees with this build.'
+        : `differs: ${differences.join('; ')}.`}
+    </p>
+  );
+}
+
 export function QualityCard({
+  characterKey,
   qualities,
   build,
   onBuildChange,
   unscored = [],
   weapon,
 }: {
+  /** For the genshin.gg cross-check. */
+  characterKey?: string;
   /** The pieces scored against each of the character's builds. */
   qualities: readonly ArtifactQuality[];
   /** The build shown (defaults to the best fit). */
@@ -118,6 +160,7 @@ export function QualityCard({
   });
   const unused = quality.unused;
   const forWeapon = weapon && guideErForWeapon(quality.profile, weapon.name);
+  const check = characterKey && crossCheck(characterKey, quality.profile);
   return (
     <section aria-label="Artifact quality" className="well space-y-2 px-3 py-2">
       <h3 className="text-xs font-semibold uppercase text-muted">
@@ -225,6 +268,7 @@ export function QualityCard({
         </p>
       )}
       {notScored}
+      {check && <CrossCheckLine check={check} />}
     </section>
   );
 }
