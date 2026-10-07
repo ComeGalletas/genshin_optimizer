@@ -3,7 +3,7 @@
 Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that finishes them. A phase is done only when its **Accept** line is met and the owner confirms it.
 
 **Current phase:** 10 (reorganization). Phases 0 to 9 are accepted (Phases 2, 8 and 9 on 2026-10-06).
-**Next item:** 10.1, the owner's scope for the reorganization; then 10.2's ADR on guide sources
+**Next item:** 10.8, several builds per character (its data pass, then ADR-0059); 10.1, the owner's scope for the reorganization, stays open beside it
 
 ## Housekeeping (done 2026-09-24)
 
@@ -509,6 +509,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - **Per character**: total RV, and the rolls spent on stats they don't use.
   - **Enka's exact rolls** for showcased characters: its API lists each substat's rolls (`appendPropIdList`). It makes those pieces exact and checks the roll split against real data.
   - **Akasha**: a link per character to your profile and the character's leaderboard, using your UID if you give it. Links only: Akasha has no public API.
+- [ ] 10.6 (Parked) Deploy the web app to Vercel, following [the parked plan](vercel_deploy_plan.md). Not started: its decisions wait for the owner, and the owner does the login and the deploy.
 - [x] 10.7 Combat readiness and artifact quality, two scores instead of the build score ([ADR-0057](adr/0057-combat-readiness-and-artifact-quality.md)), as the owner set it on 2026-10-06
   - Combat readiness (0–100): level 36, talents 29 (9/9/9 full), weapon level 21, artifact count 14, each measured as before. A crown per talent at level 10. The bands and team recommendations read it alone.
   - Artifact quality (no cap): 10 per sands, goblet and circlet whose main stat the character accepts, plus good rolls in roll-equivalents (value ÷ the stat's largest roll) on the stats they use. Flat stats count at 0.4. Energy Recharge counts up to the character's minimum, or all of it when it scales (Raiden). Shown as "main stats 3 of 3 · 28.4 good rolls of 38 possible".
@@ -530,6 +531,16 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
     - **Kokomi rechecked** against KQM and genshin-builds: an Energy Recharge sands is accepted, and Tenacity, Scroll, Song of Days Past, Deepwood and Silken Moon's Serenade are recommended beside Ocean-Hued Clam. The owner's Kokomi wears a Bloom build, which needs several builds per character (next).
     - **Main stats at 7** (up to 21), and **four bands**: with readiness above 60, Well built over 35, Built 30 or more, Partly built 21 or more.
     - On the owner's account: 49 well built, 7 built, 8 partly built, 31 unbuilt (26 of them wearing nothing), none without a recipe.
+- [ ] 10.8 Several builds per character ([ADR](adr/) first: ADR-0059), as the owner set it on 2026-10-07. The owner's Kokomi wears KQM's Bloom build and scores as a healer until then.
+  - **A build** has a name and role, its accepted main stats, substats, recommended sets and Energy Recharge minimum, all from that one guide build. The data pass settles each character's builds first; only then is anything scored.
+  - **Scoring:** each build is scored on its own and the best one counts (on a tie, the first). Builds are never merged. The character window's quality card shows which build it used, with a picker for the others; the score, "of possible", the set stars and the Energy Recharge minimum follow the build shown.
+  - **Energy Recharge is the only threshold that changes per build**, and each build uses its own guide's value: Kokomi's healer build takes what that build recommends. A curated character's meta target stays build 1 and the optimizer default.
+  - **The optimizer gets a build picker** that changes only the Energy Recharge floor, never the set or main stats it locks.
+  - **Weapons:** the minimum ignores them, as the artifact score does. The Energy Recharge line gets a tag naming a weapon that helps (its Energy Recharge substat or an energy passive, such as Favonius), with the % it gives.
+  - **Constellation builds** (Noelle at C6, Xinyan) are separate builds, named with the constellation.
+  - **Builds left out:** generic 2-piece mixes and builds whose stats the guide doesn't give are not scored, and the window says so and why.
+  - **The bands stay** at 21, 30 and over 35.
+  - **Data:** a new pass over all 120 characters reading KQM and genshin-builds only, with each build's role from one fixed list; same-role builds from the two sources merged as in ADR-0058. The owner reviews the summary before it goes into the data.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 
 ## Backlog
