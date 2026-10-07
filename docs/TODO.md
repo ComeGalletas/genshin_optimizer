@@ -521,6 +521,7 @@ Working checklist for [PLAN.md](PLAN.md). Tick items in the same commit that fin
   - The owner's follow-up (2026-10-06):
     - **Bands read both scores:** Built is readiness above 60 with artifacts 50 or more; Partly built, artifacts 30 or more; Unbuilt otherwise (so a levelled character wearing nothing); No recipe without an artifact score. On the owner's account: 10 built, 20 partly built, 7 unbuilt, 58 no recipe.
     - **Ties** on readiness break by crowns, then name.
+    - **Several recommended sets** (`otherSets` in the curated targets, read only by the artifact score). **Chiori added**, checked against KQM, genshin-builds and Game8: the three agree on crit, DEF% and ATK%. Golden Troupe is first in all three, Husk second in two.
     - **Lowest scores checked against KQM:** Kuki gains HP% and a Healing Bonus circlet; Bennett gains the Healing Bonus circlet. Bennett is geared for damage against a support recipe, and Xingqiu wears two pieces; both are scored fairly.
 - [ ] **Accept:** settled with the owner once 10.1 is.
 

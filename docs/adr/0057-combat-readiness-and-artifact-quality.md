@@ -125,6 +125,13 @@ substat priorities:
   lowest scores on the owner's account against each character's KQM guide.
   The same check found Bennett scored against a support recipe while
   geared for damage, and Xingqiu wearing two pieces: both fair.
+- **Several recommended sets:** a curated entry can list `otherSets`, the
+  4-piece sets the guides rank close behind its set requirement. The set
+  star counts them all. The optimizer's set requirement stays one set.
+- **Chiori** was added on 2026-10-06 after comparing KQM, genshin-builds
+  and Game8, as the test of that comparison. All three rank Golden Troupe
+  first, KQM and genshin-builds rank Husk second, and all agree on CRIT >
+  DEF% > ATK%. Her score is about 54.5, so Built.
 - **A character with no curated targets shows "no recipe yet"**, never a
   guessed score.
 

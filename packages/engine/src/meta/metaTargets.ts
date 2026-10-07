@@ -45,9 +45,25 @@ export interface MetaTarget {
    * a constraint, and always equippable by the character.
    */
   weaponAccessible?: string;
+  /** Other sets the guides rank close behind (4-piece), beside
+   *  `setRequirement` (TODO 10.7). Only the artifact score reads them, to
+   *  mark a recommended set; the optimizer's set requirement stays one. */
+  otherSets?: string[];
 }
 
 export const META_TARGETS: Record<string, MetaTarget> = {
+  // Added 2026-10-06 (game 7.1), after comparing KQM, genshin-builds and
+  // Game8 (TODO 10.7): all three rank Golden Troupe first; KQM and
+  // genshin-builds rank Husk second. Damage scales on DEF more than ATK.
+  chiori: {
+    characterKey: 'chiori',
+    setRequirement: { kind: '4pc', setKey: 'GoldenTroupe' },
+    otherSets: ['HuskOfOpulentDreams'],
+    mains: { sands: 'def_pct', goblet: 'elemental_dmg' },
+    objective: 'crit_value',
+    weapon: 'uraku_misugiri',
+    source: 'https://keqingmains.com/q/chiori-quickguide/',
+  },
   furina: {
     characterKey: 'furina',
     setRequirement: { kind: '4pc', setKey: 'GoldenTroupe' },

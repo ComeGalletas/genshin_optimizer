@@ -211,6 +211,24 @@ describe('artifactQuality', () => {
   });
 });
 
+describe('Chiori, checked against three guides (2026-10-06)', () => {
+  it('uses crit, DEF% and ATK%, and recommends two sets', () => {
+    const p = qualityProfile('chiori')!;
+    expect(p.usable).toMatchObject({
+      crit_rate: 1,
+      crit_dmg: 1,
+      def_pct: 1,
+      def: FLAT_FACTOR,
+      atk_pct: 1,
+      atk: FLAT_FACTOR,
+    });
+    expect(p.usable.er_pct).toBeUndefined();
+    expect(p.accepts.sands).toEqual(['def_pct', 'atk_pct']);
+    expect(p.recommendedSets).toEqual(['GoldenTroupe', 'HuskOfOpulentDreams']);
+    expect(isRecommendedSet('chiori', 'HuskOfOpulentDreams')).toBe(true);
+  });
+});
+
 describe('isRecommendedSet', () => {
   it('marks the set the build recommends', () => {
     expect(isRecommendedSet('sangonomiya_kokomi', 'OceanHuedClam')).toBe(true);

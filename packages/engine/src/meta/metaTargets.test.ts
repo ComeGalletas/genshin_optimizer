@@ -9,7 +9,10 @@ describe('META_TARGETS', () => {
     for (const [key, m] of Object.entries(META_TARGETS)) {
       expect(charKeys.has(m.characterKey), `${key} characterKey`).toBe(true);
       const req = m.setRequirement;
-      const keys = req.kind === '2+2' ? req.setKeys : [req.setKey];
+      const keys = [
+        ...(req.kind === '2+2' ? req.setKeys : [req.setKey]),
+        ...(m.otherSets ?? []),
+      ];
       for (const sk of keys)
         expect(setKeys.has(sk), `${key} set ${sk}`).toBe(true);
       expect(m.source, `${key} source`).toMatch(/^https?:\/\//);

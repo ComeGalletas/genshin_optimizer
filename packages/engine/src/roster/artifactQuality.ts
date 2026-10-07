@@ -45,11 +45,15 @@ const ER_SCALES = new Set(['raiden_shogun']);
 const EXTRA_USABLE: Record<string, StatKey[]> = {
   // Her skill's damage and healing scale with HP: EM > ER > HP%.
   kuki_shinobu: ['hp_pct'],
+  // CRIT > DEF% > ATK% in all three guides: she scales on both.
+  chiori: ['atk_pct'],
 };
 const EXTRA_MAINS: Record<string, Partial<Record<CheckedSlot, StatKey[]>>> = {
   // A Healing Bonus circlet when she or he is the team's healer.
   kuki_shinobu: { circlet: ['healing'] },
   bennett: { circlet: ['healing'] },
+  // Game8 also lists an ATK% sands.
+  chiori: { sands: ['atk_pct'] },
 };
 
 const SCALING_STATS: readonly StatKey[] = [
@@ -124,10 +128,12 @@ export function qualityProfile(characterKey: string): QualityProfile | null {
 
   const element = genshinAdapter.character(characterKey)?.element;
   const extra = EXTRA_MAINS[characterKey] ?? {};
-  const recommendedSets =
-    m.setRequirement.kind === '2+2'
-      ? [...m.setRequirement.setKeys]
-      : [m.setRequirement.setKey];
+  const recommendedSets = unique([
+    ...(m.setRequirement.kind === '2+2'
+      ? m.setRequirement.setKeys
+      : [m.setRequirement.setKey]),
+    ...(m.otherSets ?? []),
+  ]);
   return {
     usable,
     ...(m.erTarget !== undefined && { erMin: m.erTarget }),
