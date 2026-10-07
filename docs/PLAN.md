@@ -153,7 +153,7 @@ Moving elements and functions around, and adding new ones, to the owner's scope 
 - Teams come from the same sources as the character builds (10.2). They load with character data (an optimization, the character window), asynchronously and with loading indicators, rather than up front.
 - Rotations become the owner's own data, persisted locally for now, with a rotation builder: by hand, or designed by the language model under the existing draft and review rules (ADR-0043).
 
-- More guide sources for the build and team previews, beside KQM's. genshin-builds.com is extracted at data-build time into a checked schema: facts only, each with its URL and date, reviewed by the owner before use. Game8 is linked, never extracted, because its terms forbid reproduction and unauthorized software. The previews compare the sources and name them. ADR.
+- More guide sources for the build and team previews, beside KQM's. genshin-builds.com is extracted at data-build time into a checked schema: facts only, each with its URL and date, reviewed by the owner before use. genshin.gg replaced Game8 as the third source on 2026-10-07 (TODO 10.2): its robots.txt allows crawlers and it links no terms of use, while Game8's terms forbid reproduction and unauthorized software. The previews compare the sources and name them. ADR.
 - On the side: a hover window for weapons only (its passive at its refinement, its stats at its level).
 - Roll evaluation: each piece's roll value, roll luck, distance to the best piece of its kind and exact percentile among all possible +20 pieces, from the game's roll rules; exact rolls from Enka for showcased characters; a link to Akasha's leaderboards. ADR.
 - To consider for later: Stygian Onslaught teams beside the Spiral Abyss ones.
