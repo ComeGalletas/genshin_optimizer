@@ -220,33 +220,52 @@ export function QualityCard({
           </div>
         ))}
         {quality.er && (
-          <div className="flex flex-wrap justify-between gap-x-4">
-            <dt className="text-muted">
-              Energy Recharge
-              {quality.er.min !== undefined && ' vs the build’s minimum'}
-            </dt>
-            <dd
-              className={
-                quality.er.short > 0 ? 'font-mono text-amber' : 'font-mono'
-              }
-            >
-              {formatStat('er_pct', quality.er.total)}
-              {quality.er.min !== undefined &&
-                ` / ${formatStat('er_pct', quality.er.min)}`}
-              {quality.er.short > 0 &&
-                ` (${formatStat('er_pct', quality.er.short)} short)`}
-            </dd>
-            {weapon && (weapon.er || forWeapon) && (
-              <dd className="w-full text-muted" data-testid="er-weapon">
-                {weapon.er
-                  ? `${weapon.name} gives +${formatStat('er_pct', weapon.er)}`
-                  : weapon.name}
-                {forWeapon &&
-                  `; the guide asks ${forWeapon.min}% with ${forWeapon.weapon}`}
-                .
+          <>
+            <div className="flex flex-wrap justify-between gap-x-4">
+              <dt className="text-muted">Energy Recharge</dt>
+              <dd className="font-mono">
+                {formatStat('er_pct', quality.er.total)}
               </dd>
+              {weapon && (weapon.er || forWeapon) && (
+                <dd className="w-full text-muted" data-testid="er-weapon">
+                  {weapon.er
+                    ? `${weapon.name} gives +${formatStat('er_pct', weapon.er)}`
+                    : weapon.name}
+                  {forWeapon &&
+                    `; the guide asks ${forWeapon.min}% with ${forWeapon.weapon}`}
+                  .
+                </dd>
+              )}
+            </div>
+            {/* The build's two figures, always in this order (ADR-0062):
+                informative here; the rotations say which one applies. */}
+            {(
+              [
+                ['every rotation', quality.er.min, quality.er.short],
+                [
+                  'every other rotation',
+                  quality.er.everyOther,
+                  quality.er.shortEveryOther,
+                ],
+              ] as const
+            ).map(([label, min, short]) =>
+              min === undefined ? null : (
+                <div
+                  key={label}
+                  className="flex justify-between gap-x-4 pl-3"
+                  data-testid="er-threshold"
+                >
+                  <dt className="text-muted">To burst {label}</dt>
+                  <dd
+                    className={short > 0 ? 'font-mono text-amber' : 'font-mono'}
+                  >
+                    {formatStat('er_pct', min)}
+                    {short > 0 && ` (${formatStat('er_pct', short)} short)`}
+                  </dd>
+                </div>
+              ),
             )}
-          </div>
+          </>
         )}
       </dl>
       <p className="text-xs leading-relaxed text-muted">
@@ -255,10 +274,11 @@ export function QualityCard({
         roll on a stat it uses, counted as a share of that stat&rsquo;s largest
         roll (a perfect roll is 1). Flat HP, ATK and DEF count {FLAT_FACTOR}.
         CRIT and Energy Recharge count for everyone, all of it; the
-        build&rsquo;s minimum is shown, not a limit. Each build is scored, and
-        the one that fits their pieces best counts. The score compares artifacts
-        for this character; &ldquo;of possible&rdquo; is the most their pieces
-        could hold.
+        build&rsquo;s figures to burst every rotation and every other rotation
+        are shown, never a limit. Each build is scored, and the one that fits
+        their pieces best counts. The score compares artifacts for this
+        character; &ldquo;of possible&rdquo; is the most their pieces could
+        hold.
       </p>
       {unused && (
         <p className="text-xs leading-relaxed text-muted" data-testid="unused">

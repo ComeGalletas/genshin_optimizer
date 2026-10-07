@@ -65,8 +65,15 @@ export function statsOf(
   const raw = label.replace(/\([^)]*\)/g, '').trim();
   const k = squash(raw.replace(/%/g, 'pct'));
   if (!k) return [];
-  if (new RegExp(`^(${ELEMENTS})dmg(bonus)?(pct)?$`).test(k))
+  // "Hydro DMG Bonus", "Electro%", "PHEC DMG%"; a bare "DMG%" or "DMG
+  // Bonus" on a goblet is the elemental one too.
+  if (
+    new RegExp(`^(${ELEMENTS})(dmg)?(pct)?(bonus)?(pct)?$`).test(k) ||
+    (kind === 'main' && /^dmg(pct|bonus)+$/.test(k))
+  )
     return ['elemental_dmg'];
+  if (/^physical(dmg)?(pct)?(bonus)?(pct)?$/.test(k)) return ['physical_dmg'];
+  if (/^heal(ing)?(pct)?(bonus)?$/.test(k) || k === 'hb') return ['healing'];
   if (k === 'crit' || k === 'critratecritdmg' || k === 'critratedmg')
     return ['crit_rate', 'crit_dmg'];
   // A source that writes "Flat HP" for flat HP means HP% by a bare "HP".
@@ -210,7 +217,9 @@ export function setKeyOf(name: string, loose = false): string | undefined {
 export const isGenericSetText = (s: string) =>
   /combination|combo|\bany\b|dmg|bonus|%|^\s*[24]\s*pc\s*(hp|atk|def|em|er|healing)\b|elemental|physical/i.test(
     s,
-  );
+  ) ||
+  // A shorthand fragment ("2pc CW", "MH", "or"): too short to name a set.
+  squash(s.replace(/\b[24]\s*pc\b/gi, '')).length < 4;
 
 /** A build's role from its label or name ("HEAL SUPPORT", "Bloom DPS",
  *  "Off-Field Support"), or undefined when nothing in it says. */

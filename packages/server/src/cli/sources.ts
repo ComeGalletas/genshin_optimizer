@@ -30,6 +30,7 @@ import {
   parseGenshinGgPage,
 } from '@genshin-build-lab/engine/sources/genshinGg';
 import { readStats } from '@genshin-build-lab/engine/sources/labels';
+import { isSubStatKey } from '@genshin-build-lab/engine/game/genshin/substatRolls';
 import type {
   SourceBuild,
   SourceCharacter,
@@ -110,6 +111,8 @@ async function readSource(
   ) =>
     | Promise<Omit<SourceCharacter, 'url' | 'fetched'>>
     | Omit<SourceCharacter, 'url' | 'fetched'>,
+  /** Run on each fresh read after the carry-over (the language model). */
+  settle?: (key: string, next: SourceCharacter) => Promise<void>,
 ) {
   const file = load(source);
   const lines: string[] = [];
@@ -117,6 +120,11 @@ async function readSource(
   let kept = 0;
   for (const { key, name } of characters()) {
     const prev = file.characters[key];
+    if (prev?.locked) {
+      lines.push(`- **${key}**: locked (${prev.locked}); kept as it was`);
+      kept++;
+      continue;
+    }
     const url = urlFor(key, name, prev);
     if (!url) {
       lines.push(`- **${key}**: no page on ${FILES[source].site}`);
@@ -145,6 +153,7 @@ async function readSource(
     };
     if (!next.issues?.length) delete next.issues;
     keepFromPrevious(prev, next);
+    await settle?.(key, next);
     const changes = diffBuilds(prev, next);
     const flags = next.builds.flatMap((b) =>
       (b.flags ?? []).map((f) => `${b.name}: ${f}`),
@@ -179,6 +188,7 @@ async function settleWithModel(
   character: string,
   build: SourceBuild,
   text: string,
+  overview?: string,
 ): Promise<void> {
   const { createLlmClient } = await import('../llm/client');
   const { loadLlmConfig } = await import('../llm/config');
@@ -191,7 +201,10 @@ async function settleWithModel(
         role: 'user',
         content:
           `Character: ${character}. Build: "${build.name}".\n` +
-          `The guide's artifact stats section:\n${text.slice(0, 3000)}\n\n` +
+          (overview
+            ? `The guide's overview of the character's playstyles:\n${overview.slice(0, 2500)}\n\n`
+            : '') +
+          `The guide's artifact stats section for this build:\n${text.slice(0, 3000)}\n\n` +
           `Reply as {"role": one of ${ROLES.join(', ')}, "substats": [the substat priority, best first, as written]}.`,
       },
     ],
@@ -203,13 +216,19 @@ async function settleWithModel(
   const note = `settled by the language model (${client.model}); check it`;
   if (build.roleFrom === 'review' && ROLES.includes(answer.role as BuildRole)) {
     build.role = answer.role as BuildRole;
+    build.roleFrom = 'model';
     build.flags = (build.flags ?? []).filter(
       (f) => !f.startsWith('role not clear'),
     );
     build.flags.push(`role ${note}`);
   }
   if (!build.substats.length && answer.substats?.length) {
-    const { stats } = readStats(answer.substats.join(' > '), 'sub', false);
+    // Substats only: a main stat in the answer (a DMG Bonus) is dropped.
+    const stats = readStats(
+      answer.substats.join(' > '),
+      'sub',
+      false,
+    ).stats.filter((k) => isSubStatKey(k));
     if (stats.length) {
       build.substats = stats;
       build.flags = (build.flags ?? []).filter(
@@ -224,6 +243,8 @@ async function settleWithModel(
 
 async function kqm() {
   const llm = flag('llm');
+  const texts = new Map<string, Record<string, string>>();
+  const overviews = new Map<string, string>();
   await readSource(
     'kqm',
     (key, name, prev) => {
@@ -233,28 +254,35 @@ async function kqm() {
       const slug = name.split(' ').slice(-1)[0].toLowerCase();
       return `https://keqingmains.com/q/${slug}-quickguide/`;
     },
-    async (html, key) => {
+    (html, key) => {
       const page = parseKqmGuide(html);
-      if (llm)
-        for (const b of page.builds)
-          if (b.roleFrom === 'review' || !b.substats.length)
-            try {
-              await settleWithModel(
-                genshinAdapter.character(key)?.name ?? key,
-                b,
-                page.texts[b.name] ?? '',
-              );
-            } catch (e) {
-              (b.flags ??= []).push(
-                `language model failed: ${(e as Error).message}`,
-              );
-            }
+      texts.set(key, page.texts);
+      if (page.overview) overviews.set(key, page.overview);
       return {
         ...(page.updatedFor && { updatedFor: page.updatedFor }),
         builds: page.builds,
         ...(page.issues.length && { issues: page.issues }),
       };
     },
+    // --llm: only what the page and the previous read both left open.
+    llm
+      ? async (key, next) => {
+          for (const b of next.builds)
+            if (b.roleFrom === 'review' || !b.substats.length)
+              try {
+                await settleWithModel(
+                  genshinAdapter.character(key)?.name ?? key,
+                  b,
+                  texts.get(key)?.[b.name] ?? '',
+                  overviews.get(key),
+                );
+              } catch (e) {
+                (b.flags ??= []).push(
+                  `language model failed: ${(e as Error).message}`,
+                );
+              }
+        }
+      : undefined,
   );
 }
 

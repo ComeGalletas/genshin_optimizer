@@ -21,7 +21,7 @@ export function diffBuilds(
     if (!old) out.push(`+ ${n}`);
     else {
       const what = (
-        ['role', 'mains', 'substats', 'sets', 'erMin'] as const
+        ['role', 'mains', 'substats', 'sets', 'erMin', 'erEveryOther'] as const
       ).filter((k) => JSON.stringify(old[k]) !== JSON.stringify(b[k]));
       if (what.length) out.push(`~ ${n}: ${what.join(', ')}`);
     }
@@ -51,7 +51,10 @@ export function keepFromPrevious(
         : undefined);
     if (!old) continue;
     const kept: string[] = [];
-    if (b.roleFrom === 'review') {
+    // Only a settled role carries over: one the previous read itself
+    // couldn't name (still flagged) is no better than none.
+    const oldUnsettled = old.flags?.some((f) => f.startsWith('role not clear'));
+    if (b.roleFrom === 'review' && !oldUnsettled) {
       b.role = old.role;
       b.flags = (b.flags ?? []).filter((f) => !f.startsWith('role not clear'));
       kept.push('role');
@@ -68,6 +71,40 @@ export function keepFromPrevious(
       b.substats = [...old.substats];
       b.flags = (b.flags ?? []).filter((f) => f !== 'no stat priority line');
       kept.push('substats');
+    }
+    if (!b.sets.length && old.sets.length) {
+      b.sets = old.sets.map((e) => [...e]);
+      b.flags = (b.flags ?? []).filter((f) => f !== 'no artifact sets read');
+      kept.push('sets');
+    }
+    // Energy Recharge: when no table matched this build, or one table was
+    // given to every build, the previous read's figure for this build stays
+    // (the owner's rule, 2026-10-07); the table's figure is used only where
+    // there was none.
+    const unmatched = b.flags?.includes(
+      'no Energy Recharge table matched by name',
+    );
+    const shared = b.flags?.some(
+      (f) =>
+        f.startsWith('one Energy Recharge table') ||
+        f.startsWith("Energy Recharge from the page's first table"),
+    );
+    // The previous read's figure wins, "none" included: a guide that says
+    // not to build Energy Recharge has no figure on purpose.
+    if (unmatched || shared) {
+      const same = b.erMin === old.erMin;
+      if (old.erMin !== undefined) b.erMin = old.erMin;
+      else delete b.erMin;
+      if (old.erWeapons?.length)
+        b.erWeapons = old.erWeapons.map((w) => ({ ...w }));
+      else delete b.erWeapons;
+      b.flags = (b.flags ?? []).filter(
+        (f) =>
+          f !== 'no Energy Recharge table matched by name' &&
+          !f.startsWith('one Energy Recharge table') &&
+          !f.startsWith("Energy Recharge from the page's first table"),
+      );
+      if (!same) kept.push('Energy Recharge');
     }
     if (kept.length)
       (b.flags ??= []).push(

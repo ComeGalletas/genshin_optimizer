@@ -1,11 +1,12 @@
 {
  "source": "kqm",
  "site": "https://keqingmains.com",
- "readBy": "agents",
+ "readBy": "script",
  "characters": {
   "aino": {
    "url": "https://keqingmains.com/q/aino-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
      "name": "General",
@@ -56,24 +57,17 @@
        "FlowerOfParadiseLost"
       ]
      ],
-     "erMin": 190,
-     "erWeapons": [
-      {
-       "weapon": "Favonius Greatsword",
-       "min": 155
-      },
-      {
-       "weapon": "Flame-Forged Insight",
-       "min": 100
-      }
+     "flags": [
+      "role, goblet main stat, circlet main stat kept from the previous read (\"General\")"
      ],
-     "notes": "Page says GD/FoPL only serve her own damage and are not recommended."
+     "erMin": 190
     }
    ]
   },
   "albedo": {
    "url": "https://keqingmains.com/q/albedo-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V",
    "builds": [
     {
      "name": "General",
@@ -96,8 +90,7 @@
       "er_pct",
       "crit_rate",
       "crit_dmg",
-      "def_pct",
-      "atk_pct"
+      "def_pct"
      ],
      "sets": [
       [
@@ -107,14 +100,17 @@
        "GoldenTroupe"
       ]
      ],
-     "erMin": 120,
-     "notes": "ER figures apply only if he Bursts every rotation; page says ER can otherwise be ignored."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 120
     }
    ]
   },
   "alhaitham": {
    "url": "https://keqingmains.com/q/alhaitham-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
      "name": "General",
@@ -145,18 +141,6 @@
        "GildedDreams"
       ],
       [
-       "DeepwoodMemories",
-       "GoldenTroupe"
-      ],
-      [
-       "EmblemOfSeveredFate",
-       "DeepwoodMemories"
-      ],
-      [
-       "EmblemOfSeveredFate",
-       "GoldenTroupe"
-      ],
-      [
        "GoldenTroupe"
       ],
       [
@@ -166,8 +150,10 @@
        "DeepwoodMemories"
       ]
      ],
-     "erMin": 105,
-     "notes": "Stat priority puts 200-300 EM ahead of CRIT, then more EM after CRIT; 4pc DM is listed for when no teammate holds it."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 105
     }
    ]
   },
@@ -253,6 +239,7 @@
   "alyosha": {
    "url": "https://keqingmains.com/q/alyosha-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.0",
    "builds": [
     {
      "name": "General",
@@ -285,33 +272,15 @@
       ],
       [
        "NoblesseOblige"
-      ],
-      [
-       "Instructor"
-      ],
-      [
-       "DeepwoodMemories"
-      ],
-      [
-       "SilkenMoonsSerenade"
-      ],
-      [
-       "ScrollOfTheHeroOfCinderCity"
-      ],
-      [
-       "SongOfDaysPast"
-      ],
-      [
-       "ArchaicPetra"
-      ],
-      [
-       "OceanHuedClam"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 235,
      "erWeapons": [
       {
-       "weapon": "Favonius Lance",
+       "weapon": "C0 Fav",
        "min": 195
       }
      ]
@@ -321,11 +290,12 @@
   "amber": {
    "url": "https://keqingmains.com/q/amber-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "Melt",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -365,12 +335,12 @@
       ]
      ],
      "erMin": 100,
-     "notes": "ER table is for C4+ Melt (C0 Melt does not Burst); a no-CRIT-Rate weak-spot variant is also mentioned."
+     "flags": []
     },
     {
      "name": "Burgeon",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -393,12 +363,14 @@
        "GildedDreams"
       ]
      ],
-     "notes": "Page says she has no ER requirement in Burgeon since she does not Burst."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Burgeon\")"
+     ]
     },
     {
      "name": "Burst Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "er_pct",
@@ -440,13 +412,16 @@
        "min": 165
       }
      ],
-     "notes": "Both ER scenarios are weapon-specific, so there is no default erMin."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Burst Support\")"
+     ]
     }
    ]
   },
   "arataki_itto": {
    "url": "https://keqingmains.com/q/itto-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.6",
    "builds": [
     {
      "name": "General",
@@ -486,14 +461,17 @@
        "LongNightsOath"
       ]
      ],
-     "erMin": 120,
-     "notes": "erMin is Double Geo with Xilonen (2 Skills); MH matches Husk only in Furina teams and LNO is for Xianyun Plunge teams."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 120
     }
    ]
   },
   "arlecchino": {
    "url": "https://keqingmains.com/q/arlecchino-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VIII",
    "builds": [
     {
      "name": "General",
@@ -553,13 +531,18 @@
        "MarechausseeHunter"
       ]
      ],
-     "notes": "ER table (150%+ solo Pyro) is only for Bursting every rotation, which the page advises against; otherwise she builds no ER."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 150,
+     "erEveryOther": 100
     }
    ]
   },
   "baizhu": {
    "url": "https://keqingmains.com/q/baizhu-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
      "name": "General",
@@ -607,75 +590,36 @@
        "SongOfDaysPast"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 320,
      "erWeapons": [
       {
-       "weapon": "Jadefall’s Splendor R1",
+       "weapon": "R1 Jadefall’s Splendor",
        "min": 210
       },
       {
-       "weapon": "Prototype Amber R5",
+       "weapon": "R5 Prototype Amber",
        "min": 250
       },
       {
-       "weapon": "Favonius Codex R5",
+       "weapon": "R5 Favonius Codex",
        "min": 250
       }
-     ],
-     "notes": "Page says its 4pc sets are team-niche and hard to rank; erMin is the \"Other Weapons\" Solo Dendro 1-Skill figure."
+     ]
     }
    ]
   },
   "barbara": {
    "url": "https://keqingmains.com/q/barbara-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.2",
    "builds": [
-    {
-     "name": "Pure Healer/4OHC (Electro-Charged)",
-     "role": "healer",
-     "roleFrom": "review",
-     "mains": {
-      "sands": [
-       "hp_pct"
-      ],
-      "goblet": [
-       "hp_pct"
-      ],
-      "circlet": [
-       "healing"
-      ]
-     },
-     "substats": [
-      "hp_pct",
-      "hp"
-     ],
-     "sets": [
-      [
-       "MaidenBeloved"
-      ],
-      [
-       "OceanHuedClam"
-      ],
-      [
-       "MaidenBeloved",
-       "OceanHuedClam"
-      ],
-      [
-       "MaidenBeloved",
-       "TenacityOfTheMillelith"
-      ],
-      [
-       "OceanHuedClam",
-       "TenacityOfTheMillelith"
-      ]
-     ],
-     "erMin": 100,
-     "notes": "Page calls 4MB BiS for healing but says not to farm it; 4OHC is also its Electro-Charged driver set."
-    },
     {
      "name": "Vaporize",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -700,24 +644,63 @@
      ],
      "sets": [
       [
+       "MaidenBeloved"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
        "WanderersTroupe"
-      ],
-      [
-       "HeartOfDepth",
-       "ShimenawasReminiscence"
-      ],
-      [
-       "HeartOfDepth",
-       "GladiatorsFinale"
       ]
      ],
-     "erMin": 100
+     "erMin": 100,
+     "flags": []
+    },
+    {
+     "name": "Pure Healer/4OHC (Electro-Charged)",
+     "role": "healer",
+     "roleFrom": "name",
+     "mains": {
+      "sands": [
+       "hp_pct"
+      ],
+      "goblet": [
+       "hp_pct"
+      ],
+      "circlet": [
+       "healing"
+      ]
+     },
+     "substats": [
+      "hp_pct",
+      "hp"
+     ],
+     "sets": [
+      [
+       "MaidenBeloved"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "OceanHuedClam"
+      ],
+      [
+       "WanderersTroupe"
+      ]
+     ],
+     "erMin": 100,
+     "flags": []
     }
    ]
   },
   "beidou": {
    "url": "https://keqingmains.com/q/beidou-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "General",
@@ -751,8 +734,10 @@
        "Thundersoother"
       ]
      ],
-     "erMin": 185,
-     "notes": "erMin is Solo Electro with 1 perfect counter + 1 tap Skill; 2 tap Skills needs 220%+."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 185
     }
    ]
   },
@@ -926,16 +911,18 @@
      "erMin": 100,
      "notes": "erMin uses the on-field (4+ Skill uses) figure since he is the on-field trigger; GD/FoPL are listed for on-field Burgeon only."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "candace": {
    "url": "https://keqingmains.com/q/candace-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
      "name": "Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct",
@@ -975,12 +962,12 @@
       ]
      ],
      "erMin": 260,
-     "notes": "erMin is the Solo Hydro 1-Skill row; the page strongly recommends 2 Skills (230-260%)."
+     "flags": []
     },
     {
      "name": "Bloom DPS",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -1014,13 +1001,14 @@
       ]
      ],
      "erMin": 260,
-     "notes": "The page shares one ER table across both builds."
+     "flags": []
     }
    ]
   },
   "charlotte": {
    "url": "https://keqingmains.com/q/charlotte-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
      "name": "General",
@@ -1066,10 +1054,13 @@
        "MaidenBeloved"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 230,
      "erWeapons": [
       {
-       "weapon": "Prototype Amber R5",
+       "weapon": "R5 Prototype Amber",
        "min": 185
       }
      ]
@@ -1079,6 +1070,7 @@
   "chasca": {
    "url": "https://keqingmains.com/q/chasca-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "General",
@@ -1116,27 +1108,25 @@
       ],
       [
        "ViridescentVenerer"
-      ],
-      [
-       "WanderersTroupe"
-      ],
-      [
-       "DesertPavilionChronicle"
       ]
      ],
-     "erMin": 100,
-     "notes": "Page says not to build ER for Burst every rotation (165-195%); erMin is the Burst-every-other-rotation figure."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 165,
+     "erEveryOther": 100
     }
    ]
   },
   "chevreuse": {
    "url": "https://keqingmains.com/q/chevreuse-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.6",
    "builds": [
     {
      "name": "Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct",
@@ -1168,19 +1158,31 @@
        "ScrollOfTheHeroOfCinderCity"
       ],
       [
+       "EmblemOfSeveredFate"
+      ],
+      [
        "TenacityOfTheMillelith"
+      ],
+      [
+       "GoldenTroupe"
+      ],
+      [
+       "CrimsonWitchOfFlames"
       ],
       [
        "OceanHuedClam"
       ]
      ],
      "erMin": 100,
-     "notes": "Page gives one set list for both builds (split here by each set’s stated purpose); 4pc NO needs Burst every rotation (175-205%)."
+     "erEveryOther": 100,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Support\")"
+     ]
     },
     {
      "name": "Quickswap DPS",
      "role": "off_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -1203,23 +1205,42 @@
      ],
      "sets": [
       [
+       "NoblesseOblige"
+      ],
+      [
+       "SongOfDaysPast"
+      ],
+      [
+       "ScrollOfTheHeroOfCinderCity"
+      ],
+      [
        "EmblemOfSeveredFate"
+      ],
+      [
+       "TenacityOfTheMillelith"
       ],
       [
        "GoldenTroupe"
       ],
       [
        "CrimsonWitchOfFlames"
+      ],
+      [
+       "OceanHuedClam"
       ]
      ],
      "erMin": 100,
-     "notes": "GT and CW are listed for C4+ only; this build wants Burst every rotation (175-205%)."
+     "erEveryOther": 100,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Quickswap DPS\")"
+     ]
     }
    ]
   },
   "chiori": {
    "url": "https://keqingmains.com/q/chiori-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.5",
    "builds": [
     {
      "name": "General",
@@ -1252,19 +1273,20 @@
       ],
       [
        "HuskOfOpulentDreams"
-      ],
-      [
-       "GoldenTroupe",
-       "HuskOfOpulentDreams"
       ]
      ],
-     "notes": "Page says ER is not worth building (Burst when available); its ER table is only for Bursting every rotation."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 260,
+     "erEveryOther": 100
     }
    ]
   },
   "chongyun": {
    "url": "https://keqingmains.com/q/chongyun-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.5",
    "builds": [
     {
      "name": "General",
@@ -1288,7 +1310,6 @@
       "er_pct",
       "crit_rate",
       "crit_dmg",
-      "em",
       "atk_pct"
      ],
      "sets": [
@@ -1302,12 +1323,11 @@
        "GildedDreams"
       ],
       [
-       "NoblesseOblige",
-       "BlizzardStrayer"
-      ],
-      [
        "Lavawalker"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 150
     }
@@ -1316,6 +1336,7 @@
   "citlali": {
    "url": "https://keqingmains.com/q/citlali-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "General",
@@ -1360,14 +1381,17 @@
        "Instructor"
       ]
      ],
-     "erMin": 170,
-     "notes": "Page says with Favonius Codex her requirement is under 160%, so she needs no ER build."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 170
     }
    ]
   },
   "clorinde": {
    "url": "https://keqingmains.com/q/clorinde-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
      "name": "General",
@@ -1375,8 +1399,7 @@
      "roleFrom": "review",
      "mains": {
       "sands": [
-       "atk_pct",
-       "em"
+       "atk_pct"
       ],
       "goblet": [
        "elemental_dmg"
@@ -1391,7 +1414,6 @@
       "crit_rate",
       "crit_dmg",
       "atk_pct",
-      "em",
       "atk"
      ],
      "sets": [
@@ -1408,14 +1430,18 @@
        "GladiatorsFinale"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 200,
-     "notes": "erMin is Solo Electro Burst-every-Skill-combo; Burst every other combo is 110-130%."
+     "erEveryOther": 110
     }
    ]
   },
   "collei": {
    "url": "https://keqingmains.com/q/collei-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "General Build",
@@ -1465,6 +1491,9 @@
        "FlowerOfParadiseLost"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General Build\")"
+     ],
      "erMin": 200,
      "erWeapons": [
       {
@@ -1475,13 +1504,12 @@
        "weapon": "Sacrificial Bow",
        "min": 160
       }
-     ],
-     "notes": "Page gives one shared set list for both stat builds."
+     ]
     },
     {
      "name": "Pure Bloom Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -1524,6 +1552,7 @@
       ]
      ],
      "erMin": 200,
+     "flags": [],
      "erWeapons": [
       {
        "weapon": "Favonius Warbow",
@@ -1533,14 +1562,14 @@
        "weapon": "Sacrificial Bow",
        "min": 160
       }
-     ],
-     "notes": "Page gives one shared set list for both stat builds."
+     ]
     }
    ]
   },
   "columbina": {
    "url": "https://keqingmains.com/q/columbina-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.0",
    "builds": [
     {
      "name": "General",
@@ -1561,7 +1590,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "hp_pct",
@@ -1579,12 +1607,6 @@
        "NightOfTheSkysUnveiling"
       ],
       [
-       "GildedDreams"
-      ],
-      [
-       "FlowerOfParadiseLost"
-      ],
-      [
        "TenacityOfTheMillelith"
       ],
       [
@@ -1593,6 +1615,9 @@
       [
        "GoldenTroupe"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 235,
      "erWeapons": [
@@ -1604,17 +1629,17 @@
        "weapon": "Favonius Codex",
        "min": 190
       }
-     ],
-     "notes": "erMin is Off-Field Solo Hydro Burst every rotation; page says Bursting every other rotation halves it."
+     ]
     }
    ]
   },
   "cyno": {
    "url": "https://keqingmains.com/q/cyno-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.2",
    "builds": [
     {
-     "name": "General",
+     "name": "Artifact Stat Priorities",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -1654,14 +1679,18 @@
        "FlowerOfParadiseLost"
       ]
      ],
-     "erMin": 140,
-     "notes": "erMin assumes 4pc Thundering Fury; with other sets the Solo Electro figure is 180-200%."
+     "flags": [
+      "set not in the dataset: \"2pc + 2pc EM or TF\"",
+      "role kept from the previous read (\"Artifact Stat Priorities\")"
+     ],
+     "erMin": 140
     }
    ]
   },
   "dahlia": {
    "url": "https://keqingmains.com/q/dahlia-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
      "name": "General",
@@ -1697,6 +1726,9 @@
        "ArchaicPetra"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 240
     }
    ]
@@ -1704,11 +1736,12 @@
   "dehya": {
    "url": "https://keqingmains.com/q/dehya-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
      "name": "Off-Field Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -1747,12 +1780,14 @@
        "DeepwoodMemories"
       ]
      ],
-     "notes": "Page says she does not use her Burst here, so she has no ER requirement."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Off-Field Support\")"
+     ]
     },
     {
      "name": "Burgeon",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -1783,12 +1818,14 @@
        "SilkenMoonsSerenade"
       ]
      ],
-     "notes": "Page says she does not use her Burst here, so she has no ER requirement."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Burgeon\")"
+     ]
     },
     {
      "name": "On-Field DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "er_pct",
@@ -1833,18 +1870,19 @@
       ]
      ],
      "erMin": 160,
-     "notes": "HP% Sands is listed for C1 only; ER requirements drop about 40% at C4."
+     "flags": []
     }
    ]
   },
   "diluc": {
    "url": "https://keqingmains.com/q/diluc-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.6",
    "builds": [
     {
      "name": "Vaporize / Melt",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -1875,12 +1913,13 @@
        "GladiatorsFinale"
       ]
      ],
-     "erMin": 120
+     "erMin": 120,
+     "flags": []
     },
     {
      "name": "Mono Pyro",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct"
@@ -1909,12 +1948,15 @@
        "GladiatorsFinale"
       ]
      ],
-     "erMin": 115
+     "erMin": 115,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Mono Pyro\")"
+     ]
     },
     {
      "name": "Burgeon",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -1947,13 +1989,15 @@
        "GildedDreams"
       ]
      ],
-     "erMin": 120
+     "erMin": 120,
+     "flags": []
     }
    ]
   },
   "diona": {
    "url": "https://keqingmains.com/q/diona-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
      "name": "General",
@@ -1999,6 +2043,9 @@
        "Instructor"
       ]
      ],
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"General\")"
+     ],
      "erMin": 180,
      "erWeapons": [
       {
@@ -2009,19 +2056,19 @@
        "weapon": "Favonius Warbow",
        "min": 160
       }
-     ],
-     "notes": "erMin is the general Double Cryo C0 \"Other Bow\" figure; C1-C6 figures are lower (145-175%)."
+     ]
     }
    ]
   },
   "dori": {
    "url": "https://keqingmains.com/q/dori-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.0",
    "builds": [
     {
      "name": "Aggravate",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -2070,19 +2117,21 @@
        "TheExile"
       ]
      ],
+     "flags": [
+      "sets, Energy Recharge kept from the previous read (\"Aggravate\")"
+     ],
      "erMin": 210,
      "erWeapons": [
       {
        "weapon": "Favonius (w/ Favonius column)",
        "min": 180
       }
-     ],
-     "notes": "erMin is \"Other - Solo Electro\" without Favonius (the C6-driver rows are lower); the page does not say whose Favonius the other column means."
+     ]
     },
     {
      "name": "Hyperbloom",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -2124,19 +2173,21 @@
        "TheExile"
       ]
      ],
+     "flags": [
+      "sets, Energy Recharge kept from the previous read (\"Hyperbloom\")"
+     ],
      "erMin": 210,
      "erWeapons": [
       {
        "weapon": "Favonius (w/ Favonius column)",
        "min": 180
       }
-     ],
-     "notes": "erMin is \"Other - Solo Electro\" without Favonius (the C6-driver rows are lower); the page does not say whose Favonius the other column means."
+     ]
     },
     {
      "name": "Pure Healer (Not Recommended)",
      "role": "healer",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct"
@@ -2169,15 +2220,17 @@
        "TheExile"
       ]
      ],
+     "excluded": "the guide marks it not recommended",
+     "flags": [
+      "sets, Energy Recharge kept from the previous read (\"Pure Healer (Not Recommended)\")"
+     ],
      "erMin": 210,
      "erWeapons": [
       {
        "weapon": "Favonius (w/ Favonius column)",
        "min": 180
       }
-     ],
-     "excluded": "the guide marks it not recommended",
-     "notes": "Page says this build is almost never recommended; its sets are the ones tagged [Flexible]."
+     ]
     }
    ]
   },
@@ -2290,11 +2343,13 @@
      "erMin": 120,
      "notes": "Page gives one stat block for both; sets come from its separate Support and DPS set sections."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "emilie": {
    "url": "https://keqingmains.com/q/emilie-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "General",
@@ -2324,28 +2379,29 @@
       ],
       [
        "DeepwoodMemories"
-      ],
-      [
-       "GoldenTroupe"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 180,
+     "erEveryOther": 100,
      "erWeapons": [
       {
        "weapon": "Lumidouce Elegy",
        "min": 135
       }
-     ],
-     "notes": "erMin is Burst every rotation; the page says Bursting every other rotation (100-120%) is usually better."
+     ]
     }
    ]
   },
   "escoffier": {
    "url": "https://keqingmains.com/q/escoffier-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
-     "name": "Escoffier",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -2374,16 +2430,10 @@
       ],
       [
        "BlizzardStrayer"
-      ],
-      [
-       "TenacityOfTheMillelith"
-      ],
-      [
-       "ScrollOfTheHeroOfCinderCity"
-      ],
-      [
-       "NoblesseOblige"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 120
     }
@@ -2392,9 +2442,10 @@
   "eula": {
    "url": "https://keqingmains.com/q/eula-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.8",
    "builds": [
     {
-     "name": "Eula",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -2424,6 +2475,9 @@
       [
        "EmblemOfSeveredFate"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 140
     }
@@ -2517,7 +2571,8 @@
      ],
      "erMin": 175
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "fischl": {
    "url": "https://keqingmains.com/q/fischl-quickguide/",
@@ -2597,14 +2652,16 @@
      "erMin": 110,
      "notes": "Split out from the shared table: Physical goblet is 'if on-field' (C1-focused), 4pc Pale Flame is 'for on-field DPS builds only'."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "flins": {
    "url": "https://keqingmains.com/q/flins-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V I",
    "builds": [
     {
-     "name": "Flins",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -2642,6 +2699,9 @@
       [
        "GildedDreams"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 100
     }
@@ -2768,14 +2828,16 @@
      ],
      "notes": "Page says this playstyle doesn't Burst so it builds no ER; goblet is Physical or Elemental DMG (Cryo/Pyro) by team."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "furina": {
    "url": "https://keqingmains.com/q/furina-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna II",
    "builds": [
     {
-     "name": "Furina",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -2815,17 +2877,20 @@
        "MarechausseeHunter"
       ]
      ],
-     "erMin": 200,
-     "notes": "Base ER is 'Solo Hydro 200%+'; Scroll and SMS share one row; 4pc MH is for C6."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 200
     }
    ]
   },
   "gaming": {
    "url": "https://keqingmains.com/q/gaming-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
-     "name": "Gaming",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -2865,6 +2930,9 @@
       [
        "VermillionHereafter"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 150
     }
@@ -2981,14 +3049,16 @@
      "erMin": 105,
      "notes": "Uses the shared main-stat table and the 'Freeze / Support' substat line; erMin is the first off-field row (high particle generation, Triple Cryo)."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "gorou": {
    "url": "https://keqingmains.com/q/gorou-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna IV",
    "builds": [
     {
-     "name": "Gorou",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3020,24 +3090,22 @@
       ],
       [
        "SilkenMoonsSerenade"
-      ],
-      [
-       "HuskOfOpulentDreams"
-      ],
-      [
-       "EmblemOfSeveredFate"
       ]
      ],
-     "notes": "Goblet is 'Any'; ER is given only as ceilings ('up to 220%' with Favonius Warbow, 'up to 250%' without, <=140% when bursting every other rotation); Husk/EoSF come from the 'Other Sets' row."
+     "flags": [
+      "no goblet main stat read from \"Any\"",
+      "role kept from the previous read (\"General\")"
+     ]
     }
    ]
   },
   "hu_tao": {
    "url": "https://keqingmains.com/q/hu-tao-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.3",
    "builds": [
     {
-     "name": "Hu Tao",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -3074,7 +3142,9 @@
        "GildedDreams"
       ]
      ],
-     "notes": "No ER target: she shouldn't build ER to Burst every rotation, though ~110% helps. Quick guide is 'Updated for Version 3.3'."
+     "flags": [
+      "role, substats kept from the previous read (\"General\")"
+     ]
     }
    ]
   },
@@ -3083,7 +3153,7 @@
    "fetched": "2026-10-07",
    "builds": [
     {
-     "name": "Iansan",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3112,6 +3182,9 @@
        "NoblesseOblige"
       ]
      ],
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"General\")"
+     ],
      "erMin": 220,
      "erWeapons": [
       {
@@ -3125,11 +3198,12 @@
   "ifa": {
    "url": "https://keqingmains.com/q/ifa-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
      "name": "Healer / On-Field Swirl DPS",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -3160,18 +3234,18 @@
       ]
      ],
      "erMin": 160,
+     "flags": [],
      "erWeapons": [
       {
        "weapon": "Prototype Amber",
        "min": 105
       }
-     ],
-     "notes": "Prototype Amber figure is for Furina teams (105-130% at C0)."
+     ]
     },
     {
      "name": "Anemo DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct"
@@ -3206,22 +3280,23 @@
       ]
      ],
      "erMin": 160,
+     "flags": [],
      "erWeapons": [
       {
        "weapon": "Prototype Amber",
        "min": 105
       }
-     ],
-     "notes": "Page lists 4pc VV first but calls 4pc Obsidian Codex the unquestioned BiS for personal damage."
+     ]
     }
    ]
   },
   "illuga": {
    "url": "https://keqingmains.com/q/illuga-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna IV",
    "builds": [
     {
-     "name": "Illuga",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3265,6 +3340,9 @@
        "TenacityOfTheMillelith"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 165
     }
    ]
@@ -3272,9 +3350,10 @@
   "ineffa": {
    "url": "https://keqingmains.com/q/ineffa-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V",
    "builds": [
     {
-     "name": "Ineffa",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -3316,35 +3395,28 @@
        "ThunderingFury"
       ],
       [
-       "TenacityOfTheMillelith"
-      ],
-      [
-       "NoblesseOblige"
-      ],
-      [
-       "DeepwoodMemories"
-      ],
-      [
-       "ScrollOfTheHeroOfCinderCity"
-      ],
-      [
        "GoldenTroupe"
       ],
       [
        "FlowerOfParadiseLost"
       ]
      ],
-     "erMin": 100,
-     "notes": "erMin is the baseline (Burst every other rotation) column; bursting every rotation needs 140-160% (Double Electro), and she only builds ER when needs are below ~140%."
+     "flags": [
+      "set name read loosely: \"4pc Silken’s Moon Serenade\" as SilkenMoonsSerenade",
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 140,
+     "erEveryOther": 100
     }
    ]
   },
   "jahoda": {
    "url": "https://keqingmains.com/q/jahoda-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna III",
    "builds": [
     {
-     "name": "Jahoda",
+     "name": "General",
      "role": "healer",
      "roleFrom": "review",
      "mains": {
@@ -3365,8 +3437,7 @@
       "er_pct",
       "atk_pct",
       "crit_rate",
-      "crit_dmg",
-      "em"
+      "crit_dmg"
      ],
      "sets": [
       [
@@ -3385,25 +3456,28 @@
        "DeepwoodMemories"
       ]
      ],
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"General\")"
+     ],
      "erMin": 225,
      "erWeapons": [
       {
        "weapon": "Favonius Warbow",
        "min": 190
       }
-     ],
-     "notes": "Circlet cell reads 'CRIT Rate | Healing Bonus > ATK%'; CRIT Rate is for Favonius Warbow."
+     ]
     }
    ]
   },
   "jean": {
    "url": "https://keqingmains.com/q/jean-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.0",
    "builds": [
     {
      "name": "Support",
-     "role": "healer",
-     "roleFrom": "review",
+     "role": "support",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -3435,7 +3509,8 @@
        "OceanHuedClam"
       ]
      ],
-     "erMin": 160
+     "erMin": 160,
+     "flags": []
     },
     {
      "name": "Sunfire",
@@ -3463,19 +3538,28 @@
      "sets": [
       [
        "ViridescentVenerer"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "OceanHuedClam"
       ]
      ],
-     "erMin": 160,
-     "notes": "The page's single set table names 4pc VV as Sunfire's BiS; the other rows are for when VV is redundant."
+     "flags": [
+      "role kept from the previous read (\"Sunfire\")"
+     ],
+     "erMin": 160
     }
    ]
   },
   "kachina": {
    "url": "https://keqingmains.com/q/kachina-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.0",
    "builds": [
     {
-     "name": "Kachina",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3513,23 +3597,26 @@
        "ObsidianCodex"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 280,
      "erWeapons": [
       {
-       "weapon": "Favonius Lance",
+       "weapon": "C0, with Fav",
        "min": 210
       }
-     ],
-     "notes": "Base figure is '280%+' (Solo Geo, 20s rotation, C0); the 'with Fav' column doesn't say who holds the Favonius weapon. NO and TotM share one row."
+     ]
     }
    ]
   },
   "kaedehara_kazuha": {
    "url": "https://keqingmains.com/q/kazuha-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.6",
    "builds": [
     {
-     "name": "Kazuha",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3559,10 +3646,13 @@
        "ThunderingFury"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 190,
      "erWeapons": [
       {
-       "weapon": "Favonius Sword",
+       "weapon": "Kazuha’s ER / (with Favonius Sword)",
        "min": 160
       }
      ]
@@ -3656,14 +3746,16 @@
      "erMin": 230,
      "notes": "Page has one main-stat table; for support it only says to prioritise as much ER and CRIT Rate (Favonius Sword) as possible."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "kamisato_ayaka": {
    "url": "https://keqingmains.com/q/ayaka-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
-     "name": "Kamisato Ayaka",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -3694,17 +3786,26 @@
        "MarechausseeHunter"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 130,
-     "notes": "Page calls 4pc BS best on paper but unreliable, and 4pc MH the recommended set for most content with Furina."
+     "erWeapons": [
+      {
+       "weapon": "1 Additional Fav Proc",
+       "min": 120
+      }
+     ]
     }
    ]
   },
   "kamisato_ayato": {
    "url": "https://keqingmains.com/q/ayato-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
-     "name": "Kamisato Ayato",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -3759,17 +3860,20 @@
        "EmblemOfSeveredFate"
       ]
      ],
-     "erMin": 130,
-     "notes": "Page says the four recommended 4pc sets perform similarly; the last six are niche sets. ER Sands only as an off-field Burst DPS."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 130
     }
    ]
   },
   "kaveh": {
    "url": "https://keqingmains.com/q/kaveh-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
-     "name": "Kaveh",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -3810,20 +3914,23 @@
        "GildedDreams"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 210,
      "erWeapons": [
       {
        "weapon": "Favonius Greatsword",
        "min": 160
       }
-     ],
-     "notes": "Substat line: ER > CRIT Rate (if Favonius Greatsword) > EM >= ATK% >= CRIT."
+     ]
     }
    ]
   },
   "keqing": {
    "url": "https://keqingmains.com/q/keqing-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
      "name": "Dendro",
@@ -3859,10 +3966,6 @@
        "Thundersoother"
       ],
       [
-       "ThunderingFury",
-       "MarechausseeHunter"
-      ],
-      [
        "UnfinishedReverie"
       ],
       [
@@ -3875,12 +3978,14 @@
        "FlowerOfParadiseLost"
       ]
      ],
-     "notes": "Covers Aggravate and Quickbloom (EM far better than ATK% in Quickbloom); UR is Quickburn-only, MH needs Furina. ER needs near-nonexistent (up to ~140-150% in rare teams)."
+     "flags": [
+      "role kept from the previous read (\"Dendro\")"
+     ]
     },
     {
      "name": "Overload",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct"
@@ -3900,17 +4005,12 @@
      ],
      "sets": [
       [
-       "ThunderingFury",
-       "MarechausseeHunter"
-      ],
-      [
        "Thundersoother"
       ],
       [
        "FragmentOfHarmonicWhimsy"
       ]
-     ],
-     "notes": "Page says 4pc TF is not recommended in Overload; 4pc Whimsy needs Finale of the Deep and a healer."
+     ]
     },
     {
      "name": "Lunar-Charged",
@@ -3946,25 +4046,22 @@
        "Thundersoother"
       ],
       [
-       "ThunderingFury"
-      ],
-      [
-       "GildedDreams"
-      ],
-      [
        "FragmentOfHarmonicWhimsy"
       ]
      ],
-     "notes": "MH with Furina, NotSU with Aino (two Nod-Krai units)."
+     "flags": [
+      "role kept from the previous read (\"Lunar-Charged\")"
+     ]
     }
    ]
   },
   "kinich": {
    "url": "https://keqingmains.com/q/kinich-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.6",
    "builds": [
     {
-     "name": "Kinich",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -4002,17 +4099,21 @@
        "DeepwoodMemories"
       ]
      ],
-     "erMin": 100,
-     "notes": "erMin is the Burst-every-other-rotation column; Bursting every rotation needs 200-245% (Solo Dendro)."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 200,
+     "erEveryOther": 100
     }
    ]
   },
   "kirara": {
    "url": "https://keqingmains.com/q/kirara-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.0",
    "builds": [
     {
-     "name": "Kirara",
+     "name": "General",
      "role": "shield",
      "roleFrom": "review",
      "mains": {
@@ -4046,16 +4147,21 @@
        "NoblesseOblige"
       ]
      ],
-     "erMin": 160
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 160,
+     "erEveryOther": 100
     }
    ]
   },
   "klee": {
    "url": "https://keqingmains.com/q/klee-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna IV",
    "builds": [
     {
-     "name": "Klee",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -4103,17 +4209,26 @@
        "FragmentOfHarmonicWhimsy"
       ]
      ],
+     "flags": [
+      "role, sets kept from the previous read (\"General\")"
+     ],
      "erMin": 125,
-     "notes": "erMin is 'Klee + 1 Pyro, No Favonius'; a 'Support Set' row (Instructor) for support Klee has no stats of its own."
+     "erWeapons": [
+      {
+       "weapon": "With Favonius Support",
+       "min": 110
+      }
+     ]
     }
    ]
   },
   "kujou_sara": {
    "url": "https://keqingmains.com/q/sara-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.2",
    "builds": [
     {
-     "name": "Kujou Sara",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -4147,19 +4262,22 @@
        "TenacityOfTheMillelith"
       ]
      ],
-     "erMin": 140,
-     "notes": "Quick guide is 'Updated for Version 3.2'."
+     "flags": [
+      "role, substats, sets kept from the previous read (\"General\")"
+     ],
+     "erMin": 140
     }
    ]
   },
   "kuki_shinobu": {
    "url": "https://keqingmains.com/q/shinobu-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "Hyperbloom",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -4190,7 +4308,11 @@
        "DeepwoodMemories"
       ]
      ],
-     "erMin": 135
+     "erMin": 135,
+     "erEveryOther": 135,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Hyperbloom\")"
+     ]
     },
     {
      "name": "Quicken",
@@ -4246,13 +4368,17 @@
        "GildedDreams"
       ]
      ],
+     "flags": [
+      "set name read loosely: \"4pc Emblem of Severe Fate\" as EmblemOfSeveredFate",
+      "role, Energy Recharge kept from the previous read (\"Quicken\")"
+     ],
      "erMin": 160,
-     "notes": "Page lists support sets first for team value; 4pc Golden Troupe is her BiS for personal damage."
+     "erEveryOther": 135
     },
     {
      "name": "Pure Healer",
      "role": "healer",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct",
@@ -4291,6 +4417,10 @@
       [
        "ScrollOfTheHeroOfCinderCity"
       ]
+     ],
+     "erEveryOther": 135,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Pure Healer\")"
      ]
     }
    ]
@@ -4298,11 +4428,12 @@
   "lan_yan": {
    "url": "https://keqingmains.com/q/lan-yan-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.3",
    "builds": [
     {
-     "name": "Off-Field Shield Support",
+     "name": "Off-Field Shield Support, for damage",
      "role": "shield",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -4338,12 +4469,12 @@
       ]
      ],
      "erMin": 215,
-     "notes": "Substat line is 'for damage'; page says to put ATK% over CRIT for shield strength and that she usually doesn't Burst every rotation."
+     "flags": []
     },
     {
      "name": "On-Field-Reaction Driver",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -4374,13 +4505,14 @@
       ]
      ],
      "erMin": 215,
-     "notes": "Set table is shared with the shield build; ER table is shared too (Solo Anemo, 1 Skill)."
+     "flags": []
     }
    ]
   },
   "lauma": {
    "url": "https://keqingmains.com/q/lauma-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V",
    "builds": [
     {
      "name": "General",
@@ -4420,6 +4552,9 @@
        "NightOfTheSkysUnveiling"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 170
     }
    ]
@@ -4427,6 +4562,7 @@
   "layla": {
    "url": "https://keqingmains.com/q/layla-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.6",
    "builds": [
     {
      "name": "General",
@@ -4477,6 +4613,10 @@
        "DeepwoodMemories"
       ]
      ],
+     "flags": [
+      "set name read loosely: \"2pc Tenacity + 2pc Voroukasha\" as TenacityOfTheMillelith + VourukashasGlow",
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 220
     }
    ]
@@ -4484,6 +4624,7 @@
   "linnea": {
    "url": "https://keqingmains.com/q/linnea-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VI",
    "builds": [
     {
      "name": "General",
@@ -4526,18 +4667,23 @@
        "TenacityOfTheMillelith"
       ]
      ],
-     "notes": "KQM gives 170–185% ER only for bursting every rotation and says this is generally not recommended (100% when bursting as available)."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 170,
+     "erEveryOther": 100
     }
    ]
   },
   "lisa": {
    "url": "https://keqingmains.com/q/lisa-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VI",
    "builds": [
     {
      "name": "On-Field Electro DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -4573,13 +4719,15 @@
        "Thundersoother"
       ]
      ],
-     "erMin": 100,
-     "notes": "ER table is shared between builds; erMin uses its first on-field row (Electro Resonance On-field, 100–130%)."
+     "flags": [
+      "substats kept from the previous read (\"On-Field Electro DPS\")"
+     ],
+     "erMin": 100
     },
     {
      "name": "Off-Field Electro DPS / Support",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "er_pct",
@@ -4616,14 +4764,17 @@
        "GildedDreams"
       ]
      ],
-     "erMin": 170,
-     "notes": "ER table is shared between builds; erMin uses its first off-field row (Solo Electro Off-field, 170–200%)."
+     "flags": [
+      "substats, Energy Recharge kept from the previous read (\"Off-Field Electro DPS / Support\")"
+     ],
+     "erMin": 170
     }
    ]
   },
   "lohen": {
    "url": "https://keqingmains.com/q/lohen-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
      "name": "General",
@@ -4644,7 +4795,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "atk_pct",
@@ -4667,18 +4817,23 @@
        "BlizzardStrayer"
       ]
      ],
-     "notes": "KQM says his Burst does not justify building ER; the optional burst-every-rotation table starts at 190–230% (Solo Cryo). Unfinished Reverie is for Burnmelt, MH/Blizzard for Freeze."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 190,
+     "erEveryOther": 100
     }
    ]
   },
   "lynette": {
    "url": "https://keqingmains.com/q/lynette-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
      "name": "General Support / Damage Dealer",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "support",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "er_pct",
@@ -4714,7 +4869,20 @@
       ],
       [
        "DesertPavilionChronicle"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "FlowerOfParadiseLost"
       ]
+     ],
+     "flags": [
+      "set name read loosely: \"4pc Desert Pavillion Chronicle\" as DesertPavilionChronicle",
+      "Energy Recharge kept from the previous read (\"General Support / Damage Dealer\")"
      ],
      "erMin": 140,
      "erWeapons": [
@@ -4722,14 +4890,12 @@
        "weapon": "Favonius Sword",
        "min": 115
       }
-     ],
-     "notes": "ER from Off-Field Solo Anemo 2 Skills (other weapons ~140–175%, Favonius Sword ~115–160%); the 1-Skill row (~240%+, Fav ~180%) is called impractical without Favonius."
+     ]
     },
     {
      "name": "Transformative Reaction–Focused",
      "role": "reaction_dps",
-     "roleFrom": "review",
-     "constellation": "C6",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -4751,11 +4917,30 @@
        "ViridescentVenerer"
       ],
       [
+       "EmblemOfSeveredFate"
+      ],
+      [
+       "NoblesseOblige"
+      ],
+      [
+       "MarechausseeHunter"
+      ],
+      [
+       "DesertPavilionChronicle"
+      ],
+      [
+       "ViridescentVenerer"
+      ],
+      [
        "GildedDreams"
       ],
       [
        "FlowerOfParadiseLost"
       ]
+     ],
+     "flags": [
+      "set name read loosely: \"4pc Desert Pavillion Chronicle\" as DesertPavilionChronicle",
+      "Energy Recharge kept from the previous read (\"Transformative Reaction–Focused\")"
      ],
      "erMin": 140,
      "erWeapons": [
@@ -4763,14 +4948,14 @@
        "weapon": "Favonius Sword",
        "min": 115
       }
-     ],
-     "notes": "Sets section labels this the C6 Transformative Reaction playstyle; the ER table is shared and not specific to it."
+     ]
     }
    ]
   },
   "lyney": {
    "url": "https://keqingmains.com/q/lyney-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.0",
    "builds": [
     {
      "name": "General",
@@ -4781,8 +4966,7 @@
        "atk_pct"
       ],
       "goblet": [
-       "elemental_dmg",
-       "atk_pct"
+       "elemental_dmg"
       ],
       "circlet": [
        "crit_rate",
@@ -4819,8 +5003,11 @@
        "DesertPavilionChronicle"
       ]
      ],
+     "flags": [
+      "role, sets kept from the previous read (\"General\")"
+     ],
      "erMin": 125,
-     "notes": "With 4pc Marechaussee Hunter KQM says the circlet should be CRIT DMG."
+     "erEveryOther": 100
     }
    ]
   },
@@ -4924,6 +5111,7 @@
   "mika": {
    "url": "https://keqingmains.com/q/mika-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.6",
    "builds": [
     {
      "name": "General",
@@ -4962,10 +5150,13 @@
        "TheExile"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 190,
      "erWeapons": [
       {
-       "weapon": "Dialogues of the Desert Sages R5",
+       "weapon": "Desert Sages R5",
        "min": 105
       },
       {
@@ -4973,11 +5164,11 @@
        "min": 160
       },
       {
-       "weapon": "Favonius Lance",
+       "weapon": "Favonius Lance (1 proc/rotation)",
        "min": 175
       }
      ],
-     "notes": "Pre-C4 figures; CRIT Rate circlet only when using Favonius."
+     "erEveryOther": 100
     }
    ]
   },
@@ -5050,6 +5241,7 @@
   "mualani": {
    "url": "https://keqingmains.com/q/mualani-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "General",
@@ -5085,7 +5277,11 @@
       [
        "HeartOfDepth"
       ]
-     ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erEveryOther": 100
     }
    ]
   },
@@ -5234,11 +5430,13 @@
      "erMin": 120,
      "notes": "erMin from the 'Nilou Bloom (Solo Dendro)' on-field row (120–140%); the off-field column has no value."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "navia": {
    "url": "https://keqingmains.com/q/navia-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "General",
@@ -5274,14 +5472,17 @@
        "GoldenTroupe"
       ]
      ],
-     "erMin": 100,
-     "notes": "erMin is the C0 row with Xilonen / Geo Traveler / Ningguang C2+ (100–130%)."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 100
     }
    ]
   },
   "nefer": {
    "url": "https://keqingmains.com/q/nefer-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna II",
    "builds": [
     {
      "name": "General",
@@ -5314,14 +5515,17 @@
        "GildedDreams"
       ]
      ],
-     "erMin": 100,
-     "notes": "KQM says a CRIT DMG circlet is typically better than CRIT Rate; ER figures are for bursting every other rotation."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erEveryOther": 100
     }
    ]
   },
   "neuvillette": {
    "url": "https://keqingmains.com/q/neuvillette-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna IV",
    "builds": [
     {
      "name": "General",
@@ -5357,35 +5561,29 @@
       ],
       [
        "NightOfTheSkysUnveiling"
-      ],
-      [
-       "RetracingBolide"
-      ],
-      [
-       "WanderersTroupe"
-      ],
-      [
-       "NymphsDream"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 100,
      "erWeapons": [
       {
-       "weapon": "Prototype Amber R5",
+       "weapon": "R5 Prototype Amber",
        "min": 100
       },
       {
-       "weapon": "Tome of the Eternal Flow R1",
+       "weapon": "R1 Tome of the Eternal Flow",
        "min": 100
       }
-     ],
-     "notes": "Substats are CRIT = HP% after ER; erMin is Teams With Furina, other weapons (100–130%)."
+     ]
     }
    ]
   },
   "nicole": {
    "url": "https://keqingmains.com/q/nicole-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VIII",
    "builds": [
     {
      "name": "General",
@@ -5404,7 +5602,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "atk_pct",
       "atk"
      ],
@@ -5419,7 +5616,11 @@
        "NoblesseOblige"
       ]
      ],
-     "notes": "ER table's first row shows a placeholder 'XXX–YYY%' for other weapons (page error); Solo Pyro needs 200–230% (signature 160–180%), and KQM says ER can be skipped when not bursting every rotation."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 100,
+     "erEveryOther": 100
     }
    ]
   },
@@ -5497,11 +5698,13 @@
      ],
      "notes": "Stats are shared with Bountiful Bloom, but KQM says her stats barely matter in Lunar-Bloom teams; only the set matters."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "ningguang": {
    "url": "https://keqingmains.com/q/ningguang-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
      "name": "General",
@@ -5545,11 +5748,11 @@
        "EmblemOfSeveredFate"
       ],
       [
-       "HuskOfOpulentDreams"
-      ],
-      [
        "ArchaicPetra"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 110
     }
@@ -5558,6 +5761,7 @@
   "noelle": {
    "url": "https://keqingmains.com/q/noelle-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VIII",
    "builds": [
     {
      "name": "C0–C5 and Burst Talent Level 9",
@@ -5602,14 +5806,15 @@
        "ArchaicPetra"
       ]
      ],
-     "erMin": 200,
-     "notes": "erMin is the 'No Geo Teammate/Albedo/Chiori' row (200%+); Archaic Petra is only for driver/healer Noelle."
+     "flags": [
+      "role kept from the previous read (\"C0–C5 and Burst Talent Level 9\")"
+     ],
+     "erMin": 200
     },
     {
      "name": "C6 or Burst Talent Level 10+",
      "role": "on_field_dps",
      "roleFrom": "review",
-     "constellation": "C6",
      "mains": {
       "sands": [
        "def_pct"
@@ -5651,14 +5856,18 @@
        "ArchaicPetra"
       ]
      ],
-     "erMin": 200,
-     "notes": "Also applies below C6 with Burst Talent Level 10+."
+     "constellation": "C6",
+     "flags": [
+      "role kept from the previous read (\"C6 or Burst Talent Level 10+\")"
+     ],
+     "erMin": 200
     }
    ]
   },
   "odette": {
    "url": "https://keqingmains.com/q/odette-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.0",
    "builds": [
     {
      "name": "General",
@@ -5699,13 +5908,24 @@
        "TenacityOfTheMillelith"
       ]
      ],
-     "notes": "KQM generally advises not bursting (no ER in stat priority); optional table starts at 175–195% (Solo Cryo, no Fav), 100–105% with signature Whitelake Frostfeather."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 175,
+     "erWeapons": [
+      {
+       "weapon": "With Sig",
+       "min": 100
+      }
+     ],
+     "erEveryOther": 100
     }
    ]
   },
   "ororon": {
    "url": "https://keqingmains.com/q/ororon-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "General",
@@ -5743,14 +5963,17 @@
        "Instructor"
       ]
      ],
-     "erMin": 160,
-     "notes": "KQM also mentions a full-EM build for Overloaded teams in prose, without a separate table."
+     "flags": [
+      "role, sets kept from the previous read (\"General\")"
+     ],
+     "erMin": 160
     }
    ]
   },
   "prune": {
    "url": "https://keqingmains.com/q/prune-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VII",
    "builds": [
     {
      "name": "General",
@@ -5788,14 +6011,17 @@
        "NoblesseOblige"
       ]
      ],
-     "erMin": 185,
-     "notes": "erMin is C0 Double Anemo; R5 Oathsworn Eye (-30–35%) and Favonius Codex (-30–50%) are given only as reductions."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 185
     }
    ]
   },
   "qiqi": {
    "url": "https://keqingmains.com/q/qiqi-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VIII",
    "builds": [
     {
      "name": "General",
@@ -5840,18 +6066,23 @@
        "SongOfDaysPast"
       ]
      ],
-     "notes": "KQM says Qiqi can forgo ER except at C6 in Stellar-Conduct teams; its table only covers Sandrone teams (C0 240–285%). CRIT Rate only with Favonius."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 240,
+     "erEveryOther": 100
     }
    ]
   },
   "raiden_shogun": {
    "url": "https://keqingmains.com/q/raiden-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
      "name": "On-Field DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -5892,12 +6123,12 @@
       ]
      ],
      "erMin": 200,
-     "notes": "erMin is Solo Electro (200–220%); EM sands/substats only matter in Quicken or Quickbloom teams."
+     "flags": []
     },
     {
      "name": "Hyperbloom / Overloaded Trigger",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -5928,6 +6159,9 @@
       [
        "ScrollOfTheHeroOfCinderCity"
       ]
+     ],
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Hyperbloom / Overloaded Trigger\")"
      ]
     }
    ]
@@ -5935,6 +6169,7 @@
   "razor": {
    "url": "https://keqingmains.com/q/razor-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.1",
    "builds": [
     {
      "name": "Physical",
@@ -5976,16 +6211,24 @@
        "GladiatorsFinale"
       ],
       [
-       "MarechausseeHunter"
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "FlowerOfParadiseLost"
       ]
      ],
-     "erMin": 100,
-     "notes": "Set list is shared with Aggravate; KQM says EM sets only for Aggravate. erMin is the Double Electro with Fischl row."
+     "flags": [
+      "role kept from the previous read (\"Physical\")"
+     ],
+     "erMin": 100
     },
     {
      "name": "Aggravate",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -6024,15 +6267,22 @@
        "GladiatorsFinale"
       ],
       [
-       "MarechausseeHunter"
+       "GildedDreams"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "FlowerOfParadiseLost"
       ]
      ],
-     "erMin": 100
+     "erMin": 100,
+     "flags": []
     },
     {
      "name": "Transformative Reaction",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -6053,6 +6303,21 @@
      ],
      "sets": [
       [
+       "PaleFlame"
+      ],
+      [
+       "ThunderingFury"
+      ],
+      [
+       "GildedDreams"
+      ],
+      [
+       "Thundersoother"
+      ],
+      [
+       "GladiatorsFinale"
+      ],
+      [
        "GildedDreams"
       ],
       [
@@ -6063,18 +6328,19 @@
       ]
      ],
      "erMin": 100,
-     "notes": "CRIT Rate circlet/substats only when using Favonius Greatsword."
+     "flags": []
     }
    ]
   },
   "rosaria": {
    "url": "https://keqingmains.com/q/rosaria-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.8",
    "builds": [
     {
      "name": "Reverse Melt",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -6109,13 +6375,15 @@
        "EmblemOfSeveredFate"
       ]
      ],
-     "erMin": 200,
-     "notes": "erMin is Solo Cryo, 2 Skills, no C4 (200–210%); the 1-Skill row (>240%) is marked not recommended."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Reverse Melt\")"
+     ],
+     "erMin": 200
     },
     {
      "name": "Freeze / Mono Cryo",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -6155,13 +6423,15 @@
        "ArchaicPetra"
       ]
      ],
-     "erMin": 195,
-     "notes": "Without 4pc Blizzard Strayer KQM says to prioritize CRIT Rate over CRIT DMG."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Freeze / Mono Cryo\")"
+     ],
+     "erMin": 195
     },
     {
      "name": "Support",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "er_pct",
@@ -6195,13 +6465,14 @@
        "ArchaicPetra"
       ]
      ],
-     "notes": "ER requirements are said to depend heavily on the team, with no table."
+     "flags": []
     }
    ]
   },
   "sandrone": {
    "url": "https://keqingmains.com/q/sandrone-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
      "name": "General",
@@ -6220,7 +6491,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "atk_pct",
@@ -6232,24 +6502,26 @@
       ],
       [
        "GildedDreams"
-      ],
-      [
-       "ADayCarvedFromRisingWinds"
       ]
      ],
+     "flags": [
+      "set name read loosely: \"4pc Disenchantment in Deep Shadows\" as DisenchantmentInDeepShadow",
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 130,
-     "notes": "KQM says that if her requirement exceeds 140% she should skip ER and burst when available."
+     "erEveryOther": 100
     }
    ]
   },
   "sangonomiya_kokomi": {
    "url": "https://keqingmains.com/q/kokomi-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V",
    "builds": [
     {
      "name": "On-Field Healer / Enabler",
      "role": "healer",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct",
@@ -6288,19 +6560,19 @@
      "erMin": 195,
      "erWeapons": [
       {
-       "weapon": "Prototype Amber R1",
+       "weapon": "P. Amber R1",
        "min": 160
       },
       {
-       "weapon": "Prototype Amber R5",
+       "weapon": "P. Amber R5",
        "min": 145
       }
      ]
     },
     {
      "name": "Off-Field Support",
-     "role": "healer",
-     "roleFrom": "review",
+     "role": "support",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "hp_pct",
@@ -6344,20 +6616,19 @@
      "erMin": 260,
      "erWeapons": [
       {
-       "weapon": "Prototype Amber R1",
+       "weapon": "P. Amber R1",
        "min": 215
       },
       {
-       "weapon": "Prototype Amber R5",
+       "weapon": "P. Amber R5",
        "min": 195
       }
-     ],
-     "notes": "KQM says off-field Kokomi is often played Skill-only and can then forgo ER entirely."
+     ]
     },
     {
      "name": "Bloom DPS",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
@@ -6393,7 +6664,7 @@
        "OceanHuedClam"
       ]
      ],
-     "notes": "No Bloom-specific ER row; the shared on-field table starts at 195–245% (Solo Hydro)."
+     "flags": []
     }
    ]
   },
@@ -6521,11 +6792,13 @@
      "erMin": 160,
      "notes": "Substat order (CRIT > EM = ATK%) is the page's single on-field priority, shared with the ADC variant."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "sethos": {
    "url": "https://keqingmains.com/q/sethos-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
      "name": "General",
@@ -6562,17 +6835,20 @@
        "DesertPavilionChronicle"
       ]
      ],
-     "erMin": 100,
-     "notes": "ER table is split by Normal Attack and Charged Shot playstyles; erMin is its first row (Normal Attack, Double Electro with Fischl, 100%)."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 100
     }
    ]
   },
   "shenhe": {
    "url": "https://keqingmains.com/q/shenhe-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.6",
    "builds": [
     {
-     "name": "Shenhe",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -6605,20 +6881,17 @@
        "BlizzardStrayer"
       ]
      ],
-     "erMin": 180,
-     "erWeapons": [
-      {
-       "weapon": "Favonius Lance",
-       "min": 165
-      }
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
-     "notes": "erMin is the Double Cryo \"Other\" weapon column; CRIT Rate substat only matters with Favonius Lance."
+     "erMin": 165
     }
    ]
   },
   "shikanoin_heizou": {
    "url": "https://keqingmains.com/q/heizou-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.8",
    "builds": [
     {
      "name": "ADC Build",
@@ -6626,8 +6899,7 @@
      "roleFrom": "review",
      "mains": {
       "sands": [
-       "atk_pct",
-       "er_pct"
+       "atk_pct"
       ],
       "goblet": [
        "elemental_dmg"
@@ -6655,8 +6927,10 @@
        "Thundersoother"
       ]
      ],
-     "erMin": 200,
-     "notes": "KQM URL given as none; heizou-quickguide slug worked. erMin from Quickswap Support C0-3, 1 Skill (ER sands only for off-field TTDS support)."
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"ADC Build\")"
+     ],
+     "erMin": 200
     },
     {
      "name": "EM Build",
@@ -6691,17 +6965,20 @@
        "Thundersoother"
       ]
      ],
-     "erMin": 170,
-     "notes": "Sets section is shared by both builds; erMin from the On-Field Driver C0-3, 1 Skill row."
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"EM Build\")"
+     ],
+     "erMin": 170
     }
    ]
   },
   "sigewinne": {
    "url": "https://keqingmains.com/q/sigewinne-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
-     "name": "Sigewinne",
+     "name": "General",
      "role": "healer",
      "roleFrom": "review",
      "mains": {
@@ -6745,23 +7022,26 @@
        "FragmentOfHarmonicWhimsy"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 115,
      "erWeapons": [
       {
        "weapon": "Favonius Bow (1 proc, funneled)",
        "min": 105
       }
-     ],
-     "notes": "erMin from Triple Hydro, particles caught by Sigewinne, no energy weapon."
+     ]
     }
    ]
   },
   "skirk": {
    "url": "https://keqingmains.com/q/skirk-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
-     "name": "Skirk",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -6793,21 +7073,21 @@
       ],
       [
        "BlizzardStrayer"
-      ],
-      [
-       "GladiatorsFinale"
       ]
      ],
-     "notes": "No ER: her Burst does not use Energy. Marechaussee is BiS only on-field with Furina; Galleries is the generalist pick."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ]
     }
    ]
   },
   "sucrose": {
    "url": "https://keqingmains.com/q/sucrose-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VI",
    "builds": [
     {
-     "name": "Sucrose",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -6842,6 +7122,9 @@
       [
        "SilkenMoonsSerenade"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ]
     }
    ]
@@ -7011,14 +7294,16 @@
      ],
      "notes": "ER table (Double Pyro, C0-C3) only has weapon columns; erMin uses the first (R3 Favonius Lance). Also allows any HP%/Emblem/rainbow mix."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "tighnari": {
    "url": "https://keqingmains.com/q/tighnari-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.0",
    "builds": [
     {
-     "name": "Tighnari",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7052,17 +7337,20 @@
        "GildedDreams"
       ]
      ],
-     "erMin": 100,
-     "notes": "erMin = 2 Skills per Burst row (assumes 1 Favonius proc). Page says to hold 4pc Deepwood only if no teammate does."
+     "flags": [
+      "role, sets kept from the previous read (\"General\")"
+     ],
+     "erMin": 100
     }
    ]
   },
   "varesa": {
    "url": "https://keqingmains.com/q/varesa-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
-     "name": "Varesa",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7079,7 +7367,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "atk_pct",
@@ -7099,17 +7386,22 @@
        "DesertPavilionChronicle"
       ]
      ],
+     "flags": [
+      "set name read loosely: \"4pc Desert Pavillion Chronicle\" as DesertPavilionChronicle",
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 120,
-     "notes": "erMin = Double Electro (Ororon/Iansan), 2 sQ; page says ER is not a strict requirement."
+     "erEveryOther": 100
     }
    ]
   },
   "varka": {
    "url": "https://keqingmains.com/q/varka-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
-     "name": "Varka",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7129,7 +7421,6 @@
       "crit_rate",
       "crit_dmg",
       "atk_pct",
-      "em",
       "atk"
      ],
      "sets": [
@@ -7167,28 +7458,36 @@
        "GladiatorsFinale"
       ]
      ],
-     "notes": "Goblet reads \"PHEC DMG% | ATK% > Anemo DMG%\" (Pyro/Hydro/Electro/Cryo DMG first, Anemo last); Blizzard/HoD/Nymph/Lava/Thundersoother are one niche entry. No ER built."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ]
     }
    ]
   },
   "venti": {
    "url": "https://keqingmains.com/q/venti-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna V",
    "builds": [
     {
      "name": "Off-Field Support (EM Build)",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
+       "atk_pct",
        "er_pct"
       ],
       "goblet": [
-       "em"
+       "em",
+       "elemental_dmg",
+       "atk_pct"
       ],
       "circlet": [
-       "em"
+       "em",
+       "crit_rate",
+       "crit_dmg"
       ]
      },
      "substats": [
@@ -7209,24 +7508,25 @@
        "GildedDreams"
       ]
      ],
-     "erMin": 175,
-     "notes": "Off-Field Support has one combined stat table (EM/ATK%/ER, EM/Anemo/ATK%, EM/CRIT) with three stat priorities; split here per the text. erMin = Solo Anemo, 1 Skill."
+     "erMin": 175
     },
     {
      "name": "Off-Field Support (CRIT Build)",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
-       "atk_pct",
        "em",
+       "atk_pct",
        "er_pct"
       ],
       "goblet": [
+       "em",
        "elemental_dmg",
        "atk_pct"
       ],
       "circlet": [
+       "em",
        "crit_rate",
        "crit_dmg"
       ]
@@ -7254,16 +7554,20 @@
     {
      "name": "Off-Field Support (Lunar-Charged)",
      "role": "support",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em",
+       "atk_pct",
        "er_pct"
       ],
       "goblet": [
-       "em"
+       "em",
+       "elemental_dmg",
+       "atk_pct"
       ],
       "circlet": [
+       "em",
        "crit_rate",
        "crit_dmg"
       ]
@@ -7290,7 +7594,7 @@
     {
      "name": "On-Field DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct"
@@ -7318,15 +7622,17 @@
       ],
       [
        "ViridescentVenerer"
+      ],
+      [
+       "DesertPavilionChronicle"
       ]
      ],
-     "erMin": 135,
-     "notes": "4pc Desert Pavilion explicitly NOT recommended (omitted). erMin = On-Field DPS, Solo Anemo."
+     "erMin": 135
     },
     {
-     "name": "On-Field Driver",
+     "name": "On-Field Driver (General)",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -7352,17 +7658,47 @@
        "ViridescentVenerer"
       ]
      ],
-     "erMin": 125,
-     "notes": "CRIT circlet for Lunar-Charged teams. erMin = On-Field Driver, 2 Skills."
+     "erMin": 125
+    },
+    {
+     "name": "On-Field Driver (Lunar-Charged)",
+     "role": "reaction_dps",
+     "roleFrom": "name",
+     "mains": {
+      "sands": [
+       "em"
+      ],
+      "goblet": [
+       "em"
+      ],
+      "circlet": [
+       "em",
+       "crit_rate",
+       "crit_dmg"
+      ]
+     },
+     "substats": [
+      "er_pct",
+      "crit_rate",
+      "crit_dmg",
+      "em"
+     ],
+     "sets": [
+      [
+       "ViridescentVenerer"
+      ]
+     ],
+     "erMin": 125
     }
    ]
   },
   "vodyanitsa": {
    "url": "https://keqingmains.com/q/vodyanitsa-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.1",
    "builds": [
     {
-     "name": "Vodyanitsa",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -7378,9 +7714,6 @@
      },
      "substats": [
       "hp_pct",
-      "er_pct",
-      "crit_rate",
-      "crit_dmg",
       "hp"
      ],
      "sets": [
@@ -7404,23 +7737,27 @@
        "SongOfDaysPast"
       ]
      ],
+     "flags": [
+      "set name read loosely: \"2pc TotM + 2pc Vourukasha’s Glow\" as TenacityOfTheMillelith + VourukashasGlow",
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 210,
      "erWeapons": [
       {
        "weapon": "Prototype Amber",
        "min": 145
       }
-     ],
-     "notes": "ER only matters when she Bursts every rotation (Hydro teams); erMin = Double Hydro, Other Weapons."
+     ]
     }
    ]
   },
   "wanderer": {
    "url": "https://keqingmains.com/q/wanderer-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.6",
    "builds": [
     {
-     "name": "Wanderer (DPS)",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7428,8 +7765,7 @@
        "atk_pct"
       ],
       "goblet": [
-       "elemental_dmg",
-       "atk_pct"
+       "elemental_dmg"
       ],
       "circlet": [
        "crit_rate",
@@ -7437,7 +7773,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "atk_pct"
@@ -7451,15 +7786,21 @@
       ],
       [
        "MarechausseeHunter"
+      ],
+      [
+       "EchoesOfAnOffering"
       ]
      ],
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"General\")"
+     ],
      "erMin": 105,
-     "notes": "No ER needed at C0-C1; erMin = Solo Anemo, Burst every other rotation (210-230% to Burst every rotation at C2+). 4pc Echoes omitted (page says to avoid it except at C6)."
+     "erEveryOther": 105
     },
     {
      "name": "Driver Build",
      "role": "reaction_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "em"
@@ -7481,18 +7822,22 @@
       ]
      ],
      "erMin": 105,
-     "notes": "EM driver playstyle the page calls lackluster; ER table is shared with the DPS build."
+     "erEveryOther": 105,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Driver Build\")"
+     ]
     }
    ]
   },
   "wriothesley": {
    "url": "https://keqingmains.com/q/wriothesley-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.0",
    "builds": [
     {
      "name": "Stellar-Conduct DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -7523,17 +7868,17 @@
       ],
       [
        "GildedDreams"
-      ],
-      [
-       "BlizzardStrayer"
       ]
      ],
-     "notes": "No Cryo DMG goblet; never two EM main stats; Burst skipped so no ER."
+     "erEveryOther": 100,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Stellar-Conduct DPS\")"
+     ]
     },
     {
      "name": "Non-Stellar-Conduct DPS",
      "role": "on_field_dps",
-     "roleFrom": "review",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -7569,16 +7914,20 @@
       ]
      ],
      "erMin": 100,
-     "notes": "EM sands for Reverse Melt; erMin = Solo Cryo, Burst every other rotation (recommended)."
+     "erEveryOther": 100,
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Non-Stellar-Conduct DPS\")"
+     ]
     }
    ]
   },
   "xiangling": {
    "url": "https://keqingmains.com/q/xiangling-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.5",
    "builds": [
     {
-     "name": "Xiangling",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7599,8 +7948,7 @@
       "er_pct",
       "crit_rate",
       "crit_dmg",
-      "atk_pct",
-      "em"
+      "atk_pct"
      ],
      "sets": [
       [
@@ -7616,6 +7964,9 @@
        "FlowerOfParadiseLost"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 220,
      "erWeapons": [
       {
@@ -7623,20 +7974,20 @@
        "min": 200
       },
       {
-       "weapon": "Kitain Cross Spear R5",
+       "weapon": "R5 Kitain Cross Spear",
        "min": 185
       }
-     ],
-     "notes": "erMin = 1 Xiangling Skill, 2 Bennett Skills, 20-21s, Most Weapons (team-dependent table). Flower of Paradise Lost is Burgeon-only."
+     ]
     }
    ]
   },
   "xianyun": {
    "url": "https://keqingmains.com/q/xianyun-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.7",
    "builds": [
     {
-     "name": "Xianyun",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -7648,8 +7999,7 @@
        "atk_pct"
       ],
       "circlet": [
-       "atk_pct",
-       "crit_rate"
+       "atk_pct"
       ]
      },
      "substats": [
@@ -7657,7 +8007,8 @@
       "atk_pct",
       "atk",
       "em",
-      "crit_rate"
+      "crit_rate",
+      "crit_dmg"
      ],
      "sets": [
       [
@@ -7674,29 +8025,35 @@
       ],
       [
        "EmblemOfSeveredFate"
+      ],
+      [
+       "MaidenBeloved"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 220,
      "erWeapons": [
       {
-       "weapon": "Crane's Echoing Call R1 (5 Plunge procs)",
+       "weapon": "Crane’s Echoing Call / (5 Procs – R1)",
        "min": 190
       },
       {
-       "weapon": "Crane's Echoing Call R1 (8 Plunge procs)",
+       "weapon": "Crane’s Echoing Call / (8 Procs – R1)",
        "min": 165
       }
-     ],
-     "notes": "CRIT Rate circlet only with Favonius Codex; 4pc Maiden Beloved listed but called not worth using (omitted). erMin = Solo Anemo, Other Weapons."
+     ]
     }
    ]
   },
   "xiao": {
    "url": "https://keqingmains.com/q/xiao-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "4.4",
    "builds": [
     {
-     "name": "Xiao",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7729,17 +8086,21 @@
        "DesertPavilionChronicle"
       ]
      ],
-     "erMin": 100,
-     "notes": "ER table is team-dependent; erMin = first row (Sucrose / C1+ Xianyun with C6 Faruzan), 130-140% with no Faruzan. Quick guide does not list Long Night's Oath."
+     "flags": [
+      "set name read loosely: \"4pc Desert Pavillion Chronicle\" as DesertPavilionChronicle",
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 120
     }
    ]
   },
   "xilonen": {
    "url": "https://keqingmains.com/q/xilonen-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
-     "name": "Xilonen",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -7776,17 +8137,27 @@
        "NoblesseOblige"
       ]
      ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
      "erMin": 170,
-     "notes": "CRIT Rate only with Favonius; erMin = Solo Geo, 1 Skill, Caught Skill."
+     "erWeapons": [
+      {
+       "weapon": "ER Reduced per Favonius Proc",
+       "min": 30
+      }
+     ],
+     "erEveryOther": 100
     }
    ]
   },
   "xingqiu": {
    "url": "https://keqingmains.com/q/xingqiu-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.7",
    "builds": [
     {
-     "name": "Xingqiu",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -7814,19 +8185,10 @@
       ],
       [
        "MarechausseeHunter"
-      ],
-      [
-       "NoblesseOblige"
-      ],
-      [
-       "ScrollOfTheHeroOfCinderCity"
-      ],
-      [
-       "ArchaicPetra"
-      ],
-      [
-       "DeepwoodMemories"
       ]
+     ],
+     "flags": [
+      "role kept from the previous read (\"General\")"
      ],
      "erMin": 220,
      "erWeapons": [
@@ -7842,8 +8204,7 @@
        "weapon": "Amenoma Kageuchi (R3)",
        "min": 190
       }
-     ],
-     "notes": "erMin = Off-Field DPS, C0-C5, Other Weapons; on-field needs ~10-20% less. Marechaussee only when on-field with Furina; last four are support sets."
+     ]
     }
    ]
   },
@@ -7976,11 +8337,12 @@
   "yae_miko": {
    "url": "https://keqingmains.com/q/yae-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "7.0",
    "builds": [
     {
      "name": "Stellar-Conduct DPS",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -8011,14 +8373,19 @@
       ],
       [
        "HeartOfTheFurnace"
+      ],
+      [
+       "GoldenTroupe"
       ]
      ],
-     "notes": "Burst generally not used, so no ER; 4pc Golden Troupe explicitly to avoid (omitted)."
+     "flags": [
+      "Energy Recharge kept from the previous read (\"Stellar-Conduct DPS\")"
+     ]
     },
     {
      "name": "Non Stellar-Conduct DPS",
-     "role": "off_field_dps",
-     "roleFrom": "review",
+     "role": "on_field_dps",
+     "roleFrom": "name",
      "mains": {
       "sands": [
        "atk_pct",
@@ -8034,7 +8401,6 @@
       ]
      },
      "substats": [
-      "er_pct",
       "crit_rate",
       "crit_dmg",
       "atk_pct",
@@ -8065,7 +8431,7 @@
       ]
      ],
      "erMin": 140,
-     "notes": "erMin = Raiden team, C0."
+     "flags": []
     }
    ]
   },
@@ -8336,14 +8702,16 @@
      ],
      "erMin": 260
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "yelan": {
    "url": "https://keqingmains.com/q/yelan-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "5.4",
    "builds": [
     {
-     "name": "Yelan",
+     "name": "General",
      "role": "off_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -8376,19 +8744,10 @@
       ],
       [
        "NymphsDream"
-      ],
-      [
-       "NoblesseOblige"
-      ],
-      [
-       "ScrollOfTheHeroOfCinderCity"
-      ],
-      [
-       "ArchaicPetra"
-      ],
-      [
-       "DeepwoodMemories"
       ]
+     ],
+     "flags": [
+      "role, Energy Recharge kept from the previous read (\"General\")"
      ],
      "erMin": 265,
      "erWeapons": [
@@ -8396,17 +8755,17 @@
        "weapon": "Favonius Warbow",
        "min": 215
       }
-     ],
-     "notes": "erMin = Other Weapons, Solo Hydro, 1 Skill. Priority is ER > HP% (to 30,000 HP) > CRIT > HP%; HP% goblet or circlet, not both. Marechaussee only on-field with Furina."
+     ]
     }
    ]
   },
   "yoimiya": {
    "url": "https://keqingmains.com/q/yoimiya-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna I",
    "builds": [
     {
-     "name": "Yoimiya",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -8447,9 +8806,16 @@
       ],
       [
        "GildedDreams"
+      ],
+      [
+       "RetracingBolide"
       ]
      ],
-     "notes": "No ER needed (Burst only when available). Marechaussee only with Furina; 4pc Retracing Bolide explicitly not recommended (omitted)."
+     "flags": [
+      "set name read loosely: \"4pc Shimenawa Reminiscence\" as ShimenawasReminiscence",
+      "role kept from the previous read (\"General\")"
+     ],
+     "erEveryOther": 100
     }
    ]
   },
@@ -8522,14 +8888,16 @@
      "erMin": 100,
      "notes": "Taken from the text: triple EM outside SSW (Swirl cannot CRIT), ER sands viable, 4pc VV the default set."
     }
-   ]
+   ],
+   "locked": "the reader finds fewer builds on this page than the 2026-10-07 read (owner, 2026-10-07)"
   },
   "yun_jin": {
    "url": "https://keqingmains.com/yunjin/",
    "fetched": "2026-10-07",
+   "updatedFor": "3.1",
    "builds": [
     {
-     "name": "Yun Jin",
+     "name": "General",
      "role": "support",
      "roleFrom": "review",
      "mains": {
@@ -8566,17 +8934,22 @@
        "ArchaicPetra"
       ]
      ],
-     "erMin": 140,
-     "notes": "Full guide (v3.1). erMin from the first row (with Albedo); Solo Geo needs 200-270%. CRIT Rate only with Favonius Lance."
+     "flags": [
+      "no main-stat table",
+      "set name read loosely: \"2pc Husk + 2pc Emblem of Severed Fate\" as HuskOfOpulentDreams + EmblemOfSeveredFate",
+      "role, sands main stat, goblet main stat, circlet main stat, substats kept from the previous read (\"General\")"
+     ],
+     "erMin": 140
     }
    ]
   },
   "zhongli": {
    "url": "https://keqingmains.com/q/zhongli-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna II",
    "builds": [
     {
-     "name": "Shielder",
+     "name": "General",
      "role": "shield",
      "roleFrom": "review",
      "mains": {
@@ -8616,16 +8989,21 @@
        "ScrollOfTheHeroOfCinderCity"
       ]
      ],
-     "notes": "Shielder does not Burst; the ER table (100-110% every other rotation) is only for a Burst support build that has no stats here. DPS sets are deferred to the extended guide."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 120,
+     "erEveryOther": 100
     }
    ]
   },
   "zibai": {
    "url": "https://keqingmains.com/q/zibai-quickguide/",
    "fetched": "2026-10-07",
+   "updatedFor": "Luna VI",
    "builds": [
     {
-     "name": "Zibai",
+     "name": "General",
      "role": "on_field_dps",
      "roleFrom": "review",
      "mains": {
@@ -8655,8 +9033,11 @@
        "HuskOfOpulentDreams"
       ]
      ],
-     "erMin": 100,
-     "notes": "erMin = Burst when available."
+     "flags": [
+      "role kept from the previous read (\"General\")"
+     ],
+     "erMin": 105,
+     "erEveryOther": 100
     }
    ]
   }

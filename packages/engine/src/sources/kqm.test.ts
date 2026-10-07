@@ -64,6 +64,13 @@ describe('blocksOf', () => {
     expect(decodeEntities('&#8217;&#x41;&rsquo;&nbsp;')).toBe('’A’ ');
     expect(sectionAfter(blocks, 0)).toHaveLength(3);
     expect(sectionAfter(blocks, 1)).toEqual([]);
+    // Line breaks in a cell separate options; at its edges they separate
+    // nothing.
+    expect(
+      blocksOf(
+        '<table><tr><td><br>Sands<br></td><td>EM<br>ER<br><br>HP%</td></tr></table>',
+      ),
+    ).toEqual([{ kind: 'row', cells: ['Sands', 'EM / ER / HP%'] }]);
   });
 });
 
@@ -138,5 +145,53 @@ describe('parseKqmGuide', () => {
     expect(
       parseKqmGuide('<h1>Old Guide</h1><p>Prose only.</p>').issues,
     ).toEqual(['no build sections (Artifact Stats + Artifact Sets) found']);
+  });
+});
+
+describe('Energy Recharge, to burst every rotation and every other', () => {
+  const page = (er: string) =>
+    parseKqmGuide(`
+<h1>X Quick Guide</h1>
+<h2>ER Requirements</h2>${er}
+<h1>Only Build</h1>
+<h2>Artifact Stats</h2>
+<table><tr><td>Sands</td><td>Goblet</td><td>Circlet</td></tr>
+<tr><td>ATK%</td><td>Pyro DMG Bonus</td><td>CRIT</td></tr></table>
+<p>Stat Priority: ER &gt; CRIT</p>
+<h2>Artifact Sets</h2>
+<table><tr><td>4pc Crimson Witch of Flames</td><td>x</td></tr></table>`)
+      .builds[0];
+
+  it('reads a column for each, leaving a constellation’s column out', () => {
+    const b = page(`<table>
+<tr><th></th><th>Burst Every Rot</th><th>Every Rotation (C4+)</th><th>Burst Every Other</th></tr>
+<tr><td>Solo Cryo</td><td>190–230%</td><td>145–175%</td><td>100–115%</td></tr></table>`);
+    expect([b.erMin, b.erEveryOther]).toEqual([190, 100]);
+  });
+
+  it('reads rows labelled by cadence', () => {
+    const b =
+      page(`<table><tr><td>Burst Every Rotation</td><td>170–185%</td></tr>
+<tr><td>Burst When Available</td><td>100%</td></tr></table>`);
+    expect([b.erMin, b.erEveryOther]).toEqual([170, 100]);
+  });
+
+  it('takes an unlabelled figure as every rotation, and 100% every other when the guide says to skip it', () => {
+    const b = page(`<p>Use it when available instead.</p>
+<table><tr><td>Solo Pyro</td><td>260–270%</td></tr></table>`);
+    expect([b.erMin, b.erEveryOther]).toEqual([260, 100]);
+    const plain = page(
+      `<table><tr><td>Solo Pyro</td><td>150%</td></tr></table>`,
+    );
+    expect([plain.erMin, plain.erEveryOther]).toEqual([150, undefined]);
+  });
+
+  it('reads weapons down the rows: "Other" is the general figure', () => {
+    const b =
+      page(`<table><tr><th>Weapon</th><th>Pre-C4 ER Requirement</th></tr>
+<tr><td>Favonius Lance</td><td>175–230%</td></tr>
+<tr><td>Other</td><td>190–250%</td></tr></table>`);
+    expect(b.erMin).toBe(190);
+    expect(b.erWeapons).toEqual([{ weapon: 'Favonius Lance', min: 175 }]);
   });
 });

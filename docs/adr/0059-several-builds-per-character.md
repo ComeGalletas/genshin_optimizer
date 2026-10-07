@@ -1,7 +1,8 @@
 # 0059. Several builds per character
 
 - Status: Accepted, amended by [0061](0061-offline-guide-data-pipeline.md)
-  (the builds are now rebuilt from `data/sources/` by script)
+  (the builds are now rebuilt from `data/sources/` by script), and by
+  [0062](0062-two-energy-recharge-figures.md) (two Energy Recharge figures)
 - Date: 2026-10-07
 - Amends: [0058](0058-guide-profiles-and-stats-for-everyone.md)
 

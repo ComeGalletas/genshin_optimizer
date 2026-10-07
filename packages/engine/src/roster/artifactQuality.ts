@@ -116,9 +116,10 @@ export interface QualityProfile {
   sources: GuideSource[];
   /** Each usable substat and what one of its rolls counts for. */
   usable: Partial<Record<SubStatKey, number>>;
-  /** The build's Energy Recharge minimum, including the base 100% (shown
-   *  only). */
+  /** The build's Energy Recharge figures, including the base 100%, to
+   *  burst every rotation and every other rotation (shown only). */
   erMin?: number;
+  erEveryOther?: number;
   /** The guide's figures for particular weapons (shown only). */
   erWeapons?: { weapon: string; min: number }[];
   accepts: Record<CheckedSlot, StatKey[]>;
@@ -221,6 +222,7 @@ export function qualityProfiles(characterKey: string): QualityProfile[] {
       sources: [...g.sources],
       usable: usableFrom(characterKey, g.substats),
       ...(g.erMin !== undefined && { erMin: g.erMin }),
+      ...(g.erEveryOther !== undefined && { erEveryOther: g.erEveryOther }),
       ...(g.erWeapons && { erWeapons: g.erWeapons }),
       accepts: {
         sands: [...g.accepts.sands],
@@ -264,7 +266,15 @@ export interface ArtifactQuality {
   /** Good rolls by stat, in `QUALITY_STAT_ORDER`. */
   byStat: Partial<Record<SubStatKey, number>>;
   /** Energy Recharge against the build's minimum, when it counts for them. */
-  er?: { min?: number; total: number; short: number };
+  er?: {
+    /** To burst every rotation, and how far short of it they are. */
+    min?: number;
+    short: number;
+    /** To burst every other rotation, and how far short of it. */
+    everyOther?: number;
+    shortEveryOther: number;
+    total: number;
+  };
   /** Stats their kit makes useless, and why. */
   unused?: { stats: SubStatKey[]; reason: string };
 }
@@ -360,8 +370,11 @@ function scoreBuild(
     const total = erBefore() + erSubs;
     er = {
       ...(p.erMin !== undefined && { min: p.erMin }),
+      ...(p.erEveryOther !== undefined && { everyOther: p.erEveryOther }),
       total,
       short: p.erMin !== undefined ? Math.max(0, p.erMin - total) : 0,
+      shortEveryOther:
+        p.erEveryOther !== undefined ? Math.max(0, p.erEveryOther - total) : 0,
     };
   }
 

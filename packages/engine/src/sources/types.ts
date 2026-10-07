@@ -13,9 +13,9 @@ export interface SourceBuild {
   /** As the source names it. */
   name: string;
   role: BuildRole;
-  /** Whether the role came from the source's own label or was guessed from
-   *  the build's name. */
-  roleFrom: 'label' | 'name' | 'review';
+  /** Where the role came from: the source's own label, the build's name,
+   *  the language model (to check), or nowhere yet (to review). */
+  roleFrom: 'label' | 'name' | 'model' | 'review';
   /** The constellation the build needs, such as "C6". */
   constellation?: string;
   mains: Record<Slot3, StatKey[]>;
@@ -24,8 +24,12 @@ export interface SourceBuild {
   /** Ranked; each entry is one 4-piece set or a 2+2 pair. Generic 2-piece
    *  mixes ("2pc ATK% + 2pc ATK%") are left out. */
   sets: string[][];
-  /** Including the base 100%: the lower bound of the first case given. */
+  /** Energy Recharge, including the base 100%, the lower bound of the
+   *  first case given: to burst every rotation (a figure the guide doesn't
+   *  label counts as this), and to burst every other rotation (100% when
+   *  the guide says Energy Recharge isn't worth building). */
   erMin?: number;
+  erEveryOther?: number;
   erWeapons?: { weapon: string; min: number }[];
   /** Why the build is left out of the app's data (the source marks it not
    *  recommended or out of date). */
@@ -62,6 +66,9 @@ export interface SourceCharacter {
   teams?: SourceTeam[];
   /** Problems reading the page as a whole. */
   issues?: string[];
+  /** Why this character is left as it is: a fresh read never replaces it
+   *  (the reader can't yet split the page as well as the read it holds). */
+  locked?: string;
 }
 
 export type SourceName = 'kqm' | 'genshinBuilds' | 'genshinGg';

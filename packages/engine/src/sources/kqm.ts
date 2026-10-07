@@ -28,6 +28,9 @@ export interface KqmPage {
   /** Each build's Artifact Stats text, by build name: what a person (or the
    *  language-model step) reads to settle a flag. */
   texts: Record<string, string>;
+  /** The page's overview of the character's playstyles or roles, when it
+   *  has one: context for the language-model step. */
+  overview?: string;
   issues: string[];
 }
 
@@ -96,19 +99,30 @@ function readSets(section: Block[], flags: string[]) {
   const sets: string[][] = [];
   for (const b of section) {
     if (b.kind !== 'row') continue;
-    const label = b.cells[0]?.trim() ?? '';
+    // An abbreviation on its own line ("(Scroll)") names nothing new.
+    const label = (b.cells[0] ?? '').replace(/\([^)]*\)/g, ' ').trim();
     if (!/\b[24]\s*pc\b/i.test(label)) continue;
     if (/\bsets\b/i.test(label)) continue; // "4pc Support Sets": a heading
     // "2pc A + 2pc B" is one pair; anything else in the cell is sets tied
     // at the same rank, split on "/", "," or a new "4pc".
+    const pieces = label
+      .split(/\s*[,/]\s*|\s+(?=[24]\s*pc)/i)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    // A name wrapped onto a second line ("4pc Scroll of the / Hero of
+    // Cinder City") is one name again.
+    const joined: string[] = [];
+    for (let i = 0; i < pieces.length; i++) {
+      const both = `${pieces[i]} ${pieces[i + 1] ?? ''}`;
+      if (pieces[i + 1] && !setKeyOf(pieces[i]) && setKeyOf(both)) {
+        joined.push(both);
+        i++;
+      } else joined.push(pieces[i]);
+    }
     const entries: string[][] =
       /2\s*pc[^+]*\+\s*2\s*pc/i.test(label) && !/[,/]/.test(label)
         ? [label.split(/\s*\+\s*(?=2\s*pc)/i)]
-        : label
-            .split(/\s*[,/]\s*|\s+(?=[24]\s*pc)/i)
-            .map((p) => p.trim())
-            .filter((p) => p && !p.includes('+'))
-            .map((p) => [p]);
+        : joined.filter((p) => !p.includes('+')).map((p) => [p]);
     // In a 2-piece row only a named pair counts; a lone fragment of a
     // generic mix ("2pc combinations of CW / MH / TF") is left out quietly.
     const twoPiece = /^\s*2\s*pc/i.test(label);
@@ -146,7 +160,8 @@ let weaponNames: string[] | undefined;
 /** Whether a column heading names a weapon ("P. Amber R5", "Favonius
  *  Lance"), not a team ("Double Pyro"). */
 function isWeaponColumn(head: string): boolean {
-  if (!head) return false;
+  if (!head || /teammate/i.test(head)) return false;
+  if (/\bsig(nature)?\b/i.test(head)) return true;
   if (
     /\bR[1-5]\b|favonius|\bfav\b|sacrificial|\bsac\b|kitain|amber/i.test(head)
   )
@@ -156,57 +171,161 @@ function isWeaponColumn(head: string): boolean {
   return weaponNames.some((w) => w.length > 5 && h.includes(w));
 }
 
-/** One Energy Recharge table: the first row's figure in the base column,
- *  and the weapon columns' figures. */
-function readErTable(rows: { cells: string[] }[]) {
+/** How often a heading's figures assume the burst is used: "Burst Every
+ *  Rot", "Every Rotation"; "Burst Every Other", "Baseline (Every Other
+ *  Rotation)", "every 2 rotations". */
+function cadenceOf(text: string): 'rotation' | 'other' | undefined {
+  if (/every\s*other|every\s*(2|two)\b|alternate|when available/i.test(text))
+    return 'other';
+  if (/every\s*rot|each\s*rot/i.test(text)) return 'rotation';
+  return undefined;
+}
+
+/** A column for one constellation ("Every Rotation (C4+)", "C4+"): not the
+ *  general figure. */
+const forConstellation = (head: string) =>
+  // "Pre-C4" and "C0–C5" are the general case.
+  !/pre-?\s*c\d|c0\s*[–-]/i.test(head) && /\bC[1-6]\b/.test(head);
+
+/** The general column: "Base", "Baseline", "Other Weapons", "Any". */
+const isBaseColumn = (head: string) =>
+  /^$|\b(base(line)?|other weapons?|general|any weapon)\b/i.test(head);
+
+interface ErFigures {
+  /** To burst every rotation. */
+  erMin?: number;
+  /** To burst every other rotation. */
+  erEveryOther?: number;
+  erWeapons: { weapon: string; min: number }[];
+}
+
+/** One Energy Recharge table: from the first row, the figure to burst
+ *  every rotation (a column saying so, else the general column, else the
+ *  first), the one to burst every other rotation (a column saying so), and
+ *  the weapon columns' figures. A table under a heading that names a
+ *  cadence gives that cadence's figure. */
+function readErTable(
+  rows: { cells: string[] }[],
+  tableCadence?: 'rotation' | 'other',
+): ErFigures | undefined {
   const data = rows.filter((r) => r.cells.some((c) => lowerBound(c)));
   const header = rows.find((r) => !r.cells.some((c) => lowerBound(c)));
-  const first = data[0];
-  if (!first) return undefined;
+  if (!data.length) return undefined;
   // Align the header with the data from the right: a row's first cell is
   // often its own label ("Solo Hydro") with an empty header cell above it.
   const h = header?.cells ?? [];
-  const shift = first.cells.length - h.length;
-  const columns = first.cells.map((cell, i) => ({
-    head: (h[i - shift] ?? '').trim(),
-    value: lowerBound(cell),
-  }));
-  const numeric = columns.filter((c) => c.value !== undefined);
-  const base =
-    numeric.find((c) => /base|other|any|all|general|^$/i.test(c.head)) ??
-    numeric[0];
+  const columnsOf = (
+    row: { cells: string[] },
+    rowCadence?: 'rotation' | 'other',
+  ) => {
+    const shift = row.cells.length - h.length;
+    return row.cells
+      .map((cell, i) => {
+        const head = (h[i - shift] ?? '').trim();
+        return {
+          head,
+          value: lowerBound(cell),
+          cadence: cadenceOf(head) ?? rowCadence ?? tableCadence,
+        };
+      })
+      .filter((c) => c.value !== undefined && !forConstellation(c.head));
+  };
+  type Column = ReturnType<typeof columnsOf>[number];
+  const pick = (cs: Column[]) =>
+    cs.find((c) => cadenceOf(c.head)) ??
+    cs.find((c) => isBaseColumn(c.head)) ??
+    cs[0];
+  // Rows labelled by cadence: the first row of each.
+  const labelled = data.map((r) => ({ r, c: cadenceOf(r.cells[0] ?? '') }));
+  const byRows = labelled.some((x) => x.c);
+  // Rows labelled by weapon ("Favonius Lance", ..., "Other"): the "Other"
+  // row is the general figure, the named ones the weapon figures.
+  const rowLabel = (r: { cells: string[] }) => (r.cells[0] ?? '').trim();
+  const otherWeaponsRow = data.find((r) =>
+    /^(other|other weapons?|any other weapon)$/i.test(rowLabel(r)),
+  );
+  const weaponRows = otherWeaponsRow
+    ? data.filter((r) => r !== otherWeaponsRow && isWeaponColumn(rowLabel(r)))
+    : [];
+  const rotationRow = byRows
+    ? labelled.find((x) => x.c !== 'other')?.r
+    : (otherWeaponsRow ?? data[0]);
+  const otherRow = byRows ? labelled.find((x) => x.c === 'other')?.r : data[0];
+  const rotationColumns = rotationRow
+    ? columnsOf(rotationRow, byRows ? 'rotation' : undefined)
+    : [];
+  const otherColumns = otherRow
+    ? columnsOf(otherRow, byRows ? 'other' : undefined)
+    : [];
+  const rotation = pick(rotationColumns.filter((c) => c.cadence !== 'other'));
+  const other = pick(otherColumns.filter((c) => c.cadence === 'other'));
   return {
-    erMin: base?.value,
-    erWeapons: numeric
-      .filter((c) => c !== base && isWeaponColumn(c.head))
-      .map((c) => ({ weapon: c.head, min: c.value! })),
-    firstRow: first.cells[0]?.trim(),
+    ...(rotation && { erMin: rotation.value }),
+    ...(other && { erEveryOther: other.value }),
+    erWeapons: [
+      ...rotationColumns
+        .filter(
+          (c) =>
+            c !== rotation && c.cadence !== 'other' && isWeaponColumn(c.head),
+        )
+        .map((c) => ({ weapon: c.head, min: c.value! })),
+      ...weaponRows.flatMap((r) => {
+        const v = pick(
+          columnsOf(r).filter((c) => c.cadence !== 'other'),
+        )?.value;
+        return v === undefined ? [] : [{ weapon: rowLabel(r), min: v }];
+      }),
+    ],
   };
 }
 
-/** The Energy Recharge section's tables, by sub-heading ("" when there is
- *  none). */
+/** The guide saying Energy Recharge isn't worth building when the burst
+ *  waits ("use it when available", "can forgo building ER", "cast it when
+ *  it's available"): every other rotation then needs none beyond the base. */
+const SKIP_ER =
+  /when (it[’']?s |it is )?(available|convenient)|forgo (building )?er|not worth investing in er|(don[’']?t|do not|no need to) build er|not (generally )?(recommended|optimal|worth it) to burst|burst is (generally )?not (optimal|recommended|worth)|reserved for emergenc/i;
+
+/** The Energy Recharge section's figures, by sub-heading ("" when there is
+ *  none). A sub-heading that only names a cadence ("Burst Every Other
+ *  Rotation") adds to the playstyle above it. */
 function readErSection(blocks: Block[]) {
+  const out = new Map<string, ErFigures>();
   const at = blocks.findIndex((b) =>
     isHeading(b, /^(er|energy recharge) requirements?/i),
   );
-  if (at < 0) return new Map<string, ReturnType<typeof readErTable>>();
-  const out = new Map<string, ReturnType<typeof readErTable>>();
+  if (at < 0) return { tables: out, skipEr: false };
+  const section = sectionAfter(blocks, at);
   let name = '';
+  let cadence: 'rotation' | 'other' | undefined;
   let rows: { cells: string[] }[] = [];
   const flush = () => {
-    const t = readErTable(rows);
-    if (t) out.set(name, t);
+    const t = readErTable(rows, cadence);
     rows = [];
+    if (!t) return;
+    const prev = out.get(name);
+    out.set(name, {
+      erMin: prev?.erMin ?? t.erMin,
+      erEveryOther: prev?.erEveryOther ?? t.erEveryOther,
+      erWeapons: prev?.erWeapons.length ? prev.erWeapons : t.erWeapons,
+    });
   };
-  for (const b of sectionAfter(blocks, at)) {
+  for (const b of section) {
     if (b.kind === 'h') {
       flush();
-      name = b.text;
+      const c = cadenceOf(b.text);
+      const rest = b.text
+        .replace(/burst|every\s*(other|rot\w*|2|two)|rotations?|[()]/gi, '')
+        .trim();
+      if (c && !rest) cadence = c;
+      else {
+        name = b.text;
+        cadence = c;
+      }
     } else if (b.kind === 'row') rows.push(b);
   }
   flush();
-  return out;
+  const skipEr = section.some((b) => b.kind === 'text' && SKIP_ER.test(b.text));
+  return { tables: out, skipEr };
 }
 
 /** A KQM guide's builds. */
@@ -325,7 +444,7 @@ export function parseKqmGuide(html: string): KqmPage {
     issues.push('no build sections (Artifact Stats + Artifact Sets) found');
 
   // Energy Recharge: a table per playstyle, matched to the builds by name.
-  const tables = [...er.entries()];
+  const tables = [...er.tables.entries()];
   for (const b of builds) {
     const match =
       tables.length === 1
@@ -337,19 +456,43 @@ export function parseKqmGuide(html: string): KqmPage {
               n && (bn.startsWith(n) || n.startsWith(bn) || bn.includes(n))
             );
           });
-    if (!match) {
-      if (tables.length)
-        (b.flags ??= []).push('no Energy Recharge table matched by name');
-      continue;
-    }
-    const [tableName, t] = match;
-    if (!t) continue;
-    if (t.erMin !== undefined) b.erMin = t.erMin;
-    if (t.erWeapons.length) b.erWeapons = t.erWeapons;
-    if (tables.length === 1 && builds.length > 1)
-      (b.flags ??= []).push(
-        `one Energy Recharge table${tableName ? ` ("${tableName}")` : ''} for every build`,
-      );
+    // One build, several tables (by team or weapon): the first case, as
+    // the Energy Recharge rule takes everywhere.
+    const fallback = !match && builds.length === 1 ? tables[0] : undefined;
+    const t = (match ?? fallback)?.[1];
+    if (t) {
+      const tableName = (match ?? fallback)![0];
+      if (t.erMin !== undefined) b.erMin = t.erMin;
+      if (t.erEveryOther !== undefined) b.erEveryOther = t.erEveryOther;
+      if (t.erWeapons.length) b.erWeapons = t.erWeapons;
+      if (fallback)
+        (b.flags ??= []).push(
+          `Energy Recharge from the page's first table${tableName ? ` ("${tableName}")` : ''}`,
+        );
+      if (tables.length === 1 && builds.length > 1)
+        (b.flags ??= []).push(
+          `one Energy Recharge table${tableName ? ` ("${tableName}")` : ''} for every build`,
+        );
+    } else if (tables.length)
+      (b.flags ??= []).push('no Energy Recharge table matched by name');
+    // "Use it when available": every other rotation needs none beyond the
+    // base (the owner's rule, 2026-10-07).
+    if (er.skipEr && b.erEveryOther === undefined) b.erEveryOther = 100;
   }
-  return { ...(updatedFor && { updatedFor }), builds, texts, issues };
+  const ovAt = blocks.findIndex((b) =>
+    isHeading(b, /^(playstyles?|roles?|character overview)\b/i),
+  );
+  const overview =
+    ovAt >= 0
+      ? sectionAfter(blocks, ovAt)
+          .map((x) => (x.kind === 'row' ? x.cells.join(' | ') : x.text))
+          .join('\n')
+      : undefined;
+  return {
+    ...(updatedFor && { updatedFor }),
+    builds,
+    texts,
+    ...(overview && { overview }),
+    issues,
+  };
 }

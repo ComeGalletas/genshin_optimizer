@@ -33,8 +33,26 @@ Never edit `packages/engine/src/meta/guideBuilds.ts` or
 - `npm run sources -- teams`: **test only**. genshin-builds' teams against
   the curated team archetypes, as a report.
 
-## The first files
+## Energy Recharge
 
-They were seeded on 2026-10-07 from the four-agent read of the guides
-(`readBy: "agents"`) and the committed genshin.gg data, and reproduce the
-app's data exactly.
+Each build has two figures (ADR-0062): `erMin` to burst every rotation and
+`erEveryOther` to burst every other rotation, 100% when the guide says
+Energy Recharge isn't worth building. A figure the guide doesn't label
+counts as every rotation.
+
+## Locked characters
+
+A character with `"locked"` in a file keeps what it has: a fresh read
+skips it and says so in the report. Thirteen KQM pages are locked because
+the reader finds fewer builds on them than the 2026-10-07 agent read did
+(it can't yet split variants written in prose): Bennett, Durin, Faruzan,
+Fischl, Freminet, Ganyu, Kaeya, Nahida, Nilou, Sayu, Thoma, Yaoyao and
+Mizuki. Remove the field to let the reader replace it.
+
+## History
+
+- 2026-10-07: seeded from the four-agent read of the guides and the
+  committed genshin.gg data (reproducing the app's data exactly), then
+  replaced by the first script read after the owner's review: the reader
+  fixes, the previous read's values kept where a page misses them, the
+  language model's roles for nine pages, and the thirteen locks.

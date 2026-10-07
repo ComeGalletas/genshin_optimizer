@@ -614,7 +614,9 @@ describe('OptimizePanel Energy Recharge from a build (ADR-0059)', () => {
     // Her on-field healer build asks 195%, her off-field one 260%.
     await userEvent.selectOptions(
       picker,
-      screen.getByRole('option', { name: /Off-Field Support: 260%/ }),
+      screen.getByRole('option', {
+        name: /Off-Field Support, every rotation: 260%/,
+      }),
     );
     const after = currentRequest(useOptimizeRequest.getState()).constraints;
     expect(after.minStats?.er_pct).toBe(260);

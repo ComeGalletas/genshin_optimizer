@@ -41,10 +41,12 @@ const HEAD = `/**
  * - Builds from the two guides with the same role (and constellation) are
  *   one build: the main stats either names, the sets either names, KQM's
  *   substats and Energy Recharge minimum. Other builds stay separate.
- * - \`erMin\` is the guide's figure for that build, the lower bound of the
- *   first case it gives; \`erWeapons\` are its weapon-specific figures. Both
- *   are shown beside the character's Energy Recharge and never limit the
- *   score.
+ * - Energy Recharge, two figures per build (ADR-0062): \`erMin\` to burst
+ *   every rotation, \`erEveryOther\` to burst every other rotation (100%
+ *   when the guide says it isn't worth building), each the lower bound of
+ *   the first case the guide gives; \`erWeapons\` are its weapon-specific
+ *   figures. Shown beside the character's Energy Recharge, never limits
+ *   on the score.
  * - \`unscored\` lists builds the guide leaves a main stat or the substats
  *   out of, and why, so the window can say so.
  * - Builds their own guide marks not recommended or out of date are left
@@ -78,8 +80,10 @@ export interface GuideBuild {
   substats: StatKey[];
   /** Ranked; a 2+2 names both sets. */
   sets: string[];
-  /** Including the base 100%. */
+  /** Including the base 100%: to burst every rotation. */
   erMin?: number;
+  /** To burst every other rotation. */
+  erEveryOther?: number;
   erWeapons?: { weapon: string; min: number }[];
 }
 

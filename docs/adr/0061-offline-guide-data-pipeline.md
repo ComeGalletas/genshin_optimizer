@@ -1,6 +1,7 @@
 # 0061. Offline scripts for the guide data
 
-- Status: Accepted
+- Status: Accepted, amended by [0062](0062-two-energy-recharge-figures.md)
+  (two Energy Recharge figures per build)
 - Date: 2026-10-07
 - Amends: [0059](0059-several-builds-per-character.md),
   [0060](0060-genshin-gg-cross-check.md)
@@ -121,8 +122,27 @@ not development (owner, 2026-10-07). It's the starting point for 10.1's
 ## Consequences
 
 - The guide data can be rebuilt and refreshed from the repo.
-- A first fresh read (KQM: 113 of 120 pages read; genshin-builds: 120;
-  genshin.gg: 118) differs from the agents' data for 94 characters. It
+- The owner reviewed the first fresh read's flags (211, then 144 after
+  fixes to the reader) the same day, and it was applied with these rules:
+  - Energy Recharge: where one table covers several builds, or none
+    matched, each build keeps the previous read's figure; the table's
+    figure is used only where there was none.
+  - The language model settled the roles of nine pages whose builds the
+    reader couldn't name, given the page's playstyle overview (seven
+    matched the agents' main build).
+  - `locked`: thirteen characters whose page the reader splits into fewer
+    builds than the agents did keep the agents' read until it learns those
+    layouts. One of them, Mizuki, the model had read wrongly.
+  - Faruzan's pre-C6 and Gorou's "any goblet" builds stay unscored.
+
+  Applied, 81 characters' builds differ from the agents' (with ADR-0062's two Energy Recharge figures) (211 builds, 56
+  characters with several, 3 not scored). No band on the owner's account
+  moved; Fischl's score went from 34.0 to 30.7 and Yaoyao's from 26.2 to
+  23.4.
+
+- Before the review, the same read (KQM: 113 of 120 pages read;
+  genshin-builds: 120; genshin.gg: 118) differed from the agents' data for
+  94 characters. It
   changed no band on the owner's account; only Yaoyao's score moved, 26.2
   to 23.4. Most differences are build names, role labels and set lists:
   - the script reads roles from the sites' labels where the agents used

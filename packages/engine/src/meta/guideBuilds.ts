@@ -8,10 +8,12 @@
  * - Builds from the two guides with the same role (and constellation) are
  *   one build: the main stats either names, the sets either names, KQM's
  *   substats and Energy Recharge minimum. Other builds stay separate.
- * - `erMin` is the guide's figure for that build, the lower bound of the
- *   first case it gives; `erWeapons` are its weapon-specific figures. Both
- *   are shown beside the character's Energy Recharge and never limit the
- *   score.
+ * - Energy Recharge, two figures per build (ADR-0062): `erMin` to burst
+ *   every rotation, `erEveryOther` to burst every other rotation (100%
+ *   when the guide says it isn't worth building), each the lower bound of
+ *   the first case the guide gives; `erWeapons` are its weapon-specific
+ *   figures. Shown beside the character's Energy Recharge, never limits
+ *   on the score.
  * - `unscored` lists builds the guide leaves a main stat or the substats
  *   out of, and why, so the window can say so.
  * - Builds their own guide marks not recommended or out of date are left
@@ -45,8 +47,10 @@ export interface GuideBuild {
   substats: StatKey[];
   /** Ranked; a 2+2 names both sets. */
   sets: string[];
-  /** Including the base 100%. */
+  /** Including the base 100%: to burst every rotation. */
   erMin?: number;
+  /** To burst every other rotation. */
+  erEveryOther?: number;
   erWeapons?: { weapon: string; min: number }[];
 }
 
@@ -82,16 +86,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'FlowerOfParadiseLost',
         ],
         erMin: 190,
-        erWeapons: [
-          {
-            weapon: 'Favonius Greatsword',
-            min: 155,
-          },
-          {
-            weapon: 'Flame-Forged Insight',
-            min: 100,
-          },
-        ],
       },
     ],
   },
@@ -108,7 +102,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['def_pct', 'elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'def_pct', 'atk_pct'],
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'def_pct'],
         sets: [
           'HuskOfOpulentDreams',
           'GoldenTroupe',
@@ -135,10 +129,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         substats: ['er_pct', 'em', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
           'GildedDreams',
-          'DeepwoodMemories',
           'GoldenTroupe',
-          'EmblemOfSeveredFate',
           'MarechausseeHunter',
+          'DeepwoodMemories',
         ],
         erMin: 105,
       },
@@ -199,27 +192,20 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         sets: [
           'HeartOfTheFurnace',
           'NoblesseOblige',
-          'Instructor',
-          'DeepwoodMemories',
-          'SilkenMoonsSerenade',
-          'ScrollOfTheHeroOfCinderCity',
-          'SongOfDaysPast',
-          'ArchaicPetra',
-          'OceanHuedClam',
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
         erMin: 235,
         erWeapons: [
           {
-            weapon: 'Favonius Lance',
+            weapon: 'C0 Fav',
             min: 195,
           },
         ],
       },
       {
         name: 'Stellar-Conduct Support Build',
-        role: 'support',
+        role: 'off_field_dps',
         sources: ['genshinBuilds'],
         accepts: {
           sands: ['er_pct', 'atk_pct'],
@@ -233,7 +219,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
-        erMin: 180,
       },
     ],
   },
@@ -244,7 +229,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Melt',
         role: 'on_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['em', 'atk_pct'],
           goblet: ['elemental_dmg'],
@@ -355,6 +340,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'MarechausseeHunter',
         ],
+        erMin: 150,
+        erEveryOther: 100,
       },
     ],
   },
@@ -387,15 +374,15 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 320,
         erWeapons: [
           {
-            weapon: 'Jadefall’s Splendor R1',
+            weapon: 'R1 Jadefall’s Splendor',
             min: 210,
           },
           {
-            weapon: 'Prototype Amber R5',
+            weapon: 'R5 Prototype Amber',
             min: 250,
           },
           {
-            weapon: 'Favonius Codex R5',
+            weapon: 'R5 Favonius Codex',
             min: 250,
           },
         ],
@@ -406,25 +393,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     kqm: 'https://keqingmains.com/q/barbara-quickguide/',
     genshinBuilds: 'https://genshin-builds.com/en/character/barbara',
     builds: [
-      {
-        name: 'Pure Healer/4OHC (Electro-Charged)',
-        role: 'healer',
-        sources: ['kqm', 'genshinBuilds'],
-        accepts: {
-          sands: ['hp_pct'],
-          goblet: ['hp_pct'],
-          circlet: ['healing'],
-        },
-        substats: ['hp_pct', 'hp'],
-        sets: [
-          'MaidenBeloved',
-          'OceanHuedClam',
-          'TenacityOfTheMillelith',
-          'ScrollOfTheHeroOfCinderCity',
-          'Instructor',
-        ],
-        erMin: 100,
-      },
       {
         name: 'Vaporize',
         role: 'on_field_dps',
@@ -443,25 +411,27 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'atk',
           'hp',
         ],
-        sets: [
-          'WanderersTroupe',
-          'HeartOfDepth',
-          'ShimenawasReminiscence',
-          'GladiatorsFinale',
-        ],
+        sets: ['MaidenBeloved', 'OceanHuedClam', 'WanderersTroupe'],
         erMin: 100,
       },
       {
-        name: 'Bloom DPS',
-        role: 'reaction_dps',
-        sources: ['genshinBuilds'],
+        name: 'Pure Healer/4OHC (Electro-Charged)',
+        role: 'healer',
+        sources: ['kqm', 'genshinBuilds'],
         accepts: {
-          sands: ['em'],
-          goblet: ['em'],
-          circlet: ['em'],
+          sands: ['hp_pct'],
+          goblet: ['hp_pct'],
+          circlet: ['healing'],
         },
-        substats: ['em', 'er_pct'],
-        sets: ['FlowerOfParadiseLost', 'GildedDreams', 'OceanHuedClam'],
+        substats: ['hp_pct', 'hp'],
+        sets: [
+          'MaidenBeloved',
+          'OceanHuedClam',
+          'WanderersTroupe',
+          'ScrollOfTheHeroOfCinderCity',
+          'Instructor',
+        ],
+        erMin: 100,
       },
     ],
   },
@@ -472,19 +442,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Off-field DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'er_pct'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
-        sets: [
-          'EmblemOfSeveredFate',
-          'Thundersoother',
-          'ScrollOfTheHeroOfCinderCity',
-          'NoblesseOblige',
-        ],
+        sets: ['EmblemOfSeveredFate', 'Thundersoother'],
         erMin: 185,
       },
     ],
@@ -547,7 +512,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'On-field DPS',
         role: 'on_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['em', 'atk_pct', 'er_pct'],
           goblet: ['elemental_dmg'],
@@ -662,7 +627,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 230,
         erWeapons: [
           {
-            weapon: 'Prototype Amber R5',
+            weapon: 'R5 Prototype Amber',
             min: 185,
           },
         ],
@@ -688,10 +653,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'MarechausseeHunter',
           'ShimenawasReminiscence',
           'ViridescentVenerer',
-          'WanderersTroupe',
-          'DesertPavilionChronicle',
         ],
-        erMin: 100,
+        erMin: 165,
+        erEveryOther: 100,
       },
     ],
   },
@@ -713,16 +677,20 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'NoblesseOblige',
           'SongOfDaysPast',
           'ScrollOfTheHeroOfCinderCity',
+          'EmblemOfSeveredFate',
           'TenacityOfTheMillelith',
+          'GoldenTroupe',
+          'CrimsonWitchOfFlames',
           'OceanHuedClam',
           'MaidenBeloved',
         ],
         erMin: 100,
+        erEveryOther: 100,
       },
       {
         name: 'Quickswap DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'er_pct'],
           goblet: ['elemental_dmg'],
@@ -730,12 +698,17 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'hp_pct'],
         sets: [
+          'NoblesseOblige',
+          'SongOfDaysPast',
+          'ScrollOfTheHeroOfCinderCity',
           'EmblemOfSeveredFate',
+          'TenacityOfTheMillelith',
           'GoldenTroupe',
           'CrimsonWitchOfFlames',
-          'NoblesseOblige',
+          'OceanHuedClam',
         ],
         erMin: 100,
+        erEveryOther: 100,
       },
     ],
   },
@@ -754,6 +727,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         },
         substats: ['crit_rate', 'crit_dmg', 'def_pct', 'atk_pct', 'er_pct'],
         sets: ['GoldenTroupe', 'HuskOfOpulentDreams', 'ArchaicPetra'],
+        erMin: 260,
+        erEveryOther: 100,
       },
     ],
   },
@@ -764,33 +739,37 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Off-field DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'em', 'er_pct'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em', 'atk_pct'],
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
           'NoblesseOblige',
           'EmblemOfSeveredFate',
           'GildedDreams',
-          'BlizzardStrayer',
           'Lavawalker',
         ],
         erMin: 150,
       },
       {
-        name: 'Infusion Support',
-        role: 'support',
+        name: 'Burst Nuke',
+        role: 'on_field_dps',
         sources: ['genshinBuilds'],
         accepts: {
-          sands: ['atk_pct', 'er_pct'],
+          sands: ['atk_pct', 'er_pct', 'em'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'em', 'er_pct'],
-        sets: ['NoblesseOblige', 'ScrollOfTheHeroOfCinderCity', 'Instructor'],
+        sets: [
+          'NoblesseOblige',
+          'EmblemOfSeveredFate',
+          'BlizzardStrayer',
+          'GildedDreams',
+        ],
       },
     ],
   },
@@ -832,7 +811,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em', 'atk'],
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'atk'],
         sets: [
           'FragmentOfHarmonicWhimsy',
           'ThunderingFury',
@@ -840,6 +819,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
         ],
         erMin: 200,
+        erEveryOther: 110,
       },
     ],
   },
@@ -924,13 +904,11 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['hp_pct'],
           circlet: ['crit_rate', 'crit_dmg', 'hp_pct'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'hp_pct', 'em', 'hp'],
+        substats: ['crit_rate', 'crit_dmg', 'hp_pct', 'em', 'hp'],
         sets: [
           'SilkenMoonsSerenade',
           'AubadeOfMorningstarAndMoon',
           'NightOfTheSkysUnveiling',
-          'GildedDreams',
-          'FlowerOfParadiseLost',
           'TenacityOfTheMillelith',
           'DeepwoodMemories',
           'GoldenTroupe',
@@ -948,7 +926,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         ],
       },
       {
-        name: 'Low Energy Requirement - Off-Field DPS & Buff Support',
+        name: 'Low Energy Requirement Off-Field DPS & Buff Support',
         role: 'off_field_dps',
         sources: ['genshinBuilds'],
         accepts: {
@@ -966,7 +944,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/cyno',
     builds: [
       {
-        name: 'On-field DPS',
+        name: 'Artifact Stat Priorities',
         role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
@@ -980,25 +958,26 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'GladiatorsFinale',
           'FlowerOfParadiseLost',
-          'MarechausseeHunter',
+          'Thundersoother',
         ],
         erMin: 140,
       },
       {
-        name: 'Aggravate DPS',
-        role: 'on_field_dps',
+        name: 'Quickbloom / Hyperbloom DPS',
+        role: 'reaction_dps',
         sources: ['genshinBuilds'],
         accepts: {
-          sands: ['em', 'atk_pct'],
-          goblet: ['elemental_dmg'],
-          circlet: ['crit_rate', 'crit_dmg'],
+          sands: ['em'],
+          goblet: ['elemental_dmg', 'em'],
+          circlet: ['crit_rate', 'crit_dmg', 'em'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        substats: ['er_pct', 'em', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
           'ThunderingFury',
-          'GladiatorsFinale',
           'GildedDreams',
-          'Thundersoother',
+          'FlowerOfParadiseLost',
+          'GladiatorsFinale',
+          'MarechausseeHunter',
         ],
       },
     ],
@@ -1047,7 +1026,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Burgeon',
         role: 'reaction_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['em'],
           goblet: ['em'],
@@ -1059,14 +1038,12 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'DeepwoodMemories',
           'SilkenMoonsSerenade',
-          'CrimsonWitchOfFlames',
-          'TenacityOfTheMillelith',
         ],
       },
       {
         name: 'On-Field DPS',
         role: 'on_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'em', 'atk_pct', 'hp_pct'],
           goblet: ['elemental_dmg'],
@@ -1149,7 +1126,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Shield',
         role: 'shield',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['hp_pct', 'er_pct'],
           goblet: ['hp_pct'],
@@ -1163,8 +1140,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'TenacityOfTheMillelith',
           'DeepwoodMemories',
           'Instructor',
-          'MaidenBeloved',
-          'OceanHuedClam',
         ],
         erMin: 180,
         erWeapons: [
@@ -1178,6 +1153,25 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           },
         ],
       },
+      {
+        name: 'Heal & Shield Support',
+        role: 'healer',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'hp_pct'],
+          goblet: ['hp_pct'],
+          circlet: ['hp_pct', 'healing'],
+        },
+        substats: ['er_pct', 'hp_pct', 'crit_rate', 'hp'],
+        sets: [
+          'NoblesseOblige',
+          'ScrollOfTheHeroOfCinderCity',
+          'MaidenBeloved',
+          'OceanHuedClam',
+          'Instructor',
+          'TenacityOfTheMillelith',
+        ],
+      },
     ],
   },
   dori: {
@@ -1186,7 +1180,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'Aggravate',
-        role: 'off_field_dps',
+        role: 'on_field_dps',
         sources: ['kqm'],
         accepts: {
           sands: ['em', 'er_pct'],
@@ -1325,6 +1319,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'er_pct'],
         sets: ['UnfinishedReverie', 'DeepwoodMemories', 'GoldenTroupe'],
         erMin: 180,
+        erEveryOther: 100,
         erWeapons: [
           {
             weapon: 'Lumidouce Elegy',
@@ -1353,7 +1348,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'BlizzardStrayer',
           'TenacityOfTheMillelith',
           'ScrollOfTheHeroOfCinderCity',
-          'NoblesseOblige',
         ],
         erMin: 120,
       },
@@ -1463,33 +1457,22 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'On-field DPS',
         role: 'on_field_dps',
-        sources: ['kqm'],
+        sources: ['kqm', 'genshinBuilds'],
         accepts: {
-          sands: ['atk_pct'],
+          sands: ['atk_pct', 'em'],
           goblet: ['elemental_dmg', 'physical_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
-        sets: ['GoldenTroupe', 'PaleFlame'],
-        erMin: 110,
-      },
-      {
-        name: 'Off-Field Aggravate DPS',
-        role: 'off_field_dps',
-        sources: ['genshinBuilds'],
-        accepts: {
-          sands: ['atk_pct', 'em'],
-          goblet: ['elemental_dmg'],
-          circlet: ['crit_rate', 'crit_dmg'],
-        },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
         sets: [
           'GoldenTroupe',
+          'PaleFlame',
           'ADayCarvedFromRisingWinds',
           'GildedDreams',
           'ThunderingFury',
           'Thundersoother',
         ],
+        erMin: 110,
       },
     ],
   },
@@ -1885,15 +1868,13 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'NightOfTheSkysUnveiling',
           'ThunderingFury',
-          'TenacityOfTheMillelith',
-          'NoblesseOblige',
-          'DeepwoodMemories',
-          'ScrollOfTheHeroOfCinderCity',
           'GoldenTroupe',
           'FlowerOfParadiseLost',
           'ADayCarvedFromRisingWinds',
+          'TenacityOfTheMillelith',
         ],
-        erMin: 100,
+        erMin: 140,
+        erEveryOther: 100,
       },
     ],
   },
@@ -1904,13 +1885,13 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Healer',
         role: 'healer',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'atk_pct'],
           goblet: ['atk_pct'],
           circlet: ['crit_rate', 'healing', 'atk_pct'],
         },
-        substats: ['er_pct', 'atk_pct', 'crit_rate', 'crit_dmg', 'em'],
+        substats: ['er_pct', 'atk_pct', 'crit_rate', 'crit_dmg'],
         sets: [
           'ViridescentVenerer',
           'SilkenMoonsSerenade',
@@ -1926,6 +1907,18 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           },
         ],
       },
+      {
+        name: 'Off-Field Reaction DPS & Heal Support',
+        role: 'reaction_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct'],
+          goblet: ['atk_pct'],
+          circlet: ['healing', 'atk_pct', 'crit_rate'],
+        },
+        substats: ['er_pct', 'atk_pct', 'crit_rate', 'em'],
+        sets: ['ViridescentVenerer', 'SilkenMoonsSerenade', 'DeepwoodMemories'],
+      },
     ],
   },
   jean: {
@@ -1934,20 +1927,15 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'Support',
-        role: 'healer',
-        sources: ['kqm', 'genshinBuilds'],
+        role: 'support',
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'er_pct'],
-          goblet: ['elemental_dmg', 'atk_pct'],
-          circlet: ['crit_rate', 'crit_dmg', 'healing'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
-        sets: [
-          'ViridescentVenerer',
-          'NoblesseOblige',
-          'OceanHuedClam',
-          'EmblemOfSeveredFate',
-        ],
+        sets: ['ViridescentVenerer', 'NoblesseOblige', 'OceanHuedClam'],
         erMin: 160,
       },
       {
@@ -1960,8 +1948,25 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           circlet: ['em'],
         },
         substats: ['er_pct', 'em', 'crit_rate', 'crit_dmg', 'atk_pct'],
-        sets: ['ViridescentVenerer'],
+        sets: ['ViridescentVenerer', 'NoblesseOblige', 'OceanHuedClam'],
         erMin: 160,
+      },
+      {
+        name: 'Heal Support & Damage',
+        role: 'healer',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['atk_pct', 'er_pct'],
+          goblet: ['elemental_dmg', 'atk_pct'],
+          circlet: ['crit_rate', 'crit_dmg', 'healing'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        sets: [
+          'ViridescentVenerer',
+          'NoblesseOblige',
+          'OceanHuedClam',
+          'EmblemOfSeveredFate',
+        ],
       },
     ],
   },
@@ -1989,7 +1994,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 280,
         erWeapons: [
           {
-            weapon: 'Favonius Lance',
+            weapon: 'C0, with Fav',
             min: 210,
           },
         ],
@@ -2003,7 +2008,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Support',
         role: 'support',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['em', 'er_pct'],
           goblet: ['em'],
@@ -2014,10 +2019,22 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 190,
         erWeapons: [
           {
-            weapon: 'Favonius Sword',
+            weapon: 'Kazuha’s ER / (with Favonius Sword)',
             min: 160,
           },
         ],
+      },
+      {
+        name: 'Reaction DPS & Buff Support',
+        role: 'reaction_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['em', 'er_pct'],
+          goblet: ['em'],
+          circlet: ['em'],
+        },
+        substats: ['er_pct', 'em', 'crit_rate'],
+        sets: ['ViridescentVenerer', 'ThunderingFury'],
       },
     ],
   },
@@ -2028,7 +2045,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'atk_pct', 'em'],
           goblet: ['elemental_dmg'],
@@ -2041,8 +2058,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'MarechausseeHunter',
           'UnfinishedReverie',
-          'NoblesseOblige',
-          'ScrollOfTheHeroOfCinderCity',
         ],
         erMin: 230,
       },
@@ -2065,8 +2080,25 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 230,
       },
       {
+        name: 'Freeze / Mono Cryo',
+        role: 'on_field_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['atk_pct'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_dmg', 'atk_pct', 'crit_rate'],
+        sets: [
+          'BlizzardStrayer',
+          'EmblemOfSeveredFate',
+          'NoblesseOblige',
+          'ScrollOfTheHeroOfCinderCity',
+        ],
+      },
+      {
         name: 'Reverse Melt',
-        role: 'off_field_dps',
+        role: 'on_field_dps',
         sources: ['genshinBuilds'],
         accepts: {
           sands: ['er_pct', 'atk_pct', 'em'],
@@ -2100,6 +2132,12 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: ['BlizzardStrayer', 'MarechausseeHunter', 'NoblesseOblige'],
         erMin: 130,
+        erWeapons: [
+          {
+            weapon: '1 Additional Fav Proc',
+            min: 120,
+          },
+        ],
       },
     ],
   },
@@ -2200,8 +2238,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ThunderingFury',
           'GildedDreams',
           'Thundersoother',
-          'MarechausseeHunter',
           'UnfinishedReverie',
+          'MarechausseeHunter',
           'NightOfTheSkysUnveiling',
           'FlowerOfParadiseLost',
         ],
@@ -2209,20 +2247,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Overload',
         role: 'on_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
-          sands: ['atk_pct', 'em'],
+          sands: ['atk_pct'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['crit_rate', 'crit_dmg', 'atk_pct'],
-        sets: [
-          'ThunderingFury',
-          'MarechausseeHunter',
-          'Thundersoother',
-          'FragmentOfHarmonicWhimsy',
-          'GildedDreams',
-        ],
+        sets: ['Thundersoother', 'FragmentOfHarmonicWhimsy'],
       },
       {
         name: 'Lunar-Charged',
@@ -2238,10 +2270,20 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'MarechausseeHunter',
           'NightOfTheSkysUnveiling',
           'Thundersoother',
-          'ThunderingFury',
-          'GildedDreams',
           'FragmentOfHarmonicWhimsy',
         ],
+      },
+      {
+        name: 'Quickbloom DPS',
+        role: 'reaction_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['em', 'atk_pct'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em', 'atk_pct'],
+        sets: ['ThunderingFury', 'GildedDreams', 'MarechausseeHunter'],
       },
     ],
   },
@@ -2266,7 +2308,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GoldenTroupe',
           'DeepwoodMemories',
         ],
-        erMin: 100,
+        erMin: 200,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2292,6 +2335,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'VourukashasGlow',
         ],
         erMin: 160,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2323,6 +2367,12 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DesertPavilionChronicle',
         ],
         erMin: 125,
+        erWeapons: [
+          {
+            weapon: 'With Favonius Support',
+            min: 110,
+          },
+        ],
       },
     ],
   },
@@ -2370,6 +2420,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DeepwoodMemories',
         ],
         erMin: 135,
+        erEveryOther: 135,
       },
       {
         name: 'Quicken',
@@ -2393,6 +2444,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
         ],
         erMin: 160,
+        erEveryOther: 135,
       },
       {
         name: 'Pure Healer',
@@ -2411,6 +2463,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'SongOfDaysPast',
           'ScrollOfTheHeroOfCinderCity',
         ],
+        erEveryOther: 135,
       },
     ],
   },
@@ -2419,7 +2472,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/lan_yan',
     builds: [
       {
-        name: 'Off-Field Shield Support',
+        name: 'Off-Field Shield Support, for damage',
         role: 'shield',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
@@ -2524,6 +2577,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         sets: [
           'TenacityOfTheMillelith',
           'BlizzardStrayer',
+          'VourukashasGlow',
           'NoblesseOblige',
           'EmblemOfSeveredFate',
         ],
@@ -2551,6 +2605,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'Instructor',
           'TenacityOfTheMillelith',
         ],
+        erMin: 170,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2578,8 +2634,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       },
       {
         name: 'Off-Field Electro DPS / Support',
-        role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        role: 'on_field_dps',
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'atk_pct', 'em'],
           goblet: ['elemental_dmg'],
@@ -2591,9 +2647,26 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ScrollOfTheHeroOfCinderCity',
           'NoblesseOblige',
           'GildedDreams',
-          'Thundersoother',
         ],
         erMin: 170,
+      },
+      {
+        name: 'Off-Field DPS & Support',
+        role: 'off_field_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct', 'em'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        sets: [
+          'EmblemOfSeveredFate',
+          'ScrollOfTheHeroOfCinderCity',
+          'NoblesseOblige',
+          'GildedDreams',
+          'Thundersoother',
+        ],
       },
     ],
   },
@@ -2610,7 +2683,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['elemental_dmg', 'atk_pct'],
           circlet: ['crit_dmg', 'crit_rate'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'em'],
         sets: [
           'ADayCarvedFromRisingWinds',
           'ShimenawasReminiscence',
@@ -2619,6 +2692,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'BlizzardStrayer',
           'DesertPavilionChronicle',
         ],
+        erMin: 190,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2628,8 +2703,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'General Support / Damage Dealer',
-        role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        role: 'support',
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'atk_pct'],
           goblet: ['elemental_dmg', 'atk_pct'],
@@ -2642,6 +2717,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'NoblesseOblige',
           'MarechausseeHunter',
           'DesertPavilionChronicle',
+          'GildedDreams',
+          'FlowerOfParadiseLost',
         ],
         erMin: 140,
         erWeapons: [
@@ -2654,7 +2731,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Transformative Reaction–Focused',
         role: 'reaction_dps',
-        constellation: 'C6',
         sources: ['kqm'],
         accepts: {
           sands: ['em', 'er_pct'],
@@ -2662,7 +2738,15 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           circlet: ['em'],
         },
         substats: ['er_pct', 'em'],
-        sets: ['ViridescentVenerer', 'GildedDreams', 'FlowerOfParadiseLost'],
+        sets: [
+          'ViridescentVenerer',
+          'EmblemOfSeveredFate',
+          'NoblesseOblige',
+          'MarechausseeHunter',
+          'DesertPavilionChronicle',
+          'GildedDreams',
+          'FlowerOfParadiseLost',
+        ],
         erMin: 140,
         erWeapons: [
           {
@@ -2670,6 +2754,18 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
             min: 115,
           },
         ],
+      },
+      {
+        name: 'Off-Field DPS',
+        role: 'off_field_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
+        sets: ['ViridescentVenerer', 'EmblemOfSeveredFate', 'NoblesseOblige'],
       },
     ],
   },
@@ -2683,7 +2779,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
           sands: ['atk_pct'],
-          goblet: ['elemental_dmg', 'atk_pct'],
+          goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
         substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'atk', 'er_pct'],
@@ -2697,6 +2793,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DesertPavilionChronicle',
         ],
         erMin: 125,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2753,25 +2850,19 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Support',
         role: 'support',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'hp_pct'],
           goblet: ['hp_pct'],
           circlet: ['crit_rate', 'healing', 'hp_pct'],
         },
         substats: ['er_pct', 'crit_rate', 'hp_pct'],
-        sets: [
-          'NoblesseOblige',
-          'OceanHuedClam',
-          'SongOfDaysPast',
-          'TheExile',
-          'MaidenBeloved',
-          'ScrollOfTheHeroOfCinderCity',
-        ],
+        sets: ['NoblesseOblige', 'OceanHuedClam', 'SongOfDaysPast', 'TheExile'],
         erMin: 190,
+        erEveryOther: 100,
         erWeapons: [
           {
-            weapon: 'Dialogues of the Desert Sages R5',
+            weapon: 'Desert Sages R5',
             min: 105,
           },
           {
@@ -2779,9 +2870,28 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
             min: 160,
           },
           {
-            weapon: 'Favonius Lance',
+            weapon: 'Favonius Lance (1 proc/rotation)',
             min: 175,
           },
+        ],
+      },
+      {
+        name: 'Heal & Buff Support',
+        role: 'healer',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'hp_pct'],
+          goblet: ['hp_pct'],
+          circlet: ['healing', 'crit_rate'],
+        },
+        substats: ['er_pct', 'crit_rate', 'hp_pct', 'hp'],
+        sets: [
+          'NoblesseOblige',
+          'OceanHuedClam',
+          'SongOfDaysPast',
+          'MaidenBeloved',
+          'ScrollOfTheHeroOfCinderCity',
+          'TheExile',
         ],
       },
     ],
@@ -2843,6 +2953,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'HeartOfDepth',
           'MarechausseeHunter',
         ],
+        erEveryOther: 100,
       },
     ],
   },
@@ -2853,7 +2964,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Off-Field',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['em'],
           goblet: ['em', 'elemental_dmg'],
@@ -2867,7 +2978,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GoldenTroupe',
           'GildedDreams',
           'Instructor',
-          'FlowerOfParadiseLost',
         ],
         erMin: 100,
       },
@@ -2911,6 +3021,24 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         ],
         erMin: 120,
       },
+      {
+        name: 'Buff Support & Damage',
+        role: 'support',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['em'],
+          goblet: ['em', 'elemental_dmg'],
+          circlet: ['em', 'crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em', 'atk_pct'],
+        sets: [
+          'DeepwoodMemories',
+          'GildedDreams',
+          'GoldenTroupe',
+          'TenacityOfTheMillelith',
+          'FlowerOfParadiseLost',
+        ],
+      },
     ],
   },
   navia: {
@@ -2951,7 +3079,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em'],
         sets: ['NightOfTheSkysUnveiling', 'GildedDreams'],
-        erMin: 100,
+        erEveryOther: 100,
       },
     ],
   },
@@ -2980,11 +3108,11 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 100,
         erWeapons: [
           {
-            weapon: 'Prototype Amber R5',
+            weapon: 'R5 Prototype Amber',
             min: 100,
           },
           {
-            weapon: 'Tome of the Eternal Flow R1',
+            weapon: 'R1 Tome of the Eternal Flow',
             min: 100,
           },
         ],
@@ -2998,13 +3126,31 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Support',
         role: 'support',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'er_pct'],
           goblet: ['atk_pct'],
+          circlet: ['atk_pct'],
+        },
+        substats: ['atk_pct', 'atk'],
+        sets: [
+          'CelestialGift',
+          'ScrollOfTheHeroOfCinderCity',
+          'NoblesseOblige',
+        ],
+        erMin: 100,
+        erEveryOther: 100,
+      },
+      {
+        name: 'Shield & Buff Support',
+        role: 'shield',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct'],
+          goblet: ['atk_pct'],
           circlet: ['atk_pct', 'crit_rate'],
         },
-        substats: ['er_pct', 'atk_pct', 'atk'],
+        substats: ['er_pct', 'atk_pct', 'crit_rate'],
         sets: [
           'CelestialGift',
           'ScrollOfTheHeroOfCinderCity',
@@ -3069,8 +3215,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'Thundersoother',
           'Lavawalker',
           'EmblemOfSeveredFate',
-          'HuskOfOpulentDreams',
           'ArchaicPetra',
+          'HuskOfOpulentDreams',
         ],
         erMin: 110,
       },
@@ -3123,7 +3269,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       },
       {
         name: 'Driver',
-        role: 'on_field_dps',
+        role: 'reaction_dps',
         sources: ['genshinBuilds'],
         accepts: {
           sands: ['def_pct'],
@@ -3142,7 +3288,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Off-field DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct'],
           goblet: ['atk_pct'],
@@ -3156,9 +3302,17 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'BlizzardStrayer',
           'TenacityOfTheMillelith',
         ],
+        erMin: 175,
+        erEveryOther: 100,
+        erWeapons: [
+          {
+            weapon: 'With Sig',
+            min: 100,
+          },
+        ],
       },
       {
-        name: 'Stellar Support / Enabler',
+        name: 'Stellar Support Build',
         role: 'support',
         sources: ['genshinBuilds'],
         accepts: {
@@ -3173,6 +3327,18 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
+      },
+      {
+        name: 'Best Stellar Support Build',
+        role: 'support',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['atk_pct'],
+          goblet: ['atk_pct'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['crit_dmg', 'crit_rate', 'atk_pct', 'er_pct', 'em'],
+        sets: ['HeartOfTheFurnace', 'DisenchantmentInDeepShadow'],
       },
     ],
   },
@@ -3246,6 +3412,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'OceanHuedClam',
           'SongOfDaysPast',
         ],
+        erMin: 240,
+        erEveryOther: 100,
       },
     ],
   },
@@ -3312,10 +3480,11 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'Thundersoother',
           'GladiatorsFinale',
-          'MarechausseeHunter',
+          'FlowerOfParadiseLost',
           'ADayCarvedFromRisingWinds',
           'EchoesOfAnOffering',
           'EmblemOfSeveredFate',
+          'MarechausseeHunter',
         ],
         erMin: 100,
       },
@@ -3335,7 +3504,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GildedDreams',
           'Thundersoother',
           'GladiatorsFinale',
-          'MarechausseeHunter',
+          'FlowerOfParadiseLost',
         ],
         erMin: 100,
       },
@@ -3349,7 +3518,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           circlet: ['em', 'crit_rate'],
         },
         substats: ['er_pct', 'em', 'crit_rate'],
-        sets: ['GildedDreams', 'ThunderingFury', 'FlowerOfParadiseLost'],
+        sets: [
+          'PaleFlame',
+          'ThunderingFury',
+          'GildedDreams',
+          'Thundersoother',
+          'GladiatorsFinale',
+          'FlowerOfParadiseLost',
+        ],
         erMin: 100,
       },
     ],
@@ -3360,7 +3536,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'Reverse Melt',
-        role: 'off_field_dps',
+        role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
           sands: ['em', 'atk_pct'],
@@ -3378,7 +3554,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       },
       {
         name: 'Freeze / Mono Cryo',
-        role: 'off_field_dps',
+        role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
           sands: ['atk_pct', 'er_pct'],
@@ -3429,14 +3605,15 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['atk_pct', 'em'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'em'],
         sets: [
           'DisenchantmentInDeepShadow',
           'GildedDreams',
-          'ADayCarvedFromRisingWinds',
           'GladiatorsFinale',
+          'ADayCarvedFromRisingWinds',
         ],
         erMin: 130,
+        erEveryOther: 100,
       },
       {
         name: 'Sandrone DPS Build',
@@ -3454,7 +3631,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
-        erMin: 125,
       },
       {
         name: 'Stellar-Conduct Build',
@@ -3472,7 +3648,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
-        erMin: 125,
       },
     ],
   },
@@ -3502,18 +3677,18 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 195,
         erWeapons: [
           {
-            weapon: 'Prototype Amber R1',
+            weapon: 'P. Amber R1',
             min: 160,
           },
           {
-            weapon: 'Prototype Amber R5',
+            weapon: 'P. Amber R5',
             min: 145,
           },
         ],
       },
       {
         name: 'Off-Field Support',
-        role: 'healer',
+        role: 'support',
         sources: ['kqm'],
         accepts: {
           sands: ['hp_pct', 'er_pct'],
@@ -3533,11 +3708,11 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         erMin: 260,
         erWeapons: [
           {
-            weapon: 'Prototype Amber R1',
+            weapon: 'P. Amber R1',
             min: 215,
           },
           {
-            weapon: 'Prototype Amber R5',
+            weapon: 'P. Amber R5',
             min: 195,
           },
         ],
@@ -3659,13 +3834,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ScrollOfTheHeroOfCinderCity',
           'BlizzardStrayer',
         ],
-        erMin: 180,
-        erWeapons: [
-          {
-            weapon: 'Favonius Lance',
-            min: 165,
-          },
-        ],
+        erMin: 165,
       },
     ],
   },
@@ -3678,7 +3847,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
-          sands: ['atk_pct', 'er_pct'],
+          sands: ['atk_pct'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
@@ -3764,8 +3933,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'MarechausseeHunter',
           'FinaleOfTheDeepGalleries',
           'BlizzardStrayer',
-          'GladiatorsFinale',
           'DesertPavilionChronicle',
+          'GladiatorsFinale',
         ],
       },
     ],
@@ -3791,7 +3960,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'Instructor',
           'SilkenMoonsSerenade',
         ],
-        erMin: 160,
       },
     ],
   },
@@ -3859,19 +4027,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Shield Support Thoma',
         role: 'shield',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'hp_pct'],
           goblet: ['hp_pct'],
           circlet: ['hp_pct', 'crit_rate'],
         },
         substats: ['er_pct', 'hp_pct', 'crit_rate', 'hp'],
-        sets: [
-          'NoblesseOblige',
-          'ScrollOfTheHeroOfCinderCity',
-          'Instructor',
-          'DeepwoodMemories',
-        ],
+        sets: ['NoblesseOblige'],
         erMin: 210,
         erWeapons: [
           {
@@ -3923,7 +4086,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['elemental_dmg', 'atk_pct'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'atk'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'atk'],
         sets: [
           'LongNightsOath',
           'ObsidianCodex',
@@ -3931,6 +4094,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DesertPavilionChronicle',
         ],
         erMin: 120,
+        erEveryOther: 100,
       },
     ],
   },
@@ -3947,7 +4111,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['elemental_dmg', 'atk_pct'],
           circlet: ['crit_dmg', 'crit_rate'],
         },
-        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'em', 'atk'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'atk'],
         sets: [
           'ADayCarvedFromRisingWinds',
           'MarechausseeHunter',
@@ -3973,9 +4137,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         role: 'support',
         sources: ['kqm'],
         accepts: {
-          sands: ['em', 'er_pct'],
-          goblet: ['em'],
-          circlet: ['em'],
+          sands: ['em', 'atk_pct', 'er_pct'],
+          goblet: ['em', 'elemental_dmg', 'atk_pct'],
+          circlet: ['em', 'crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'em', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
@@ -3990,9 +4154,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         role: 'support',
         sources: ['kqm'],
         accepts: {
-          sands: ['atk_pct', 'em', 'er_pct'],
-          goblet: ['elemental_dmg', 'atk_pct'],
-          circlet: ['crit_rate', 'crit_dmg'],
+          sands: ['em', 'atk_pct', 'er_pct'],
+          goblet: ['em', 'elemental_dmg', 'atk_pct'],
+          circlet: ['em', 'crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
         sets: [
@@ -4007,9 +4171,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         role: 'support',
         sources: ['kqm'],
         accepts: {
-          sands: ['em', 'er_pct'],
-          goblet: ['em'],
-          circlet: ['crit_rate', 'crit_dmg'],
+          sands: ['em', 'atk_pct', 'er_pct'],
+          goblet: ['em', 'elemental_dmg', 'atk_pct'],
+          circlet: ['em', 'crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em'],
         sets: [
@@ -4033,11 +4197,12 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ADayCarvedFromRisingWinds',
           'EchoesOfAnOffering',
           'ViridescentVenerer',
+          'DesertPavilionChronicle',
         ],
         erMin: 135,
       },
       {
-        name: 'On-Field Driver',
+        name: 'On-Field Driver (General)',
         role: 'reaction_dps',
         sources: ['kqm'],
         accepts: {
@@ -4046,6 +4211,19 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           circlet: ['em', 'crit_rate', 'crit_dmg'],
         },
         substats: ['er_pct', 'em', 'crit_rate', 'crit_dmg', 'atk_pct'],
+        sets: ['ViridescentVenerer'],
+        erMin: 125,
+      },
+      {
+        name: 'On-Field Driver (Lunar-Charged)',
+        role: 'reaction_dps',
+        sources: ['kqm'],
+        accepts: {
+          sands: ['em'],
+          goblet: ['em'],
+          circlet: ['em', 'crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'em'],
         sets: ['ViridescentVenerer'],
         erMin: 125,
       },
@@ -4082,7 +4260,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'Best Stellar-Swirl DPS Build',
-        role: 'on_field_dps',
+        role: 'reaction_dps',
         sources: ['genshinBuilds'],
         accepts: {
           sands: ['atk_pct'],
@@ -4096,7 +4274,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'GladiatorsFinale',
           'ADayCarvedFromRisingWinds',
         ],
-        erMin: 100,
       },
     ],
   },
@@ -4113,7 +4290,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           goblet: ['hp_pct'],
           circlet: ['hp_pct'],
         },
-        substats: ['hp_pct', 'er_pct', 'crit_rate', 'crit_dmg', 'hp'],
+        substats: ['hp_pct', 'hp'],
         sets: [
           'TenacityOfTheMillelith',
           'VourukashasGlow',
@@ -4137,15 +4314,15 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/wanderer',
     builds: [
       {
-        name: 'DPS',
+        name: 'On-field DPS',
         role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
           sands: ['atk_pct'],
-          goblet: ['elemental_dmg', 'atk_pct'],
+          goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
           'DesertPavilionChronicle',
           'ShimenawasReminiscence',
@@ -4156,6 +4333,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'Lavawalker',
         ],
         erMin: 105,
+        erEveryOther: 105,
       },
       {
         name: 'Driver Build',
@@ -4169,6 +4347,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         substats: ['er_pct', 'em'],
         sets: ['ViridescentVenerer'],
         erMin: 105,
+        erEveryOther: 105,
       },
     ],
   },
@@ -4190,10 +4369,10 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DisenchantmentInDeepShadow',
           'MarechausseeHunter',
           'GildedDreams',
-          'BlizzardStrayer',
           'ShimenawasReminiscence',
           'EchoesOfAnOffering',
         ],
+        erEveryOther: 100,
       },
       {
         name: 'Non-Stellar-Conduct DPS',
@@ -4212,6 +4391,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ShimenawasReminiscence',
         ],
         erMin: 100,
+        erEveryOther: 100,
       },
     ],
   },
@@ -4222,20 +4402,18 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Off-field DPS',
         role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'em', 'atk_pct'],
           goblet: ['elemental_dmg'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct'],
         sets: [
           'EmblemOfSeveredFate',
           'CrimsonWitchOfFlames',
           'GildedDreams',
           'FlowerOfParadiseLost',
-          'NoblesseOblige',
-          'DeepwoodMemories',
         ],
         erMin: 220,
         erWeapons: [
@@ -4244,9 +4422,27 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
             min: 200,
           },
           {
-            weapon: 'Kitain Cross Spear R5',
+            weapon: 'R5 Kitain Cross Spear',
             min: 185,
           },
+        ],
+      },
+      {
+        name: 'Off-Field Vaporize DPS',
+        role: 'on_field_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct', 'em'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em'],
+        sets: [
+          'EmblemOfSeveredFate',
+          'CrimsonWitchOfFlames',
+          'GildedDreams',
+          'NoblesseOblige',
+          'DeepwoodMemories',
         ],
       },
     ],
@@ -4262,25 +4458,26 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         accepts: {
           sands: ['er_pct', 'atk_pct'],
           goblet: ['atk_pct'],
-          circlet: ['atk_pct', 'crit_rate'],
+          circlet: ['atk_pct'],
         },
-        substats: ['er_pct', 'atk_pct', 'atk', 'em', 'crit_rate'],
+        substats: ['er_pct', 'atk_pct', 'atk', 'em', 'crit_rate', 'crit_dmg'],
         sets: [
           'ViridescentVenerer',
           'OceanHuedClam',
           'NoblesseOblige',
           'SongOfDaysPast',
           'EmblemOfSeveredFate',
+          'MaidenBeloved',
           'ScrollOfTheHeroOfCinderCity',
         ],
         erMin: 220,
         erWeapons: [
           {
-            weapon: "Crane's Echoing Call R1 (5 Plunge procs)",
+            weapon: 'Crane’s Echoing Call / (5 Procs – R1)',
             min: 190,
           },
           {
-            weapon: "Crane's Echoing Call R1 (8 Plunge procs)",
+            weapon: 'Crane’s Echoing Call / (8 Procs – R1)',
             min: 165,
           },
         ],
@@ -4307,7 +4504,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'DesertPavilionChronicle',
           'LongNightsOath',
         ],
-        erMin: 100,
+        erMin: 120,
       },
     ],
   },
@@ -4332,6 +4529,13 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'NoblesseOblige',
         ],
         erMin: 170,
+        erEveryOther: 100,
+        erWeapons: [
+          {
+            weapon: 'ER Reduced per Favonius Proc',
+            min: 30,
+          },
+        ],
       },
     ],
   },
@@ -4354,8 +4558,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'MarechausseeHunter',
           'NoblesseOblige',
           'ScrollOfTheHeroOfCinderCity',
-          'ArchaicPetra',
-          'DeepwoodMemories',
           'NymphsDream',
           'ADayCarvedFromRisingWinds',
           'BlizzardStrayer',
@@ -4414,7 +4616,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       {
         name: 'Pyro DPS',
         role: 'on_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['atk_pct', 'def_pct', 'er_pct'],
           goblet: ['elemental_dmg'],
@@ -4439,22 +4641,6 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         ],
         erMin: 200,
       },
-      {
-        name: 'Shield Support',
-        role: 'shield',
-        sources: ['genshinBuilds'],
-        accepts: {
-          sands: ['def_pct', 'er_pct'],
-          goblet: ['def_pct'],
-          circlet: ['def_pct'],
-        },
-        substats: ['er_pct', 'atk_pct', 'def_pct', 'crit_rate', 'crit_dmg'],
-        sets: [
-          'TenacityOfTheMillelith',
-          'ScrollOfTheHeroOfCinderCity',
-          'HuskOfOpulentDreams',
-        ],
-      },
     ],
   },
   yae_miko: {
@@ -4463,7 +4649,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     builds: [
       {
         name: 'Stellar-Conduct DPS',
-        role: 'off_field_dps',
+        role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
           sands: ['atk_pct', 'em', 'er_pct'],
@@ -4483,14 +4669,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
       },
       {
         name: 'Non Stellar-Conduct DPS',
-        role: 'off_field_dps',
-        sources: ['kqm', 'genshinBuilds'],
+        role: 'on_field_dps',
+        sources: ['kqm'],
         accepts: {
-          sands: ['atk_pct', 'em', 'er_pct'],
+          sands: ['atk_pct', 'em'],
           goblet: ['elemental_dmg', 'em'],
           circlet: ['crit_rate', 'crit_dmg'],
         },
-        substats: ['er_pct', 'crit_rate', 'crit_dmg', 'atk_pct', 'em', 'atk'],
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'em', 'atk'],
         sets: [
           'GoldenTroupe',
           'GildedDreams',
@@ -4499,10 +4685,25 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'SilkenMoonsSerenade',
           'TenacityOfTheMillelith',
           'ScrollOfTheHeroOfCinderCity',
-          'EmblemOfSeveredFate',
-          'Thundersoother',
         ],
         erMin: 140,
+      },
+      {
+        name: 'Off-Field DPS',
+        role: 'off_field_dps',
+        sources: ['genshinBuilds'],
+        accepts: {
+          sands: ['er_pct', 'atk_pct'],
+          goblet: ['elemental_dmg'],
+          circlet: ['crit_rate', 'crit_dmg'],
+        },
+        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'er_pct', 'em'],
+        sets: [
+          'GoldenTroupe',
+          'EmblemOfSeveredFate',
+          'Thundersoother',
+          'TenacityOfTheMillelith',
+        ],
       },
     ],
   },
@@ -4546,19 +4747,14 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         name: 'Shield Support (C4+)',
         role: 'shield',
         constellation: 'C4',
-        sources: ['kqm', 'genshinBuilds'],
+        sources: ['kqm'],
         accepts: {
           sands: ['er_pct', 'hp_pct'],
           goblet: ['hp_pct'],
           circlet: ['hp_pct', 'crit_rate'],
         },
         substats: ['er_pct', 'hp_pct', 'hp', 'crit_rate'],
-        sets: [
-          'NoblesseOblige',
-          'EmblemOfSeveredFate',
-          'TenacityOfTheMillelith',
-          'ScrollOfTheHeroOfCinderCity',
-        ],
+        sets: ['NoblesseOblige'],
         erMin: 250,
         erWeapons: [
           {
@@ -4658,15 +4854,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           circlet: ['crit_rate', 'crit_dmg', 'hp_pct'],
         },
         substats: ['er_pct', 'hp_pct', 'crit_rate', 'crit_dmg'],
-        sets: [
-          'EmblemOfSeveredFate',
-          'MarechausseeHunter',
-          'NymphsDream',
-          'NoblesseOblige',
-          'ScrollOfTheHeroOfCinderCity',
-          'ArchaicPetra',
-          'DeepwoodMemories',
-        ],
+        sets: ['EmblemOfSeveredFate', 'MarechausseeHunter', 'NymphsDream'],
         erMin: 265,
         erWeapons: [
           {
@@ -4698,7 +4886,9 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'NightOfTheSkysUnveiling',
           'CrimsonWitchOfFlames',
           'GildedDreams',
+          'RetracingBolide',
         ],
+        erEveryOther: 100,
       },
     ],
   },
@@ -4764,7 +4954,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/zhongli',
     builds: [
       {
-        name: 'Shielder',
+        name: 'Shield',
         role: 'shield',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
@@ -4782,23 +4972,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
           'ScrollOfTheHeroOfCinderCity',
           'VourukashasGlow',
         ],
-      },
-      {
-        name: 'Burst Support',
-        role: 'off_field_dps',
-        sources: ['genshinBuilds'],
-        accepts: {
-          sands: ['atk_pct', 'hp_pct'],
-          goblet: ['elemental_dmg'],
-          circlet: ['crit_rate', 'crit_dmg'],
-        },
-        substats: ['crit_rate', 'crit_dmg', 'atk_pct', 'hp_pct', 'er_pct'],
-        sets: [
-          'EmblemOfSeveredFate',
-          'NoblesseOblige',
-          'ArchaicPetra',
-          'TenacityOfTheMillelith',
-        ],
+        erMin: 120,
+        erEveryOther: 100,
       },
     ],
   },
@@ -4817,7 +4992,8 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
         },
         substats: ['crit_rate', 'crit_dmg', 'def_pct', 'em', 'er_pct'],
         sets: ['NightOfTheSkysUnveiling', 'HuskOfOpulentDreams'],
-        erMin: 100,
+        erMin: 105,
+        erEveryOther: 100,
       },
     ],
   },

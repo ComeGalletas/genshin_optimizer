@@ -316,11 +316,20 @@ export function OptimizePanel({
       ? 'Pick a character to start.'
       : null;
   const meta = META_TARGETS[characterKey];
-  // The character's builds that give an Energy Recharge figure (ADR-0059):
-  // picking one fills the floor above, nothing else.
-  const erBuilds = qualityProfiles(characterKey).filter(
-    (b) => b.erMin !== undefined,
-  );
+  // The character's builds' Energy Recharge figures (ADR-0059, ADR-0062),
+  // every rotation then every other rotation for each: picking one fills
+  // the floor above, nothing else.
+  const erBuilds = qualityProfiles(characterKey).flatMap((b) => {
+    const name = `${b.name}${b.constellation ? ` (${b.constellation})` : ''}`;
+    return [
+      ...(b.erMin !== undefined
+        ? [{ label: `${name}, every rotation`, min: b.erMin }]
+        : []),
+      ...(b.erEveryOther !== undefined
+        ? [{ label: `${name}, every other rotation`, min: b.erEveryOther }]
+        : []),
+    ];
+  });
   // `avg_damage` needs a curated profile, so it is offered per character. If the
   // user switches to a character without one, drop the selection — otherwise
   // buildContext would throw on the next run.
@@ -503,16 +512,15 @@ export function OptimizePanel({
                 onChange={(e) => {
                   const b = erBuilds[Number(e.target.value)];
                   if (!b) return;
-                  setMinERInput(String(b.erMin));
-                  setMinER(String(b.erMin));
+                  setMinERInput(String(b.min));
+                  setMinER(String(b.min));
                 }}
                 aria-describedby={`${uid}-er-build-hint`}
               >
                 <option value="">Pick a build…</option>
                 {erBuilds.map((b, i) => (
                   <option key={i} value={i}>
-                    {b.name}
-                    {b.constellation ? ` (${b.constellation})` : ''}: {b.erMin}%
+                    {b.label}: {b.min}%
                   </option>
                 ))}
               </select>

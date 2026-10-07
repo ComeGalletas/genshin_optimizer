@@ -3159,6 +3159,7 @@
    "substats": [
     "er_pct",
     "crit_rate",
+    "crit_dmg",
     "atk_pct"
    ]
   },

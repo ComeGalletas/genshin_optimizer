@@ -84,4 +84,22 @@ describe('keepFromPrevious', () => {
     expect(next.builds[1].flags).toBeUndefined();
     keepFromPrevious(undefined, next);
   });
+
+  it('keeps the previous Energy Recharge figure, or its absence, over a shared table', () => {
+    const prev = character([
+      build({ name: 'A', erMin: 100 }),
+      build({ name: 'B' }),
+    ]);
+    const shared = 'one Energy Recharge table for every build';
+    const next = character([
+      build({ name: 'A', erMin: 195, flags: [shared] }),
+      build({ name: 'B', erMin: 195, flags: [shared] }),
+    ]);
+    keepFromPrevious(prev, next);
+    expect(next.builds[0].erMin).toBe(100);
+    expect(next.builds[1].erMin).toBeUndefined();
+    expect(next.builds[1].flags).toEqual([
+      'Energy Recharge kept from the previous read ("B")',
+    ]);
+  });
 });

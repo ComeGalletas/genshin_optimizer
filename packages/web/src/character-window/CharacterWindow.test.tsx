@@ -576,6 +576,18 @@ describe('character window', () => {
     );
   });
 
+  it('shows both Energy Recharge figures, every rotation first', async () => {
+    useRoster.getState().setRoster({ chiori: { buildLevel: 90, level: 90 } });
+    render(<CharacterWindow />);
+    openCharacter('chiori');
+    await screen.findByRole('region', { name: 'Artifact quality' }, LAZY);
+    const rows = screen.getAllByTestId('er-threshold');
+    expect(rows.map((r) => r.textContent)).toEqual([
+      'To burst every rotation260.0% (160.0% short)',
+      'To burst every other rotation100.0%',
+    ]);
+  });
+
   it('stars the set the build recommends', async () => {
     const user = userEvent.setup();
     furina();

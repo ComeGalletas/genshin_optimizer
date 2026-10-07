@@ -39,11 +39,12 @@ const piece = (
 const MAX = (k: keyof typeof SUBSTAT_TIERS_5) => SUBSTAT_TIERS_5[k][3];
 
 describe('qualityProfiles', () => {
-  it('reads Kokomi’s three builds: two healers and Bloom', () => {
+  it('reads Kokomi’s three builds: a healer, a support and Bloom', () => {
     const builds = qualityProfiles('sangonomiya_kokomi');
+    // Her off-field build is a support by KQM's name for it.
     expect(builds.map((b) => b.role)).toEqual([
       'healer',
-      'healer',
+      'support',
       'reaction_dps',
     ]);
     const [onField, offField, bloom] = builds;
@@ -218,7 +219,7 @@ describe('artifactQuality', () => {
     const columbina = artifactQuality('columbina', undefined, lots, 1)!;
     expect(columbina.profile.erMin).toBeUndefined();
     expect(columbina.byStat.er_pct).toBeCloseTo(50 / MAX('er_pct'), 6);
-    expect(columbina.er).toEqual({ total: 150, short: 0 });
+    expect(columbina.er).toEqual({ total: 150, short: 0, shortEveryOther: 0 });
     // Her first build carries the guide's weapon figures too.
     expect(qualityProfile('columbina')!.erWeapons?.length).toBeGreaterThan(0);
     // Mavuika's kit makes it useless: none of it.
@@ -343,7 +344,8 @@ describe('Chiori', () => {
       atk: FLAT_FACTOR,
       er_pct: 1,
     });
-    expect(p.erMin).toBeUndefined();
+    // KQM's table is for bursting every rotation, which it advises against.
+    expect([p.erMin, p.erEveryOther]).toEqual([260, 100]);
     expect(p.accepts.sands).toEqual(['def_pct']);
     expect(p.recommendedSets.slice(0, 2)).toEqual([
       'GoldenTroupe',

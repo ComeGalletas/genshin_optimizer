@@ -85,6 +85,7 @@ function asGuideBuild(
     substats: uniq(b.substats),
     sets: flatSets(b),
     ...(b.erMin !== undefined && { erMin: b.erMin }),
+    ...(b.erEveryOther !== undefined && { erEveryOther: b.erEveryOther }),
     ...(b.erWeapons?.length && { erWeapons: [...b.erWeapons] }),
   };
 }
@@ -137,6 +138,8 @@ export function mergeGuideBuilds(
         m.sets = uniq([...m.sets, ...flatSets(b)]);
         m.sources.push('genshinBuilds');
         if (m.erMin === undefined && b.erMin !== undefined) m.erMin = b.erMin;
+        if (m.erEveryOther === undefined && b.erEveryOther !== undefined)
+          m.erEveryOther = b.erEveryOther;
         if (b.erWeapons?.length)
           m.erWeapons = [...(m.erWeapons ?? []), ...b.erWeapons];
       } else

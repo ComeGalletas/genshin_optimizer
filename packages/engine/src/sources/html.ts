@@ -44,7 +44,22 @@ export function blocksOf(html: string): Block[] {
   s = s.replace(/<tr[\s\S]*?<\/tr>/gi, (row) => {
     const cells = [...row.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(
       // The markers can't appear in a cell's text.
-      (m) => stripTags(m[1]).split('\u0001').join('').split(CELL).join(''),
+      (m) =>
+        stripTags(
+          // Options on their own lines in one cell are alternatives.
+          m[1].replace(
+            /<br\s*\/?>|<\/p>\s*<p[^>]*>|<\/li>\s*<li[^>]*>/gi,
+            ' / ',
+          ),
+        )
+          .split('\u0001')
+          .join('')
+          .split(CELL)
+          .join('')
+          // A break before or after the text, or two in a row, separates
+          // nothing.
+          .replace(/(\s*\/\s*){2,}/g, ' / ')
+          .replace(/^\s*\/\s*|\s*\/\s*$/g, ''),
     );
     return `\n${ROW}${cells.join(CELL)}\n`;
   });
