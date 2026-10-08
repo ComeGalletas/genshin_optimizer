@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { OptimizePanel } from './OptimizePanel';
@@ -623,6 +630,21 @@ describe('OptimizePanel Energy Recharge from a build (ADR-0059)', () => {
     expect(after.setRequirement).toEqual(before.setRequirement);
     expect(after.mainStatLocks).toEqual(before.mainStatLocks);
     expect(screen.getByLabelText(/Minimum Energy Recharge/)).toHaveValue(260);
+  });
+
+  it('leaves the floor alone when the placeholder is picked', async () => {
+    useOptimizeRequest.getState().setCharacterKey('sangonomiya_kokomi');
+    render(
+      <OptimizePanel onRun={() => {}} running={false} onCancel={vi.fn()} />,
+    );
+    const before = currentRequest(useOptimizeRequest.getState()).constraints;
+    fireEvent.change(
+      screen.getByRole('combobox', { name: /Energy Recharge from a build/ }),
+      { target: { value: '' } },
+    );
+    expect(
+      currentRequest(useOptimizeRequest.getState()).constraints.minStats,
+    ).toEqual(before.minStats);
   });
 
   it('offers no picker when no build gives a figure', () => {

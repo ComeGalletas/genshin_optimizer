@@ -8,6 +8,7 @@
 import type { Tone } from './components/ui/tone';
 import type { Grade } from '@genshin-build-lab/engine/meta/grade';
 import type { Band } from '@genshin-build-lab/engine/roster/buildScore';
+import type { GuideSource } from '@genshin-build-lab/engine/meta/guideBuilds';
 
 export * from '@genshin-build-lab/engine/labels';
 // `countOf` and `pluralWord`, the one plural helper, come from the engine
@@ -31,4 +32,10 @@ export const GRADE_TONE: Record<Grade, Tone> = {
   B: 'flux',
   C: 'muted',
   D: 'rose',
+};
+
+/** The guides a build comes from, as the window names them. */
+export const GUIDE_SOURCE_NAMES: Record<GuideSource, string> = {
+  kqm: 'KQM',
+  genshinBuilds: 'genshin-builds',
 };

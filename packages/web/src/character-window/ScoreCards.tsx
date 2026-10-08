@@ -23,6 +23,7 @@ import { SourceLink } from '../components/ui/SourceLink';
 import {
   formatScore,
   formatSetName,
+  GUIDE_SOURCE_NAMES,
   formatStat,
   SLOT_LABELS,
   statLabel,
@@ -62,14 +63,9 @@ export function ReadinessCard({ readiness }: { readiness: Readiness }) {
   );
 }
 
-/** The guides a build comes from, in words. */
-const SOURCE_NAMES: Record<GuideSource, string> = {
-  kqm: 'KQM',
-  genshinBuilds: 'genshin-builds',
-};
 const sourcesText = (sources: readonly GuideSource[]) =>
   sources.length
-    ? `From ${sources.map((s) => SOURCE_NAMES[s]).join(' and ')}`
+    ? `From ${sources.map((s) => GUIDE_SOURCE_NAMES[s]).join(' and ')}`
     : 'From the curated target';
 const buildName = (q: ArtifactQuality) =>
   q.profile.constellation
@@ -131,7 +127,8 @@ export function QualityCard({
     <p className="text-xs leading-relaxed text-muted" data-testid="unscored">
       {unscored.map((u) => (
         <span key={`${u.source}-${u.name}`} className="block">
-          Not scored: {u.name} ({SOURCE_NAMES[u.source]}), because {u.reason}.
+          Not scored: {u.name} ({GUIDE_SOURCE_NAMES[u.source]}), because{' '}
+          {u.reason}.
         </span>
       ))}
     </p>

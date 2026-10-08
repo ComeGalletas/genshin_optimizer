@@ -43,8 +43,14 @@ function titleCase(s: string) {
     .replace(/\bC(\d)\b/gi, 'C$1');
 }
 
+/** Names that say nothing about the build: a section heading ("Artifact
+ *  Stat Priorities") or "General". */
+const GENERIC_NAME =
+  /^(general( build)?|artifacts?|builds?|artifact stats( and sets)?|(artifact )?stat priorit(y|ies))$/i;
+
 /** A build's name as shown: a shouting label in title case, and a generic
- *  one ("General", the character's own name) as its role. */
+ *  one ("General", a section heading, the character's own name) as its
+ *  role. */
 export function buildLabel(characterName: string, b: SourceBuild): string {
   let n = b.name.trim();
   if (n === n.toUpperCase()) n = titleCase(n);
@@ -53,7 +59,7 @@ export function buildLabel(characterName: string, b: SourceBuild): string {
   const paren = n.match(/^([^()]+)\(([^)]+)\)$/);
   if (paren && words.includes(paren[1].trim().toLowerCase()))
     n = paren[2].trim();
-  if (/^general$/i.test(n) || words.includes(n.toLowerCase()))
+  if (GENERIC_NAME.test(n) || words.includes(n.toLowerCase()))
     n = ROLE_LABEL[b.role];
   return n.charAt(0).toUpperCase() + n.slice(1);
 }
@@ -140,8 +146,11 @@ export function mergeGuideBuilds(
         if (m.erMin === undefined && b.erMin !== undefined) m.erMin = b.erMin;
         if (m.erEveryOther === undefined && b.erEveryOther !== undefined)
           m.erEveryOther = b.erEveryOther;
-        if (b.erWeapons?.length)
-          m.erWeapons = [...(m.erWeapons ?? []), ...b.erWeapons];
+        // A weapon both guides give a figure for keeps KQM's.
+        const extra = (b.erWeapons ?? []).filter(
+          (w) => !m.erWeapons?.some((x) => x.weapon === w.weapon),
+        );
+        if (extra.length) m.erWeapons = [...(m.erWeapons ?? []), ...extra];
       } else
         builds.push(
           asGuideBuild(buildLabel(nameOf(key), b), b, 'genshinBuilds'),

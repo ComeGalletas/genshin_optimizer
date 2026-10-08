@@ -52,7 +52,10 @@ describe('mergeGuideBuilds', () => {
           role: 'healer',
           mains: { sands: ['hp_pct'], goblet: ['hp_pct'], circlet: ['hp_pct'] },
           sets: [['TenacityOfTheMillelith', 'OceanHuedClam']],
-          erWeapons: [{ weapon: 'Amber', min: 150 }],
+          erWeapons: [
+            { weapon: 'Amber', min: 150 },
+            { weapon: 'Fav', min: 170 },
+          ],
         }),
         build({ name: 'Support', role: 'support' }),
         build({ name: 'Old', role: 'on_field_dps', excluded: 'out of date' }),
@@ -70,7 +73,11 @@ describe('mergeGuideBuilds', () => {
     expect(healer.accepts.circlet).toEqual(['healing', 'hp_pct']);
     expect(healer.sets).toEqual(['OceanHuedClam', 'TenacityOfTheMillelith']);
     expect(healer.erMin).toBe(195);
-    expect(healer.erWeapons).toHaveLength(2);
+    // A weapon both give a figure for appears once, with KQM's.
+    expect(healer.erWeapons).toEqual([
+      { weapon: 'Fav', min: 160 },
+      { weapon: 'Amber', min: 150 },
+    ]);
     expect(merged.unscored).toEqual([
       {
         name: 'Broken',
@@ -83,6 +90,15 @@ describe('mergeGuideBuilds', () => {
   it('names a build the way the window shows it', () => {
     expect(buildLabel('Kirara', build({ name: 'General' }))).toBe('Support');
     expect(buildLabel('Kirara', build({ name: 'Kirara' }))).toBe('Support');
+    expect(
+      buildLabel(
+        'Cyno',
+        build({ name: 'Artifact Stat Priorities', role: 'on_field_dps' }),
+      ),
+    ).toBe('On-field DPS');
+    expect(buildLabel('Collei', build({ name: 'General Build' }))).toBe(
+      'Support',
+    );
     expect(
       buildLabel(
         'Yumemizuki Mizuki',

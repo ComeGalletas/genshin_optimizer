@@ -828,7 +828,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/collei',
     builds: [
       {
-        name: 'General Build',
+        name: 'Support',
         role: 'support',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {
@@ -944,7 +944,7 @@ export const GUIDE_BUILDS: Record<string, CharacterGuides> = {
     genshinBuilds: 'https://genshin-builds.com/en/character/cyno',
     builds: [
       {
-        name: 'Artifact Stat Priorities',
+        name: 'On-field DPS',
         role: 'on_field_dps',
         sources: ['kqm', 'genshinBuilds'],
         accepts: {

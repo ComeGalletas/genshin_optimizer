@@ -20,6 +20,7 @@ import { useOptimizeRequest } from '../state/optimizeRequest';
 import {
   formatCount,
   formatCritRatio,
+  GUIDE_SOURCE_NAMES,
   isPctStat,
   objectiveLabel,
   setRequirementLabel,
@@ -319,8 +320,16 @@ export function OptimizePanel({
   // The character's builds' Energy Recharge figures (ADR-0059, ADR-0062),
   // every rotation then every other rotation for each: picking one fills
   // the floor above, nothing else.
-  const erBuilds = qualityProfiles(characterKey).flatMap((b) => {
-    const name = `${b.name}${b.constellation ? ` (${b.constellation})` : ''}`;
+  const profiles = qualityProfiles(characterKey);
+  const titleOf = (b: (typeof profiles)[number]) =>
+    `${b.name}${b.constellation ? ` (${b.constellation})` : ''}`;
+  const erBuilds = profiles.flatMap((b) => {
+    // Two builds with one name are told apart by their guides.
+    const repeated =
+      profiles.filter((x) => titleOf(x) === titleOf(b)).length > 1;
+    const name = repeated
+      ? `${titleOf(b)}, ${b.sources.map((x) => GUIDE_SOURCE_NAMES[x]).join(' and ') || 'curated'}`
+      : titleOf(b);
     return [
       ...(b.erMin !== undefined
         ? [{ label: `${name}, every rotation`, min: b.erMin }]
@@ -510,6 +519,8 @@ export function OptimizePanel({
                 className="field"
                 value=""
                 onChange={(e) => {
+                  // The placeholder ("") picks nothing.
+                  if (e.target.value === '') return;
                   const b = erBuilds[Number(e.target.value)];
                   if (!b) return;
                   setMinERInput(String(b.min));
